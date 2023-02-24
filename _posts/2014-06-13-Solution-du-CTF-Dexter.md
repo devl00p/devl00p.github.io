@@ -1,4 +1,7 @@
-# Solution du CTF Dexter
+---
+title: "Solution du CTF Dexter de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Tam tadam tadam...
 ------------------

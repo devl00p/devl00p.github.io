@@ -1,4 +1,7 @@
-# Solution du CTF VulnImage
+---
+title: "Solution du CTF VulnImage de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Insert coin
 -----------

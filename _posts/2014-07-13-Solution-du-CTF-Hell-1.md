@@ -1,11 +1,14 @@
-# Solution du CTF Hell: 1
+---
+title: "Solution du CTF Hell: 1 de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Aller simple pour l'enfer
 -------------------------
 
 [Hell est un CTF](http://vulnhub.com/entry/hell-1,95/) dont la difficulté est un cran au dessus de la plupart des CTF de *VulnHub* tout comme l'était [Hades](http://devloop.users.sourceforge.net/index.php?article84/solution-du-challenge-hades).  
 
-Par conséquent le présent article risque d'atteindre une certaine longueur. Préparez-vous à manger du Python :-)  
+Par conséquent, le présent article risque d'atteindre une certaine longueur. Préparez-vous à manger du Python :-)  
 
 Notez que je donne ici la solution que j'ai suivi pour obtenir pour obtenir le flag mais le CTF semble donner plusieurs manières d'y arriver et il n'est pas impossible (si j'en ai le courage) que j'écrive d'autres articles sur ce CTF pour couvrir d'autres parties.  
 

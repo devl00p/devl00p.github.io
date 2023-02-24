@@ -1,4 +1,7 @@
-# Solution du CTF Drunk Web Admin
+---
+title: "Solution du CTF Drunk Web Admin de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Introduction
 ------------

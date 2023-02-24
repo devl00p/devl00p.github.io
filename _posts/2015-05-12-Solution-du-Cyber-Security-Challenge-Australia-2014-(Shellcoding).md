@@ -1,4 +1,7 @@
-# Solution du Cyber-Security Challenge Australia 2014 (Shellcoding)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (Shellcoding)"
+tags: [CTF, CySCA2014]
+---
 
 Exploitation web... [check](http://devloop.users.sourceforge.net/index.php?article111/solution-du-cyber-security-challenge-australia-2014-partie-web)  
 

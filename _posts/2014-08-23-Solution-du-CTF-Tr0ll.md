@@ -1,4 +1,7 @@
-# Solution du CTF Tr0ll
+---
+title: "Solution du CTF Tr0ll de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Introduction
 ------------
@@ -7,7 +10,7 @@ Introduction
 
 L'auteur prévient qu'il y aura beaucoup de trolls (c'est à dire des fausses pistes) donc le challenge risque d'être agaçant.  
 
-Toutefois il est aussi indiqué que le challenge se destine aux débutants.  
+Toutefois, il est aussi indiqué que le challenge se destine aux débutants.  
 
 Mais trop de guessing peu suffire à vous pourrir la vie comme sur le CTF *Flick* que j'ai terminé mais qui ne mérite pas un writeup au vu du temps perdu dessus (d'autres ont déjà écrit des writeups plus intéressants).  
 

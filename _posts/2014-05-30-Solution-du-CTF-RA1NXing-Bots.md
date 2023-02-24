@@ -1,4 +1,7 @@
-# Solution du CTF RA1NXing Bots
+---
+title: "Solution du CTF RA1NXing Bots de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Anti-bot Consortium
 -------------------
@@ -7,7 +10,7 @@ Le CTF [RA1NXing Bots](http://vulnhub.com/entry/bot-challenges-ra1nxing-bots,52/
 
 L'objectif est d'exploiter une vulnérabilitée dans le bot et de prendre par exemple le contrôle du C&C.  
 
-Ici c'est un peu particulier car dans la vraie vie on partirait sans doute d'un bot trouvé sur une machine infectée pour remonter jusqu'au C&C alors que là on va partir du C&C pour ensuite accèder au bot.  
+Ici, c'est un peu particulier car dans la vraie vie on partirait sans doute d'un bot trouvé sur une machine infectée pour remonter jusqu'au C&C alors que là on va partir du C&C pour ensuite accèder au bot.  
 
 Smells like bot spirit
 ----------------------
@@ -156,7 +159,7 @@ Idem pour /tmp. La commande mount n'a rien révélé de particulier... qu'import
 Le chat' bot-é
 --------------
 
-```plain
+```bash
 mabox:~$ ./tsh 192.168.1.53
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)

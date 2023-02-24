@@ -1,4 +1,7 @@
-# Solution du CTF Sokar de VulnHub
+---
+title: Solution du CTF Sokar de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Après avoir solutionné différentes partie du *CySCA 2014*, j'ai choisi de faire un break en m'orientant vers une compétition qui était alors organisée par *VulnHub*. Ce challenge baptisé [Sokar](https://www.vulnhub.com/entry/sokar-1,113/) est un *boot2root*, c'est à dire qu'il faut parvenir à obtenir les droits root sur la machine pour attraper le flag.  
 

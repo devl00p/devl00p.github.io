@@ -1,4 +1,7 @@
-# Solution du CTF Hackademic: RTB2
+---
+title: "Solution du CTF Hackademic: RTB2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Faux départ
 -----------
@@ -7,7 +10,7 @@ Le challenge [Hackademic: RTB2](http://vulnhub.com/entry/hackademic_rtb2,18/), q
 
 Il s'avère que les autres personnes ayant résolu ce challenge ont découvert le premier point d'entrée par chance, malheureusement je ne devais pas être dans un bon jour.  
 
-En effet lorsque l'on scanne la cible on obtient les résultats suivants :  
+En effet, lorsque l'on scanne la cible on obtient les résultats suivants :  
 
 ```plain
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-04-01 19:01 CEST

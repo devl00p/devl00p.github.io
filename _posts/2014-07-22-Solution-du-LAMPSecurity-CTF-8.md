@@ -1,4 +1,7 @@
-# Solution du LAMPSecurity CTF #8
+---
+title: "Solution du LAMPSecurity CTF #8 de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Nitro
 -----

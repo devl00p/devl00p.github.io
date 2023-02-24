@@ -1,4 +1,7 @@
-# Solution du CTF SecOS 1
+---
+title: "Solution du CTF SecOS 1 de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Nitro
 -----

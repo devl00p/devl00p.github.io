@@ -1,8 +1,11 @@
-# Solution du Cyber-Security Challenge Australia 2014 (Crypto)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (Crypto)"
+tags: [CTF, CySCA2014]
+---
 
 Quand je commence une nouvelle épreuve du *CySCA 2014*, c'est avec appréhension que je me demande ce que sera la prochaine.  
 
-Pourtant quand j'arrive à la fin de l'épreuve en cours le choix de la suivante m'apparaît comme une évidence.  
+Pourtant, quand j'arrive à la fin de l'épreuve en cours le choix de la suivante m'apparaît comme une évidence.  
 
 C'est ainsi que je me suis retrouvé sur les épreuves de cryptanalyse du *CySCA* qui à ma plus grande surprise sont passées comme une formalité.  
 

@@ -1,4 +1,7 @@
-# Solution du CTF LAMPSecurity 6
+---
+title: "Solution du CTF LAMPSecurity 6 de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Introduction
 ------------

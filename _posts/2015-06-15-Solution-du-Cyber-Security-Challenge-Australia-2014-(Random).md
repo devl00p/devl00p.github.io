@@ -1,4 +1,7 @@
-# Solution du Cyber-Security Challenge Australia 2014 (Random)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (Random)"
+tags: [CTF, CySCA2014]
+---
 
 Après quelques migraines sur les spécifications des codes QR voici finalement mon writeup pour la partie *Random* du *CySCA* 2014.  
 

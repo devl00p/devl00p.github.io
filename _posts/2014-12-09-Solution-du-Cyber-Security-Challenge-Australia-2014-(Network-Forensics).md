@@ -1,4 +1,7 @@
-# Solution du Cyber-Security Challenge Australia 2014 (Network Forensics)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (Network Forensics)"
+tags: [CTF, CySCA2014]
+---
 
 Après avoir résolu [la partie web du CySCA 2014](http://devloop.users.sourceforge.net/index.php?article111/solution-du-cyber-security-challenge-australia-2014-partie-web) j'avais le choix quand au domaine sur lequel jeter mon dévolu.  
 

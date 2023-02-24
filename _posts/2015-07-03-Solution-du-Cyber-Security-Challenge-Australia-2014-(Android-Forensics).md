@@ -1,4 +1,7 @@
-# Solution du Cyber-Security Challenge Australia 2014 (Android Forensics)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (Android Forensics)"
+tags: [CTF, CySCA2014]
+---
 
 De toutes les épreuves proposées par le *CySCA 2014*, il n'y a qu'une série d'épreuve qui n'évoquait strictement rien pour moi : l'épreuve d'inforensique Androïd.  
 

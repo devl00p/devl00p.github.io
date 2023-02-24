@@ -1,4 +1,7 @@
-# Solution du Cyber-Security Challenge Australia 2014 (Mad Coding Skillz)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (Mad Coding Skillz)"
+tags: [CTF, CySCA2014]
+---
 
 Après avoir solutionné [la partie reverse-engineering du CySCA 2014](http://devloop.users.sourceforge.net/index.php?article113/solution-du-cyber-security-challenge-australia-2014-reverse-engineering), quoi de plus naturel que d’enchaîner sur les épreuves de programmation ?  
 

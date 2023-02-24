@@ -1,4 +1,7 @@
-# Solution du Cyber-Security Challenge Australia 2014 (Reverse Engineering)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (Reverse Engineering)"
+tags: [CTF, CySCA2014]
+---
 
 Après avoir solutionné [la partie Network Forensics du CySCA 2014]( http://devloop.users.sourceforge.net/index.php?article112/solution-du-cyber-security-challenge-australia-2014-network-forensics) l'envie m'est venu de casser du binaire. Je me suis donc lancé sur la partie reverse-engineering.  
 
