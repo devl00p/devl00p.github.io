@@ -4,8 +4,6 @@ date: 2022-12-13 12:00:00
 tags: [CTF, VulnHub]
 ---
 
-# 
-
 Le CTF [SP: alphonse](https://vulnhub.com/entry/sp-alphonse-v13,362/) créé par [Daniel Solstad](https://dsolstad.com/) était assez étonnant avec un chemin pour obtenir une exécution de commande assez compliqué puis une escalade de privilèges triviale.
 
 J'ai aussi rencontré quelques difficultés avec la VM qui a tendance à vite manquer d'espace disque en raison des logs qui grossissent rapidement si on fuzze ou brute-force (attention aussi aux fichiers de session PHP dans `/var/lib/php`).
