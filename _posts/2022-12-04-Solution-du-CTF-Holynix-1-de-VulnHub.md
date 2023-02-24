@@ -4,9 +4,9 @@
 
 La VM ne charge pas correctement que ce soit dans VMWare ou VirtualBox : elle ne parvient pas à obtenir une adresse IP.
 
-Pour régler le problème il faut monter l'image virtuelle et supprimer un fichier `udev`. Ca se fait facilement avec l'utilitaire `vmware-mount`.
+Pour régler le problème il faut monter l'image virtuelle et supprimer un fichier `udev`. Ça se fait facilement avec l'utilitaire `vmware-mount`.
 
-Si vous galérez à installer VMWare sur votre machine (problème de compilation des modules kernel) je vous invite à suivre [ces instructions]([vmware-host-modules/INSTALL at master · mkubecek/vmware-host-modules · GitHub](https://github.com/mkubecek/vmware-host-modules/blob/master/INSTALL)).
+Si vous galérez à installer VMWare sur votre machine (problème de compilation des modules kernel) je vous invite à suivre [ces instructions](https://github.com/mkubecek/vmware-host-modules/blob/master/INSTALL).
 
 On liste d'abord les partitions présentes dans le fichier vmdk :
 
