@@ -1,13 +1,17 @@
-# How I solved HackThis captcha challenges
+---
+title: How I solved HackThis captcha challenges
+date: 2018-11-23 18:06:00
+tags: [ctf,hackthis,captcha,machine learning]
+---
 
 And now for something completely different
 ------------------------------------------
 
-Dear readers, this time no box pwnage, no *HackTheBox* or *VulnHub* writeup. I'll will talk about another subject I like : breaking captchas <3 and this time I will use (my somewhat broken) english language.  
+Dear readers, this time no box pwnage, no *HackTheBox* or *VulnHub* writeup. I'll talk about another subject I like : breaking captchas <3 and this time I will use (my somewhat broken) english language.  
 
 For those who don't know [HackThis.co.uk](https://www.hackthis.co.uk/), it's a website with some jeopardy challenges. Most are related to web-exploitation but the 5 captcha challenges are something you won't probably see on lots on websites of that kind.  
 
-In this article I share how I solved the 5 captcha challenges from the easiest one to the harddest, using differents techniques.  
+In this article I share how I solved the 5 captcha challenges from the easiest one to the hardest, using differents techniques.  
 
 Before I give solutions I will first give some tips (in the next section) for those of you that just want a nudge and solve the challenges by themselves.  
 

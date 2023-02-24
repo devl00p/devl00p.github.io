@@ -1,10 +1,8 @@
 ---
-title: A propos du CTF LoBOTomy
+title: A propos du CTF LoBOTomy de VulnHub
 date: 2014-06-21 19:02:00
 tags: [ctf,vulnhub]
 ---
-
-# A propos du CTF LoBOTomy
 
 Présentation
 ------------

@@ -4,8 +4,6 @@ date: 2014-05-23 19:12:00
 tags: [ctf,vulnhub,binary exploitation]
 ---
 
-# Solution du challenge Hades
-
 Introduction
 ------------
 

@@ -1,4 +1,8 @@
-# Hell: 1 writeup in english
+---
+title: My writeup for the Hell: 1 CTF from VulnHub
+date: 2014-07-20 11:01:00
+tags: [ctf,vulnhub]
+---
 
 One way ticket to Hell
 ----------------------
@@ -13,7 +17,7 @@ Let me introduce myself before we start : I'm *devloop*, I'm french (and my engl
 
 Note that if you like the software you can help the project making a donation via *PayPal* and maybe at the end of the year I may be able to buy a pack of belgium beers :p  
 
-Ready for adenture ?  
+Ready for adventure ?  
 
 So here we go
 -------------
@@ -92,14 +96,14 @@ Yes, it's an *echo*-like service : you send it some data and the server reply wi
 
 A message informs us that the binary is archived on the web serveur and indeed we can find an *echoserver.bak* file on the web server's root.  
 
-```plain
+```shellsession
 $ file echoserver.bak 
 echoserver.bak: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.26, BuildID[sha1]=e8d0c6cce9504db15d02078b96e4b95e108e2aa2, not stripped
 ```
 
 Good news : the binary is dynamically linked and not stripped (symbols inside), so it should not be as hard as analysing the [display\_key binary from the Hades CTF](http://devloop.users.sourceforge.net/index.php?article84/solution-du-challenge-hades) :p
 
-```plain
+```shellsession
 $ nm echoserver.bak 
                  U accept@@GLIBC_2.2.5
                  U bind@@GLIBC_2.2.5
