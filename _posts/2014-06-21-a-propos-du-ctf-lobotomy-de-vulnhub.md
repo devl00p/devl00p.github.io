@@ -34,7 +34,7 @@ Aditionnellement, une indication sur la page précise qu'un navigateur headless 
 
 La première chose à faire est d'essayer de trouver où a été placé ce fameux panel. Un scan avec *dirb* permet de trouver rapidement un dossier *m* :  
 
-```shellsession
+```bash
 ./dirb http://192.168.1.57/ wordlists/big.txt
 http://192.168.1.57/m/
 http://192.168.1.57/m/adm/

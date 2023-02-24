@@ -128,7 +128,7 @@ J'ai tenté de casser ça avec `hashcat` sur `Penglab` sans succès.
 
 Finalement j'ai trouvé un fichier intéressant en listant les fichiers de l'utilisateur `acid` (il a beaucoup de fichiers dont certains liés à vmware) :
 
-```shellsession
+```bash
 www-data@acid:/var/www/html/Challenge$ find / -user acid 2> /dev/null  | grep -v vmware
 /sbin/raw_vs_isi/hint.pcapng
 /bin/pwn_me
@@ -142,7 +142,7 @@ On peut ouvrir le fichier pcapng avec `Wireshark` mais ici un simple `strings` s
 
 L'alias en question est accepté comme mot de passe qui nous mène à root :
 
-```shellsession
+```bash
 www-data@acid:/var/www/html/Challenge$ su saman 
 Password: 
 saman@acid:/var/www/html/Challenge$ sudo -l

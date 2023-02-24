@@ -24,7 +24,7 @@ PORT      STATE    SERVICE VERSION
 
 Faute de mieux on se connecte au SSH :
 
-```shellsession
+```bash
 $ ssh 192.168.56.92
 The authenticity of host '192.168.56.92 (192.168.56.92)' can't be established.
 ED25519 key fingerprint is SHA256:C0uB9VmjqmE/ozc84o4eswbK3YfOvPb1hEntqHCN6b0.
@@ -92,7 +92,7 @@ m'ouvrira ses portes si je semble venir d'un autre script.
 
 Je  teste donc différents referers et alors que je n'aurais pas parié dessus :
 
-```shellsession
+```bash
 $ curl --referer http://192.168.56.92:33447/bin/includes/validation.php http://192.168.56.92:33447/bin/dashboard.php
 
 
@@ -227,7 +227,7 @@ J'ai voulu utiliser `foremost` mais la compilation échoue en 64 bits. J'ai util
 
 Finalement j'ai trouvé une image Docker pour `binwalk` :
 
-```shellsession
+```bash
 $ docker run -it --rm -v "$(pwd):/workspace" -w /workspace sheabot/binwalk -e strcpy.pdf
 
 DECIMAL       HEXADECIMAL     DESCRIPTION
@@ -333,7 +333,7 @@ Les caractères `Rar!` correspondent à l'entête pour les fichiers RAR. Je rela
 
 Le base64 dans l'entrée `MSWABMAPI` se décode en NooB@123 et permet une connexion avec le compte `makke` :
 
-```shellsession
+```bash
 $ ssh makke@192.168.56.92
     _    ____ ___ ____        ____  _____ _     ___    _    ____  _____ ____  
    / \  / ___|_ _|  _ \      |  _ \| ____| |   / _ \  / \  |  _ \| ____|  _ \ 
@@ -395,7 +395,7 @@ Run the executable to own kingdom :-)
 
 Le binaire `overlayfs` n'est plus présent mais j'en ai un sous la main du précédent CTF :
 
-```shellsession
+```bash
 makke@acid:/tmp$ ./ofs
 spawning threads
 mount #1

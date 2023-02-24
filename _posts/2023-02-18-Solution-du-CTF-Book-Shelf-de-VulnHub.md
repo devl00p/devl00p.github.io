@@ -164,7 +164,7 @@ Le base 64 se décode en `?path=` mais contrairement à ce qu'on pourrait croire
 
 Un accès au système plus tard je liste les fichiers qui étaient vraiment présents sous la racine web :
 
-```shellsession
+```bash
 www-data@debian:/var/www/html$ find . -type f | grep -v jpg
 ./robots.txt
 ./root/log_in/meaco/login.php
@@ -199,7 +199,7 @@ if (isset($_POST['submit'])){
 
 Pour l'escalade de privilèges on trouve un binaire setuid et un flag dont l'accès est refusé :
 
-```shellsession
+```bash
 www-data@debian:/home/defender$ find . -type f 2> /dev/null 
 ./Desktop/.flag3.txt
 ./.bash_logout
@@ -242,7 +242,7 @@ Du coup l'appel échoue, le binaire ne peux pas fonctionner.
 
 Comme j'ai pu le dire sur d'autres CTFs, écraser un binaire setuid retire son bit donc impossible de rectifier l'appel à setuid :
 
-```shellsession
+```bash
 www-data@debian:/home/defender/Downloads$ ls -al .shelf
 -rwsrwxrwx  1 defender defender 16896 Mar  8  2021 .shelf
 www-data@debian:/home/defender/Downloads$ which id
@@ -254,7 +254,7 @@ www-data@debian:/home/defender/Downloads$ ls -al .shelf
 
 Pour passer root on peut heureusement compter sur l'exploit `PwnKit` pour la `CVE-2021-4034` :
 
-```shellsession
+```bash
 www-data@debian:/tmp$ ./PwnKit 
 root@debian:/tmp# id
 uid=0(root) gid=0(root) groups=0(root),33(www-data)

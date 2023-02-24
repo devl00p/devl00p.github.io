@@ -58,7 +58,7 @@ Via *feroxbuster* je trouve une mire de login à l'adresse [http://192.168.56.22
 
 On peut lancer Wapiti dessus en ne sélectionnant que le ou les modules les plus à même de remonter quelque chose d'intéressant afin d'éviter le ban sur la quantité de requêtes :
 
-```shellsession
+```bash
 $ wapiti -u http://192.168.56.24/admin/ --color -m timesql -v2
 [*] Lancement du module timesql
 ---
@@ -86,7 +86,7 @@ Evil request:
 
 Nice ! On peut enchainer avec SQLmap mais en mode *vas-y molo*. Ça passe en utilisant l'option *delay* mais SQLmap ne la respecte pas vraiment puisqu'il faudrait aussi limiter le parallélisme à un seul thread pour que ce soit effectif.
 
-```shellsession
+```bash
 
 $ python sqlmap.py -u http://192.168.56.24/admin/verify.php --data "username=admin&password=password" --dbms mysql --risk 3 --level 5 --delay 5
 
@@ -137,7 +137,7 @@ Lazy Fox
 
 Les identifiants de la base de donnés nous fournissent finalement un accès via SSH.
 
-```shellsession
+```bash
 
 fox@boverflow:~$ cat user.txt 
 a7de9153594943377ea6e508f5561a67
@@ -208,7 +208,7 @@ Wrong username or password!
 
 On trouve la chaine *passworaaaaaaaaaaaaaa* qui n'est pas dans le code C.
 
-```shellsession
+```bash
 
 fox@boverflow:~$ ./mysudo 
 

@@ -112,7 +112,7 @@ Host script results:
 
 On peut voir que le service des partages est actif (présence du 20) :  
 
-```shellsession
+```bash
 $ nmblookup -A 192.168.1.19
 Looking up status of 192.168.1.19
         C0M80           <00> -         B <ACTIVE>
@@ -126,7 +126,7 @@ Looking up status of 192.168.1.19
 
 Malheureusement on ne trouve que l'imprimante du réseau local, pas d'accès au disque :  
 
-```shellsession
+```bash
 $ smbclient -I 192.168.1.19 -L COM80 -N
 WARNING: The "syslog" option is deprecated
 Domain=[WORKGROUP] OS=[Windows 6.1] Server=[Samba 4.3.11-Ubuntu]
@@ -218,7 +218,7 @@ Dans les autres infos utiles il y a la variable *HOMEPATH* valant *\Users\bob* e
 
 A ce stade, on peut se servir de rpclient pour vérifier l'existence de quelques utilisateurs :  
 
-```shellsession
+```bash
 $ rpcclient -U "" 192.168.1.19
 Enter 's password:
 rpcclient $> srvinfo
@@ -246,7 +246,7 @@ C'est le moment de se pencher sur le NFS.
 
 Une fois installé les outils nécessaires (paquet *nfs-common* sous Ubuntu), on peut lister les points de montage et y accéder :  
 
-```shellsession
+```bash
 $ showmount -e 192.168.1.19
 Export list for 192.168.1.19:
 /ftpsvr/bkp *
@@ -286,7 +286,7 @@ En dehors du fait qu'il y avait plusieurs fichiers présents dans le dump, ce qu
 
 Le fichier original obtenu via *xxd -r ftp104.bkp output* s'avère être un exécutable... peu exploitable ^\_^  
 
-```shellsession
+```bash
 $ file output
 output: MS-DOS executable, MZ for MS-DOS
 ```
@@ -547,7 +547,7 @@ BugReport Link Sent to Bob...
 
 Et là qui voilà ?  
 
-```shellsession
+```bash
 $ ncat -l -p 7777 -v
 Ncat: Version 7.01 ( https://nmap.org/ncat )
 Ncat: Listening on :::7777
@@ -612,7 +612,7 @@ Après quelques difficultés (allez taper un mot de passe aussi long avec un cla
 
 Il est temps de se promener un peu sur le système...  
 
-```shellsession
+```bash
 $ lsb_release -a
 No LSB modules are available.
 Distributor ID: WondawsXP
@@ -627,7 +627,7 @@ La blague jusqu'au boût :)
 
 C'est sans doute le moment de se pencher sur le partage NFS.  
 
-```shellsession
+```bash
 $ ls -alR /ftpsvr
 /ftpsvr:
 total 676
@@ -662,7 +662,7 @@ uid=1001(al1ce) gid=34(backup) groups=34(backup)
 
 On peut normalement se connecter au compte d'al1ce avec la clé SSH de b0b :  
 
-```shellsession
+```bash
 b0b@C0m80:/home$ cat al1ce/.ssh/authorized_keys
 ssh-rsa AAAAB3NzaC--- snip nevermind ---tB9qKxMKM3x b0b@C0m80
 ```

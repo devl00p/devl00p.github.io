@@ -11,7 +11,7 @@ Chocoooooo
 
 On peut lancer un masscan pour lister les ports en écoute :  
 
-```shellsession
+```bash
 $ sudo masscan -i tun0 -p1-65535 --rate 100 10.1.1.17
 
 Starting masscan 1.0.4 (http://bit.ly/14GZzcT) at 2019-02-23 14:32:37 GMT

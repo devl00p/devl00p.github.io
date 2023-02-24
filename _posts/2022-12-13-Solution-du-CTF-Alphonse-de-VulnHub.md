@@ -14,7 +14,7 @@ Le CTF fait partie d'une série de challenges nommés après des personnages de 
 
 > Alphonse is into genes and would like to research your DNA. Is his setup secure thought?
 
-```shellsession
+```bash
 $ sudo nmap -p- -T5 -sCV 192.168.56.74
 Starting Nmap 7.93 ( https://nmap.org )
 Nmap scan report for 192.168.56.74
@@ -76,7 +76,7 @@ Nmap done: 1 IP address (1 host up) scanned in 13.32 seconds
 
 Sur le serveur FTP se trouve dans le dossier `dev` un fichier avec une extension `apk` :
 
-```shellsession
+```bash
 $ file DNAnalyzer.apk 
 DNAnalyzer.apk: Zip archive data, at least v2.0 to extract, compression method=deflate
 ```
@@ -90,7 +90,7 @@ Il s'agit bien sûr d'une application pour Android. On le voit aussi à travers 
 
 Nous allons rétro-ingénierer l'application. Pour cela il faut d'abord extraire le code en utilisant [dex2jar: Tools to work with android .dex and java .class files](https://github.com/pxb1988/dex2jar) :
 
-```shellsession
+```bash
 $ ./d2j-dex2jar.sh classes.dex 
 dex2jar classes.dex -> ./classes-dex2jar.jar
 ```
@@ -153,7 +153,7 @@ Les scripts de l'API sont suffisemment verbeux pour nous indiquer quoi faire :
 
 Je peux ainsi procéder à l'enregistrement :
 
-```shellsession
+```bash
 $ curl -D- http://192.168.56.74/dnanalyzer/api/register.php -XPOST -d "username=devloop&password=devloop&dna_string=1"
 HTTP/1.1 200 OK
 Server: Apache/2.4.38 (Debian)
@@ -169,7 +169,7 @@ Content-Type: application/json; charset=UTF-8
 
 Et ensuite à la connexion :
 
-```shellsession
+```bash
 $ curl -D- http://192.168.56.74/dnanalyzer/api/login.php -XPOST -d "username=devloop&password=devloop"
 HTTP/1.1 200 OK
 Server: Apache/2.4.38 (Debian)
@@ -451,7 +451,7 @@ if (isset($_SESSION['authed'])) {
 
 Tout est stocké dans une base sqlite3 :
 
-```shellsession
+```bash
 www-data@alphonse:/var/www/html/dnanalyzer$ sqlite3 users.sqlite3 
 SQLite version 3.27.2 2019-02-25 16:06:06
 Enter ".help" for usage hints.
@@ -512,7 +512,7 @@ Un petit hexdump s'impose :
 
 Comme dis au début de l'article c'est trivial :
 
-```shellsession
+```bash
 www-data@alphonse:/home/alphonse/Documents$ ./rootme aNhgKi4xuO
 Here you go:
 # id
@@ -528,7 +528,7 @@ flag.txt
 
 Il y a un Firefox (un vrai, pas un headless) qui est lancé à l'ouverture de session de l'utilisateur et qui se charge d'ouvrir un fichier HTML sur le disque :
 
-```shellsession
+```bash
 www-data@alphonse:/home/alphonse$ cat .config/autostart/Firefox.desktop 
 [Desktop Entry]
 Encoding=UTF-8

@@ -66,7 +66,7 @@ response:                           ACCESS GRANTED
 
 Seulement quand on s'y connecte l'expérience est de courte durée :  
 
-```shellsession
+```bash
 $ ncat 192.168.1.43 9999 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.43:9999.
@@ -129,7 +129,7 @@ Register dump:
 
 Il nous faut donc 516 + 8 = 524 octets avant d’écraser EIP. On relance en mettant 524 A puis 4 D. On en profite pour regarder plus en détails l'état de la stack et des registres via *winedbg* dont les commandes sont similaires à *gdb* :  
 
-```shellsession
+```bash
 $ winedbg ./brainpan.exe 
 fixme:service:scmdatabase_autostart_services Auto-start service L"PGPsdkDriver" failed to start: 2
 fixme:service:scmdatabase_autostart_services Auto-start service L"PGPsdkServ" failed to start: 2
@@ -294,7 +294,7 @@ puck:x:1002:1002:Puck,,,:/home/puck:/bin/bash
 
 L'utilisateur *Puck* sur lequel on a la main a le droits d'exécuter une commande en tant que root... mais on ne dispose d'aucun accès au binaire :'(  
 
-```shellsession
+```bash
 puck@brainpan:~$ sudo -l
 Matching Defaults entries for puck on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -305,7 +305,7 @@ User puck may run the following commands on this host:
 
 On se rencarde donc sur *anansi* qui est notre nouveau meilleur ennemi :  
 
-```shellsession
+```bash
 puck@brainpan:~$ find / -user anansi 2> /dev/null
 /usr/local/bin/validate
 /home/anansi
@@ -313,7 +313,7 @@ puck@brainpan:~$ find / -user anansi 2> /dev/null
 
 Le binaire *validate* est setuid de cet utilisateur. A l'attaque !  
 
-```shellsession
+```bash
 puck@brainpan:~$ /usr/local/bin/validate
 usage /usr/local/bin/validate <input>
 puck@brainpan:~$ /usr/local/bin/validate test
@@ -459,7 +459,7 @@ Root 66
 
 L'accès anansi obtenu, voyons voir ce que fait l'utilitaire mentionné plus tôt :  
 
-```shellsession
+```bash
 anansi@brainpan:/home/anansi$ ./bin/anansi_util
 Usage: ./bin/anansi_util [action]
 Where [action] is one of:
@@ -480,7 +480,7 @@ Rien de plus à voir, d'ailleurs peut importe, il nous suffit de le remplacer pa
 
 Le problème venait des droits sur */home/anansi* qui ne nous laissaient pas traverser jusqu'au binaire :  
 
-```shellsession
+```bash
 anansi@brainpan:/home/anansi$ ls -ld .
 drwx------ 4 anansi anansi 4096 Mar  4  2013 .
 anansi@brainpan:/home/anansi$ chmod o+rx .

