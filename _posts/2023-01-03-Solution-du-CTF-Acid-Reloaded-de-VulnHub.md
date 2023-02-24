@@ -1,5 +1,5 @@
 ---
-title: Solution du CTF Acid: Reloaded de VulnHub
+title: "Solution du CTF Acid: Reloaded de VulnHub"
 date: 2023-01-03 12:00:00
 tags: [CTF,VulnHub]
 ---
@@ -264,7 +264,6 @@ r9lD
 TMcX
 \       '|!
 k\w;
-{{5WH
 aG]p
 Q%,i]
 UR]7
