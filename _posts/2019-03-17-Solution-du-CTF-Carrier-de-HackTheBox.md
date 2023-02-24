@@ -1,6 +1,5 @@
 ---
 title: "Solution du CTF Carrier de HackTheBox"
-date: 2018-09-15 18:08:00
 tags: [CTF, HackTheBox]
 ---
 
