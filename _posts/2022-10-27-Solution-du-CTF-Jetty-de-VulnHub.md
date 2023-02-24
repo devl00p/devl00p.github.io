@@ -312,8 +312,7 @@ J'ai trouvé un site permettant de faire ça, ce qui fait gagner quelques minute
 
 ![PyExtractor Jetty VulnHub password_keeper.exe](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/jetty_pyextractor.png)
 
-Une fois les fichiers obtenus on peut utiliser [uncompyle6](https://github.com/rocky/python-uncompyle6) pour décompiler le fichier Python principal. La problématique que j'avais était que toutes les versions de Python dont je disposais étaient trop récentes pour cet outil (c'est ça d'utiliser [openSUSE Tumbleweed](https://get.opensuse.org/tumbleweed/) ![8-)](plugins/plxtoolbar/custom.buttons/smilies/cool.png)
-)  
+Une fois les fichiers obtenus on peut utiliser [uncompyle6](https://github.com/rocky/python-uncompyle6) pour décompiler le fichier Python principal. La problématique que j'avais était que toutes les versions de Python dont je disposais étaient trop récentes pour cet outil (c'est ça d'utiliser [openSUSE Tumbleweed](https://get.opensuse.org/tumbleweed/))  
 
 J'ai choisi d'installer *uncompyle6* depuis la VM étudiée mais la machine étant sur le réseau privé virtuel elle n'a pas d'accès à Internet et ne peux donc pas lancer *pip*.  
 
