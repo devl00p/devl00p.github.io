@@ -1,7 +1,7 @@
 ---
 title: "Solution du CTF BornToSec HackMe v1.1 de l'école 42"
 date: 2022-11-29 13:34:00
-tags: [CTF, 42]
+tags: [CTF, Ecole42]
 ---
 
 Il y a quelques années de cela, un ancien collègue m'avait partagé un CTF qui provenait de l'école 42.
