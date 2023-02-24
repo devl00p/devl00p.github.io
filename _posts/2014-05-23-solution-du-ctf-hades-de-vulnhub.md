@@ -708,7 +708,7 @@ Si le code appelle *printf()* à deux endroits différents alors la suite des ca
 
 J'ai décidé d'écrire un débugger basé sur *ptrace()* qui m'affiche les adresses des instructions qui suivent les ret à partir du moment où un syscall spécifique est appelé. En gros les adresses juste après le call.  
 
-Le principal du code (la version plus complète [à télécharger ici](../persistent/data/documents/call_trace.c)) :  
+Le principal du code (la version plus complète [à télécharger ici](/assets/data/call_trace.c)) :  
 
 ```c
 #include <sys/ptrace.h>
