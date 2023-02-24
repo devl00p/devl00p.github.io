@@ -1,9 +1,12 @@
-# Solution du Cyber-Security Challenge Australia 2014 (partie web)
+---
+title: "Solution du Cyber-Security Challenge Australia 2014 (partie web)"
+tags: [CTF, CySCA2014]
+---
 
-Et bien tu viens plus aux soirées ?
+Eh bien tu viens plus aux soirées ?
 -----------------------------------
 
-Mais si, mais si... Ces derniers temps je me suis penché sur le *CTF CySCA 2014*.  
+Mais si, mais si... Ces derniers temps, je me suis penché sur le *CTF CySCA 2014*.  
 
 Le *CySCA* ça signifie *Cyber Security Challenge Australia*. C'est un challenge national sponsorisé entre autres par le gouvernement australien, *Microsoft* et des sociétés australiennes.  
 
@@ -11,7 +14,7 @@ Les organisateurs ont eu la bonne idée d'en faire une image virtuelle comme ça
 
 On peut notamment récupérer la machine virtuelle VMWare [sur *VulnHub*](https://www.vulnhub.com/entry/cysca-cysca2014-in-a-box,94/).  
 
-Le challenge est énorme est une fois la VM mise en place on accède à un site sur le port 80 qui donne les missions à réaliser organisées par thématiques.  
+Le challenge est énorme est une fois la VM mise en place, on accède à un site sur le port 80 qui donne les missions à réaliser organisées par thématiques.  
 
 On trouve ainsi l'exploitation d'applications web, de l'inforensique *Androïd*, de la rétro-ingénierie, de la crypto, de la recherche de vulnérabilités et création d'exploit, de l'écriture de shellcode, de l'inforensique réseau, de la programmation et enfin une catégorie baptisée *Random* qui rassemble vraisemblablement des exercices que les organisateurs ne sont pas parvenus à catégoriser.  
 
@@ -26,7 +29,7 @@ On dispose de l'indication suivante :
 
 > Only VIP and registered users are allowed to view the Blog. Become VIP to gain access to the Blog to reveal the hidden flag.
 
-A l'adresse */index.php* on trouve une série de liens en haut de page. Le lien *"Blog"* est grisé et en regardant la source on remarque qu'il n'y a pas de lien pour cette section.  
+À l'adresse */index.php* on trouve une série de liens en haut de page. Le lien *"Blog"* est grisé et en regardant la source on remarque qu'il n'y a pas de lien pour cette section.  
 
 Si on demande */blog.php* on est redirigé vers la page de login.  
 
