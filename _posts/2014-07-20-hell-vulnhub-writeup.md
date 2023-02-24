@@ -1,7 +1,7 @@
 ---
 title: My writeup for the Hell: 1 CTF from VulnHub
 date: 2014-07-20 11:01:00
-tags: [ctf,vulnhub]
+tags: [CTF,VulnHub]
 ---
 
 One way ticket to Hell

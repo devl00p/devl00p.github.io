@@ -1,7 +1,7 @@
 ---
 title: How I solved HackThis captcha challenges
 date: 2018-11-23 18:06:00
-tags: [ctf,hackthis,captcha,machine learning]
+tags: [CTF,HackThis,captcha,machine learning]
 ---
 
 And now for something completely different

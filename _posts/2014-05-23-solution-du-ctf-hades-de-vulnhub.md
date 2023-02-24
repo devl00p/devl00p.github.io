@@ -1,7 +1,7 @@
 ---
 title: Solution du CTF Hades de VulnHub
 date: 2014-05-23 19:12:00
-tags: [ctf,vulnhub,binary exploitation]
+tags: [CTF,VulnHub,binary exploitation]
 ---
 
 Introduction
