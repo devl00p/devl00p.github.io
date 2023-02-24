@@ -1,9 +1,12 @@
-# Solution du CTF Hackademic: RTB1
+---
+title: "Solution du CTF Hackademic: RTB1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Introduction
 ------------
 
-La challenge [Hackademic: RTB1](http://vulnhub.com/entry/hackademic_rtb1,17/) (toujours sur *VulnHub*) propose une image virtuelle *VMWare* d'un système Linux.  
+Le challenge [Hackademic: RTB1](http://vulnhub.com/entry/hackademic_rtb1,17/) (toujours sur *VulnHub*) propose une image virtuelle *VMWare* d'un système Linux.  
 
 L'objectif de ce CTF est de lire le contenu du fichier */root/key.txt*  
 

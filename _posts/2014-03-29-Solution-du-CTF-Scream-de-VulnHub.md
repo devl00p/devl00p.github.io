@@ -1,4 +1,7 @@
-# Solution du CTF Scream
+---
+title: "Solution du CTF Scream de VulnHub"
+tags: [CTF,VulnHub]
+---
 
 Nitro
 -----
