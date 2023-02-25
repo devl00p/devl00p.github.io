@@ -1,4 +1,7 @@
-# Solution du CTF DevGuru de VulnHub
+---
+title: "Solution du CTF DevGuru de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Dirty Little Secret
 -------------------

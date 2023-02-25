@@ -1,4 +1,7 @@
-# Solution du CTF Cute de VulnHub
+---
+title: "Solution du CTF Cute de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Ayant résolu déjà 2 CTFs de foxlox (ICMP et Boverflow) et les trouvant plutôt intéressants j'ai décidé de continuer avec celui-ci. Je ne sais pas exactement quel est son nom il est désigné comme [BBS (cute): 1.0.2](https://www.vulnhub.com/entry/bbs-cute-102,567/) sur VulnHub.
 

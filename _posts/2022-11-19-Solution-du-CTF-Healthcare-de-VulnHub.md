@@ -1,4 +1,7 @@
-# Solution du CTF Healthcare de VulnHub
+---
+title: "Solution du CTF Healthcare de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Healthcare](https://vulnhub.com/entry/healthcare-1,522/) est un CTF proposé sur VulnHub et créé par [v1n1v131r4](https://twitter.com/v1n1v131r4).
 

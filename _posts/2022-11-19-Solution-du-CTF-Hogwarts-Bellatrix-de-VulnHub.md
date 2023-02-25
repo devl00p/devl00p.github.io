@@ -1,4 +1,7 @@
-# Solution du CTF Hogwarts: Bellatrix de VulnHub
+---
+title: "Solution du CTF Hogwarts: Bellatrix de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [Hogwarts: Bellatrix](https://vulnhub.com/entry/hogwarts-bellatrix,609/) est un boot2root que je qualifierais de facile. Il y a un peu de jeu de piste mais n'entre jamais dans le mauvais penchant du guessing.
 

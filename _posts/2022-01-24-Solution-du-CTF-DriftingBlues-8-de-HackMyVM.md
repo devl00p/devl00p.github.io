@@ -1,4 +1,7 @@
-# Solution du CTF DriftingBlues #8 de HackMyVM
+---
+title: Solution du CTF DriftingBlues #8 de HackMyVM
+tags: [CTF, HackMyVM]
+---
 
 ~el8
 ----

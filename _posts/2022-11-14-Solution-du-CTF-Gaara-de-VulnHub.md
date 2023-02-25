@@ -1,6 +1,9 @@
-# Solution du CTF Gaara de VulnHub
+---
+title: "Solution du CTF Gaara de VulnHub"
+tags: [CTF, VulnHub]
+---
 
-Disons le, ce CTF [Gaara](https://vulnhub.com/entry/gaara-1,629/) était loin d'être le plus agréable ou le plus intéressant.
+Disons-le, ce CTF [Gaara](https://vulnhub.com/entry/gaara-1,629/) était loin d'être le plus agréable ou le plus intéressant.
 
 Il commence sur une série de soit disant indices qui génèrent de la confusion. On final on brute force un compte supposé avec la wordlist RockYou et on obtient un shell.
 

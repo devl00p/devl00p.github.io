@@ -1,4 +1,7 @@
-# Solution du CTF Who Wants To Be King: 1
+---
+title: "Solution du CTF Who Wants To Be King: 1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Who Wants To Be King: 1](https://vulnhub.com/entry/who-wants-to-be-king-1,610/) est un CTF pour débutant. La description annonce que Google est notre ami... ça promet.
 

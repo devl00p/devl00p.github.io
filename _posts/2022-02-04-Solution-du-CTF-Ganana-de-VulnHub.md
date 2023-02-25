@@ -1,4 +1,7 @@
-# Solution du CTF Ganana de VulnHub
+---
+title: "Solution du CTF Ganana de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Onboarding
 ----------

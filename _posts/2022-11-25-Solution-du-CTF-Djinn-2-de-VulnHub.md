@@ -1,4 +1,7 @@
-# Solution du CTF Djinn: 2 de VulnHub
+---
+title: "Solution du CTF Djinn: 2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Voici le writeup pour le CTF [djinn: 2](https://www.vulnhub.com/entry/djinn-2,420/), sans doute le moins fun des trois avec quelques services qui n'ont pas d'utilité.
 

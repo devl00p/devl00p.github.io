@@ -1,4 +1,7 @@
-# Solution du CTF DriftingBlues #2 de VulnHub
+---
+title: Solution du CTF DriftingBlues #2 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Intro
 -----

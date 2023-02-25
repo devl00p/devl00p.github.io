@@ -1,4 +1,7 @@
-# Solution du CTF Cybox de VulnHub
+---
+title: "Solution du CTF Cybox de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Cybox](https://vulnhub.com/entry/cybox-11,607/) est un CTF de type boot2root proposé sur VulnHub. Il y a deux flags à récupérer.
 

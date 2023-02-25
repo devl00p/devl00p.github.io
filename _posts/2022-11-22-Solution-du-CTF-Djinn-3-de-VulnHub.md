@@ -1,4 +1,7 @@
-# Solution du CTF Djinn: 3 de VulnHub
+---
+title: "Solution du CTF Djinn: 3 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [djinn: 3](https://www.vulnhub.com/entry/djinn-3,492/) est un CTF de [mzfr](https://twitter.com/0xmzfr) proposé sur VulnHub.  Il y a deux autres opus dans cette série.
 

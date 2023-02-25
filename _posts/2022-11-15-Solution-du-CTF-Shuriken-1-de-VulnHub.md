@@ -1,4 +1,7 @@
-# Solution du CTF Shuriken #1 de VulnHub
+---
+title: "Solution du CTF Shuriken #1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Après avoir solutionné [Shuriken: Node](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Shuriken%3A%20Node%20de%20VulnHub.md) je me suis penché sur le premier de la série.
 

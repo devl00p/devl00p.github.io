@@ -1,4 +1,7 @@
-# Solution du CTF DriftingBlues #7 de VulnHub
+---
+title: Solution du CTF DriftingBlues #7 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 No bullshit
 -----------

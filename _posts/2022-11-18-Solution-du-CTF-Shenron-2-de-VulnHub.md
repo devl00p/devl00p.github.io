@@ -1,4 +1,7 @@
-# Solution du CTF Shenron 2 de VulnHub
+---
+title: "Solution du CTF Shenron 2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le précédent de la série était pas mal alors j'ai continué sur ce [shenron: 2 de VulnHub](https://vulnhub.com/entry/shenron-2,677/).
 

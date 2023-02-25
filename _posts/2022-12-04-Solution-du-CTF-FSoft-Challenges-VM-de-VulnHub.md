@@ -1,4 +1,7 @@
-# Solution du CTF FSoft Challenges VM de VulnHub
+---
+title: "Solution du CTF FSoft Challenges VM de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [FSoft Challenges VM](https://www.vulnhub.com/entry/fsoft-challenges-vm-1,402/) est un CTF créé par *Akasafe Team*. Il est disponible sur VulnHub soit au format OVA soit au format VMDF.
 

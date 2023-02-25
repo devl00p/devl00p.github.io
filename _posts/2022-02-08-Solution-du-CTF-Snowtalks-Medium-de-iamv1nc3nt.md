@@ -1,4 +1,7 @@
-# Solution du CTF Snowtalks Medium de iamv1nc3nt
+---
+title: "Solution du CTF Snowtalks Medium de iamv1nc3nt"
+tags: [CTF, iamv1nc3nt]
+---
 
 Cul de sac
 ----------

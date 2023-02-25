@@ -1,4 +1,7 @@
-# Solution du CTF Ki de VulnHub
+---
+title: "Solution du CTF Ki de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Ki](https://www.vulnhub.com/entry/ki-1,641/) est un CTF posté sur VulnHub et créé par un certain *Cody Winkler*. La description du CTF... et bien il n'y en a pas donc on se dit soit l'auteur a tout fait à l'arrache soit seul la technique l'intéresse et il n'a pas perdu du temps sur la description.
 

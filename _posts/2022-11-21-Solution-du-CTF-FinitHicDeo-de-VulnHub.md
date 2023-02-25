@@ -1,4 +1,7 @@
-# Solution du CTF FinitHicDeo de VulnHub
+---
+title: "Solution du CTF FinitHicDeo de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [FinitHicDeo: 1](https://www.vulnhub.com/entry/finithicdeo-1,636/) est un CTF créé par *Muzkkir Husseni* et *Nachiket Rathod* et proposé sur VulnHub.
 

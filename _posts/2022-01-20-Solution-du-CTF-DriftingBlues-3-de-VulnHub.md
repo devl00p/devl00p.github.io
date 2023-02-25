@@ -1,4 +1,7 @@
-# Solution du CTF DriftingBlues #3 de VulnHub
+---
+title: Solution du CTF DriftingBlues #3 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Jamais deux sans trois
 ----------------------

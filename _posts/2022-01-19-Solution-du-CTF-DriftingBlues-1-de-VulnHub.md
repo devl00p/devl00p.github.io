@@ -1,4 +1,7 @@
-# Solution du CTF DriftingBlues #1 de VulnHub
+---
+title: Solution du CTF DriftingBlues #1 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 First of the name
 -----------------

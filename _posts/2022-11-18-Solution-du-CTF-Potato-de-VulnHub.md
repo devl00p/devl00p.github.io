@@ -1,4 +1,7 @@
-# Solution du CTF Potato de VulnHub
+---
+title: "Solution du CTF Potato de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Potato](https://vulnhub.com/entry/potato-1,529/) est un CTF proposé sur VulnHub. Il est nul. Fuyez pauvres fous !
 

@@ -1,4 +1,7 @@
-# Solution du CTF Photographer de VulnHub
+---
+title: "Solution du CTF Photographer de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Photographer](https://vulnhub.com/entry/photographer-1,519/) est un boot2root créé par [v1n1v131r4](https://twitter.com/@v1n1v131r4) et téléchargeable sur VulnHub.
 

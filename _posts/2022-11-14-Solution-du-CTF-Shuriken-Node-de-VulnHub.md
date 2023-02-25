@@ -1,4 +1,7 @@
-# Solution du CTF Shuriken: Node de VulnHub
+---
+title: "Solution du CTF Shuriken: Node de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Shuriken: Node](https://vulnhub.com/entry/shuriken-node,628/) est un CTF créé par *TheCyb3rW0lf* et proposé sur VulnHub. L'objectif est comme souvent d'obtenir les droits root et récupérer le fameux flag.
 

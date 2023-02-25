@@ -1,4 +1,7 @@
-# Solution du CTF ICMP de VulnHub
+---
+title: "Solution du CTF ICMP de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Proposé par foxlox, [ICMP: 1](https://vulnhub.com/entry/icmp-1,633/) est une box affichée comme facile. D'autant plus si on a de bonnes connaissances en réseau :)
 
