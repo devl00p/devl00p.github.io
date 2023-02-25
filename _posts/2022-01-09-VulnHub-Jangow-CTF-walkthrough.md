@@ -1,4 +1,7 @@
-# VulnHub Jangow CTF walkthrough
+---
+title: VulnHub Jangow CTF walkthrough
+tags: [CTF, VulnHub]
+---
 
 You drag your coffin around
 ---------------------------

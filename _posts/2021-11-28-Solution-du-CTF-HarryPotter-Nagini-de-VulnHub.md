@@ -1,4 +1,7 @@
-# Solution du CTF HarryPotter: Nagini de VulnHub
+---
+title: Solution du CTF HarryPotter: Nagini de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Nitro
 -----

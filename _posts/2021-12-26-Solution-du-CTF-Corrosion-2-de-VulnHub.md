@@ -1,4 +1,7 @@
-# Solution du CTF Corrosion #2 de VulnHub
+---
+title: Solution du CTF Corrosion #2 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Convertisseur de rouille
 ------------------------

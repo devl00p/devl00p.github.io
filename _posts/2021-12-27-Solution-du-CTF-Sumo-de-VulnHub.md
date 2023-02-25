@@ -1,4 +1,7 @@
-# Solution du CTF Sumo de VulnHub
+---
+title: Solution du CTF Sumo de VulnHub
+tags: [CTF, VulnHub]
+---
 
 One way or another
 ------------------

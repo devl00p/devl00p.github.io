@@ -1,4 +1,7 @@
-# Solution du CTF HarryPotter: Fawkes de VulnHub
+---
+title: Solution du CTF HarryPotter: Fawkes de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Et c'est parti
 --------------

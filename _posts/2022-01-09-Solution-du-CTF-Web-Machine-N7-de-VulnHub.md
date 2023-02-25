@@ -1,4 +1,7 @@
-# Solution du CTF Web Machine N7 de VulnHub
+---
+title: Solution du CTF Web Machine N7 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Worst CTF Ever
 --------------

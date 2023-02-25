@@ -1,4 +1,7 @@
-# Solution du CTF Prime #2 de VulnHub
+---
+title: Solution du CTF Prime #2 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Faux départ
 -----------

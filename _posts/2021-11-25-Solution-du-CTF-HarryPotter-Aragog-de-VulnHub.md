@@ -1,4 +1,7 @@
-# Solution du CTF HarryPotter: Aragog de VulnHub
+---
+title: Solution du CTF HarryPotter: Aragog de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Intro
 -----

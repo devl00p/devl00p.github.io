@@ -1,4 +1,7 @@
-# Solution du CTF KB-VULN #1 de VulnHub
+---
+title: Solution du CTF KB-VULN #1 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Rapide et furieux
 -----------------

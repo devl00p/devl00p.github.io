@@ -1,4 +1,7 @@
-# Solution du CTF KB-VULN #2 de VulnHub
+---
+title: Solution du CTF KB-VULN #2 de VulnHub
+tags: [CTF, VulnHub]
+---
 
 2 Rapides
 ---------

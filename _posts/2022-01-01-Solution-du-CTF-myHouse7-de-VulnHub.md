@@ -1,4 +1,7 @@
-# Solution du CTF myHouse7 de VulnHub
+---
+title: Solution du CTF myHouse7 de VulnHub
+tags: [CTF, VulnHub]
+--- 
 
 Madness
 -------

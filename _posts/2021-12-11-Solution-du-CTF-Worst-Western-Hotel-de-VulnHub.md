@@ -1,4 +1,7 @@
-# Solution du CTF Worst Western Hotel de VulnHub
+---
+title: Solution du CTF Worst Western Hotel de VulnHub
+tags: [CTF, VulnHub]
+---
 
 Hôtel Transylvanie
 ------------------

@@ -16,51 +16,51 @@ Le scan Nmap nous retourne une pléthore de ports liés aux différents services
 Un proxy Squid tourne mais ne nous permet pas d'aller voir en interne (*curl -x http://192.168.56.25:3128/ http://localhost/* nous refuse l'accès).  
 
 ```plain
-$ sudo nmap -T5 -p- -sCV 192.168.56.25  
+$ sudo nmap -T5 -p- -sCV 192.168.56.25  
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-01-11 20:16 CET 
 Nmap scan report for 192.168.56.25 
 Host is up (0.00011s latency). 
 Not shown: 65526 closed tcp ports (reset) 
-PORT      STATE SERVICE    VERSION 
-22/tcp    open  ssh        OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0) 
-| ssh-hostkey:  
-|   2048 f8:3b:7c:ca:c2:f6:5a:a6:0e:3f:f9:cf:1b:a9:dd:1e (RSA) 
-|   256 04:31:5a:34:d4:9b:14:71:a0:0f:22:78:2d:f3:b6:f6 (ECDSA) 
-|_  256 4e:42:8e:69:b7:90:e8:27:68:df:68:8a:83:a7:87:9c (ED25519) 
-80/tcp    open  http       Apache httpd 2.4.38 ((Debian)) 
+PORT      STATE SERVICE    VERSION 
+22/tcp    open  ssh        OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0) 
+| ssh-hostkey:  
+|   2048 f8:3b:7c:ca:c2:f6:5a:a6:0e:3f:f9:cf:1b:a9:dd:1e (RSA) 
+|   256 04:31:5a:34:d4:9b:14:71:a0:0f:22:78:2d:f3:b6:f6 (ECDSA) 
+|_  256 4e:42:8e:69:b7:90:e8:27:68:df:68:8a:83:a7:87:9c (ED25519) 
+80/tcp    open  http       Apache httpd 2.4.38 ((Debian)) 
 |_http-server-header: Apache/2.4.38 (Debian) 
 |_http-title: Site doesn't have a title (text/html). 
-111/tcp   open  rpcbind    2-4 (RPC #100000) 
-| rpcinfo:  
-|   program version    port/proto  service 
-|   100000  2,3,4        111/tcp   rpcbind 
-|   100000  2,3,4        111/udp   rpcbind 
-|   100000  3,4          111/tcp6  rpcbind 
-|   100000  3,4          111/udp6  rpcbind 
-|   100003  3           2049/udp   nfs 
-|   100003  3           2049/udp6  nfs 
-|   100003  3,4         2049/tcp   nfs 
-|   100003  3,4         2049/tcp6  nfs 
-|   100005  1,2,3      36713/udp   mountd 
-|   100005  1,2,3      44363/tcp   mountd 
-|   100005  1,2,3      57572/udp6  mountd 
-|   100005  1,2,3      60195/tcp6  mountd 
-|   100021  1,3,4      35689/tcp   nlockmgr 
-|   100021  1,3,4      44158/udp   nlockmgr 
-|   100021  1,3,4      44621/tcp6  nlockmgr 
-|   100021  1,3,4      48444/udp6  nlockmgr 
-|   100227  3           2049/tcp   nfs_acl 
-|   100227  3           2049/tcp6  nfs_acl 
-|   100227  3           2049/udp   nfs_acl 
-|_  100227  3           2049/udp6  nfs_acl 
-2049/tcp  open  nfs_acl    3 (RPC #100227) 
-3128/tcp  open  http-proxy Squid http proxy 4.6 
+111/tcp   open  rpcbind    2-4 (RPC #100000) 
+| rpcinfo:  
+|   program version    port/proto  service 
+|   100000  2,3,4        111/tcp   rpcbind 
+|   100000  2,3,4        111/udp   rpcbind 
+|   100000  3,4          111/tcp6  rpcbind 
+|   100000  3,4          111/udp6  rpcbind 
+|   100003  3           2049/udp   nfs 
+|   100003  3           2049/udp6  nfs 
+|   100003  3,4         2049/tcp   nfs 
+|   100003  3,4         2049/tcp6  nfs 
+|   100005  1,2,3      36713/udp   mountd 
+|   100005  1,2,3      44363/tcp   mountd 
+|   100005  1,2,3      57572/udp6  mountd 
+|   100005  1,2,3      60195/tcp6  mountd 
+|   100021  1,3,4      35689/tcp   nlockmgr 
+|   100021  1,3,4      44158/udp   nlockmgr 
+|   100021  1,3,4      44621/tcp6  nlockmgr 
+|   100021  1,3,4      48444/udp6  nlockmgr 
+|   100227  3           2049/tcp   nfs_acl 
+|   100227  3           2049/tcp6  nfs_acl 
+|   100227  3           2049/udp   nfs_acl 
+|_  100227  3           2049/udp6  nfs_acl 
+2049/tcp  open  nfs_acl    3 (RPC #100227) 
+3128/tcp  open  http-proxy Squid http proxy 4.6 
 |_http-server-header: squid/4.6 
 |_http-title: ERROR: The requested URL could not be retrieved 
-35689/tcp open  nlockmgr   1-4 (RPC #100021) 
-44363/tcp open  mountd     1-3 (RPC #100005) 
-53631/tcp open  mountd     1-3 (RPC #100005) 
-54727/tcp open  mountd     1-3 (RPC #100005)
+35689/tcp open  nlockmgr   1-4 (RPC #100021) 
+44363/tcp open  mountd     1-3 (RPC #100005) 
+53631/tcp open  mountd     1-3 (RPC #100005) 
+54727/tcp open  mountd     1-3 (RPC #100005)
 ```
 
 Conclusion: on s'en tient au port 80 qu'on maltraite avec l'aide de *Feroxbuster*. L'outil de brute force de paths nous trouve un dossier */company* à la racine du site.  
@@ -117,15 +117,15 @@ sudoedit: unable to resolve host blackwidow: Temporary failure in name resolutio
 # id 
 uid=0(root) gid=0(root) groups=0(root),33(www-data) 
 # cd /root 
-# ls  
+# ls  
 root.txt 
 # cat root.txt 
 
-▄▄▄▄· ▄▄▌   ▄▄▄·  ▄▄· ▄ •▄     ▄▄▌ ▐ ▄▌▪  ·▄▄▄▄        ▄▄▌ ▐ ▄▌ 
-▐█ ▀█▪██•  ▐█ ▀█ ▐█ ▌▪█▌▄▌▪    ██· █▌▐███ ██▪ ██ ▪     ██· █▌▐█ 
-▐█▀▀█▄██▪  ▄█▀▀█ ██ ▄▄▐▀▀▄·    ██▪▐█▐▐▌▐█·▐█· ▐█▌ ▄█▀▄ ██▪▐█▐▐▌ 
-██▄▪▐█▐█▌▐▌▐█ ▪▐▌▐███▌▐█.█▌    ▐█▌██▐█▌▐█▌██. ██ ▐█▌.▐▌▐█▌██▐█▌ 
-·▀▀▀▀ .▀▀▀  ▀  ▀ ·▀▀▀ ·▀  ▀     ▀▀▀▀ ▀▪▀▀▀▀▀▀▀▀•  ▀█▄▀▪ ▀▀▀▀ ▀▪ 
+▄▄▄▄· ▄▄▌   ▄▄▄·  ▄▄· ▄ •▄     ▄▄▌ ▐ ▄▌▪  ·▄▄▄▄        ▄▄▌ ▐ ▄▌ 
+▐█ ▀█▪██•  ▐█ ▀█ ▐█ ▌▪█▌▄▌▪    ██· █▌▐███ ██▪ ██ ▪     ██· █▌▐█ 
+▐█▀▀█▄██▪  ▄█▀▀█ ██ ▄▄▐▀▀▄·    ██▪▐█▐▐▌▐█·▐█· ▐█▌ ▄█▀▄ ██▪▐█▐▐▌ 
+██▄▪▐█▐█▌▐▌▐█ ▪▐▌▐███▌▐█.█▌    ▐█▌██▐█▌▐█▌██. ██ ▐█▌.▐▌▐█▌██▐█▌ 
+·▀▀▀▀ .▀▀▀  ▀  ▀ ·▀▀▀ ·▀  ▀     ▀▀▀▀ ▀▪▀▀▀▀▀▀▀▀•  ▀█▄▀▪ ▀▀▀▀ ▀▪ 
 
 Congrats! 
 
@@ -171,7 +171,7 @@ Fatality
 On peut donc obtenir le flag utilisateur :  
 
 ```plain
-viper@blackwidow:~$ cat local.txt  
+viper@blackwidow:~$ cat local.txt  
 d930fe79919376e6d08972dae222526b
 ```
 

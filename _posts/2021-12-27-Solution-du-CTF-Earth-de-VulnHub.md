@@ -1,4 +1,7 @@
-# Solution du CTF Earth de VulnHub
+---
+title: Solution du CTF Earth de VulnHub
+tags: [CTF, VulnHub]
+---
 
 James Webb
 ----------
