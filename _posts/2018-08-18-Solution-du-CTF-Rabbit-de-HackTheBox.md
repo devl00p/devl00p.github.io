@@ -1,4 +1,7 @@
-# Solution du CTF Rabbit de HackTheBox
+---
+title: "Solution du CTF Rabbit de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Soyons franc, quand je me suis penché sur le CTF Rabbit de [Hack The Box](https://www.hackthebox.eu/) je m'attendais à croiser du [RabbitMQ](https://www.rabbitmq.com/) :p   
 

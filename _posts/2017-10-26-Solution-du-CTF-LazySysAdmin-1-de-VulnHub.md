@@ -1,4 +1,7 @@
-# Solution du CTF LazySysAdmin: 1 de VulnHub
+---
+title: "Solution du CTF LazySysAdmin: 1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Intro
 -----

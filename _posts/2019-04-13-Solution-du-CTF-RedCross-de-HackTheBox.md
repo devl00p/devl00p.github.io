@@ -1,4 +1,7 @@
-# Solution du CTF RedCross de HackTheBox
+---
+title: "Solution du CTF RedCross de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Intro
 -----

@@ -1,4 +1,7 @@
-# Solution du CTF Silo de HackTheBox
+---
+title: "Solution du CTF Silo de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Le challenge CTF Silo de [Hack The Box](https://www.hackthebox.eu/) a été pour moi un CTF plutôt perturbant comme il a du l'être à tous ceux qui ne sont pas habitués à faire du pentest sur Oracle et/ou ceux pour qui Oracle est une vrai usine à gaz (et on ne pourra pas leur donner tort).  
 

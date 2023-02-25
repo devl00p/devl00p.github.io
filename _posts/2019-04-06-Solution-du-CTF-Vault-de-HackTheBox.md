@@ -1,4 +1,7 @@
-# Solution du CTF Vault de HackTheBox
+---
+title: "Solution du CTF Vault de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Ocean One
 ---------

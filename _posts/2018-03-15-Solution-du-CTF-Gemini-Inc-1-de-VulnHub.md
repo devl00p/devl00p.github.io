@@ -1,4 +1,7 @@
-# Solution du CTF Gemini Inc: 1 de VulnHub
+---
+title: "Solution du CTF Gemini Inc: 1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Créé par [sec 9emin1](https://twitter.com/@sec_9emin1), [ce CTF](https://www.vulnhub.com/entry/gemini-inc-1,227/) se présente comme un cas rencontré lors d'un pentest, donc réaliste.  
 

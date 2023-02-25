@@ -1,4 +1,7 @@
-# Solution du CTF Reel de HackTheBox
+---
+title: "Solution du CTF Reel de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Nitro
 -----

@@ -1,4 +1,7 @@
-# Solution du CTF Silver de Wizard Labs
+---
+title: Solution du CTF Silver de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Bronze
 ------

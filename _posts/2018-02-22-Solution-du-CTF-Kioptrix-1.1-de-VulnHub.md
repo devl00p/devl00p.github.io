@@ -1,4 +1,7 @@
-# Solution du CTF Kioptrix: 1.1 de VulnHub
+---
+title: "Solution du CTF Kioptrix: 1.1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Après un temps... quelque peu plus long que prévu, *SourceForge* a pu régler les derniers bugs provoqués par sa mise à jour et je peux enfin poster à nouveaux des articles.  
 

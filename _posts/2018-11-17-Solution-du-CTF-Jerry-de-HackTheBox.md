@@ -1,4 +1,7 @@
-# Solution du CTF Jerry de HackTheBox
+---
+title: "Solution du CTF Jerry de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Introduction
 ------------

@@ -1,4 +1,7 @@
-# Solution du CTF DerpNStink: 1 de VulnHub
+---
+title: "Solution du CTF DerpNStink: 1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF *DerpNStink: 1* a été créé par [securekomodo](https://twitter.com/securekomodo) et est [disponible sur VulnHub](https://www.vulnhub.com/entry/derpnstink-1,221/).  
 

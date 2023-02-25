@@ -1,4 +1,7 @@
-# Solution du CTF Mischief de HackTheBox
+---
+title: Solution du CTF Mischief de HackTheBox
+tags: [CTF,HackTheBox]
+---
 
 Introduction
 ------------

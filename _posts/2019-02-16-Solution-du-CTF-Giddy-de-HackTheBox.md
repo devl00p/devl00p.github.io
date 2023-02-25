@@ -1,4 +1,7 @@
-# Solution du CTF Giddy de HackTheBox
+---
+title: Solution du CTF Giddy de HackTheBox
+tags: [CTF,HackTheBox]
+---
 
 Giddy j'y reste
 ---------------

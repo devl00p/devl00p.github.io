@@ -1,4 +1,7 @@
-# Solution du CTF SecNotes de HackTheBox
+---
+title: Solution du CTF SecNotes de HackTheBox
+tags: [CTF,HackTheBox]
+---
 
 Yo Dawg
 -------

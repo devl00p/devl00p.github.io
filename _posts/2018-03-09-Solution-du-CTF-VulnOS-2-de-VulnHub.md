@@ -1,4 +1,7 @@
-# Solution du CTF VulnOS: 2 de VulnHub
+---
+title: "Solution du CTF VulnOS: 2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [VulnOS 2](https://www.vulnhub.com/entry/vulnos-2,147/) est un boot2root composé de services vulnérables.  
 

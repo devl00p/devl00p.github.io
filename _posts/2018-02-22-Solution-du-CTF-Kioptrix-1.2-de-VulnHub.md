@@ -1,4 +1,7 @@
-# Solution du CTF Kioptrix: 1.2 de VulnHub
+---
+title: "Solution du CTF Kioptrix: 1.2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Voici la solution du [CTF Kioptrix 1.2](https://www.vulnhub.com/entry/kioptrix-level-12-3,24/) qui date d'avril 2011  
 

@@ -1,4 +1,7 @@
-# Solution du CTF Dina: 1.0.1 de VulnHub
+---
+title: "Solution du CTF Dina: 1.0.1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 On continue les CTF de chez VulnHub avec le [Dina 1.0.1](https://www.vulnhub.com/entry/dina-101,200/) datant d'octobre 2017.  
 

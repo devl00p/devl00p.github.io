@@ -1,4 +1,7 @@
-# Solution du CTF g0rmint: 1 de VulnHub
+---
+title: "Solution du CTF g0rmint: 1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Yeh Bik Gayi Hai Gormint
 ------------------------

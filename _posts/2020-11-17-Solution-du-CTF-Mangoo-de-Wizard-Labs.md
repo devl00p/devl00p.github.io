@@ -1,4 +1,7 @@
-# Solution du CTF Mangoo de Wizard Labs
+---
+title: Solution du CTF Mangoo de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Bananaa
 -------

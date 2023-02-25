@@ -1,4 +1,7 @@
-# Solution du CTF Ethereal de HackTheBox
+---
+title: Solution du CTF Ethereal de HackTheBox
+tags: [CTF,HackTheBox]
+---
 
 Between a rock and a hard place
 -------------------------------

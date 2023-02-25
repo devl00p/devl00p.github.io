@@ -1,4 +1,7 @@
-# Solution du CTF NetMon de HackTheBox
+---
+title: Solution du CTF NetMon de HackTheBox
+tags: [CTF, HackTheBox]
+---
 
 RealPain
 --------

@@ -1,4 +1,7 @@
-# Solution du CTF Ypuffy de HackTheBox
+---
+title: Solution du CTF Ypuffy de HackTheBox
+tags: [CTF,HackTheBox]
+---
 
 Introduction
 ------------

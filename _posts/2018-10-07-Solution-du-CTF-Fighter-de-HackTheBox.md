@@ -1,4 +1,7 @@
-# Solution du CTF Fighter de HackTheBox
+---
+title: "Solution du CTF Fighter de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Opening credits
 ---------------

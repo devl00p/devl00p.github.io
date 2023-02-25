@@ -1,4 +1,7 @@
-# Solution du CTF H.A.S.T.E: 1 de VulnHub
+---
+title: "Solution du CTF H.A.S.T.E: 1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 A short time ago...
 -------------------

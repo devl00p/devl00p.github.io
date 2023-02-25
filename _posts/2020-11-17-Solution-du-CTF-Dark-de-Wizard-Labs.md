@@ -1,4 +1,7 @@
-# Solution du CTF Dark de Wizard-Labs
+---
+title: Solution du CTF Dark de Wizard-Labs
+tags: [CTF, WizardLabs]
+---
 
 Vader
 -----

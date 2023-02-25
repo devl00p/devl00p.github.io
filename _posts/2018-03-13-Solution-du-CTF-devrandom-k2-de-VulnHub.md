@@ -1,4 +1,7 @@
-# Solution du CTF /dev/random: k2 de VulnHub
+---
+title: "Solution du CTF /dev/random: k2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le challenge [K2](https://www.vulnhub.com/entry/devrandom-k2,204/) créé par [Sagi](https://twitter.com/@s4gi_) est le dernier en date de la série */dev/random* après les [Scream](http://devloop.users.sourceforge.net/index.php?article75/solution-du-ctf-scream), [Relativity](http://devloop.users.sourceforge.net/index.php?article71/solution-du-ctf-relativity), [Pipe](http://devloop.users.sourceforge.net/index.php?article137/solution-du-ctf-dev-random-pipe-de-vulnhub) et [Sleepy](http://devloop.users.sourceforge.net/index.php?article138/solution-du-ctf-dev-random-sleepy-de-vulnhub).  
 

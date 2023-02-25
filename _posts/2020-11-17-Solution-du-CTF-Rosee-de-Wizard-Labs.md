@@ -1,4 +1,7 @@
-# Solution du CTF Rosee de Wizard Labs
+---
+title: Solution du CTF Rosee de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Shrubbery
 ---------

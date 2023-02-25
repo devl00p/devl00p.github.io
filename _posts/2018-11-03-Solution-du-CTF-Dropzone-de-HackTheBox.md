@@ -1,4 +1,7 @@
-# Solution du CTF Dropzone de HackTheBox
+---
+title: "Solution du CTF Dropzone de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Introduction
 ------------

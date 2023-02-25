@@ -1,4 +1,7 @@
-# Solution du CTF Stratosphere de HackTheBox
+---
+title: "Solution du CTF Stratosphere de HackTheBox"
+tags: [CTF, HackTheBox]
+---
 
 Yet Another HackTheBox CTF
 --------------------------

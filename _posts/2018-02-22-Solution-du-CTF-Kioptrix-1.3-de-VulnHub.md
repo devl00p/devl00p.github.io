@@ -1,4 +1,7 @@
-# Solution du CTF Kioptrix: 1.3 de VulnHub
+---
+title: "Solution du CTF Kioptrix: 1.3 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Il est tant de boucler les *Kioptrix* existants avec ce [level 1.3](https://www.vulnhub.com/entry/kioptrix-level-13-4,25/) publié en février 2012.  
 

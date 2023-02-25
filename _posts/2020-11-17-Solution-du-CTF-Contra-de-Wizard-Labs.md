@@ -1,4 +1,7 @@
-# Solution du CTF Contra de Wizard Labs
+---
+title: Solution du CTF Contra de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Insert Coin
 -----------

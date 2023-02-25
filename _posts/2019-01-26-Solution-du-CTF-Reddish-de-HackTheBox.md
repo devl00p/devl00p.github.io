@@ -1,4 +1,7 @@
-# Solution du CTF Reddish de HackTheBox
+---
+title: Solution du CTF Reddish de HackTheBox
+tags: [CTF,HackTheBox]
+---
 
 Unboxing
 --------

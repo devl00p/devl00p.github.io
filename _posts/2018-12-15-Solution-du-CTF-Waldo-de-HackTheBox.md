@@ -1,4 +1,7 @@
-# Solution du CTF Waldo de HackTheBox
+---
+title: Solution du CTF Waldo de HackTheBox
+tags: [CTF,HackTheBox]
+---
 
 Il était où hein le Charlie ?
 -----------------------------

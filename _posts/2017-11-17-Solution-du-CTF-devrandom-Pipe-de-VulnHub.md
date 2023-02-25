@@ -1,4 +1,7 @@
-# Solution du CTF /dev/random: Pipe de VulnHub
+---
+title: "Solution du CTF /dev/random: Pipe de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [Pipe](https://www.vulnhub.com/entry/devrandom-pipe,124/) disponible sur *VulnHub* fait partie de la série de CTF baptisée */dev/random* créée par [Sagi](https://twitter.com/@s4gi_).  
 

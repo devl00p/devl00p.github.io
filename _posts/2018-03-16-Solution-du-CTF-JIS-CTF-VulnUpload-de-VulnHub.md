@@ -1,4 +1,7 @@
-# Solution du CTF JIS-CTF: VulnUpload de VulnHub
+---
+title: "Solution du CTF JIS-CTF: VulnUpload de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [JIS-CTF: VulnUpload](https://www.vulnhub.com/entry/jis-ctf-vulnupload,228/) se présente comme un CTF pour débutants sur lequel il faut récupérer 5 flags.  
 

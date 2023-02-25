@@ -1,4 +1,7 @@
-# Solution du CTF Querier de HackTheBox
+---
+title: Solution du CTF Querier de HackTheBox
+tags: [CTF, HackTheBox]
+---
 
 Nitro
 -----

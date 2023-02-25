@@ -1,4 +1,7 @@
-# Solution du CTF Panopticon de Wizard Labs
+---
+title: Solution du CTF Panopticon de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Emoticon
 --------

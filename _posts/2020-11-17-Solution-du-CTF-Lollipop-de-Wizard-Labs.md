@@ -1,4 +1,7 @@
-# Solution du CTF Lollipop de Wizard Labs
+---
+title: Solution du CTF Lollipop de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Lollipopshell
 -------------

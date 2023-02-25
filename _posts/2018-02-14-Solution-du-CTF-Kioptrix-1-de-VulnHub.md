@@ -1,4 +1,7 @@
-# Solution du CTF Kioptrix: 1 de VulnHub
+---
+title: "Solution du CTF Kioptrix: 1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 J'avais résolu le dernier (à l'heure de ces lignes) *Kioptrix* lors de sa sortie [en 2014](http://devloop.users.sourceforge.net/index.php?article79/solution-du-ctf-kioptrix-2014-5).  
 

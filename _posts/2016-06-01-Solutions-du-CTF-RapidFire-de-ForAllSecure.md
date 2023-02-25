@@ -1,4 +1,7 @@
-# Solutions du CTF RapidFire de ForAllSecure
+---
+title: "Solutions du CTF RapidFire de ForAllSecure"
+tags: [CTF, RapidFire]
+---
 
 Dans [un billet sur leur blog](https://blog.forallsecure.com/2016/05/24/live-streaming-security-games/), la compagnie *ForAllSecure* présentait la vidéo d'un CTF de leur création baptisé *Rapid Fire*.  
 

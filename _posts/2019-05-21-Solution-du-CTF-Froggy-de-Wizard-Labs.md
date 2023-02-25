@@ -1,4 +1,7 @@
-# Solution du CTF Froggy de Wizard Labs
+---
+title: Solution du CTF Froggy de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Froggie jumped all over the stage that day
 ------------------------------------------

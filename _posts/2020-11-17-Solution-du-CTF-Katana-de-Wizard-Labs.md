@@ -1,4 +1,7 @@
-# Solution du CTF Katana de Wizard Labs
+---
+title: Solution du CTF Katana de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Couteau
 -------

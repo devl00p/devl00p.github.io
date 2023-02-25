@@ -1,4 +1,7 @@
-# Solution du CTF Rubbish de Wizard Labs
+---
+title: Solution du CTF Rubbish de Wizard Labs
+tags: [CTF, WizardLabs]
+---
 
 Gibberish
 ---------
