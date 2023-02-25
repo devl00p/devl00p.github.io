@@ -1,4 +1,7 @@
-# Solution du CTF SecTalks: BNE0x02 - Fuku de VulnHub
+---
+title: "Solution du CTF SecTalks: BNE0x02 - Fuku de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [Fuku](https://vulnhub.com/entry/sectalks-bne0x02-fuku,140/) était intéressant car il nous met quelques batons dans les roues. Il faut utiliser de la programation ou bien trouver quelques astuces pour parvenir à nos fins.
 

@@ -1,4 +1,7 @@
-# Solution du CTF Holynix #2 de VulnHub
+---
+title: "Solution du CTF Holynix #2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Holynix: v2](https://vulnhub.com/entry/holynix-v2,21/) n'a pas été le plus simple à résoudre avec des actions à mener qui sortaient trop de l'ordinaire pour même y penser. Ainsi il s'est avéré qu'il fallait modifier à deux reprises l'adresse IP de la machine hôte ou comme moi utiliser une seconde machine virtuelle, ce qui complique considérablement les étapes.
 

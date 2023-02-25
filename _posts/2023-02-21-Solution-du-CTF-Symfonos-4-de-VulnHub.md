@@ -1,4 +1,7 @@
-# Solution du CTF Symfonos #4 de VulnHub
+---
+title: "Solution du CTF Symfonos #4 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Jamais 3 sans 4 avec [cet autre CTF](https://vulnhub.com/entry/symfonos-4,347/).
 

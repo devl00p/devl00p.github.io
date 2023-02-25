@@ -1,4 +1,7 @@
-# Solution du CTF Symfonos #6 de VulnHub
+---
+title: "Solution du CTF Symfonos #6 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [symfonos: 6.1](https://vulnhub.com/entry/symfonos-61,458/), le dernier CTF de cette série, ne m'a pas déçu. Il était original tout en laissant peu de doute sur les actions à réaliser.
 

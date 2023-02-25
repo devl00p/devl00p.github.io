@@ -1,4 +1,7 @@
-# Solution du CTF NullByte de VulnHub
+---
+title: "Solution du CTF NullByte de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [NullByte](https://vulnhub.com/entry/nullbyte-1,126/) est un CTF proposé sur VulnHub et datant du mois d'aout 2015. Il est plutôt simple mais attention le début est *un peu* orienté stéganographie ce qui peu dérouter les participants.
 

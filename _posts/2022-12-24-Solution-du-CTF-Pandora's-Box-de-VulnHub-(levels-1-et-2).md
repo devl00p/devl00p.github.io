@@ -1,6 +1,6 @@
 ---
 title: "Solution du CTF Pandora's Box de VulnHub (levels 1 et 2)"
-tags: [CTF,VulnHub]
+tags: [CTF,VulnHub,binary exploitation]
 ---
 
 [Pandora's Box](https://vulnhub.com/entry/pandoras-box-1,111/) est un autre de ces vieux CTF (janvier 2015) provenant de VulnHub mais pas des moindres.

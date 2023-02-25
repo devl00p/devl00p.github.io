@@ -1,4 +1,7 @@
-# Solution du CTF Wayne Manor de VulnHub
+---
+title: "Solution du CTF Wayne Manor de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Créé par un certain *balkan*, ce CTF téléchargeable [sur VulnHub](https://vulnhub.com/entry/wayne-manor-1,681/) est centré sur le personnage de fiction *Batman*.
 

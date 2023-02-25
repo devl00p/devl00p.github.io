@@ -1,4 +1,7 @@
-# Solution du CTF Freshly de VulnHub
+---
+title: "Solution du CTF Freshly de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Freshly](https://vulnhub.com/entry/tophatsec-freshly,118/) est un CTF datant de février 2015 et créé par [TopHatSec](https://www.tophatsec.com/).
 

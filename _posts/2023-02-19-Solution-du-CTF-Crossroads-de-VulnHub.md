@@ -1,8 +1,11 @@
-# Solution du CTF Crossroads de VulnHub
+---
+title: "Solution du CTF Crossroads de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Crossroads](https://vulnhub.com/entry/crossroads-1,659/) est un CTF de `VulnHub` qui ne fait pas partie de la série `DriftingBlues` déjà traité sur le blog mais qui est visiblement du même auteur.
 
-A un moment on a du brute-force à effectuer malheureusement les outils existants ne fonctionnent pas forcément.
+À un moment, on a du brute-force à effectuer malheureusement les outils existants ne fonctionnent pas forcément.
 
 ```
 Nmap scan report for 192.168.56.111

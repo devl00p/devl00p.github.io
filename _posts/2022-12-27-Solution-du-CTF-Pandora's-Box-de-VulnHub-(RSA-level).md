@@ -1,4 +1,7 @@
-# Solution du CTF Pandora's Box de VulnHub (RSA level)
+---
+title: "Solution du CTF Pandora's Box de VulnHub (RSA level)"
+tags: [CTF,VulnHub]
+---
 
 [La précédente étape](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(level%205).md) qui nous avait donné un shell root nous avait laissé avec un flag au format txt sur les mains. Voci son contenu :
 
@@ -29,7 +32,7 @@ Credits:
 Special thanks to Barrebas and Jelle for testing the challenges and the feedback, you guys r0ck!
 ```
 
-Ces histoire de RSA à casser sont un classique de certains CTFs. A tel point qu'il en est ressortit un projet nommé [RsaCtfTool: RSA attack tool (mainly for ctf) - retreive private key from weak public key and/or uncipher data](https://github.com/RsaCtfTool/RsaCtfTool).
+Ces histoires de RSA à casser sont un classique de certains CTFs. A tel point qu'il en est ressortit un projet nommé [RsaCtfTool: RSA attack tool (mainly for ctf) - retreive private key from weak public key and/or uncipher data](https://github.com/RsaCtfTool/RsaCtfTool).
 
 On va d'abord récupérer la clé privée via le modulo et l'exposant donnés dans le fichier :
 

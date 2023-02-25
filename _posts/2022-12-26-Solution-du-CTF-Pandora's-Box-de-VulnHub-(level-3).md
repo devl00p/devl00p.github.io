@@ -1,4 +1,7 @@
-# Solution du CTF Pandora's Box de VulnHub (level 3)
+---
+title: "Solution du CTF Pandora's Box de VulnHub (level 3)"
+tags: [CTF,VulnHub,binary exploitation]
+---
 
 Après avoir [écrasé un pointeur dans le heap pour obtenir un write-what-where dans le précédent level](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(levels%201%20et%202).md) nous voici donc face à un autre binaire setuid qui nous donnera les droits de l'utilisateur `level3`.
 

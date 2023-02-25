@@ -1,4 +1,7 @@
-# Solution du CTF Wireless de VulnHub
+---
+title: "Solution du CTF Wireless de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [Wireless](https://vulnhub.com/entry/wireless-1,669/) est un CTF créé par `Patel Kunal` et téléchargeable sur VulnHub. Il ne manquait pas d'originalité et était plutôt bien ficelé.
 

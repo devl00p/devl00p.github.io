@@ -1,4 +1,7 @@
-# Solution du CTF SP: Jerome de VulnHub
+---
+title: "Solution du CTF SP: Jerome de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [SP: jerome](https://vulnhub.com/entry/sp-jerome-v101,303/) disponible sur VulnHub est le dernier de la série créé par [Daniel Solstad](https://dsolstad.com/) qui me reste à faire.
 

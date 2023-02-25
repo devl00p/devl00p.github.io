@@ -1,4 +1,7 @@
-# Solution du CTF SecTalks: BNE0x03 - Simple de VulnHub
+---
+title: "Solution du CTF SecTalks: BNE0x03 - Simple de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [SecTalks: BNE0x03 - Simple](https://vulnhub.com/entry/sectalks-bne0x03-simple,141/) est un boot2root avec plusieurs indices que les habitués des CTFs pourront tout à fait ignorer :
 

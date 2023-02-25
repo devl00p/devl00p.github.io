@@ -1,4 +1,7 @@
-# Solution du CTF SmashTheTux
+---
+title: "Solution du CTF SmashTheTux de VulnHub"
+tags: [CTF, VulnHub, binary exploitation]
+---
 
 [SmashTheTux](https://vulnhub.com/entry/smashthetux-101,138/) est un CTF tourné vers l'exploitation de binaires et créé par le site https://canyoupwn.me/ qui, hé ! il existe encore, même si les derniers articles sur le site datent de 2019.
 

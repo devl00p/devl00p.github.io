@@ -1,4 +1,7 @@
-# Solution du CTF SickOs 1.2 de VulnHub
+---
+title: "Solution du CTF SickOs 1.2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [SickOs: 1.2](https://www.vulnhub.com/entry/sickos-12,144/) est le second et dernier opus de la série. Il s'agit d'un boot2root Linux.
 

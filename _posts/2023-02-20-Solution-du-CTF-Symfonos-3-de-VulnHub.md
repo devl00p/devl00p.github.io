@@ -1,4 +1,7 @@
-# Solution du CTF Symfonos #3 de VulnHub
+---
+title: "Solution du CTF Symfonos #3 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [symfonos: 3.1](https://vulnhub.com/entry/symfonos-31,332/) m'a causé quelques problèmes à l'énumération en raison d'une exentricité du serveur web. Une fois ce cas passé c'est relativement facile de trouver quoi faire mais ça requiert sans doute un peu d'expérience en CTF.
 

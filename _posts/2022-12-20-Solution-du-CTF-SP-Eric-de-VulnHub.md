@@ -1,4 +1,7 @@
-# Solution du CTF SP: Eric de VulnHub
+---
+title: "Solution du CTF SP: Eric de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [SP: eric](https://www.vulnhub.com/entry/sp-eric,274/) proposé sur VulnHub m'aura occupé quelques minutes. Avec une bonne énumération et les bons outils il tombe vite.
 

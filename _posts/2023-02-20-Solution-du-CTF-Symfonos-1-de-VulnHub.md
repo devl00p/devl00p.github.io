@@ -1,4 +1,7 @@
-# Solution du CTF Symfonos #1 de VulnHub
+---
+title: "Solution du CTF Symfonos #1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [symfonos: 1](https://vulnhub.com/entry/symfonos-1,322/) est le premier d'une série de CTFs conçus par `Zayotic`.
 

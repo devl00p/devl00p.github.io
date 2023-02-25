@@ -1,4 +1,7 @@
-# Solution du CTF SP: Ike de VulnHub
+---
+title: "Solution du CTF SP: Ike de VulnHub"
+tags: [CTF, VulnHub]
+--- 
 
 [SP: ike](https://www.vulnhub.com/entry/sp-ike-v101,275/) est un CTF de type boot2root proposé sur VulnHub. La description est la suivante :
 

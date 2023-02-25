@@ -1,4 +1,7 @@
-# Solution du CTF ZorZ de VulnHub
+---
+title: "Solution du CTF ZorZ de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [TopHatSec: ZorZ](https://vulnhub.com/entry/tophatsec-zorz,117/) fait partie de la même série que le CTF [Freshly](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Freshly%20de%20VulnHub.md). On va potentiellement rester sur notre fin aussi car il semble qu'il n'y ait rien prévu pour l'escalade de privilèges... mais sait-on jamais.
 

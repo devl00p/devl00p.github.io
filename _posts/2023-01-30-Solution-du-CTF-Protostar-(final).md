@@ -1,6 +1,6 @@
 ---
 title: "Solution du CTF Protostar (final)"
-tags: [CTF]
+tags: [CTF,Protostar,binary exploitation]
 ---
 
 On est en finale ! On est en finale ! On est, on est, on est en finale !

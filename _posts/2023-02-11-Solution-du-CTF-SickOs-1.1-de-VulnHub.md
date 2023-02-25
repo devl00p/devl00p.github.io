@@ -1,4 +1,7 @@
-# Solution du CTF SickOs 1.1 de VulnHub
+---
+title: "Solution du CTF SickOs 1.1 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [SickOs: 1.1](https://www.vulnhub.com/entry/sickos-11,132/) est un CTF créé par [D4rk36](https://twitter.com/D4rk36) et téléchargeable sur VulnHub.
 

@@ -1,4 +1,7 @@
-# Solution du CTF Symfonos #2 de VulnHub
+---
+title: "Solution du CTF Symfonos #2 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Je continue sur la série des Symfonos avec [symfonos: 2](https://vulnhub.com/entry/symfonos-2,331/).
 

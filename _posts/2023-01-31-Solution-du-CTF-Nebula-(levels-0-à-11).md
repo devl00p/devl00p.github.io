@@ -1,10 +1,13 @@
-# Solution du CTF Nebula (levels 0 à 11)
+---
+title: "Solution du CTF Nebula (levels 0 à 11)"
+tags: [CTF,Nebula,binary exploitation]
+---
 
 Le CTF [Nebula](https://www.vulnhub.com/entry/exploit-exercises-nebula-v5,31/) est un vieux challenge qui tourne autour de l'escalade de privilèges sous système Unix. C'est sans doute dans le même état d'esprit que certains challenges de [OverTheWire: Wargames](https://overthewire.org/wargames/).
 
 ## Level 0
 
-On an apprend plus sur le CTF en se connectant au port SSH :
+On en apprend plus sur le CTF en se connectant au port SSH :
 
 ```bash
 $ ssh level00@192.168.56.97

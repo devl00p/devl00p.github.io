@@ -1,4 +1,7 @@
-# Solution du CTF Pandora's Box de VulnHub (level 4)
+---
+title: "Solution du CTF Pandora's Box de VulnHub (level 4)"
+tags: [CTF,VulnHub,binary exploitation]
+---
 
 Lors du précédent level [on avait eu à exploiter une format string](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(level%203).md) sur un binaire qu'on lançait pour un accès distant.
 

@@ -1,4 +1,7 @@
-# Solution du CTF SP: Leopold de VulnHub
+---
+title: "Solution du CTF SP: Leopold de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [SP: leopold](https://www.vulnhub.com/entry/sp-leopold-v12,277/) est un challenge qui a été mis en ligne sur VulnHub en septembre 2019. On a deux flags à trouver et le scénario est le suivant :
 

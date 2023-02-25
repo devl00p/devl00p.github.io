@@ -1,4 +1,7 @@
-# Solution du CTF ColddBox: Easy de VulnHub
+---
+title: "Solution du CTF ColddBox: Easy de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 [ColddBox: Easy](https://vulnhub.com/entry/colddbox-easy,586/) est comme son nom l'indique un CTF très facile. Il peut toutefois permettre aux débutants de s'initier à différents outils.
 

@@ -1,4 +1,7 @@
-# Solution du CTF Symfonos #5 de VulnHub
+---
+title: "Solution du CTF Symfonos #5 de VulnHub"
+tags: [CTF, VulnHub]
+---
 
 Le CTF [symfonos: 5.2](https://vulnhub.com/entry/symfonos-52,415/) était intéressant. J'ai mis pas mal de temps à avoir l'idée qu'il fallait pour l'exploitation web mais une fois cela passé ça n'a pris que quelques minutes pour passer root.
 

@@ -1,4 +1,7 @@
-## Solution du CTF SecTalks: BNE0x00 - Minotaur de VulnHub
+---
+title: "Solution du CTF SecTalks: BNE0x00 - Minotaur de VulnHub"
+tags: [CTF, VulnHub]
+--- 
 
 Dernier CTF de la série `SecTalks` créé par [Robert Winkel](https://twitter.com/RobertWinkel), ce CTF a été globalement sympathique  et les indices suivants qui étaient donnés ont empéché de potentielles errances :
 

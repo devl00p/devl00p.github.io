@@ -1,4 +1,7 @@
-# Solution du CTF SP: Harrison de VulnHub
+---
+title: "Solution du CTF SP: Harrison de VulnHub"
+tags: [CTF, VulnHub]
+--- 
 
 Toujours la suite de cette série de CTFs ayant pour thème la série South Park. Ce CTF [SP: harrison](https://vulnhub.com/entry/sp-harrison,302/) est certainement l'un des plus difficiles du lot.
 
