@@ -1,5 +1,5 @@
 ---
-title: Solution du CTF Empire: LupinOne de VulnHub
+title: "Solution du CTF Empire: LupinOne de VulnHub"
 tags: [CTF, VulnHub]
 --- 
 
