@@ -334,7 +334,7 @@ Got no error and status code 200 with cebu / cabergas08
 
 L'étape suivante est de modifier un script PHP du template Joomla via *control panel > templates > templates > protostar* (ce dernier étant le nom du template utilisé).  
 
-![WizardLabs CTF Rosee joomla template injection PHP backdoor](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/rosee_joomla_template_edit.png)
+![WizardLabs CTF Rosee joomla template injection PHP backdoor](/assets/img/wizard-labs/rosee_joomla_template_edit.png)
 
 On obtient facilement un shell en tant que *www-data* et via la réutilisation du mot de passe l'accès au compte *cebu* (et le premier flag).  
 

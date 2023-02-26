@@ -106,7 +106,7 @@ On remarque aussi rapidement depuis le désassembleur que le programme doit affi
 
 Après avoir vérifié que le programme ne fait rien de nasty je le lance via wine et je lui envoie un bon gros buffer de *A* via ncat. L'équivalent du *DrWatson* se réveille et nous donne les infos concernant le crash :  
 
-![Wine watson](https://raw.githubusercontent.com/devl00p/blog/master/images/brainpan_1/watson.png)
+![Wine watson](/assets/img/brainpan_1/watson.png)
 
 Bingo ! On peut écraser EIP. Il ne reste qu'à déterminer combien d'octets doivent être passés pour y parvenir.  
 
@@ -192,7 +192,7 @@ sock.close()
 
 Et c'est le win !  
 
-![brainpan win32 sigtrap](https://raw.githubusercontent.com/devl00p/blog/master/images/brainpan_1/debug_payload.png)
+![brainpan win32 sigtrap](/assets/img/brainpan_1/debug_payload.png)
 
 Après avoir cherché un shellcode potable sur le web je m'en suis finalement remis à *Metasploit* car ça reste la crème de la crème (la cerise sur le gâteau) :  
 
@@ -245,11 +245,11 @@ raw_input("Enjoy your shell, press enter to exit")
 sock.close()
 ```
 
-![Connect back](https://raw.githubusercontent.com/devl00p/blog/master/images/brainpan_1/connect_back.png)
+![Connect back](/assets/img/brainpan_1/connect_back.png)
 
 A ma grande surprise on peut faire exécuter des commandes linux depuis l'invite de commande récupérée (j'ai testé préalablement sur ma machine et ça ne fonctionnait pas).  
 
-![Linux command from wine](https://raw.githubusercontent.com/devl00p/blog/master/images/brainpan_1/linux_wine.png)
+![Linux command from wine](/assets/img/brainpan_1/linux_wine.png)
 
 Comme sur le *Brainpan1*, j'uploade un *tshd* car aucun serveur SSH ne tourne sur le système.  
 

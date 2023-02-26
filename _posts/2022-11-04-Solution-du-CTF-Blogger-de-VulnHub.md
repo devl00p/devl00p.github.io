@@ -70,7 +70,7 @@ $ feroxbuster -u http://blogger.thm/ -w fuzzdb/discovery/predictable-filepaths/f
 
 mais voyant que ça commençait à scanner dans des dossiers inutiles (assets, css, images, js, etc) j'ai stoppé l'énumération.
 
-![C'est con ça](https://raw.githubusercontent.com/devl00p/blog/master/images/cest_con_ca.gif)
+![C'est con ça](/assets/img/cest_con_ca.gif)
 
 Bien mal m'en a pris car l'auteur du CTF a placé un Wordpress à l'adresse http://blogger.thm/assets/fonts/blog
 

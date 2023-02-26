@@ -123,7 +123,7 @@ Still here ? Ok here are the solutions :)
 
 First step I did was cleaning the image by converting it to black and white. Basically all you have to do is convert green color to black and grey to white. But the image given by HackThis is compressed so you will have to set a threshold to determine if a color is green or not.  
 
-![HackThis captcha1](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/captcha1_example.png)
+![HackThis captcha1](/assets/img/hackthis/captcha1_example.png)
 
 The following script does that stuff : creating a black and white version of a captcha image from the challenge. It uses the *Pillow* library but other libraries likes *OpenCV* can do all the stuff in less lines of codes :  
 
@@ -183,7 +183,7 @@ with open(sys.argv[1], "rb") as fd:
 
 The script is also calculating the contours for the whole text, thus resulting in a smaller picture.  
 
-![HackThis captcha1 cleaned](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/captcha1_example_clean.png)
+![HackThis captcha1 cleaned](/assets/img/hackthis/captcha1_example_clean.png)
 
 Now we need a script to split the cleanned image, extracting each character in a new image file.  
 
@@ -337,7 +337,7 @@ You would have to glue the several scripts and install the dependancies to compl
 
 ### Level 2
 
-![HackThis captcha 2](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/captcha2_example.png)
+![HackThis captcha 2](/assets/img/hackthis/captcha2_example.png)
 
 Let's move to smileys ! If you pay attention you should see in the challenge webpage source that the caption is not made of pictures but characters.  
 
@@ -345,7 +345,7 @@ It's not hard to discover that thoses smileys come from a font called [icomoon](
 
 Using a tool like *gucharmap* you can explore unicode characters in that font and finally finding the smileys :  
 
-![Seeing characters codes with gucharmap](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/gucharmap.png)
+![Seeing characters codes with gucharmap](/assets/img/hackthis/gucharmap.png)
 
 Using a tool like Pango you should even be able to generate your own captcha images :  
 
@@ -377,7 +377,7 @@ Also here I'm not just checking if two hashes are identical but I'm calculating 
 
 Cleaning and cutting the picture is almost the same process. You only have to name each captchas as you won't be able to put a slash in a filename.  
 
-![HackThis Captcha 2 cleaned](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/captcha2_example_clean.png)
+![HackThis Captcha 2 cleaned](/assets/img/hackthis/captcha2_example_clean.png)
 
 My solving script looks like this :  
 
@@ -457,7 +457,7 @@ Same player, play again !
 
 Converting color is exactly the same process but as smileys aren't on a single line any more we must calculate their ordinates when cutting.  
 
-![HackThis captcha 3](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/captcha3_example.png)
+![HackThis captcha 3](/assets/img/hackthis/captcha3_example.png)
 
 ```python
 #!/usr/bin/python3
@@ -568,7 +568,7 @@ Changes from the previous challenge are random colors used for smileys and rotat
 
 While color isn't really a problem (background color haven't changed), we should be careful at how we deal with rotation.  
 
-![HackThis captcha 4](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/captcha4_example.png)
+![HackThis captcha 4](/assets/img/hackthis/captcha4_example.png)
 
 The solution I choosed is once again tied to *pHash*. It works but it's not very accurate and requires lot of samples and processing. So feel free to use your own method :)  
 
@@ -633,7 +633,7 @@ Here we have captchas made up of 5 characters (letter or digit) that have been b
 
 How the f\*ck do you solve this ? Well, one problem at a time !  
 
-![HackThis captcha 5](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/captcha5_example.png)
+![HackThis captcha 5](/assets/img/hackthis/captcha5_example.png)
 
 First thing to do is try to reproduce the identical clear image. All we have to do is find the right colors, font size and (x, y) coordinates for the begining of the text.  
 
@@ -670,8 +670,8 @@ I finally reached those parameters (let's call this script *write.php*):
 
 Can you spot the differences between those images ? One is provided by the challenge, one is my own generated image :  
 
-![HacThis captcha 5](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/example.png)
- ![My generated image](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/generated.png)
+![HacThis captcha 5](/assets/img/hackthis/example.png)
+ ![My generated image](/assets/img/hackthis/generated.png)
 
 No let's move to bluring ! Bluring images in PHP using GD is not complicated but we need to find how many times the blur filter have been applied on the text.  
 
@@ -732,7 +732,7 @@ Even if you delete each image once you calculated the hash you still need to sto
 
 And finally, guess what ?  
 
-![False positives everywhere](https://raw.githubusercontent.com/devl00p/blog/master/images/hackthis/false-positives-false-positives-everywhere.jpg)
+![False positives everywhere](/assets/img/hackthis/false-positives-false-positives-everywhere.jpg)
 
 That's right ! I let a script calculates hashes just for two days and I found 224 collisions for a hash I took randomly. So *abciu* produce the same hash as *abclu*, *abc1u* but also *abyQu*, *abA5o*, *ahElx* or *akLCw*.  
 

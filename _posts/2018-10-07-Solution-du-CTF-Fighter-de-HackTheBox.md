@@ -25,7 +25,7 @@ Le site a tout d'un *Wordpress* mais les liens renvoient tous à la seule page d
 
 Le contenu donne le thème central du CTF, puisque le site se présente comme le *Street Fighter Club*, un site pour les fans du jeu vidéo de *Capcom*. Les auteurs des posts sur le site sont d'ailleurs des personnages du jeu.  
 
-![HackTheBox Fighter Homepage](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/fighter_homepage.png.jpg)
+![HackTheBox Fighter Homepage](/assets/img/htb/fighter_homepage.png.jpg)
 
 La dernière annonce sur le site fait mention du domaine *streetfighterclub.htb* ainsi que l'existence de la vieille version du site pour les membres déplacée à un emplacement qui n'est lui pas mentionné.  
 
@@ -535,7 +535,7 @@ cmds = [
 
 Et ça mort à l'hameçon :  
 
-![HackTeBox Fighter unprivileged reverse shell](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/fighter_first_shell.png)
+![HackTeBox Fighter unprivileged reverse shell](/assets/img/htb/fighter_first_shell.png)
 
 Round 2, Fight !
 ----------------
@@ -724,11 +724,11 @@ Il semble que l'on ait un peu de reverse-engineering sur la planche !
 
 Le binaire *root.exe* ne fait que se servir de la fonction *dll\_check* de la DLL présente en lui passant la chaîne correspondant à *arvg[1]*. Si le résultat de cette fonction est 1 alors le flag nous est remis.  
 
-![Fighter HackTheBox root.exe assembly code](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/fighter_root_exe.png)
+![Fighter HackTheBox root.exe assembly code](/assets/img/htb/fighter_root_exe.png)
 
 On peut obtenir l'adresse de la fonction dans la DLL avec la commande *rabin2 -E checkdll.dll*. Une fois l'adresse obtenue on désassemble dans radare2 :  
 
-![HackTheBox Fighter checkdll.dll disassembly](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/fighter_checkdll.png)
+![HackTheBox Fighter checkdll.dll disassembly](/assets/img/htb/fighter_checkdll.png)
 
 La première chose à faire est de déterminer l’étendue de la fonction en regardant jusqu'où s'arrête chaque embranchement. Ici on voit qu'on ira pas plus loin que l'adresse 0x10001032 et que la fonction n'effectue pas de call. Elle est donc très courte.  
 
@@ -747,7 +747,7 @@ Le décodage se fait en une ligne de Python :
 
 On peut alors utiliser Wine (si on dispose de toutes les DLL nécessaires) ou d'un système Windows pour récupérer le flag final :  
 
-![HackTheBox Fighter final flag](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/fighter_final_flag.png)
+![HackTheBox Fighter final flag](/assets/img/htb/fighter_final_flag.png)
 
 Game over
 ---------

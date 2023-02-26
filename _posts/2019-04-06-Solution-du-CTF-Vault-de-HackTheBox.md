@@ -172,7 +172,7 @@ Bien sûr on peut tout aussi bien utiliser OpenSSH dans notre cas (*ssh -L 80:19
 
 Le site dispose de deux liens, l'un pour modifier la configuration DNS et l'autre pour tester une configuration OpenVPN :  
 
-![Vault HackTheBox CTF OpenVPN Configurator RCE](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/vault_openvpn.png)
+![Vault HackTheBox CTF OpenVPN Configurator RCE](/assets/img/htb/vault_openvpn.png)
 
 Il nous faut seulement trouver un moyen d’appeler une commande depuis une configuration *OpenVPN*, [ce qui n'est pas compliqué](https://medium.com/tenable-techblog/reverse-shell-from-an-openvpn-configuration-file-73fd8b1d38da).  
 

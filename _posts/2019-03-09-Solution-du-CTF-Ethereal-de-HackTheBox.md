@@ -140,7 +140,7 @@ La page d'assistance qui contient un formulaire valide indique :
 
 > Just enter your IP address and Client ID which was given. We'll try to access the share we created on your server and check the logs.
 
-![HackTheBox Ethereal CTF assistance.aspx web form](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/ethereal_assistance.png)
+![HackTheBox Ethereal CTF assistance.aspx web form](/assets/img/htb/ethereal_assistance.png)
 
 Après avoir saisie mon IP directement, en lien http, https, chemin UNC dans les différents champs, force est de constater qu'on est dans une impasse.  
 
@@ -158,7 +158,7 @@ Allez, peut être plus de chance sur la section admin :) On a une note laissée 
 
 On a au moins un nom d'utilisateur ! Quand à la console en question c'est un gros troll avec une interface web ressemblant à du Windows 7. Rien de vrai, juste des layouts qui s'affichent ou se cachent en fonction de où l'on clique.  
 
-![HackTheBox Ethereal CTF fake web Windows](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/ethereal_troll.png)
+![HackTheBox Ethereal CTF fake web Windows](/assets/img/htb/ethereal_troll.png)
 
 On a même droit à un bon gros troll avec un faux flag (je me demande combien ont tenté de rentrer ce flag sur l'interface de *HackTheBox*).  
 
@@ -217,7 +217,7 @@ keyb fr
 
 On teste les mots de passe les plus fréquents (123456, etc) et on arrive rapidement sur *password* :  
 
-![Ethereal HackTheBox CTF pbox decrypt DOSbox](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/ethereal_pbox.png)
+![Ethereal HackTheBox CTF pbox decrypt DOSbox](/assets/img/htb/ethereal_pbox.png)
 
 Cette fois les identifiants *alan / !C414m17y57r1k3s4g41n!* nous permettent d'accéder au port 8080 :)  
 

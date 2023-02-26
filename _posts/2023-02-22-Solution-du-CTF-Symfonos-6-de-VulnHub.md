@@ -134,7 +134,7 @@ Le `FlySpray` en question est une appli de gestion de tickets (bugtracker): [Git
 
 Sur le ticket déjà présent on peut voir un certain `Mr Super User` indiquer qu'il surveille de près l'issue.
 
-![Mr Super User is watching](https://raw.githubusercontent.com/devl00p/blog/main/images/vulnhub/symfonos6/mr_super_user_watching.jpg)
+![Mr Super User is watching](/assets/img/vulnhub/symfonos6/mr_super_user_watching.jpg)
 
 Ca tombe bien car il existe une faille XSS dans `Flyspray` : [FlySpray 1.0-rc4 - Cross-Site Scripting / Cross-Site Request Forgery - PHP webapps Exploit](https://www.exploit-db.com/exploits/41918)
 
@@ -169,7 +169,7 @@ document.getElementById("hacked_form").submit();
 
 Ensuite j'ai édité le profil de mon utilisateur pour qu'il appelle mon code javascript :
 
-![Injection JS code](https://raw.githubusercontent.com/devl00p/blog/main/images/vulnhub/symfonos6/xss_payload_injection.jpg)
+![Injection JS code](/assets/img/vulnhub/symfonos6/xss_payload_injection.jpg)
 
 Et finalement j'ai posté un commentaire sur l'issue. Cependant j'ai remarqué que le javasript nécessitait d'échapper un attribut HTML :
 
@@ -211,7 +211,7 @@ Il existe un exploit pour `Gitea` mais il semble avoir été publié après que 
 
 Un peu comme sur les CTF comportant du Jenkins (voir [Solution du CTF Jeeves de HackTheBox](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Jeeves%20de%20HackTheBox.md)) où il fallait créer une étape de build sur un projet, ici nous allons créer un hook qui exécutera des commandes lorsque du code est poussé sur un projet Git.
 
-Au lieu d'utiliser l'exploit j'ai effectué les commandes moi même. D'abord il faut créer le répo via l'interface web de `Gitea` puis créer le répo local, définir le répo distant puis pousser :
+Au lieu d'utiliser l'exploit, j'ai effectué les commandes moi même. D'abord il faut créer le répo via l'interface web de `Gitea` puis créer le répo local, définir le répo distant puis pousser :
 
 ```bash
 $ mkdir yolo
@@ -298,7 +298,7 @@ Cette utilisateur peut utiliser l'outil du langage `Golang` en tant que root :
 
 ```bash
 [achilles@symfonos6 git]$ sudo -l
-Entrées par défaut pour achilles sur symfonos6 :
+Entrées par défaut pour achilles sur symfonos6 :
     !visiblepw, always_set_home, match_group_by_gid, env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS", env_keep+="MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE",
     env_keep+="LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES", env_keep+="LC_MONETARY LC_NAME LC_NUMERIC LC_PAPER LC_TELEPHONE", env_keep+="LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY",
     secure_path=/sbin\:/bin\:/usr/sbin\:/usr/bin
@@ -381,7 +381,7 @@ On obtient alors un RCE avec l'utilisateur `apache` et on peut `su` pour `achill
 
 ## Sous le capot
 
-Un petit coup d'oeil au code qui simulait l'utilisateur de `FlySpray` :
+Un petit coup d'œil au code qui simulait l'utilisateur de `FlySpray` :
 
 ```python
 #!/usr/bin/python3.6

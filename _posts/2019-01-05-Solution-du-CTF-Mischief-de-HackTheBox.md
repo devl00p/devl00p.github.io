@@ -208,7 +208,7 @@ On peut lancer un scan Nmap sur cette nouvelle adresse. Nmap semble avoir du mal
 
 On trouve alors un classique port 80 :)  
 
-![Mischief IPv6 Apache HackTheBox CTF](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/mischief_ipv6.png)
+![Mischief IPv6 Apache HackTheBox CTF](/assets/img/htb/mischief_ipv6.png)
 
 Le site web a une page de login et le mot de passe ne fonctionne pas avec l'utilisateur *loki*. J'ai donc placé les deux passwords dans un fichier, ajouté un top 500 des mots de passe classiques et fait de même pour les utilisateurs.  
 
@@ -227,7 +227,7 @@ Une fois connecté on a un champ de texte pour la saisie d'une commande Linux. O
 
 *whoami* fait partie des commandes autorisées. On voit aussi une référence à un fichier nommé *credentials*.  
 
-![Mischief IPv6 RCE Apache HackTheBox CTF](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/mischief_rce.png)
+![Mischief IPv6 RCE Apache HackTheBox CTF](/assets/img/htb/mischief_rce.png)
 
 A titre d'exemple on ne peut pas utiliser *ls* ou son alias *dir* mais on peut exécuter ça :  
 

@@ -198,7 +198,7 @@ Une énumération dans ce dossier ne retourne absolument rien mais en cherchant 
 
 On entame alors la précédure d'installation :
 
-![VulnHub SP Christophe CTF CMS Made Simple install](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/christophe/install1.jpg)
+![VulnHub SP Christophe CTF CMS Made Simple install](/assets/img/vulnhub/christophe/install1.jpg)
 
 On avance dans les étapes puis arrive finalement le moment où l'on doit saisir les informations pour la base de données.
 
@@ -225,11 +225,11 @@ MySQL [(none)]> ^DBye
 
 puis je renseigne ma DB :
 
-![VulnHub SP Christophe CTF CMS Made Simple install 2](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/christophe/install2.jpg)
+![VulnHub SP Christophe CTF CMS Made Simple install 2](/assets/img/vulnhub/christophe/install2.jpg)
 
 Pour terminer je définis l'utilisateur administrateur :
 
-![VulnHub SP Christophe CTF CMS Made Simple install 3](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/christophe/install3.jpg)
+![VulnHub SP Christophe CTF CMS Made Simple install 3](/assets/img/vulnhub/christophe/install3.jpg)
 
 On continue jusqu'à la fin et ce qui se passe en réalité c'est que l'installation est faite dans `/install` au lieu de s'effectuer à la racine web comme l'installation existante.
 

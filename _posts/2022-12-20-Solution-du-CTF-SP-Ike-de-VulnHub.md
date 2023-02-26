@@ -32,7 +32,7 @@ PORT     STATE SERVICE VERSION
 
 On a un serveur *InspIRCd*. Aucun exploit n'est présent pour ce logiciel sur exploit-db comme quoi soit il est bien conçu soit il n'intéresse personne :D
 
-Sur ma machine il ne me reste que Pidgin comme client supportant IRC alors on fera avec. Je créé le compte en spécifiant l'adresse IP du serveur puis je vais sur *Comptes > devloop@192.168.56.76 > voir le message du jour* qui m'affiche les infos suivantes :
+Sur ma machine, il ne me reste que Pidgin comme client supportant IRC alors on fera avec. Je crée le compte en spécifiant l'adresse IP du serveur puis je vais sur *Comptes > devloop@192.168.56.76 > voir le message du jour* qui m'affiche les infos suivantes :
 
 ```
 - #############################################
@@ -65,9 +65,9 @@ Avec un client plus traditionnel j'aurais eu le message directement.
 
 Il y a donc un bot sur le chan `#php`. On va causer un peu avec lui :
 
-![VulnHub SP Ike PHP IRC bot](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/sp_ike/irc_phpbot.png)
+![VulnHub SP Ike PHP IRC bot](/assets/img/vulnhub/sp_ike/irc_phpbot.png)
 
-`proc_open` est donc notre porte d'entrée. Je peux récupérer l'environnement qui en dit suffisemment long sur le compte qui fait tourner le bot :
+`proc_open` est donc notre porte d'entrée. Je peux récupérer l'environnement qui en dit suffisamment long sur le compte qui fait tourner le bot :
 
 ```php
  !php proc_open("env",array(),$something);
@@ -96,7 +96,7 @@ User ike may run the following commands on ike:
     (root) NOPASSWD: /usr/bin/nmap
 ```
 
-Un coup d'oeil à GTFObins plus tard :
+Un coup d'œil à GTFObins plus tard :
 
 ```bash
 ike@ike:/home/ike$ echo 'os.execute("/bin/dash")' > myscript 

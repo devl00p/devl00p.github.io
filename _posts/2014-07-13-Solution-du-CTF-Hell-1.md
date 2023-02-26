@@ -63,7 +63,7 @@ Il y a donc un service fait-maison sur le port 666 ainsi que deux URLs à fouill
 
 L'URL */personal/* est le site d'un fan-club de *g0tmi1k* (le créateur de *VulnHub*).  
 
-![g0tmi1k fan club](https://raw.githubusercontent.com/devl00p/blog/master/images/hell_1.png)
+![g0tmi1k fan club](/assets/img/hell_1.png)
 
 Sur l'URL */super\_secret\_login\_path\_muhahaha/* on tombe sur une section *"Admin"* demandant des identifiants.  
 

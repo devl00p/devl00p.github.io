@@ -6,14 +6,14 @@ tags: [CTF, VulnHub]
 Le tour des lieux
 -----------------
 
-[Empire: LupinOne](https://www.vulnhub.com/entry/empire-lupinone,750/) est un CTF de  *icex64 & Empire Cybersecurity* téléchargeable sur la plateforme *VulnHub*.  
+[Empire: LupinOne](https://www.vulnhub.com/entry/empire-lupinone,750/) est un CTF de *icex64 & Empire Cybersecurity* téléchargeable sur la plateforme *VulnHub*.  
 
 Le nom *Lupin* fait référence à *Arsène Lupin* mais comme vous le verrez par la suite la thématique n'a pas été trop poussée (ça reste un boot2root).  
 
 On commence comme il se doit par le classique scan de ports:  
 
-```plain
-sudo nmap -T5 -p- -sC -sV 192.168.2.5 -v -Pn
+```bash
+$ sudo nmap -T5 -p- -sC -sV 192.168.2.5 -v -Pn
 
 Nmap scan report for 192.168.2.5
 Host is up (0.00022s latency).
@@ -106,7 +106,7 @@ L'image affichée sur la page d'index du site ne semble contenir aucun tag EXIF 
 
 Enfin l'utilisation de dictionnaires bien connus pour l'énumération des fichiers et dossiers (raft-large-etc) sur le site n'a mené à rien.  
 
-Il m'aura fallut un indice pour savoir que le mot à rechercher était *mysecret* qui n'était dans aucune de mes wordlists. De plus le fichier était caché dans le sens où il était aussi précédé d'un point et disposait d'une extension *txt* bref autant de détails improbables qui rendent cette partie peu réaliste.  
+Il m'aura fallu un indice pour savoir que le mot à rechercher était *mysecret* qui n'était dans aucune de mes wordlists. De plus le fichier était caché dans le sens où il était aussi précédé d'un point et disposait d'une extension *txt* bref autant de détails improbables qui rendent cette partie peu réaliste.  
 
 On aurait pu trouver le fichier avec rockyou de cette façon :  
 
@@ -123,7 +123,7 @@ Le fichier obtenu n'est pas dans le format classique d'une clé SSH avec le asci
 
 On tente de l'utiliser :  
 
-```plain
+```bash
 $ ssh -i /tmp/icex64.key icex64@192.168.2.5
 Load key "/tmp/icex64.key": invalid format
 icex64@192.168.2.5's password:
@@ -145,8 +145,8 @@ Le site dispose d'un décodeur qui cette fois nous retourne la clé privée SSH 
 
 Pour le coup JtR n'en fait qu'une bouchée :  
 
-```plain
-./john  --wordlist=wordlist.txt  hash.txt 
+```bash
+$ ./john  --wordlist=wordlist.txt  hash.txt 
 Using default input encoding: UTF-8
 Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
 Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 2 for all loaded hashes
@@ -172,7 +172,7 @@ Je m'intéresse tout de suite aux autres utilisateurs, en particulier Arsène :
 uid=1000(arsene) gid=1000(arsene) groups=1000(arsene),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev)
 ```
 
-```plain
+```bash
 icex64@LupinOne:~$ ls -al /home/arsene
 total 40
 drwxr-xr-x 3 arsene arsene 4096 Oct  4 18:46 .
@@ -187,7 +187,7 @@ drwxr-xr-x 3 arsene arsene 4096 Oct  4 12:37 .local
 -rw------- 1 arsene arsene   67 Oct  4 14:32 .secret
 ```
 
-Arsène nous a laissé une note:  
+Arsène nous a laissé une note :  
 
 ```plain
 Hi my friend Icex64,
@@ -207,8 +207,7 @@ Le code Python *heist.py* n'est pas modifiable par nous. Il ne fait qu'utiliser 
 
 Du coup je ne suis pas vraiment surpris de retrouver le module parmi la liste des fichiers que je peux modifier :  
 
-```plain
-
+```bash
 $ find / -writable 2> /dev/null  | grep -v /proc | grep -v /run
 
 --- snip ---
@@ -253,7 +252,7 @@ I dont like to forget my password "rQ8EE"UK,eV)weg~*nd-`5:{*"j7*Q"
 
 Que peut-on faire avec un mot de passe ? Commençons par regarder du côté de sudo:  
 
-```plain
+```bash
 arsene@LupinOne:~$ sudo -l
 Matching Defaults entries for arsene on LupinOne:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin

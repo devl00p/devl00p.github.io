@@ -84,7 +84,7 @@ ftp                     [Status: 200, Size: 5295, Words: 645, Lines: 68]
 :: Progress: [50000/50000] :: Job [1/1] :: 3296 req/sec :: Duration: [0:00:16] :: Errors: 0 ::
 ```
 
-On va jeter un oeil à chacun de ces sites, et effectuer s'il le faut une énumération avec `feroxbuster`.
+On va jeter un œil à chacun de ces sites et effectuer s'il le faut une énumération avec `feroxbuster`.
 
 ## cybox.company
 

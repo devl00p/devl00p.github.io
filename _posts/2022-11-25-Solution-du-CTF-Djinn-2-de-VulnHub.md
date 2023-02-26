@@ -323,7 +323,7 @@ www-data@djinn:/opt$ find / -user nitish -ls 2> /dev/null
 
 Cette fois otre identifiant sert à ouvrir le fichier kdbx avec KeepPassX et ainsi obtenir un mot de passe qui y était stocké :
 
-![Djinn 2 VulnHub Nitish KeePassX](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/djinn_nitish_keepassx.jpg)
+![Djinn 2 VulnHub Nitish KeePassX](/assets/img/vulnhub/djinn_nitish_keepassx.jpg)
 
 L'utilisation de ce mdp permet d'obtenir un shell :
 

@@ -117,7 +117,7 @@ $ gobuster -u http://192.168.3.2/ -w raft-large-files.txt -s 200,204,301,302,307
 
 Ce script nous indique de passer une variable *cmd* alors on s'exécute... et lui exécute :)   
 
-![Vulnhub Escalate_Linux CTF first shell](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/privesc_ctf_phpshell.png)
+![Vulnhub Escalate_Linux CTF first shell](/assets/img/vulnhub/privesc_ctf_phpshell.png)
 
 C'est aussi simple que cela !  
 

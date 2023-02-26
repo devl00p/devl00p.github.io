@@ -395,7 +395,7 @@ bash-4.2$ /var/nfsshare/setuid_david
 uid=1000(david) gid=1000(david) groups=1000(david),48(apache) context=system_u:system_r:httpd_t:s0
 ```
 
-On peut aussi jeter un oeil au partage qui nous était restreint :  
+On peut aussi jeter un œil au partage qui nous était restreint :  
 
 ```plain
 [david@bravery ~]$ ls -l /samba/secured/

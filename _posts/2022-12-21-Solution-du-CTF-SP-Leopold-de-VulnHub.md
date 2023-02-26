@@ -86,7 +86,7 @@ Côté exploits pour le `Samba` il pourrait y avoir le module `linux/samba/is_kn
 
 J'ai finalement mis en écoute le trafic réseau et vu quelques résolutions de noms Netbios passer :
 
-![VulnHub CTF Leopold NBNS queries](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/leopold_smb_query.png)
+![VulnHub CTF Leopold NBNS queries](/assets/img/vulnhub/leopold_smb_query.png)
 
 J'ai alors mis en écoute `Responder` :
 

@@ -232,7 +232,7 @@ root@boverflow:/root# cat root.txt
 
 Et voilà !  
 
-Un petit coup d'oeil au fichier verify.php nous permet de voir comment était formé la requête SQL :  
+Un petit coup d'œil au fichier verify.php nous permet de voir comment était formé la requête SQL :  
 
 ```php
 $q="select count(*) from passwd where username='".$_POST['username']."' and password='".$_POST['password']."';";

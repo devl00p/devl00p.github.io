@@ -21,7 +21,7 @@ J'ai donc ouvert le fichier `/etc/vbox/networks.conf` et ajouté une page IPv4 e
 
 Après on peut rajouter notre interface de façon classique :
 
-![Breach VM Host Only setup](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/breach_vm_setup.png)
+![Breach VM Host Only setup](/assets/img/vulnhub/breach_vm_setup.png)
 
 ## VM Fix
 

@@ -75,11 +75,11 @@ On atterrit alors sur une page de login classique (nom d'utilisateur et mot de p
 
 Si on rentre une apostrophe c'est plus intéressant (note: le hash MD5 correspond au pass que l'on a saisit) :  
 
-![DarNet CTF SQLite3 error 1](https://raw.githubusercontent.com/devl00p/blog/master/images/darknet/darknet_single_quote.png)
+![DarNet CTF SQLite3 error 1](/assets/img/darknet/darknet_single_quote.png)
 
 Et sur la saisie d'une apostrophe suivi de double-quote c'est encore plus verbeux :  
 
-![DarNet CTF SQLite3 error 2](https://raw.githubusercontent.com/devl00p/blog/master/images/darknet/darknet_single_double_quote.png)
+![DarNet CTF SQLite3 error 2](/assets/img/darknet/darknet_single_double_quote.png)
 
 Si l'on tente de fermer la requête qui semble être de la forme *select \*\*\* from \*\*\* where usurario = <user> and pass = hash(<pass>)* avec *' OR 1 #* on obtient l'erreur suivante :  
 
@@ -309,7 +309,7 @@ L'accès au *xpanel* n'apporte à première vue pas grand chose... Mais en comme
 
 Il s'agit bien sûr d'un script d'upload mais le fichier ne sera accepté que si on trouve le bon code...  
 
-![DarkNet CTF upload script requiring code](https://raw.githubusercontent.com/devl00p/blog/master/images/darknet/darknet_upload_script.png)
+![DarkNet CTF upload script requiring code](/assets/img/darknet/darknet_upload_script.png)
 
 Les valeurs de chaque checkbox sont numériques on aura donc une combinaison de ces valeurs à trouver :  
 

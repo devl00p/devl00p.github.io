@@ -228,7 +228,7 @@ On peut ainsi se connecter avec les identifiants d’administration sur */admin.
 
 L'interface permet de spécifier certaines commandes prédéfinies que les bots exécuteront à leur prochaine connexion (c'est un botnet HTTP, rappelons-le).  
 
-![Bitbot command panel](https://raw.githubusercontent.com/devl00p/blog/master/images/bitbot_commands.png)
+![Bitbot command panel](/assets/img/bitbot_commands.png)
 
 La commande *DOWN* semble tout indiqué pour que l'on récupère un shell mais si je lui passe l'adresse d'un *tshd* compilé statiquement ce dernier est bien récupéré mais le port de la backdoor n'est pas ouverte.  
 

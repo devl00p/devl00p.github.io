@@ -335,11 +335,11 @@ drwxrwxr-x 7 developerdmv developerdmv 4096 Dec  2 15:07 admin.git
 drwxrwxr-x 7 developerdmv developerdmv 4096 Apr 28  2020 site.git
 ```
 
-On voit dans les activités précédentes que un `git checkout` de root semble provoquer l'accès à l'un des repository de `developerdmv`.
+On voit dans les activités précédentes qu'un `git checkout` de root semble provoquer l'accès à l'un des repository de `developerdmv`.
 
 En particulier sur le second choix l'utilisateur `checkout` le project `admin` et ensuite exécute le binaire `admin` qui est présent à l'intérieur.
 
-Je vais donc cloner le projet dans `/tmp` et jeter un oeil à ce qui s'y trouve (dans `/home/developerdmv/admin.git/` on ne voit pas les fichiers tels quels, juste les objets Git) :
+Je vais donc cloner le projet dans `/tmp` et jeter un œil à ce qui s'y trouve (dans `/home/developerdmv/admin.git/` on ne voit pas les fichiers tels quels, juste les objets Git) :
 
 ```bash
 developerdmv@mv2:/tmp$ git clone /home/developerdmv/admin.git/ admincopy

@@ -210,11 +210,11 @@ Dans *ZAP* on fait un click-droit sur la requête puis *Attaquer* puis *Génére
 
 Il faut ensuite sélectionner un dictionnaire contenant des paths de fichiers intéressants (j'en ai un perso mais ça peut se trouver sur le web).  
 
-![ZAP generate noise location](https://raw.githubusercontent.com/devl00p/blog/master/images/ctf2017_zap_brute.png)
+![ZAP generate noise location](/assets/img/ctf2017_zap_brute.png)
 
 Quand le fuzz a fini on fait un simple tri sur la taille des pages retournées ce qui nous permet de trouver le bon path pour la config d'Apache.  
 
-![ZAP fuzzing results](https://raw.githubusercontent.com/devl00p/blog/master/images/ctf2017_dir_traversal_zap.png)
+![ZAP fuzzing results](/assets/img/ctf2017_dir_traversal_zap.png)
 
 On en déduit facilement le chemin (heureusement celui par défaut) pour le sites-enabled : */etc/apache2/sites-enabled/000-default.conf* contenant le *DocumentRoot* (*/var/www/html*).  
 

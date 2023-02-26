@@ -27,11 +27,11 @@ Malheureusement on ne trouve aucun fichier et les droits d'accès ne permettent 
 
 Le serveur web affiche une page défacée avec un ascii art à rendre jaloux le graphiste de *The Offspring* :  
 
-![Contra Wizard Labs CTF defaced index page](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/contra_skull.png)
+![Contra Wizard Labs CTF defaced index page](/assets/img/wizard-labs/contra_skull.png)
 
 Un dirbuster permet de découvrir rapidement un Wordpress à l'adresse */blog*. Ce dernier a visiblement été piraté :  
 
-![Contra Wizard Labs CTF hacked wordpress](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/contra_hacked_wordpress.png)
+![Contra Wizard Labs CTF hacked wordpress](/assets/img/wizard-labs/contra_hacked_wordpress.png)
 
 Ma première réaction a été de lancé un WPscan sur ce *Wordpress 4.9.8*, ce qui ne m'a pas mené bien loin...  
 

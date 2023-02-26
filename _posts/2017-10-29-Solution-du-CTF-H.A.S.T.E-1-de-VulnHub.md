@@ -191,7 +191,7 @@ mais tout en majuscules cela fonctionne :
 <!--#EXEC cmd="ls" --> 
 ```
 
-![SSI injenction result](https://raw.githubusercontent.com/devl00p/blog/master/images/hastevm.png)
+![SSI injenction result](/assets/img/hastevm.png)
 
 A Python was good
 -----------------

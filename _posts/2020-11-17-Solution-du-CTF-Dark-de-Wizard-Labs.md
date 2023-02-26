@@ -10,7 +10,7 @@ Vader
 
 La machine fait tourner un serveur web avec un formulaire de contact en index :  
 
-![Wizard-Labs Dark CTF index page XXE](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/dark_index.png)
+![Wizard-Labs Dark CTF index page XXE](/assets/img/wizard-labs/dark_index.png)
 
 En regardant le code source de la page on voit que les données sont soumises via Ajax au format XML :  
 

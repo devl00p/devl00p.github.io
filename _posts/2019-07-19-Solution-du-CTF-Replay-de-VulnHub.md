@@ -112,7 +112,7 @@ Ces chaînes apparaissent en réalité accolées, j'ai découpé en lignes pour 
 
 Lancer un *ltrace* ou un *strace* retourne bien trop d'output sans intérêt. Le mieux que l'on puisse faire est de lancer *Wireshark* et de surveiller les communications générées entre notre machine et celle du CTF :  
 
-![VulnHub Replay CTF first trafic analysis](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/replay_trafic1.png)
+![VulnHub Replay CTF first trafic analysis](/assets/img/vulnhub/replay_trafic1.png)
 
 Le premier comportement suspect c'est la façon dont sont envoyées les données au serveur, par petits blocs, ce qui explique notamment le temps de traitement assez long.  
 
@@ -165,7 +165,7 @@ On relance le client avec le bon mot de passe et l'authentification passe. La co
 
 Si on regarde la nouvelle capture on remarque une vérification assez basique pour l'étape 2 : le serveur envoie une chaîne base64 et on doit envoyer la valeur décodée.  
 
-![VulnHub Replay CTF first trafic analysis](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/replay_trafic2.png)
+![VulnHub Replay CTF first trafic analysis](/assets/img/vulnhub/replay_trafic2.png)
 
 L'étape 3 consiste pour le client à envoyer une valeur correspondant à un octet encodé en base64. Puis il envoie un bloc de données plus gros au serveur.  
 

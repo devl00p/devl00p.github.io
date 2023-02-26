@@ -65,7 +65,7 @@ Un buster sur le serveur IIS ne révèle rien de plus que le classique dossier *
 
 C'est en revanche plus intéressant sur le serveur Apache sur lequel on découvrira un soft de e-learning baptisé *Manhali* à l'adresse */platform* :  
 
-![WizardLabs CTF Katana Manhali e-learning CMS](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/katana/katana_manhali.png)
+![WizardLabs CTF Katana Manhali e-learning CMS](/assets/img/wizard-labs/katana/katana_manhali.png)
 
 D'autant plus intéressant que l'on trouve via *searchsploit* une vulnérabilité pour ce logiciel :  
 
@@ -97,7 +97,7 @@ Cette dernière n'a rien d'intéressant puisque l'utilisateur root peut se conne
 
 Au passage l'exploit parlait d'une faille d'inclusion locale, il n'en est rien puisque le code PHP n'est pas interprété. C'est pourtant pas compliqué de lire un put\*\*\* de message d'erreur :  
 
-![WizardLabs CTF Katana Manhali directory traversal](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/katana/katana_file_disclosure.png)
+![WizardLabs CTF Katana Manhali directory traversal](/assets/img/wizard-labs/katana/katana_file_disclosure.png)
 
 Mais du coup que peut t'on faire avec ce directory traversal / file disclosure ?  
 
@@ -114,11 +114,11 @@ Deuxièmement on ne trouve aucune page pour éditer un fichier existant et y raj
 
 Le seul indice est ce fichier Word présent dans le gestionnaire de fichier :  
 
-![WizardLabs CTF Katana uploaded docx](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/katana/kanata_vhost_doc.png)
+![WizardLabs CTF Katana uploaded docx](/assets/img/wizard-labs/katana/kanata_vhost_doc.png)
 
 Au vu du contenu de ce fichier on est sur la bonne piste et il est encore question de ce scanner *Monero* :  
 
-![WizardLabs CTF Katana WAMP vhost doc](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/katana/katana_docx_content.png)
+![WizardLabs CTF Katana WAMP vhost doc](/assets/img/wizard-labs/katana/katana_docx_content.png)
 
 On se sert de la faille dans *Manhali* pour aller lire le fichier *C:\wamp64\bin\apache\apache2.4.37\conf\extra\httpd-vhosts.conf* qui nous révèle l'existence d'un virtual host :  
 
@@ -171,7 +171,7 @@ Katana
 
 Il est temps de voir ce que ces identifiants dissimulaient sur le serveur Apache :  
 
-![WizardLabs CTF Katana URL scaner](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/katana/katana_scanner.png)
+![WizardLabs CTF Katana URL scaner](/assets/img/wizard-labs/katana/katana_scanner.png)
 
 La première idée qui me vient est de mettre un port en écoute et de voir les entêtes envoyées par le script :  
 
@@ -189,7 +189,7 @@ Connection: close
 
 Pas très bavard, mais quand je coupe la connexion j'ai une erreur plus parlante :  
 
-![WizardLabs CTF Katana URL scanner include() vulnerability](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/katana/katana_include.png)
+![WizardLabs CTF Katana URL scanner include() vulnerability](/assets/img/wizard-labs/katana/katana_include.png)
 
 Cette fois on l'a notre faille *include()*.  
 
@@ -238,7 +238,7 @@ Pour peu que l'on dispose de suffisamment de droits sur le système de fichier o
 
 J'ai uploadé [cette backdoor ASPX](https://raw.githubusercontent.com/fuzzdb-project/fuzzdb/master/web-backdoors/asp/cmd.aspx) via la session Meterpreter et boum ! A nous l'exécution de commandes :)  
 
-![WizardLabs CTF Katana ASPX web backdoor](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/katana/katana_webshell.png)
+![WizardLabs CTF Katana ASPX web backdoor](/assets/img/wizard-labs/katana/katana_webshell.png)
 
 Sans trop de surprises on a une exécution avec les droits *katana\www* et toujours pas de flag utilisateur :(  
 

@@ -86,11 +86,11 @@ Ici *clen* correspond aux nombres de caractères présents dans la page, ce qui 
 
 Armé de cette info j'ai installé l'extension Firefox *Cookie Manager*, ce n'est clairement pas la meilleure mais elle a fait le job :  
 
-![HackTheBox Dab CTF cookie edit](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/dab/dab_cookie_manager.png)
+![HackTheBox Dab CTF cookie edit](/assets/img/htb/dab/dab_cookie_manager.png)
 
 On se retrouve alors sur un formulaire permettant d'envoyer des données vers un port local de la machine :  
 
-![HackTheBox Dab CTF socket send form](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/dab/dab_socket.png)
+![HackTheBox Dab CTF socket send form](/assets/img/htb/dab/dab_socket.png)
 
 On peut aussi passer une plage numérique à Patator :  
 
@@ -369,7 +369,7 @@ Ce petit rigolo de binaire ne fait qu'afficher une fausse invite root, attendre 
 
 De plus le binaire est protégé via stack-protector et le *fgets* ne prend pas assez de données pour être vulnérable donc pas de regrets...  
 
-![HackTheBox Dab CTF try_harder CTF](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/dab/dab_try_harder.png)
+![HackTheBox Dab CTF try_harder CTF](/assets/img/htb/dab/dab_try_harder.png)
 
 En revanche il y a un autre binaire qui ne m'a pas sauté immédiatement aux yeux et qui fait appel à une librairie custom :  
 
@@ -385,7 +385,7 @@ Ce binaire demande un mot de passe avant de faire appel à la fonction importée
 
 D'après la valeur des registres on devine que le prototype de cette fonction ne prend aucun argument.  
 
-![HackTheBox Dab CTF myexec binary](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/dab/dab_myexec.png)
+![HackTheBox Dab CTF myexec binary](/assets/img/htb/dab/dab_myexec.png)
 
 L'exploitation est en tout point similaire à un scénario du type LD\_PRELOAD :  
 
@@ -407,7 +407,7 @@ void seclogin(void)
 
 On compile, on place la librairie dans */tmp*, on exécute *myexec*, on rentre le mot de passe attendu et à nous le shell root et le flag final :)  
 
-![HackTheBox Dab CTF  final exploit](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/dab/dab_root.png)
+![HackTheBox Dab CTF  final exploit](/assets/img/htb/dab/dab_root.png)
 
 Outro
 -----

@@ -389,9 +389,9 @@ Que demander de plus ?
 After-pwn
 ---------
 
-J'ai tout de même jeté un oeil sur les fichiers de logs pour voir si on pouvait aller plus loin avec la faille include() et... on ne pouvait pas car les accès sont tous trop restreints.  
+J'ai tout de même jeté un œil sur les fichiers de logs pour voir si on pouvait aller plus loin avec la faille include() et... on ne pouvait pas car les accès sont tous trop restreints.  
 
-Toutefois, admettons que les logs de Samba fussent lisible on aurait d'abord remarqué que leur nom contient l'adresse IP ou le nom d'hôte du client (comme indiqué dans */etc/samba/smb.conf*) :  
+Toutefois, admettons que les logs de Samba fussent lisibles on aurait d'abord remarqué que leur nom contient l'adresse IP ou le nom d'hôte du client (comme indiqué dans */etc/samba/smb.conf*) :  
 
 ```plain
 # This tells Samba to use a separate log file for each machine

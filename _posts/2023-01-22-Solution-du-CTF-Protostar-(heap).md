@@ -556,7 +556,7 @@ Le heap est une liste doublement chainée de chunks qui représentent chacun une
 
 Un chunk (tel qui nous intéresse) ressemble à ceci :
 
-![dmlalloc heap chunk](https://raw.githubusercontent.com/devl00p/blog/master/images/protostar/heap/chunk.png)
+![dmlalloc heap chunk](/assets/img/protostar/heap/chunk.png)
 
 Sur la gauche, en rouge, est représenté un chunk utilisé (il contient des données) et sur la droite, en vert, est représenté un chunk libre. Il s'agit en réalité exactement de la même structure mais ce qui est stocké à l'intérieur va changer en fonction de son état.
 
@@ -811,13 +811,13 @@ Pour le reste rien ne semble avoir changé, en tout cas en apparence.
 
 Lorsque le chunk 4 a été libéré, `malloc` a regardé à gauche puis à droite s'il y avait un chunk libre avec lequel fusionner et ainsi libérer le maximum de place. Voici un schéma avant/après de cette fusion :
 
-![dlmalloc backward consolidation](https://raw.githubusercontent.com/devl00p/blog/master/images/protostar/heap/consilidation_left.png)
+![dlmalloc backward consolidation](/assets/img/protostar/heap/consilidation_left.png)
 
 Avec une bordure plus épaisse on retrouve les adresses qui ont été altérées dans l'opération.
 
 C'est plus parlant si la consolidation avait été faite du chunk 3 vers le chunk 4 :
 
-![dlmalloc forward consolidation](https://raw.githubusercontent.com/devl00p/blog/master/images/protostar/heap/consilidation_right.png)
+![dlmalloc forward consolidation](/assets/img/protostar/heap/consilidation_right.png)
 
 Ici on voit bien (en partant du chunk 4) que pour mettre à jour la liste doublement chainée :
 

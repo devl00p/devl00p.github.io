@@ -90,7 +90,7 @@ flag00@nebula:~$ getflag
 You have successfully executed getflag on a target account
 ```
 
-On peut jeter un oeil rapide pour voir ce que ce binaire fait :
+On peut jeter un œil rapide pour voir ce que ce binaire fait :
 
 ```nasm
 flag00@nebula:~$ gdb -q /bin/getflag
@@ -545,7 +545,7 @@ Voici les données envoyées par le client (représentation ascii).
 backdoor...00Rm8.ate
 ```
 
-Le mot de passe `backdoor` n'était pas accepté... J'ai donc regardé les octets présents après et ce ne sont pas des points, ils correspondent au code `7F`. Un coup d'oeil sur [man ascii (7): Jeu de caractères ASCII en octal, décimal, et hexadécimal](https://fr.manpages.org/ascii/7) permet de voir que ça correspond à la touche `Del` du clavier donc les caractères sont effacés. Le mot de passe est  en vérité `backd00Rmate`.
+Le mot de passe `backdoor` n'était pas accepté... J'ai donc regardé les octets présents après et ce ne sont pas des points, ils correspondent au code `7F`. Un coup d'œil sur [man ascii (7): Jeu de caractères ASCII en octal, décimal, et hexadécimal](https://fr.manpages.org/ascii/7) permet de voir que ça correspond à la touche `Del` du clavier donc les caractères sont effacés. Le mot de passe est  en vérité `backd00Rmate`.
 
 ```
 level08@nebula:~$ su flag08

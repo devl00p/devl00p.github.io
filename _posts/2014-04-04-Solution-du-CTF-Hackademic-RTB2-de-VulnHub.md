@@ -225,7 +225,7 @@ var $gzip = '0';
 
 Avec les identifiants on se connecte sur *phpMyAdmin* puis on place une backdoor PHP via l'utilisation de l'instruction *INTO OUTFILE* :  
 
-![INTO OUTFILE backdoor creation](https://raw.githubusercontent.com/devl00p/blog/master/images/into_outfile.png)
+![INTO OUTFILE backdoor creation](/assets/img/into_outfile.png)
 
 On utilise cette backdoor pour rappatrier un *tshd* et obtenir un accès terminal. On dispose des droits de l'utilisateur *www-data* et on a affaire à un kernel 2.6.32 :  
 
@@ -235,14 +235,14 @@ Du coup on réutilise l'exploit RDS pour le kernel pour passer root ([comme pour
 
 Une fois le fichier décodé (*base64 -d key.txt > file.out*) on obtient la clé suivante :  
 
-![Image obtenue via decodage base64](https://raw.githubusercontent.com/devl00p/blog/master/images/rtb2_flag.png)
+![Image obtenue via decodage base64](/assets/img/rtb2_flag.png)
 
 Victoire !  
 
 Sous le capot
 -------------
 
-Bon maintenant qu'on a terminé, jettons un coup d'oeil à ce fameux script *check.php* qui m'a tant énervé (j'ai coupé l'output une fois de plus car c'est super long) :  
+Bon maintenant qu'on a terminé, jettons un coup d'œil à ce fameux script *check.php* qui m'a tant énervé (j'ai coupé l'output une fois de plus car c'est super long) :  
 
 ```php
 $pass_answer = "' or 1=1--'";

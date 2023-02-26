@@ -27,7 +27,7 @@ Qu'importe il est possible de la charger dans *VirtualBox*. La conversion est en
 
 Une fois *VirtualBox* lancé, cliquez sur le bouton *"Nouvelle"* puis renseignez les informations comme suit :  
 
-![Création image VirtualBox](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity1.png)
+![Création image VirtualBox](/assets/img/relativity1.png)
 
 Ces paramètres ne sont pas fantaisistes : ils sont en réalité trouvables dans le fichier *.vmx* qui a été extrait.  
 
@@ -115,7 +115,7 @@ Après un tour rapide sur le serveur web (rien d'intéressant de trouvé), on
 
 Qui dit SQL (comme dans mod\_sql) dit potentiellement injection SQL. On joue alors un peu avec le client FTP et le nom d'utilisateur et on s'apperçoit vite qu'il a du mal à digérer la présence de l'apostrophe dans le username :)  
 
-![Test injection SQL](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity2.png)
+![Test injection SQL](/assets/img/relativity2.png)
 
 Maintenant essayons de faire des injections qui ne font pas crasher la connexion et qui pourraient nous en apprendre plus.  
 
@@ -142,7 +142,7 @@ Par conséquent il doit être possible d'utiliser la fonction IF() de MySQL a�
 
 Mais d'abord déterminons pourquoi nous ne pouvons pas simplement faire fermer la requête SQL. Vraisemblablement le code généré en fond s'attend à trouver un autre caractère. Que se passe-t-il si nous fermons aussi une parenthèse ?  
 
-![Injection SQL, pas de crash](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity3.png)
+![Injection SQL, pas de crash](/assets/img/relativity3.png)
 
 Bingo ! *Login failed*, pas de déconnexion.  
 
@@ -191,7 +191,7 @@ Le script est allé bien au delà de nos espérances puisqu'il a réussi à
 
 On relance le client FTP et on utilise notre nom d'utilisateur très spécial.  
 
-![Connexion au serveur FTP](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity4.png)
+![Connexion au serveur FTP](/assets/img/relativity4.png)
 
 Notre exploit a visiblement mis le serveur FTP dans un état un peu particulier car contrairement aux droits affichés on ne peut pas faire un *"cd"* dans le dossier *0f756638e0737f4a0de1c53bf8937a08*. Ce qui n'est pas trop génant puisqu'on peut lister son contenu.  
 
@@ -199,7 +199,7 @@ Hop ! Direction http://192.168.1.57/0f756638e0737f4a0de1c53bf8937a08/ voir si on
 
 En regardant comment sont formées les URLs il semble évident qu'on est en présence d'une faille de type local file disclosure ou include().  
 
-![Pages web cachées](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity5.png)
+![Pages web cachées](/assets/img/relativity5.png)
 
 On teste rapidement quelques entrées pour le paramètre page comme /etc/passwd, ../../../../../../etc/passwd, .htaccess, /proc/self/environ mais de toute évidence il y a une protection supplémentaire.  
 
@@ -279,7 +279,7 @@ ssh -i mauk_key mauk@192.168.1.57
 
 (on aura préalablement mis les bonnes permissions sur le fichier *mauk\_key* pour que SSH ne râle pas)  
 
-![Connexion avec le compte mauk](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity6.png)
+![Connexion avec le compte mauk](/assets/img/relativity6.png)
 
 Ca y est on est dans la boîte !
 
@@ -307,11 +307,11 @@ Puis sur mon accès VM :
 * je compile KevProxy
 * je le lance pour créer mon tunnel vers le serveur IRC
 
-![Redirection de port avec KevProxy](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity7.png)
+![Redirection de port avec KevProxy](/assets/img/relativity7.png)
 
 Plus qu'à configurer *Konversation* pour se connecter au serveur *UnrealIRC* :  
 
-![Connexion au serveur UnrealIRCd](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity8.png)
+![Connexion au serveur UnrealIRCd](/assets/img/relativity8.png)
 
 On remarque que le serveur est en version 3.2.8.1. Il s'agit ni plus ni moins [d'une version qui a été backdoorée](http://d4n3ws.polux-hosting.com/2010/06/13/unrealircd-backdoore/) et dont on trouve différents exploits [sur *SecurityFocus*](http://www.securityfocus.com/bid/40820/exploit).  
 
@@ -363,7 +363,7 @@ Monumentale erreur ! Appeler un programme sans spécifier son path exact !
 
 Comment le programme réagit-il quand on le lance normalement ?  
 
-![Fonctionnement de auth_server](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity9.png)
+![Fonctionnement de auth_server](/assets/img/relativity9.png)
 
 Modifions quelque peu les choses. D'abord écrivons un programme *fortune.c* comme suit dont le rôle est de passer un binaire à nous baptisé *gotroot* en setuid root :
 
@@ -398,7 +398,7 @@ int main(void)
 
 On compile les deux, on modifie le path (*export PATH=.:$PATH*, on le voit pas dans la capture) et on profite :  
 
-![Exploitation de auth_server](https://raw.githubusercontent.com/devl00p/blog/master/images/relativity10.png)
+![Exploitation de auth_server](/assets/img/relativity10.png)
 
 Ca y est, mission accomplished 8-)  
 

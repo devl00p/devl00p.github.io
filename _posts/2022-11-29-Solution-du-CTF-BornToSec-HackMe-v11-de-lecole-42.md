@@ -444,7 +444,7 @@ Voici un exemple plus parlant puisqu'il s'agit de la première étape du binaire
 0x08048b47      nop
 ```
 
-Ici on est dans le cas de crackme le plus simple possible : la fonction reçoit une chaine de caractères en paramètre et la compare à une autre qui est hardcodé. Au simple coup d'oeil on sait que la solution est `Public speaking is very easy.`
+Ici on est dans le cas de crackme le plus simple possible : la fonction reçoit une chaine de caractères en paramètre et la compare à une autre qui est hardcodé. Au simple coup d'œil on sait que la solution est `Public speaking is very easy.`
 
 Le code Python pour résoudre l'étape avec `angr` est le suivant :
 
@@ -936,7 +936,7 @@ totooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 Segmentation fault (core dumped)
 ```
 
-Petit coup d'oeil à l'output de `dmesg` :
+Petit coup d'œil à l'output de `dmesg` :
 
 `[48067.977397] exploit_me[4634]: segfault at 6f6f6f6f ip 6f6f6f6f sp bffff6d0 error 14`
 

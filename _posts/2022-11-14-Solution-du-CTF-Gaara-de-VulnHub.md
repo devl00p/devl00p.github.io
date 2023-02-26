@@ -70,7 +70,7 @@ Le premier est le flag `5451d3eb27acb16c652277d30945ab1e` et le second contient 
 > 
 > L3Vzci9sb2NhbC9nYW1lcw==
 
-Le base64 nous indique d'aller jeter un oeil dans `/usr/local/games` où l'on trouve un fichier texte qui a l'air encodé via [Brainfuck](https://fr.wikipedia.org/wiki/Brainfuck) :
+Le base64 nous indique d'aller jeter un œil dans `/usr/local/games` où l'on trouve un fichier texte qui a l'air encodé via [Brainfuck](https://fr.wikipedia.org/wiki/Brainfuck) :
 
 ```
 Godaime Kazekage:

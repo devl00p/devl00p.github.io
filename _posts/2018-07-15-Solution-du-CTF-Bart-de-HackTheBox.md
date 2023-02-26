@@ -68,7 +68,7 @@ Le nouveau domaine nous amène sur une installation de [PHP Server Monitor](http
 
 Ainsi on a l'erreur suivante lorsque l'on saisit par exemple *test* :  
 
-![PHP Server Monitor username enumeration](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/bart_phpservermonitor_forgot.png)
+![PHP Server Monitor username enumeration](/assets/img/htb/bart_phpservermonitor_forgot.png)
 
 Alors que si l'on rentre *daniel* ou *harvey* que l'on a noté plus tôt on obtient le message *An email has been sent to you with information how to reset your password.*  
 
@@ -129,7 +129,7 @@ with open(wordlist) as fd:
 
 Cet accès nous permet de voir un nouveau hostname parmi les serveurs monitorés : internal-01.bart.htb  
 
-![HackTheBox Bart reference to internal-01.bart.htb](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/bart_internal_chat_reference.png)
+![HackTheBox Bart reference to internal-01.bart.htb](/assets/img/htb/bart_internal_chat_reference.png)
 
 Un formulaire de login pour une appli de chat vraisemblablement home-made nous incite une fois encore à trouver un mot de passe pour ce cher *Harvey*. De quoi relancer *Patator* :  
 
@@ -148,7 +148,7 @@ Highway to shell
 
 Cette application de chat est très sommaire toutefois en regardant le code source on devine une situation de write-what-where dans le mécanisme de logging présent :  
 
-![HackTheBox Bart XHR request to log chats](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/bart_internal_chat_xhr.png)
+![HackTheBox Bart XHR request to log chats](/assets/img/htb/bart_internal_chat_xhr.png)
 
 On peut s'en assurer avec cette erreur verbose lorsque l'on spécifie le *boot.ini* comme fichier de log :  
 

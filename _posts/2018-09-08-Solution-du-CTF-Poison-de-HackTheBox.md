@@ -80,7 +80,7 @@ Nmap y voit du *Fortinet* mais d'après la classification sur HackTheBox on sait
 
 Sur la page d'index du serveur web se trouve un formulaire permettant d'exécuter un script PHP parmi plusieurs choix existants :  
 
-![Index page of Poison CTF from HackTheBox](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/poison_index.png)
+![Index page of Poison CTF from HackTheBox](/assets/img/htb/poison_index.png)
 
 Ce script est largement vulnérable puisque si l'on saisit */etc/passwd* dans le champ de texte on obtient le contenu du fichier qui révèle la présence d'un utilisateur nommé *charix*.  
 
@@ -207,7 +207,7 @@ Il suffit alors d'utiliser *xvncviewer* en spécifiant le display. le principe e
 
 On s'en tire alors avec la commande *xvncviewer -passwd secret 127.0.0.1:1* qui nous amène face à un terminal root qui traînait par là :  
 
-![Poison HackTheBox CTF final root flag with xvncviewer](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/poison_root_flag.png)
+![Poison HackTheBox CTF final root flag with xvncviewer](/assets/img/htb/poison_root_flag.png)
 
 Game over
 ---------

@@ -166,7 +166,7 @@ current user: 'root@localhost'
 
 Je prends tout de même la peine de tester les failles SQL de `ProPlayer` car je gagnerais du temps si l'une des failles n'est pas time-based (utilisation de la fonction `sleep()`). Malheureusement cette version du plugin ne semble pas vulnérable.
 
-Je jette aussi un oeil au port 8080 mais il ne semble être que la version *en clair* du port 443.
+Je jette aussi un œil au port 8080, mais il ne semble être que la version *en clair* du port 443.
 
 On est bon pour continuer sur ce port 80... et on sent que l'extraction des données va prendre en certains temps.
 

@@ -42,9 +42,9 @@ MAC Address: 08:00:27:09:6B:FC (Oracle VirtualBox virtual NIC)
 Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-Dans le FTP on trouve un fichier *.bash\_history*. Est-ce le dossier personnel d 'un utilisateur quelconque ? Dans tous les cas on ne dispose pas d'accès en écriture donc on s'arrête là.  
+Dans le FTP on trouve un fichier *.bash\_history*. Est-ce le dossier personnel d'un utilisateur quelconque ? Dans tous les cas on ne dispose pas d'accès en écriture donc on s'arrête là.  
 
-Une énumération de la racine web ne remonte rien mais un coup d'oeil à la source de la page d'index permet de trouver un nom d'utilisateur :  
+Une énumération de la racine web ne remonte rien, mais un coup d'œil à la source de la page d'index permet de trouver un nom d'utilisateur :  
 
 ```html
 <!-- Username : sysadmin -->

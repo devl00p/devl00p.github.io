@@ -345,7 +345,7 @@ Cette discussion nous permet de comprendre la présence du fichier *Documents/de
 
 L'avantage c'est que l'on sait ce que l'on recherche (une requête HTTP POST sur le port 80) c'est donc assez facile de s'y retrouver avec le bon filtre dans Wireshark.  
 
-![DerpNStink CTF Wireshark Wordpress password](https://raw.githubusercontent.com/devl00p/blog/master/images/derpnstink_derp_password.png)
+![DerpNStink CTF Wireshark Wordpress password](/assets/img/derpnstink_derp_password.png)
 
 Ainsi on peut passer de *stinky* à *mrderp* via la commande su et le mot de passe *derpderpderpderpderpderpderp*.  
 

@@ -124,7 +124,7 @@ On se dit alors que peut être l'authentification est mal écrite et qu'il est f
 
 Et le miracle s'accomplit :   
 
-![Wapiti htaccess bypass](https://raw.githubusercontent.com/devl00p/blog/master/images/wapiti3_htaccess_bypass.png)
+![Wapiti htaccess bypass](/assets/img/wapiti3_htaccess_bypass.png)
 
 Mégateuf Wayne ! On peut accéder à la page si on effectue par exemple un POST à la place d'un GET sur */index.php*.  
 
@@ -291,7 +291,7 @@ rene:$apr1$wfYjXf4U$0ZZ.qhGGrtkOxvKr5WFqX/
 
 Le hash semble trop complexe à casser donc on déplace juste le .htaccess et on n'est plus embêté :)   
 
-Les fichiers .BAK (que l'on retrouve aussi dans l'archive .tar.gz) ne semblent pas correspondre à grand chose. Un coup d'oeil via un éditeur hexa ne nous met sur aucune piste.  
+Les fichiers .BAK (que l'on retrouve aussi dans l'archive .tar.gz) ne semblent pas correspondre à grand chose. Un coup d'œil via un éditeur hexa ne nous met sur aucune piste.  
 
 Même en ressortant mon *Guide complet du FreeBSD* (superbe livre au passage) sur la section des backups je n'ai rien trouvé qui pourrait me diriger sur le sujet. De plus *dump* et *restore* ne sont pas présents sur le système.  
 
@@ -351,7 +351,7 @@ cd /home/rene/backup; touch -- "--checkpoint=1"; touch -- "--checkpoint-action=e
 
 On attend un peu et on touche le jackpot :  
 
-![PIPE CTF flag](https://raw.githubusercontent.com/devl00p/blog/master/images/pipe_ctf.png)
+![PIPE CTF flag](/assets/img/pipe_ctf.png)
 
 Au passage le script qui générait les fichiers BAK n'était là que pour la forme :  
 

@@ -230,7 +230,7 @@ Bourriner n'ayant pas fonctionné je me suis penché sur l'inclusion de */proc/s
 
 Finalement le titre de l'interface web est un bon candidat :  
 
-![VulnHub Presidentials CTF phpMyAdmin title configuration](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/presidentials_pma_settings.png)
+![VulnHub Presidentials CTF phpMyAdmin title configuration](/assets/img/vulnhub/presidentials_pma_settings.png)
 
 Le texte est bien présent :  
 

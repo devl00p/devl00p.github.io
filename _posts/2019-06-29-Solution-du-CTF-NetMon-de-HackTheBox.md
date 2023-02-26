@@ -145,7 +145,7 @@ J'ai pu exploiter cela tout seul mais j'ai découvert au moment de l'écriture d
 
 On pouvait alors créer un compte administrateur sur la machine de cette façon :  
 
-![HackTheBox NetMon CTF PRTG notification command execution vulnerability](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/netmon_prtg_notif.png)
+![HackTheBox NetMon CTF PRTG notification command execution vulnerability](/assets/img/htb/netmon_prtg_notif.png)
 
 Comme le montre l'infobulle, au moment de la création de la notification il faut laisser vide les identifiants si on veut que la tache soit exécutée avec les droits du démon PRTG (qui tourne en SYSTEM).  
 
@@ -153,7 +153,7 @@ Quand on enregistre la notification, PRTG re-renseigne ces champs mais j'ai rema
 
 Finalement on peut définir notre notification parmi les notifications de base (exécutées pour tous les événements) ou spécifiquement sur un événement.  
 
-![HackTheBox NetMon CTF PRTG devices group notification](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/netmon_prtg_devices.png)
+![HackTheBox NetMon CTF PRTG devices group notification](/assets/img/htb/netmon_prtg_devices.png)
 
 Une fois qu'on s'est battu pour que personne n'ai supprimé / modifié la notification ou changé le mot de passe tout est ok et on peut obtenir le flag root :  
 

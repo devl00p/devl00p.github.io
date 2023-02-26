@@ -313,7 +313,7 @@ Comme pour le CTF [Uninvited](https://devloop.users.sourceforge.net/index.php?ar
 
 J'ai trouvé un site permettant de faire ça, ce qui fait gagner quelques minutes d'installation :  
 
-![PyExtractor Jetty VulnHub password_keeper.exe](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/jetty_pyextractor.png)
+![PyExtractor Jetty VulnHub password_keeper.exe](/assets/img/vulnhub/jetty_pyextractor.png)
 
 Une fois les fichiers obtenus on peut utiliser [uncompyle6](https://github.com/rocky/python-uncompyle6) pour décompiler le fichier Python principal. La problématique que j'avais était que toutes les versions de Python dont je disposais étaient trop récentes pour cet outil (c'est ça d'utiliser [openSUSE Tumbleweed](https://get.opensuse.org/tumbleweed/))  
 

@@ -22,7 +22,7 @@ On note aussi au moment de l'enregistrement que les mots de passe doivent faire 
 
 Quand on est connecté on est face à un système de gestion de mémos. Et on voit un premier nom d'utilisateur ainsi qu'un lien de contact qui amène vers un formulaire pour envoyer un message à cet utilisateur.  
 
-![HackTheBox SecNotes members website](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/secnotes_home.png)
+![HackTheBox SecNotes members website](/assets/img/htb/secnotes_home.png)
 
 Du coup on met un port en écoute et on envoie un lien par ce formulaire pour voir si quelqu'un mort à l'hameçon. Et la pèche est bonne :  
 
@@ -66,7 +66,7 @@ Press Ctrl-C to quit.
 
 Une fois connecté on voit des identifiants parmi les mémos de *Tyler* :  
 
-![HackTheBox SecNotes Tyler credentials](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/secnotes_newsite_passwd.png)
+![HackTheBox SecNotes Tyler credentials](/assets/img/htb/secnotes_newsite_passwd.png)
 
 Run-P.H.P.
 ----------

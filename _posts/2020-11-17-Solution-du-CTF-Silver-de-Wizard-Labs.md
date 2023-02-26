@@ -26,7 +26,7 @@ Sur le site web de la box, [Wapiti](http://wapiti.sourceforge.net/) trouve diff�
 * Exécution de commande via un wrapper PHP (voir capture d'écran plus loin)
 * Timeout si la valeur est *http://www.google.com/*
 
-![Wizard Labs CTF Silver include() vulnerability Wapiti report](https://raw.githubusercontent.com/devl00p/blog/master/images/wizard-labs/silver_rce.png)
+![Wizard Labs CTF Silver include() vulnerability Wapiti report](/assets/img/wizard-labs/silver_rce.png)
 
 Autant dire qu'on a affaire à une faille d'inclusion PHP et que l'inclusion distante est activée.  
 

@@ -23,7 +23,7 @@ On a ici un port 80 qui fait une redirection automatique vers le port 443 de *in
 
 Le port 443 livre quand à lui un certificat matchant ce nom d'hôte.  
 
-![HackTheBox CTF RedCross homepage](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/redcross/redcross_www.png)
+![HackTheBox CTF RedCross homepage](/assets/img/htb/redcross/redcross_www.png)
 
 Le site dispose d'une page de login et d'un formulaire de contact. Les URLs peuvent penser à la présence d'une faille include ou directory traversal mais il n'en est rien.  
 
@@ -87,7 +87,7 @@ A force d'énumération on finit par découvrir la présence d'un document *acco
 
 Devoir chercher la présence de fichiers PDFs est quelque chose que l'on rencontre rarement sur un CTF mais vu le nom du dossier ça se tenait...  
 
-![HackTheBox CTF RedCross pdf file account signup](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/redcross/redcross_pdf.png)
+![HackTheBox CTF RedCross pdf file account signup](/assets/img/htb/redcross/redcross_pdf.png)
 
 Ce document signé par une certaine *Penelope Harris* nous informe en quelque sorte qu'un traitement automatisé permet la création de comptes sur l'appli *intra*.  
 
@@ -218,7 +218,7 @@ Le dernier champ du formulaire permettant de laisser un email ou un numéro de t
 
 Du coup on peut tester en essayant de provoquer le chargement d'une image vers un serveur web sous notre contrôle. On n'oublie pas de lancer un wireshark pour avoir la totalité de la requête avec le user-agent :  
 
-![HackTheBox CTF RedCross PhantomJS user-agent](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/redcross/redcross_phantomjs.png)
+![HackTheBox CTF RedCross PhantomJS user-agent](/assets/img/htb/redcross/redcross_phantomjs.png)
 
 On voit ici qu'une action humaine est émulée via l'emploi du navigateur headless PhantomJS.  
 
@@ -236,11 +236,11 @@ Groovy :)
 
 Une fois le cookie injecté dans notre navigateur (par exemple avec *Cookie Manager* sous Firefox) on peut accéder au *control panel* qui propose une gestion utilisateurs :  
 
-![HackTheBox RedCross CTF user management interface](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/redcross/redcross_user.png)
+![HackTheBox RedCross CTF user management interface](/assets/img/htb/redcross/redcross_user.png)
 
 ainsi qu'un script de whitelisting d'IPs... donc certainement une utilisation de iptables... dont probablement une faille d'injection de commande ? A voir.  
 
-![HackTheBox RedCross CTF IP management interface](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/redcross/redcross_firewall.png)
+![HackTheBox RedCross CTF IP management interface](/assets/img/htb/redcross/redcross_firewall.png)
 
 Sésame, ouvre-toi
 -----------------
@@ -337,7 +337,7 @@ POST https://admin.redcross.htb/pages/actions.php HTTP/1.1
 ip=8.8.8.8;id;uname -a;pwd;date;&id=17&action=deny
 ```
 
-![HackTheBox CTF RCE in IP management](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/redcross/redcross_zap_rce.png)
+![HackTheBox CTF RCE in IP management](/assets/img/htb/redcross/redcross_zap_rce.png)
 
 Puisque la machine est susceptible d'être réinitialisée j'ai écrit un script pour automatisuer toute cette première partie : envoyer le XSS via le formulaire de contact et injecter ensuite une commande download-execute dans l'interface admin :  
 

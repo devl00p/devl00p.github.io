@@ -223,7 +223,7 @@ Si on affiche la variable `delog` dans la console des `developper tools` on voit
 
 Il s'agit bien de celà :
 
-![Code JS déobfusqué](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/wireless_obfuscated_js.jpg)
+![Code JS déobfusqué](/assets/img/vulnhub/wireless_obfuscated_js.jpg)
 
 Soit le nom d'utilisateur `jinmori` et le mot de passe `Taekwondo`.
 

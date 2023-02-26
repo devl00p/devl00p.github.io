@@ -57,13 +57,13 @@ Quand on ouvre l'exécutable dans Cutter on voit sur la gauche la liste des fonc
 
 C'est la fonction `WinMainCRTStartup` qui semble faire le lien entre tout ça et après avoir navigué un peu c'est `sym._main` qui correspond à notre vrai point d'entrée.
 
-![Netstart login.exe main](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/netstart_main.png)
+![Netstart login.exe main](/assets/img/vulnhub/netstart_main.png)
 
 Ce que fait cette fonction c'est principalement de la gestion d'erreur. Ainsi à chaque bloc on est redirigé en cas d'erreur (flèches rouges) vers la fin d'exécution. Les vérifications sont faites sur la création de la socket, le bind, le listen, etc.
 
 Si tout se passe bien on entre dans la dernière boucle qui est celle du `accept()` quand un client se connecte au port. La fonction `CreateThread` est alors appelée, cette dernière reçoit en paramètre le callback qui servira à la gestion du client : `sym._ConnectionHandler_4`.
 
-![VulnHub Netstart login.exe ConnectionHandler](https://raw.githubusercontent.com/devl00p/blog/master/images/vulnhub/netstart_handler.png)
+![VulnHub Netstart login.exe ConnectionHandler](/assets/img/vulnhub/netstart_handler.png)
 
 Cette fonction a deux points intéressants. D'abord juste avant le dernier bloc on voit un appel à une fonction baptisée `_f3` qui semble recevoir les données reçues sur la socket.
 

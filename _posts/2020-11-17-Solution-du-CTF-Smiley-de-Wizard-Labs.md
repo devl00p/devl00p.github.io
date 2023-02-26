@@ -17,7 +17,7 @@ Les services accessibles sur la machine sont caractéristiques d'une machine Lin
 
 Le site web renvoie un *Wordpress* géré par un certain *smiley* :  
 
-![Wizard Labs CTF Smiley wordpress site](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/smiley_wordpress.png)
+![Wizard Labs CTF Smiley wordpress site](/assets/img/htb/smiley_wordpress.png)
 
 Je m'empresse d'utiliser [WPscan](https://wpscan.org/) pour énumérer la version de Wordpress et les plugins installés. Cela n'a rien remonté d'intéressant donc on va s'intéresser aux utilisateurs :  
 
@@ -46,7 +46,7 @@ Ici j'ai utilisé une wordlist contenant les 500 mots de passe les plus utilisé
 
 Ces identifiants permettent donc d'accéder à la partie admin du site en se rendant sur */wp-admin*. Dans une situation comme celle-ci on peut installer un module Wordpress qui nous facilite la vie comme pour le [CTF Basic Pentesting: 1](http://devloop.users.sourceforge.net/index.php?article143/solution-du-ctf-basic-pentesting-1-de-vulnhub) ou bien aller modifier un script PHP d'un thème existant dans *Appearance > Editor* (*footer.php* par exemple).  
 
-![Wizard Labs CTF Smiley wordpress theme edit backdoor](https://raw.githubusercontent.com/devl00p/blog/master/images/htb/smiley_wp_edit.png)
+![Wizard Labs CTF Smiley wordpress theme edit backdoor](/assets/img/htb/smiley_wp_edit.png)
 
 Via une backdoor PHP insérée dans le script on peut exécuter des commandes sur le système en tant que *www-data* (pas vraiment de surprises).  
 

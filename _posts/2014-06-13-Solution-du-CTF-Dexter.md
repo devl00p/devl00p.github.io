@@ -86,7 +86,7 @@ Ainsi si l'on se base sur l'article de *SpiderLabs*, le paramètre val envoyé p
 
 Son décodage (par Python ou tout autre site en ligne et utilitaire) retourne la clé *"gisha"* (le bot génère une clé aléatoire à chaque requête).  
 
-![Harry's Code](https://raw.githubusercontent.com/devl00p/blog/master/images/dexter1.jpg)
+![Harry's Code](/assets/img/dexter1.jpg)
 
 J'ai écrit le programme suivant qui permet de chiffrer / déchiffrer des données transmises par *Dexter* :  
 
@@ -225,7 +225,7 @@ param = page, payload = ' OR sleep(5)#
 timeout !
 ```
 
-![Wonderfuck!](https://raw.githubusercontent.com/devl00p/blog/master/images/dexter2.gif)
+![Wonderfuck!](/assets/img/dexter2.gif)
 
 Le paramètre page est donc vulnérable et il faut fermer une quote pour injecter du SQL.  
 
@@ -529,7 +529,7 @@ root@dexter:/tmp# head -1 /etc/shadow
 root:$6$gN9t1RCt$dYj80MPAWCeWkh9kTpoPHuUU.x5hfaXfrB.UUWkMQDQpjDfAHO4D2RLWvG00wjUGrO8EMdfl/Ys31WePgl8hV1:16145:0:99999:7:::
 ```
 
-![FUCK YEAH!](https://raw.githubusercontent.com/devl00p/blog/master/images/dexter3.gif)
+![FUCK YEAH!](/assets/img/dexter3.gif)
 
 Quand à l'explication sur le lancement de *antitamper.py* :  
 

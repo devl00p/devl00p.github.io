@@ -239,7 +239,7 @@ sam:x:1000:1000:sam,,,:/home/sam:/bin/bash
 nitish:x:1001:1001::/home/nitish:/bin/bash
 ```
 
-On peut jeter un coup d'oeil à l'appli Flask pour mieux comprendre la filtrage qui était présent :
+On peut jeter un coup d'œil à l'appli Flask pour mieux comprendre la filtrage qui était présent :
 
 ```python
 import subprocess

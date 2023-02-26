@@ -24,7 +24,7 @@ MAC Address: 08:00:27:CE:36:33 (Oracle VirtualBox virtual NIC)
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-Une énumération sur le LigHTTPd (avec `gobuster`) ne retourne pas grand chose si ce n'est un dossier `test` vide. Jetons un oeil aux méthodes HTTP autorisées :
+Une énumération sur le LigHTTPd (avec `gobuster`) ne retourne pas grand chose si ce n'est un dossier `test` vide. Jetons un œil aux méthodes HTTP autorisées :
 
 ```http
 $ curl -XOPTIONS -I http://192.168.57.4/test/

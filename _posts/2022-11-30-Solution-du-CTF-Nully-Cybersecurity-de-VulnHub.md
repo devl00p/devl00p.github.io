@@ -439,7 +439,7 @@ oliver:x:1001:1001:Oliver Jackson,,,,I am in charge of the website and web appli
 messagebus:x:102:104::/nonexistent:/usr/sbin/nologin
 ```
 
-J'ai pris l'habitude de jeter un oeil dans `/var/backups` comme l'aurait fait `LinPEAS` :
+J'ai pris l'habitude de jeter un œil dans `/var/backups` comme l'aurait fait `LinPEAS` :
 
 ```bash
 www-data@WebServer:/var$ ls backups/
