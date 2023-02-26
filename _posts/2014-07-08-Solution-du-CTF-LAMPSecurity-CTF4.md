@@ -8,7 +8,7 @@ Une nouvelle traque commence
 
 [LAMPSecurity: CTF4](http://vulnhub.com/entry/lampsecurity-ctf4,83/) est le 4ème CTF d'une série de CTFs en rapport avec les failles que l'on trouve souvent dans les web-apps PHP.  
 
-[Le précédent CTF](http://devloop.users.sourceforge.net/index.php?article88/solution-du-ctf-lampsecurity-6) s'était montré très simple, nous allons voir si celui-ci corse un peu les choses.  
+[Le précédent CTF]({% link _posts/2014-06-03-Solution-du-CTF-LAMPSecurity-6.md %}) s'était montré très simple, nous allons voir si celui-ci corse un peu les choses.  
 
 Pour info le système est une RHEL 3.  
 

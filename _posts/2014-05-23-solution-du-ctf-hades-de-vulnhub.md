@@ -374,7 +374,7 @@ Regardons plutôt la fonction *v2* qui est appelée pour la seconde commande :
 
 Ici 72 octets (0x48) seulement sont réservés sur la pile. Qui plus est, la cible du *strcpy()* est stockée en ebp-0x2e donc le buffer fait uniquement 46 octets.  
 
-On va lancer notre copie du serveur en local, l'attacher depuis *gdb* (voir [VulnImage](http://devloop.users.sourceforge.net/index.php?article80/solution-du-ctf-vulnimage)) et envoyer un buffer via ce code python :  
+On va lancer notre copie du serveur en local, l'attacher depuis *gdb* (voir [VulnImage]({% link _posts/2014-04-15-Solution-du-CTF-VulnImage-de-VulnHub.md %})) et envoyer un buffer via ce code python :  
 
 ```python
 #!/usr/bin/python

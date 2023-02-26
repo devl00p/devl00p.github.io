@@ -8,9 +8,9 @@ Nitro
 
 Une mise à jour vers [Metasploit 4.9](https://community.rapid7.com/community/metasploit/blog/2014/03/26/new-metasploit-49-helps-evade-anti-virus-solutions-test-network-segmentation-and-increase-productivity-for-penetration-testers) et on est reparti !  
 
-Comme pour le [CTF Bobby 1](http://devloop.users.sourceforge.net/index.php?article74/solution-du-ctf-bobby-1) on a affaire à un CTF Windows qui passe par la personnalisation d'un ISO de XP SP3.  
+Comme pour le [CTF Bobby 1]({% link _posts/2014-03-28-Solution-du-CTF-Bobby-1-de-VulnHub.md %}) on a affaire à un CTF Windows qui passe par la personnalisation d'un ISO de XP SP3.  
 
-Par conséquent allez faire un tour sur mon précédent article pour la mise en place.  
+Par conséquent, allez faire un tour sur mon précédent article pour la mise en place.  
 
 Ici l'objectif [du challenge Scream](http://vulnhub.com/entry/devrandom_scream,47/) est d'obtenir le mot de passe de l'utilisateur local.  
 

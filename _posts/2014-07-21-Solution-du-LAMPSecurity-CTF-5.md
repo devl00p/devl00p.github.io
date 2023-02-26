@@ -159,7 +159,7 @@ cyrus:x:76:12:Cyrus IMAP Server:/var/lib/imap:/bin/bash
 
 Le système compte 5 utilisateurs : *patrick, jennifer, andy, loren* et *amy*. Cela pourra nous servir plus tard.  
 
-La faille étant presque [celle du CTF4](http://devloop.users.sourceforge.net/index.php?article96/solution-du-ctf-lampsecurity-ctf4), il suffit de modifier légèrement le script Python que j'avais écrit pour effectuer une énumération rapide de fichiers sur le système :  
+La faille étant presque [celle du CTF4]({% link _posts/2014-07-08-Solution-du-CTF-LAMPSecurity-CTF4.md %}), il suffit de modifier légèrement le script Python que j'avais écrit pour effectuer une énumération rapide de fichiers sur le système :  
 
 ```python
 import requests

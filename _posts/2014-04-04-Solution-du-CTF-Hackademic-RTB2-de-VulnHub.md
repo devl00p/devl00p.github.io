@@ -48,8 +48,8 @@ On a une page de login qui soumet via POST les identifiants vers un fichier *che
 
 Du coup on cherche ailleurs en lançant [dirb](http://dirb.sourceforge.net/) (j'ai réduit l'output) :  
 
-```plain
-> ./dirb http://192.168.1.91/ wordlists/big.txt 
+```bash
+$ ./dirb http://192.168.1.91/ wordlists/big.txt 
 
 -----------------
 DIRB v2.21    
@@ -84,7 +84,7 @@ Les exploits de *Metasploit* échouent aussi.
 
 J'ai testé énormément d'attaques brute-force par exemple en attaquant l'accès au setup de *phpMyAdmin* :  
 
-```plain
+```bash
 medusa -h 192.168.1.91 -U dico.txt -P candidates.txt -m DIR:phpmyadmin/setup -M http
 ```
 
@@ -231,7 +231,7 @@ On utilise cette backdoor pour rappatrier un *tshd* et obtenir un accès termina
 
 *Linux HackademicRTB2 2.6.32-24-generic #39-Ubuntu SMP Wed Jul 28 06:07:29 UTC 2010 i686 GNU/Linux*  
 
-Du coup on réutilise l'exploit RDS pour le kernel pour passer root ([comme pour le RTB1](http://devloop.users.sourceforge.net/index.php?article76/solution-du-ctf-hackademic-rtb1)) et quand on affiche le contenu de */root/Key.txt* on a une longue chaîne en base64.  
+Du coup on réutilise l'exploit RDS pour le kernel pour passer root ([comme pour le RTB1]({% link _posts/2014-03-31-Solution-du-CTF-Hackademic-RTB1-de-VulnHub.md %})) et quand on affiche le contenu de */root/Key.txt* on a une longue chaîne en base64.  
 
 Une fois le fichier décodé (*base64 -d key.txt > file.out*) on obtient la clé suivante :  
 
@@ -302,7 +302,7 @@ Cette fois on a des caractères sous forme binaire. Une fois décodé on remarqu
 
 A priori les ports sont 1001, 1101, 1011 puis 1001 pour provoquer l'ouverture du port 666. Cela dis ils sont mal choisis car ils laissent supposer qu'on a encore affaire à du binaire.  
 
-A noter que le fichier de configuration de [knockkock](http://www.thoughtcrime.org/software/knockknock/) présent sur le système ne correspond pas à ces ports :  
+À noter que le fichier de configuration de [knockkock](http://www.thoughtcrime.org/software/knockknock/) présent sur le système ne correspond pas à ces ports :  
 
 ```plain
 [options]

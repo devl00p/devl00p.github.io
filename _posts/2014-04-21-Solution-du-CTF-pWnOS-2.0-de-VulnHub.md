@@ -6,7 +6,7 @@ tags: [CTF,VulnHub]
 pWn++
 -----
 
-Pour continuer dans la lancée [du précédent articl](http://devloop.users.sourceforge.net/index.php?article81/solution-du-ctf-pwnos-v1-0)e, j'ai décidé de m'attaquer au CTF [pWnOS 2.0](http://vulnhub.com/entry/pwnos-20-pre-release,34/).  
+Pour continuer dans la lancée [du précédent article]({% link _posts/2014-04-18-Solution-du-CTF-pWnOS-v1.0-de-VulnHub.md %}), j'ai décidé de m'attaquer au CTF [pWnOS 2.0](http://vulnhub.com/entry/pwnos-20-pre-release,34/).  
 
 Là encore, un seul objectif : obtenir un shell root par tous les moyens (sauf évidemment manipuler la VM via l'image disque et des techniques du même acabit).  
 
@@ -107,7 +107,7 @@ Les hashs des utilisateurs MySQL (tables users via l'utilisation de *--passwords
 [21:59:14] [INFO] retrieved: "debian-sys-maint","*9366FE2112E650C8E5523AE337B10A625C727943"
 ```
 
-Malheureusement aucun des hashs n'est tombé même avec une bonne wordlist. Il faut dire aussi que le MySQL est plus récent que sur d'autres CTF (comme [VulnImage](http://devloop.users.sourceforge.net/index.php?article80/solution-du-ctf-vulnimage)) et l'algorithme de hashage utilisé est plus robuste.  
+Malheureusement aucun des hashs n'est tombé même avec une bonne wordlist. Il faut dire aussi que le MySQL est plus récent que sur d'autres CTF (comme [VulnImage]({% link _posts/2014-04-15-Solution-du-CTF-VulnImage-de-VulnHub.md %})) et l'algorithme de hashage utilisé est plus robuste.  
 
 On dumpe le contenu de la table *users* de la base *ch16* utilisé par l'application web (*-D ch16 -t users --dump*) :  
 

@@ -119,7 +119,7 @@ msf auxiliary(smb_enumusers) > exploit
 
 On profite de ces informations pour brute-forcer les comptes SMB avec *Medusa* mais force est de constater que les mots de passe résistent.  
 
-On décide alors de se tourner vers le site web qui est tout aussi minimaliste que celui vu dans le cadre [du CTF VulnImage](http://devloop.users.sourceforge.net/index.php?article80/solution-du-ctf-vulnimage).  
+On décide alors de se tourner vers le site web qui est tout aussi minimaliste que celui vu dans le cadre [du CTF VulnImage]({% link _posts/2014-04-15-Solution-du-CTF-VulnImage-de-VulnHub.md %}).  
 
 L'index à la racine du site effectue une redirection via javascript sur laquelle *Wapiti* bute. Il suffit d'utiliser l'option -s pour lui donner un point de départ supplémentaire (output réduit) :  
 

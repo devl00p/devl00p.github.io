@@ -6,7 +6,7 @@ tags: [CTF, VulnHub]
 Nitro
 -----
 
-Après [le précédent](http://devloop.users.sourceforge.net/index.php?article224/solution-du-ctf-harrypotter-aragog-de-vulnhub) épisode de cette série de CTF j'ai volontiers sauté sur le second opus baptisé [HarryPotter: Nagini](https://www.vulnhub.com/entry/harrypotter-nagini,689/).  
+Après [le précédent]({% link _posts/2021-11-25-Solution-du-CTF-HarryPotter-Aragog-de-VulnHub.md %}) épisode de cette série de CTF j'ai volontiers sauté sur le second opus baptisé [HarryPotter: Nagini](https://www.vulnhub.com/entry/harrypotter-nagini,689/).  
 
 L'occasion d'en extraire les 3 horcrux suivants et de continuer l'aventure.  
 

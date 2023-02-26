@@ -7,7 +7,7 @@ tags: [CTF, VulnHub]
 Introduction
 ------------
 
-Le challenge [Brainpan 2](http://devloop.users.sourceforge.net/index.php?article73/solution-du-ctf-brainpan2) était le 3ème CTF auquel je me suis attaqué sur *VulnHub*.  
+Le challenge [Brainpan 2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}) était le 3ème CTF auquel je me suis attaqué sur *VulnHub*.  
 
 Je ne m'étais pas encore penché sur [le premier du nom](http://vulnhub.com/entry/brainpan-1,51/), ne savant pas trop si le 2 signifiait un tout autre challenge où juste une mise à jour.  
 

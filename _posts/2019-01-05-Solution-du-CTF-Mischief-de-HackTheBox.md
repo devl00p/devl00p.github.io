@@ -260,7 +260,7 @@ cat /home/loki/cred* #
 On obtient alors 
 > pass: lokiisthebestnorsegod
 
-Il est aussi possible d'exfiltrer le contenu du fichier via ICMP (voir [ma solution du CTF Persistence](http://devloop.users.sourceforge.net/index.php?article106/solution-du-ctf-persistence)) mais c'est clairement overkill pour notre cas puisqu'on peut obtenir l'output.  
+Il est aussi possible d'exfiltrer le contenu du fichier via ICMP (voir [ma solution du CTF Persistence]({% link _posts/2014-10-06-Solution-du-CTF-Persistence.md %})) mais c'est clairement overkill pour notre cas puisqu'on peut obtenir l'output.  
 
 Si j'connaissais l'con qu'a fait sauter le pont...
 --------------------------------------------------

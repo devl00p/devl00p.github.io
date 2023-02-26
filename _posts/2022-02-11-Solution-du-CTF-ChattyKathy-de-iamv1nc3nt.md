@@ -271,7 +271,7 @@ tommy@chattykathy:~$ sudo /snap/bin/lxc list
 +-------------+---------+----------------------+-----------------------------------------------+-----------+-----------+
 ```
 
-Je suppose que l'exploitation est du même type à savoir monter la racine de l'hôte comme volume dans le container. En fouillant sur mon site je redécouvre que j'avais déjà exploité ça sur [le CTF Aloha de Wizard Labs](http://devloop.users.sourceforge.net/index.php?article212/solution-du-ctf-aloha-de-wizard-labs).  
+Je suppose que l'exploitation est du même type à savoir monter la racine de l'hôte comme volume dans le container. En fouillant sur mon site je redécouvre que j'avais déjà exploité ça sur [le CTF Aloha de Wizard Labs]({% link _posts/2020-11-17-Solution-du-CTF-Aloha-de-Wizard-Labs.md %}).  
 
 Il aura fallut seulement quelques essais pour trouver le bon shell à demander à l'image Alpine :  
 

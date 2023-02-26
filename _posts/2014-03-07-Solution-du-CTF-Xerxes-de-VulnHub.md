@@ -6,7 +6,7 @@ tags: [CTF,VulnHub]
 Intro
 -----
 
-Après le [CTF Relativity](http://devloop.users.sourceforge.net/index.php?article71/solution-du-ctf-relativity), on garde le rythme et on enchaîne avec le [Xerxes 1](http://vulnhub.com/entry/xerxes_1,58/), un autre CTF téléchargeable sur *VulnHub*.  
+Après le [CTF Relativity]({% link _posts/2014-03-04-Solution-du-CTF-Relativity-de-VulnHub.md %}), on garde le rythme et on enchaîne avec le [Xerxes 1](http://vulnhub.com/entry/xerxes_1,58/), un autre CTF téléchargeable sur *VulnHub*.  
 
 Cette fois pas de conversion à faire de *VM Player* vers *VirtualBox* puisque l'on a directement un fichier *.ova*.  
 

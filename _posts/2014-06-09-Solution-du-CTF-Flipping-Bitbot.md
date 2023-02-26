@@ -6,7 +6,7 @@ tags: [CTF,VulnHub]
 Présentation
 ------------
 
-Après [RA1NXing Bots](http://devloop.users.sourceforge.net/index.php?article87/solution-du-ctf-ra1nxing-bots), [Flipping Bitbot](http://vulnhub.com/entry/bot-challenges-flipping-bitbot,54/) est le second d'une série de ~~3~~ maintenant 4 CTF orientés sur l'analyse de botnet.  
+Après [RA1NXing Bots]({% link _posts/2014-05-30-Solution-du-CTF-RA1NXing-Bots.md %}), [Flipping Bitbot](http://vulnhub.com/entry/bot-challenges-flipping-bitbot,54/) est le second d'une série de ~~3~~ maintenant 4 CTF orientés sur l'analyse de botnet.  
 
 Le challenge donne une image virtuelle au format vmdk qui a montré des réticences à fonctionner parfaitement sous VirtualBox.  
 
@@ -85,8 +85,8 @@ Avec *DirBuster* (un équivalent en Java de dirb) j'ai eu des résultats plus in
 
 Notez que c'est seulement une question de wordlists et d'options utilisées ainsi avec *dirb* on peut aussi obtenir des résultats satisfaisant de cette façon (avec l'une des wordlists par défaut) :  
 
-```plain
-./dirb http://192.168.1.29/ wordlists/vulns/cgis.txt -r -X .php
+```bash
+$ ./dirb http://192.168.1.29/ wordlists/vulns/cgis.txt -r -X .php
 ```
 
 Mais j'ai trouvé d'autres wordlists qui s'avèrent très pratiques [sur ce site](http://blog.thireus.com/web-common-directories-and-filenames-word-lists-collection).  

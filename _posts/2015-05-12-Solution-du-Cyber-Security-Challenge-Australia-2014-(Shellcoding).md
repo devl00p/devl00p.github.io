@@ -9,7 +9,7 @@ Network forensics... [check](http://devloop.users.sourceforge.net/index.php?arti
 
 Reverse engineering... [check](http://devloop.users.sourceforge.net/index.php?article113/solution-du-cyber-security-challenge-australia-2014-reverse-engineering)  
 
-Mad Coding Skillz... [check](http://devloop.users.sourceforge.net/index.php?article114/solution-du-cyber-security-challenge-australia-2014-mad-coding-skillz)  
+Mad Coding Skillz... [check]({% link _posts/2015-02-14-Solution-du-Cyber-Security-Challenge-Australia-2014-(Mad-Coding-Skillz).md %})  
 
 Shellcoding... Here we go !  
 

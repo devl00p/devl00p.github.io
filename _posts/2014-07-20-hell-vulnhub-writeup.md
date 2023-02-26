@@ -7,7 +7,7 @@ tags: [CTF,VulnHub]
 One way ticket to Hell
 ----------------------
 
-[Hell is a CTF](http://vulnhub.com/entry/hell-1,95/) whose difficulty is harder than most of others CTF you can find on *VulnHub* just like [Hades](http://devloop.users.sourceforge.net/index.php?article84/solution-du-challenge-hades) was.  
+[Hell is a CTF](http://vulnhub.com/entry/hell-1,95/) whose difficulty is harder than most of others CTF you can find on *VulnHub* just like [Hades]({% link _posts/2014-05-23-solution-du-ctf-hades-de-vulnhub.md %}) was.  
 
 Therefore this article is likely to be long. Prepare yourself for a lot of Python code :-)  
 
@@ -101,7 +101,7 @@ $ file echoserver.bak
 echoserver.bak: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.26, BuildID[sha1]=e8d0c6cce9504db15d02078b96e4b95e108e2aa2, not stripped
 ```
 
-Good news : the binary is dynamically linked and not stripped (symbols inside), so it should not be as hard as analysing the [display\_key binary from the Hades CTF](http://devloop.users.sourceforge.net/index.php?article84/solution-du-challenge-hades) :p
+Good news : the binary is dynamically linked and not stripped (symbols inside), so it should not be as hard as analysing the [display\_key binary from the Hades CTF]({% link _posts/2014-05-23-solution-du-ctf-hades-de-vulnhub.md %}) :p
 
 ```bash
 $ nm echoserver.bak 
@@ -494,9 +494,9 @@ bazza:x:1004:1004::/home/bazza:/bin/sh
 oj:x:1005:1005::/home/oj:/bin/sh
 ```
 
-So yes we can escape the filter and take a look wherever we want (with the rights of the web server). Furthermore, I now have some more usernames (but I dind't get any more results using the same brute-force scripts seen above).  
+So yes we can escape the filter and take a look wherever we want (with the rights of the web server). Furthermore, I now have some more usernames (but I didn't get any more results using the same brute-force scripts seen above).  
 
-I re-used the enumeration script leveraging the *include(*) function I used on the [LAMPSecurity CTF4](http://devloop.users.sourceforge.net/index.php?article96/solution-du-ctf-lampsecurity-ctf4), just modifying the place where the paths are injected :  
+I re-used the enumeration script leveraging the *include(*) function I used on the [LAMPSecurity CTF4]({% link _posts/2014-07-08-Solution-du-CTF-LAMPSecurity-CTF4.md %}), just modifying the place where the paths are injected :  
 
 ```python
 import requests
@@ -950,7 +950,7 @@ milk_4_life@hell:~$ cat /proc/sys/kernel/randomize_va_space
 
 So we will be able to set up a shellcode with an olympic swimming-pool of nops in an environment variable and overwrite the saved-eip on the stack with the address of the environment variable.  
 
-How to do this ? Please refer to my [Brainpan 2](http://devloop.users.sourceforge.net/index.php?article73/solution-du-ctf-brainpan2) article.  
+How to do this ? Please refer to my [Brainpan 2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}) article.  
 
 Here I used a [reverse TCP shell](http://shell-storm.org/shellcode/files/shellcode-833.php) shellcode. First I wanted to write some Python code to communicate with the program using the *subprocess* module but console buffering makes this really hard to do.  
 
