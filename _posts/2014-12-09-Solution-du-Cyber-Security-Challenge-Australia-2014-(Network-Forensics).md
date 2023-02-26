@@ -3,7 +3,7 @@ title: "Solution du Cyber-Security Challenge Australia 2014 (Network Forensics)"
 tags: [CTF, CySCA2014]
 ---
 
-Après avoir résolu [la partie web du CySCA 2014](http://devloop.users.sourceforge.net/index.php?article111/solution-du-cyber-security-challenge-australia-2014-partie-web) j'avais le choix quand au domaine sur lequel jeter mon dévolu.  
+Après avoir résolu [la partie web du CySCA 2014]({% link _posts/2014-11-18-Solution-du-Cyber-Security-Challenge-Australia-2014-(partie-web).md %}) j'avais le choix quant au domaine sur lequel jeter mon dévolu.  
 
 Assez rapidement j'ai choisi de passer à la partie inforensique (baptisée ici *Network Forensics* mais comme vous verrez il n'est pas uniquement question de réseau) :)  
 
@@ -20,7 +20,7 @@ Du coup je suis passé immédiatement à [Chaosreader](http://chaosreader.source
 
 Il faut d'abord créer un dossier (ici *outdir*) où seront stockés les données extraites pour le spécifier à *Chaosreader* :  
 
-```plain
+```shell_session
 $ ./chaosreader -D outdir 86590ed37efccf55b78f404ae6be09f0-net01.pcap 
 $* is no longer supported at ./chaosreader line 265.
 Chaosreader ver 0.94
@@ -45,7 +45,7 @@ index.html created.
 
 Et en faisant un simple "file" sur les fichiers de session générés... on trouve la solution dans un tag *EXIF* d'une image :  
 
-```plain
+```shell_session
 $ file session_0001.*
 session_0001.part_01.gz:    gzip compressed data, from Unix
 session_0001.part_02.gz:    gzip compressed data, was "43c20729bb03986ca09dc18974c994ec", last modified: Mon Feb 24 01:26:52 2014, from Unix
@@ -59,7 +59,7 @@ session_0001.www-http.html: HTML document, ASCII text, with very long lines, wit
 
 Encore plus simple que prévu :p  
 
-Notwork Forensics (200 points)
+Network Forensics (200 points)
 ------------------------------
 
 On nous indique que la capture fournie est celle d'un échange entre deux criminels suspectés.  
@@ -104,14 +104,14 @@ Un hexdump rapide permet de déterminer qu'il s'agit bien d'une image disque (d'
 
 Les distributions Linux modernes disposent d'un outil baptisé *kpartx* qui rend vraiment simple le montage de disques :  
 
-```plain
+```shell_session
 # kpartx -av diskimage 
 add map loop0p1 (254:2): 0 59392 linear /dev/loop0 128
 ```
 
 Ici une seule partition détectée dans l'image. Le périphérique *loop0p1* a été ajouté au système, il suffit de le monter et d'explorer avec le gestionnaire de fichiers de son choix.  
 
-```plain
+```shell_session
 # mount /dev/mapper/loop0p1 /mnt/
 ```
 
@@ -119,7 +119,7 @@ Dans la corbeille (*/mnt/$RECYCLE.BIN/*) on trouve une référence à un fichier
 
 Le démontage se fait de cette façon :  
 
-```plain
+```shell_session
 # umount /mnt
 # kpartx -d diskimage
 loop deleted : /dev/loop0
@@ -127,7 +127,7 @@ loop deleted : /dev/loop0
 
 J'ai décidé de passer à l'étape suivante en utilisant *Sleuthkit* à la recherche de fichiers effacés.  
 
-```plain
+```shell_session
 # fdisk -l diskimage
 
 Disk diskimage: 32 MiB, 33554432 bytes, 65536 sectors
@@ -143,7 +143,7 @@ diskimage1        128 59519   59392  29M  7 HPFS/NTFS/exFAT
 
 La partition commence au secteur 128. On doit l'indiquer à *fls* pour travailler :  
 
-```plain
+```shell_session
 # fls -f ntfs -o 128 diskimage 
 r/r 4-128-4:    $AttrDef
 r/r 8-128-2:    $BadClus
@@ -173,7 +173,7 @@ d/d 768:        $OrphanFiles
 
 On fouille dans le dossier *files* :  
 
-```plain
+```shell_session
 $ fls -f ntfs -o 128 diskimage 38-144-8
 ```
 
@@ -187,7 +187,7 @@ Et on trouve une bonne quantité de fichiers dont voici les derniers :
 
 La récupération d'un fichier se fait à l'aide d'*icat* :  
 
-```plain
+```shell_session
 $ icat -f ntfs -i raw -o 128 diskimage 589-128-1 > secret.7z
 ```
 
@@ -210,7 +210,7 @@ Headers Size = 135
 
 J'ai généré une timeline de l'activité du disque avec mactime dans l'espoir de découvrir d'autres informations :  
 
-```plain
+```shell_session
 $ fls -f ntfs -r -p -m C: -o 128 diskimage > body.txt
 $ mactime -b body.txt > mactime.txt
 ```
@@ -219,7 +219,7 @@ Malheureusement je n'ai pas vu de très intéressant.
 
 Obtenir des infos concernant un fichier sur la partition se fait à l'aide de *istat* :  
 
-```plain
+```shell_session
 $ istat -f ntfs -i raw -o 128 diskimage 589
 MFT Entry Header Values:
 Entry: 589        Sequence: 2
@@ -264,7 +264,7 @@ En explorant via fls le dossier *$RECYCLE.BIN* on apperçoit un fichier *$ISH2ZG
 
 Les données de ce fichier contiennent la référence au fichier de mots de passes vu plus tôt.  
 
-```plain
+```shell_session
 $ icat -f ntfs -i raw -o 128 -s diskimage 76-128-1 |hexdump -C
 00000000  01 00 00 00 00 00 00 00  f0 03 00 00 00 00 00 00  |................|
 00000010  80 b2 38 db 50 33 cf 01  46 00 3a 00 5c 00 66 00  |..8.P3..F.:.\.f.|
@@ -282,7 +282,7 @@ C'est un fichier spécial de la corbeille dont le format est le suivant :
 
 Or le fichier *$RSH2ZGB.txt* lui aussi dans la corbeille fait 1008 octets mais commence par un *lorem ipsum*... Ce n'est donc pas la liste de mots de passe que l'on espérait.  
 
-On peut en déduire le le fichier *"My Secret Passwords.txt"* a été écrasé par un fichier contenant le *lorem ipsum* avant d'être placé dans la corbeille.  
+On peut en déduire que le fichier *"My Secret Passwords.txt"* a été écrasé par un fichier contenant le *lorem ipsum* avant d'être placé dans la corbeille.  
 
 Toutefois on suppose que le fichier contenant les mots de passe est de très petite taille.  
 
@@ -294,7 +294,7 @@ On a vu que les fichiers qui nous concernent sont à la fin de l'index (numéros
 
 Il suffit alors d'extraire la MFT via *icat* (la MFT a l'index 0), d'appeler dessus *srch\_strings* (l'outil fournit par *Sleuthkit* qui remplace agréablement le programme strings de base) pour extraire les chaines de caractères et commencer à lire par la fin puis remonter l'output généré.  
 
-Après une longue série de FILE0 on fini par tomber sur ça :  
+Après une longue série de FILE0 on finit par tomber sur ça :  
 
 ```plain
 FILE0
@@ -434,7 +434,7 @@ Je me suis alors attaqué au second type de requêtes que l'on trouve : les rép
 
 Une fois décodées on s’aperçoit que le début de chaque réponse est quasiment toujours le même (\x00\x00\x01...).  
 
-```plain
+```python
 >>> s = "AAAAMQAAABwAAAF4nMvNTsksUki2iokpz8xLyS8vjolJBABPkwex"
 >>> base64.b64decode(s)
 '\x00\x00\x001\x00\x00\x00\x1c\x00\x00\x01x\x9c\xcb\xcdN\xc9,RH\xb6\x8a\x89)\xcf\xccK\xc9//\x8e\x89I\x04\x00O\x93\x07\xb1'
@@ -544,7 +544,7 @@ cd c:\windows\a && a.exe a -hpqazWSXedc567 o.dat *.pdf
 
 Le fichier 11 extrait par le dump est un exécutable Windows 32bits.  
 
-A regarder de plus près avec *srch\_strings*, il s'agit de l'utilitaire winrar en ligne de commande.  
+À regarder de plus près avec *srch\_strings*, il s'agit de l'utilitaire winrar en ligne de commande.  
 
 Une recherche DDG sur le hash MD5 du fichier (070d15cd95c14784606ecaa88657551e) confirme cette supposition.  
 

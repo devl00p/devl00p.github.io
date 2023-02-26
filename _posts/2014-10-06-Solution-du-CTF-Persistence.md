@@ -714,11 +714,11 @@ Via gdb on trouve l'adresse de *system* :
 $1 = {<text variable, no debug info>} 0x16c210 <system>
 ```
 
-Notez que l'adresse de *system* comporte un octet nul qui est, comme expliqué sur le [CTF Xerxes2](http://devloop.users.sourceforge.net/index.php?article103/solution-du-ctf-xerxes-2), un mécanisme de protection de gcc.  
+Notez que l'adresse de *system* comporte un octet nul qui est, comme expliqué sur le [CTF Xerxes2]({% link _posts/2014-08-14-Solution-du-CTF-Xerxes-2.md %}), un mécanisme de protection de gcc.  
 
 Mais comme on n'est pas en face d'un *strcpy* les octets nuls n'ont pas d'importance.  
 
-Il nous faut aussi l'adresse d'une chaîne correspondant au path d'un fichier sur le système. Ici il y a une chaîne fixe dans le binaire : */tmp/log* qui est à *0x08048c60*.  
+Il nous faut aussi l'adresse d'une chaîne correspondant au path d'un fichier sur le système. Ici, il y a une chaîne fixe dans le binaire : */tmp/log* qui est à *0x08048c60*.  
 
 On sait donc ce que l'on va mettre sur la stack... Ne nous reste plus que le *canary* :(  
 

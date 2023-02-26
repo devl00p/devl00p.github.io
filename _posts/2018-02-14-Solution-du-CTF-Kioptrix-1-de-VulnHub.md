@@ -3,7 +3,7 @@ title: "Solution du CTF Kioptrix: 1 de VulnHub"
 tags: [CTF, VulnHub]
 ---
 
-J'avais résolu le dernier (à l'heure de ces lignes) *Kioptrix* lors de sa sortie [en 2014](http://devloop.users.sourceforge.net/index.php?article79/solution-du-ctf-kioptrix-2014-5).  
+J'avais résolu le dernier (à l'heure de ces lignes) *Kioptrix* lors de sa sortie [en 2014]({% link _posts/2014-04-10-Solution-du-CTF-Kioptrix-2014-(5).md %}).  
 
 Etant donné qu'il n'y en a pas eu de nouveaux dans la série, c'est l'occasion de se pencher sur les anciens.  
 

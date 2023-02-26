@@ -5,7 +5,7 @@ tags: [CTF, VulnHub]
 
 Le CTF [Pipe](https://www.vulnhub.com/entry/devrandom-pipe,124/) disponible sur *VulnHub* fait partie de la série de CTF baptisée */dev/random* créée par [Sagi](https://twitter.com/@s4gi_).  
 
-J'ai déjà à ce jour résolu les CTF [Relativity](http://devloop.users.sourceforge.net/index.php?article71/solution-du-ctf-relativity) et [Scream](http://devloop.users.sourceforge.net/index.php?article75/solution-du-ctf-scream) de sa composition.  
+J'ai déjà à ce jour résolu les CTF [Relativity]({% link _posts/2014-03-04-Solution-du-CTF-Relativity-de-VulnHub.md %}) et [Scream]({% link _posts/2014-03-29-Solution-du-CTF-Scream-de-VulnHub.md %}) de sa composition.  
 
 C'était donc l'occasion de reprendre cette série avec le Pipe qui date de septembre 2015.  
 

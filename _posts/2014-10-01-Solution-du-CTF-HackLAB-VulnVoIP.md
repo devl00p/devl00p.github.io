@@ -6,7 +6,7 @@ tags: [CTF,VulnHub]
 Nitro
 -----
 
-Après les CTFs [Vulnix](http://devloop.users.sourceforge.net/index.php?article95/solution-du-ctf-hacklab-vulnix) et [VulnVPN]({% link _posts/2014-09-28-Solution-du-CTF-HackLAB-VulnVPN.md %}) voici mon writeup pour le dernier de la série *HackLAB* (du moins au moment de ces lignes) : [VulnVoIP](http://vulnhub.com/entry/hacklab-vulnvoip,40/).  
+Après les CTFs [Vulnix]({% link _posts/2014-07-04-Solution-du-CTF-HackLAB-Vulnix.md %}) et [VulnVPN]({% link _posts/2014-09-28-Solution-du-CTF-HackLAB-VulnVPN.md %}) voici mon writeup pour le dernier de la série *HackLAB* (du moins au moment de ces lignes) : [VulnVoIP](http://vulnhub.com/entry/hacklab-vulnvoip,40/).  
 
 L'objectif final du challenge est d'obtenir un accès root mais aussi de trouver les utilisateurs VoIP et d'obtenir un accès à la boîte vocale du compte *Support*.  
 

@@ -3,7 +3,7 @@ title: "Solution du CTF /dev/random: k2 de VulnHub"
 tags: [CTF, VulnHub]
 ---
 
-Le challenge [K2](https://www.vulnhub.com/entry/devrandom-k2,204/) créé par [Sagi](https://twitter.com/@s4gi_) est le dernier en date de la série */dev/random* après les [Scream]({% link _posts/2014-03-29-Solution-du-CTF-Scream-de-VulnHub.md %}), [Relativity](http://devloop.users.sourceforge.net/index.php?article71/solution-du-ctf-relativity), [Pipe](http://devloop.users.sourceforge.net/index.php?article137/solution-du-ctf-dev-random-pipe-de-vulnhub) et [Sleepy](http://devloop.users.sourceforge.net/index.php?article138/solution-du-ctf-dev-random-sleepy-de-vulnhub).  
+Le challenge [K2](https://www.vulnhub.com/entry/devrandom-k2,204/) créé par [Sagi](https://twitter.com/@s4gi_) est le dernier en date de la série */dev/random* après les [Scream]({% link _posts/2014-03-29-Solution-du-CTF-Scream-de-VulnHub.md %}), [Relativity]({% link _posts/2014-03-04-Solution-du-CTF-Relativity-de-VulnHub.md %}), [Pipe]({% link _posts/2017-11-17-Solution-du-CTF-devrandom-Pipe-de-VulnHub.md %}) et [Sleepy]({% link _posts/2017-11-23-Solution-du-CTF-devrandom-Sleepy-de-VulnHub.md %}).  
 
 L'occasion de boucler la série. Un nouvel opus serait toutefois le bienvenue :-)  
 

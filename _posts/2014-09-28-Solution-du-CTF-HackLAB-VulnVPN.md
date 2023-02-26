@@ -7,7 +7,7 @@ Présentation
 ------------
 
 [VulnVPN](http://vulnhub.com/entry/hacklab-vulnvpn,49/) est un CTF faisant partie de la série des *HackLAB* proposée sur *VulnHub*.
-J'ai déjà eu l'occasion de me mesurer au [Vulnix](http://devloop.users.sourceforge.net/index.php?article95/solution-du-ctf-hacklab-vulnix) dans la même série.  
+J'ai déjà eu l'occasion de me mesurer au [Vulnix]({% link _posts/2014-07-04-Solution-du-CTF-HackLAB-Vulnix.md %}) dans la même série.  
 
 Celui-ci propose, comme son nom l'indique, de s'attaquer à un VPN. C'est le seul challenge de ce type sur *VulnHub* donc l'occasion rêvée de découvrir le hacking de VPN.  
 

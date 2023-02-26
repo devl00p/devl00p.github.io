@@ -3,11 +3,11 @@ title: "Solution du Cyber-Security Challenge Australia 2014 (Shellcoding)"
 tags: [CTF, CySCA2014]
 ---
 
-Exploitation web... [check](http://devloop.users.sourceforge.net/index.php?article111/solution-du-cyber-security-challenge-australia-2014-partie-web)  
+Exploitation web... [check]({% link _posts/2014-11-18-Solution-du-Cyber-Security-Challenge-Australia-2014-(partie-web).md %}})  
 
-Network forensics... [check](http://devloop.users.sourceforge.net/index.php?article112/solution-du-cyber-security-challenge-australia-2014-network-forensics)  
+Network forensics... [check]({% link _posts/2014-12-09-Solution-du-Cyber-Security-Challenge-Australia-2014-(Network-Forensics).md %})  
 
-Reverse engineering... [check](http://devloop.users.sourceforge.net/index.php?article113/solution-du-cyber-security-challenge-australia-2014-reverse-engineering)  
+Reverse engineering... [check]({% link _posts/2014-12-26-Solution-du-Cyber-Security-Challenge-Australia-2014-(Reverse-Engineering).md %})  
 
 Mad Coding Skillz... [check]({% link _posts/2015-02-14-Solution-du-Cyber-Security-Challenge-Australia-2014-(Mad-Coding-Skillz).md %})  
 

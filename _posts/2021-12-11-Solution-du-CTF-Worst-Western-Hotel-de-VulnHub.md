@@ -783,6 +783,7 @@ On voit l'utilisation d'un browser headless PhantomJS (déprécié mais il suffi
 
 Comment ça se lance tout ça ? On ne trouvera pas de script d'init des différents containers. En fait chaque container dispose d'une propriété de *RestartPolicy* qui indique comment le service Docker traite chaque container.  
 
+{% raw %}
 ```plain
 root@hotelww:/etc# docker ps|grep -v CON|awk '{print $1}'|while read line; do  docker inspect -f "{{ .HostConfig.RestartPolicy.Name }}" $line |xargs echo $line ;done
 27621f70edca unless-stopped
@@ -790,6 +791,7 @@ ad38409077c4 unless-stopped
 cc12d63f25ef unless-stopped
 70b3e0c40034 unless-stopped
 ```
+{% endraw %}
 
 Docker se charge ici de lancer (et relancer en cas de crash) tous les containers. Cette information ne peut se voir qu'avec la ligne de commande docker, le service Docker gérant ses containers à sa manière (les informations doivent être gardées dans un format trop compliqué pour le commun des mortels).
 

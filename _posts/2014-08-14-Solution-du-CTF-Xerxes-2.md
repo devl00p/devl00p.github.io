@@ -6,7 +6,7 @@ tags: [CTF,VulnHub]
 Présentation
 ------------
 
-[Xerxes 2](http://vulnhub.com/entry/xerxes-2,97/) est comme son nom l'indique le second de la série des *Xerxes*. [Le premier du nom](http://devloop.users.sourceforge.net/index.php?article72/solution-du-ctf-xerxes) était l'un des premiers CTF auquel je me suis attaqué parmi ceux disponibles sur *VulnHub*. Le challenge était intéressant mais il y avait un peu trop de guessing à mon goût, c'est donc avec une certaine appréhension que je me lançais sur le second opus.  
+[Xerxes 2](http://vulnhub.com/entry/xerxes-2,97/) est comme son nom l'indique le second de la série des *Xerxes*. [Le premier du nom]({% link _posts/2014-03-07-Solution-du-CTF-Xerxes-de-VulnHub.md %}) était l'un des premiers CTF auquel je me suis attaqué parmi ceux disponibles sur *VulnHub*. Le challenge était intéressant mais il y avait un peu trop de guessing à mon goût, c'est donc avec une certaine appréhension que je me lançais sur le second opus.  
 
 Première énigme
 ---------------
@@ -73,7 +73,7 @@ Une fois décodé on a un fichier audio de 104ko avec une voix disant *"This is 
 
 En fond sonore on entend des sons comme ceux d'un modem et des modulations de fréquence laissant envisager qu'il y a de la stéganographie dans l'air.  
 
-N'ayant pas vraiment le courage de persister (justement) dans cette voix (ou voie :), je décide de lancer un second scan de port. Une nouvelle habitude qui me vient [du CTF Hackademic RTB2](http://devloop.users.sourceforge.net/index.php?article77/solution-du-ctf-hackademic-rtb2) (je suis pris de convulsions quand j'en parle :p).  
+N'ayant pas vraiment le courage de persister (justement) dans cette voix (ou voie :), je décide de lancer un second scan de port. Une nouvelle habitude qui me vient [du CTF Hackademic RTB2]({% link _posts/2014-04-04-Solution-du-CTF-Hackademic-RTB2-de-VulnHub.md %}) (je suis pris de convulsions quand j'en parle :p).  
 
 Et effectivement on voit un nouveau port ouvert, preuve qu'un démon de *port-knocking* est à l'oeuvre (le fichier audio referme peut-être l'ordre des ports à *knocker*... ça je ne le saurais que plus tard en lisant la solution des autres participants dès que j'aurais publié la mienne).  
 
@@ -679,7 +679,7 @@ Unauthorized file access will be reported..
 XERXES wishes you a most productive day
 ```
 
-et l'autre qui s'affiche depuis un lecteur PDF quelconque (ex: *Okular*) et contient un *QRcode* [en référence à Xerxes 1](http://devloop.users.sourceforge.net/index.php?article72/solution-du-ctf-xerxes).  
+et l'autre qui s'affiche depuis un lecteur PDF quelconque (ex: *Okular*) et contient un *QRcode* [en référence à Xerxes 1]({% link _posts/2014-03-07-Solution-du-CTF-Xerxes-de-VulnHub.md %}).  
 
 Mais il n'y a rien à voir du côté du *QRcode* qui correspond seulement au texte *"XERXES is watching..."*  
 

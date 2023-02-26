@@ -6,7 +6,7 @@ tags: [CTF, VulnHub]
 A short time ago...
 -------------------
 
-Après [le précédent CTF](http://devloop.users.sourceforge.net/index.php?article134/solution-du-ctf-lazysysadmin-1-de-vulnhub) qui m'avait laissé sur ma fin, j'en ai cherché un qui serait plus *consistent* et je me suis tourné vers le *HASTE* dont la difficulté était notée moyenne.  
+Après [le précédent CTF]({% link _posts/2017-10-26-Solution-du-CTF-LazySysAdmin-1-de-VulnHub.md %}) qui m'avait laissé sur ma faim, j'en ai cherché un qui serait plus *consistent* et je me suis tourné vers le *HASTE* dont la difficulté était notée moyenne.  
 
 [H.A.S.T.E: 1](https://www.vulnhub.com/entry/haste-1,203/) est une VM créée par [f1re\_w1re](https://securityshards.wordpress.com/).  
 

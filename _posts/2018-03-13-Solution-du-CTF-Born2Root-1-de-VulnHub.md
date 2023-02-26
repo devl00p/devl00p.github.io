@@ -226,7 +226,7 @@ L'ordre de résolution des commandes de bash est le suivant d'après la page de 
 >  Each entry consists of a directory name. The current directory may be indicated implicitly by an empty directory name, or explicitly by a single period.
 > 
 
-On peut tenter d'utiliser la technique que certains ont utilisé sur le CTF [Sleepy](http://devloop.users.sourceforge.net/index.php?article138/solution-du-ctf-dev-random-sleepy-de-vulnhub) et d'exporter des fonctions du nom de ces commandes :  
+On peut tenter d'utiliser la technique que certains ont utilisé sur le CTF [Sleepy]({% link _posts/2017-11-23-Solution-du-CTF-devrandom-Sleepy-de-VulnHub.md %}) et d'exporter des fonctions du nom de ces commandes :  
 
 ```plain
 /sbin/ifconfig() { /bin/sh; }; export -f /sbin/ifconfig
@@ -250,7 +250,7 @@ CVE-2014-7187 (nested loops off by one): not vulnerable
 CVE-2014-//// (exploit 3 on http://shellshocker.net/): not vulnerable
 ```
 
-A ce point là il est intéressant de se pencher sur les versions de la libc et de bash, trouvables via dpkg :  
+À ce point là il est intéressant de se pencher sur les versions de la libc et de bash, trouvables via dpkg :  
 
 ```plain
 ii  bash                          4.3-11+deb8u1                      i386         GNU Bourne Again SHell
@@ -261,7 +261,7 @@ La page de manuel de [ld.so(8)](http://man7.org/linux/man-pages/man8/ld.so.8.htm
 
 On en déduit malheureusement que la version du système n'est pas vulnérables aux failles LD\_AUDIT / ORIGIN...  
 
-Bash étant dans sa version 4.3 ça vaut le coup d'utiliser le même exploit que pour le CTF [K2](http://devloop.users.sourceforge.net/index.php?article154/solution-du-ctf-dev-random-k2-de-vulnhub) qui utilise xtrace et PS4... mais sans succès.  
+Bash étant dans sa version 4.3 ça vaut le coup d'utiliser le même exploit que pour le CTF [K2]({% link _posts/2018-03-13-Solution-du-CTF-devrandom-k2-de-VulnHub.md %}) qui utilise xtrace et PS4... mais sans succès.  
 
 Il faut dire que sous Debian /bin/sh redirige vers /bin/dash qui est grosso-modo un bash allégé :  
 

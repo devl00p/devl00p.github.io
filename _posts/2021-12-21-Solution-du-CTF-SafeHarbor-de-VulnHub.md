@@ -410,6 +410,7 @@ PORT     STATE SERVICE
 
 Les noms d'hôtes étant assez explicites je me suis attaché à extraire le titre HTML pour les différents serveurs webs. J'ai aussi remarqué que le commentaire mentionnant le changelog avait un comportement différent, certainement signe d'un mécanisme de load-balancing :  
 
+{% raw %}
 ```plain
 http://172.20.0.1/
 Server: nginx/1.17.4
@@ -448,6 +449,7 @@ X-Powered-By: PHP/7.2.7
 <!-- Harbor Bank Online v2 - See changelog.txt for version details.--> n’apparaît jamais
 Online Banking Login
 ```
+{% endraw %}
 
 De la même façon que j'ai redirigé le port MySQL j'ai pu accéder au *Kibana* (interface web pour *ElasticSearch*) qui était cassé et logstash (je ne sais comment ça fonctionne mais je n'ai vu aucune astuce de RCE le concernant).  
 
