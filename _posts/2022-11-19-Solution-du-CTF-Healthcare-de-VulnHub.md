@@ -43,15 +43,15 @@ Feroxbuster trouve quelques dossiers supplémentaires :
 403        1l        4w       55c http://192.168.56.65/perl-status
 ```
 
-On voit la mention de gitweb et d'ailleurs si je demande `/cgi-bin/gitweb.cgi` le fichier est présent mais j'obtiens une erreur 500... pas vraiment ce que j'espérait.
+On voit la mention de gitweb et d'ailleurs si je demande `/cgi-bin/gitweb.cgi` le fichier est présent mais j'obtiens une erreur 500... pas vraiment ce que j'espérais.
 
 Tout semblait plutôt mal barré puis j'ai relancé la recherche aec la wordlist `directory-list-2.3-big.txt` qui a trouvé un dossier supplémentaire :
 
 `http://192.168.56.65/openemr`
 
-Il s'agit d'une install de OpenEMR, déjà croisé sur [le CTF DriftingBlues 8 de HackMyVM](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20DriftingBlues%208%20de%20HackMyVM.md#so-long-and-thank-for-all-the-wordlists). Ici le logiciel affiche sa version : 4.1.0.
+Il s'agit d'une install de OpenEMR, déjà croisé sur [le CTF DriftingBlues 8 de HackMyVM]({% link _posts/2022-01-24-Solution-du-CTF-DriftingBlues-8-de-HackMyVM.md %}#so-long-and-thank-for-all-the-wordlists). Ici le logiciel affiche sa version : 4.1.0.
 
-Ca tombe bien car il y a justement [une injection SQL](https://www.exploit-db.com/exploits/49742) qui touche cette version. Ainsi si je donne un apostrophe en paramètre au script vulnérable, jobtiens :
+Ça tombe bien car il y a justement [une injection SQL](https://www.exploit-db.com/exploits/49742) qui touche cette version. Ainsi si je donne une apostrophe en paramètre au script vulnérable, j'obtiens :
 
 > ERROR: query failed: select password,length(password) as passlength from users where username = '''
 > 

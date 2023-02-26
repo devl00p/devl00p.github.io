@@ -216,7 +216,7 @@ https://wordpress.org/
 
 L'idée m'est venue de déclencher la réinitialisation du mot de passe Wordpress et d'aller récupérer le lien pour changer le mot de passe mais le compte semble avoir été enregistré avec une adresse invalide (`helios@blah.com`) par conséquent ce n'est pas possible.
 
-A la place je vais envoyer un mail à `Helios` tout comme j'avais procédé sur le [CTF Underdist #3](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Underdist%20%233%20de%20VulnHub.md) :
+A la place je vais envoyer un mail à `Helios` tout comme j'avais procédé sur le [CTF Underdist #3]({% link _posts/2023-01-01-Solution-du-CTF-Underdist-3-de-VulnHub.md %}) :
 
 ```bash
 $ ncat 192.168.56.112 25 -v

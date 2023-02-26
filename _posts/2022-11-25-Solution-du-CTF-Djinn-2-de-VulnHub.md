@@ -139,7 +139,7 @@ J'énumore alors le port 7331 et il trouve deux entrées :
 200       23l       53w      456c http://192.168.242.134:7331/wish
 ```
 
-On retrouve le `/wish` (lorraine) qui était présent sur [Djinn: 1](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Djinn%3A%201%20de%20VulnHub.md) sauf que là, la RCE est patchée, d'ailleurs un message indique que les vulnérabilités ont été corrigées. J'ai testé quelques injections qui n'ont mené nul part.
+On retrouve le `/wish` (lorraine) qui était présent sur [Djinn: 1]({% link _posts/2022-11-25-Solution-du-CTF-Djinn-1-de-VulnHub.md %}) sauf que là, la RCE est patchée, d'ailleurs un message indique que les vulnérabilités ont été corrigées. J'ai testé quelques injections qui n'ont mené nulle part.
 
 L'URL `/source` retourne le code suivant :
 

@@ -101,7 +101,7 @@ harrison:~$ id
 *** forbidden command: id
 ```
 
-Une recherche sur le web pour la phrase *to get the list of allowed commands* nous retourne des références à `lshell` déjà croisé sur [Kioptrix: 1.3](https://github.com/devl00p/blog/blob/db5fe862db386ad078af26f79dd725069530ef5e/ctf_writeups/Solution%20du%20CTF%20Kioptrix:%201.3%20de%20VulnHub.md#i-wont-let-it-happen).
+Une recherche sur le web pour la phrase *to get the list of allowed commands* nous retourne des références à `lshell` déjà croisé sur [Kioptrix: 1.3]({% link _posts/2018-02-22-Solution-du-CTF-Kioptrix-1.3-de-VulnHub.md %}#i-wont-let-it-happen).
 
 Certaines erreurs sont encore plus parlantes :
 

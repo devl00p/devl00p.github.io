@@ -3,7 +3,7 @@ title: "Solution du CTF Underdist #3 de VulnHub"
 tags: [CTF,VulnHub]
 ---
 
-Le CTF [Underdist: 3](https://vulnhub.com/entry/underdist-3,108/) proposé sur VulnHub a été créé par le même auteur que pour le CTF [Darknet](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Darknet%20de%20VulnHub.md). On s'attend donc à un peu de difficulté.
+Le CTF [Underdist: 3](https://vulnhub.com/entry/underdist-3,108/) proposé sur VulnHub a été créé par le même auteur que pour le CTF [Darknet]({% link _posts/2018-03-27-Solution-du-CTF-Darknet-de-VulnHub.md %}). On s'attend donc à un peu de difficulté.
 
 Le CTF a été publié en novembre 2014.
 

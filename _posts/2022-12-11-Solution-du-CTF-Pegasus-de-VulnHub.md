@@ -347,7 +347,7 @@ Il y a bien sûr différentes façons de passer outre cette randomisation :
 
 
 
-Ma technique d'attaque était la même que sur le CTF [Moee](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Moee%20de%20VulnHub.md) :
+Ma technique d'attaque était la même que sur le CTF [Moee]({% link _posts/2022-01-30-Solution-du-CTF-Moee-de-VulnHub.md %}) :
 
 - fuiter l'adresse d'une fonction présente dans la GOT (Global Offset Table) du binaire
 

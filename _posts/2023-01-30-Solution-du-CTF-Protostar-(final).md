@@ -401,7 +401,7 @@ uid=0(root) gid=0(root) groups=0(root)
 
 Bien sûr sur ce dernier exercice on est en présence d'un heap overflow et il nous faudra écraser les métadonnées de chunk pour exploiter une faille unlink dlmalloc.
 
-Pour plus d'informations sur le fonctionnement de malloc et l'exploitation de cette faille  il est péférable que vous lisiez d'abord [Solution du CTF Protostar heap3](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Protostar%20(heap).md#level-3).
+Pour plus d'informations sur le fonctionnement de malloc et l'exploitation de cette faille  il est péférable que vous lisiez d'abord [Solution du CTF Protostar heap3]({% link _posts/2023-01-22-Solution-du-CTF-Protostar-(heap).md %}#level-3).
 
 Le code source du CTF est ici : [Final Two :: Andrew Griffiths' Exploit Education](https://exploit.education/protostar/final-two/). Le code ne révèle pas toute la réalité : le programme consiste en une grosse boucle qui lit des blocs de 128 octets sur le réseau. A chaque fois il copie les données vers un nouveau chunk alloué et vérifie que la taille reçue est bien de 128 et qu'un entête `FSRD` est présent.
 

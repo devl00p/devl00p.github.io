@@ -113,7 +113,7 @@ J'ai aussi lancé en parallèle un `Feroxbuster` qui m'a trouvé plusieurs dossi
 403        9l       28w      278c http://192.168.56.68/tmp/downloads/
 ```
 
-Grace au dump j'obtiens la page d'index PHP du site. Je ne met pas la totalité du fichier ci-dessous mais le site ressemble comme deux goutes d'eau à celui du [DMV #1](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20DMV%20%231%20de%20VulnHub.md).
+Grace au dump j'obtiens la page d'index PHP du site. Je ne mets pas la totalité du fichier ci-dessous mais le site ressemble comme deux goutes d'eau à celui du [DMV #1]({% link _posts/2022-11-30-Solution-du-CTF-DMV-1-de-VulnHub.md %}).
 
 La description du CTF mentionne quand même :
 

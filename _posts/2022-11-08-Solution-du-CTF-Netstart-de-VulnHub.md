@@ -308,7 +308,7 @@ Directory of C:\users\fox
       20 directories      6,558,572,544 bytes free
 ```
 
-Tout comme pour le CTF [CallMe](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20CallMe%20de%20VulnHub.md) j'ai utilisé la commande `start /unix` pour m'échapper de l'invite de commande Windows et obtenir un reverse shell avec `nc.traditional`.
+Tout comme pour le CTF [CallMe]({% link _posts/2022-11-05-Solution-du-CTF-CallMe-de-VulnHub.md %}) j'ai utilisé la commande `start /unix` pour m'échapper de l'invite de commande Windows et obtenir un reverse shell avec `nc.traditional`.
 
 Dans le dossier de l'utilisateur qui faisait tourner le service je trouve un script bash :
 

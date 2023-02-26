@@ -97,7 +97,7 @@ Le second est une archive de Wordpress mais il n'y a pas le `wp-config.php` deda
 
 ## Patting myself on the back
 
-Sur le port 8000 je trouve le CMS *Koken*, une appli web déjà croisée sur [le CTF The Office: Doomsday Device de VulnHub](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20The%20Office%3A%20Doomsday%20Device%20de%20VulnHub.md#kitty-cat). Il semble s'agir du site de Daisa Ahomi.
+Sur le port 8000 je trouve le CMS *Koken*, une appli web déjà croisée sur [le CTF The Office: Doomsday Device de VulnHub]({% link _posts/2022-01-27-Solution-du-CTF-The-Office-Doomsday-Device-de-VulnHub.md %}#kitty-cat). Il semble s'agir du site de Daisa Ahomi.
 
 Le site fait mention d'un fichier *shell.php* qui a du être uploadé comme si c'était une image. L'URL du fichier est facile à obtenir mais la page retourne le message suivant :
 

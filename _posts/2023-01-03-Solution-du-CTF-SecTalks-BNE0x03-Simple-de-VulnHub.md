@@ -19,7 +19,7 @@ PORT   STATE SERVICE VERSION
 |_http-server-header: Apache/2.4.7 (Ubuntu)
 ```
 
-Ce début de CTF est exactement le même scénario que sur le CTF [Cute](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Cute%20de%20VulnHub.md) : on dispose d'une appli web `CuteNews` sur laquelle il est possible de s'enregistrer et déposer un shell PHP via la fonctionnalité l'upload d'avatar pour peu que notre script PHP ait un entête d'image valide pour passer les vérifications.
+Ce début de CTF est exactement le même scénario que sur le CTF [Cute]({% link _posts/2022-11-05-Solution-du-CTF-Cute-de-VulnHub.md %}) : on dispose d'une appli web `CuteNews` sur laquelle il est possible de s'enregistrer et déposer un shell PHP via la fonctionnalité l'upload d'avatar pour peu que notre script PHP ait un entête d'image valide pour passer les vérifications.
 
 On obtient alors un webshell avec les droits `www-data`.
 

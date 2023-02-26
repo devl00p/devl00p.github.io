@@ -259,7 +259,7 @@ Si `LinPEAS` n'a pas remarqué le fichier précédemment c'est parce que le doss
 
 Il s'avère que le fichier `daemon.sh` est un binaire ELF et dispose du bit setuid root. Ce serait donc domage de l'écraser (il perdrait le bit setuid).
 
-A l'exécution on découvre aussi qu'il s'agit de l'interpréteur Lua. J'ai repris la technique d'exécution que j'avais croisé sur [le CTF Nebula ](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Nebula%20(levels%2012%20%C3%A0%2019).md).
+À l'exécution on découvre aussi qu'il s'agit de l'interpréteur Lua. J'ai repris la technique d'exécution que j'avais croisé sur [le CTF Nebula]({% link _posts/2023-02-02-Solution-du-CTF-Nebula-(levels-12-a-19).md %}).
 
 ```bash
 sword@Clover:~$ /usr/games/clover/deamon.sh

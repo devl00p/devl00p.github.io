@@ -242,7 +242,7 @@ LinPEAS repère rapidement un binaire setuid inhabituel :
 
 `-rwsr-xr-x 1 root root 1.7M Nov 24  2019 /usr/bin/screen-4.5.0 (Unknown SUID binary)`
 
-On est exactement sur le même scénario que pour le CTF [Nully Cybersecurity](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Nully%20Cybersecurity%20de%20VulnHub.md).
+On est exactement sur le même scénario que pour le CTF [Nully Cybersecurity]({% link _posts/2022-11-30-Solution-du-CTF-Nully-Cybersecurity-de-VulnHub.md %}).
 
 On s'empresse de récupérer l'exploit pour cette version de screen mais ça cafouille :
 

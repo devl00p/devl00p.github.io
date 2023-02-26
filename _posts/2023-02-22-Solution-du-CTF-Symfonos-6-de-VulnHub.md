@@ -209,9 +209,9 @@ Ces identifiants ne permettant pas d'accéder au compte via SSH car seule une au
 
 Il existe un exploit pour `Gitea` mais il semble avoir été publié après que le CTF soit disponible, ce n'est donc probablement pas la solution officielle : [Gitea 1.12.5 - Remote Code Execution (Authenticated) - Multiple webapps Exploit](https://www.exploit-db.com/exploits/49571)
 
-Un peu comme sur les CTF comportant du Jenkins (voir [Solution du CTF Jeeves de HackTheBox](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Jeeves%20de%20HackTheBox.md)) où il fallait créer une étape de build sur un projet, ici nous allons créer un hook qui exécutera des commandes lorsque du code est poussé sur un projet Git.
+Un peu comme sur les CTF comportant du Jenkins (voir [Solution du CTF Jeeves de HackTheBox]({% link _posts/2018-05-24-Solution-du-CTF-Jeeves-de-HackTheBox.md %})) où il fallait créer une étape de build sur un projet, ici nous allons créer un hook qui exécutera des commandes lorsque du code est poussé sur un projet Git.
 
-Au lieu d'utiliser l'exploit, j'ai effectué les commandes moi même. D'abord il faut créer le répo via l'interface web de `Gitea` puis créer le répo local, définir le répo distant puis pousser :
+Au lieu d'utiliser l'exploit, j'ai effectué les commandes moi-même. D'abord il faut créer le répo via l'interface web de `Gitea` puis créer le répo local, définir le répo distant puis pousser :
 
 ```bash
 $ mkdir yolo
@@ -373,7 +373,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 }
 ```
 
-Pour un exemple d'exploitation voir le [CTF Nebula level 9](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Nebula%20(levels%200%20%C3%A0%2011).md#level-9)
+Pour un exemple d'exploitation voir le [CTF Nebula level 9]({% link _posts/2023-01-31-Solution-du-CTF-Nebula-(levels-0-à-11).md %}#level-9)
 
 La solution décrite sur l'article http://ratmirkarabut.com/articles/vulnhub-writeup-symfonos-6-1/ consiste à utiliser l'API écrite en Go (qui écoute sur le port 5000) pour injecter du code PHP dans un post puis appeller le blog pour que `preg_replace` exécute le code.
 
@@ -426,6 +426,6 @@ while True:
         sleep(60)
 ```
 
-Ca fait plaisir de voir quelqu'un savoir ce qu'il fait :)
+Ça fait plaisir de voir quelqu'un savoir ce qu'il fait :)
 
 *Publié le 22 février 2023*

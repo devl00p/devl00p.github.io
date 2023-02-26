@@ -3,7 +3,7 @@ title: "Solution du CTF Jarbas de VulnHub"
 tags: [CTF,VulnHub]
 ---
 
-[Jarbas](https://www.vulnhub.com/entry/jarbas-1,232/), un CTF proposé sur VulnHub, est un peu le cousin germain de [Jeeves de HackTheBox](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Jeeves%20de%20HackTheBox.md).
+[Jarbas](https://www.vulnhub.com/entry/jarbas-1,232/), un CTF proposé sur VulnHub, est un peu le cousin germain de [Jeeves de HackTheBox]({% link _posts/2018-05-24-Solution-du-CTF-Jeeves-de-HackTheBox.md %}).
 
 Le scénario est d'ailleurs quasi identique : sur le port 80 on trouve une copie de l'ancien moteur de recherche `Ask.com`.
 

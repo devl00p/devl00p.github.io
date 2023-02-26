@@ -192,7 +192,7 @@ User www-data may run the following commands on cute:
     (root) NOPASSWD: /usr/sbin/hping3 --icmp
 ```
 
-Si on tente par exemple de rajouter le paramètre *--file* comme sur le [CTF ICMP](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20ICMP%20de%20VulnHub.md) on sort de la permission *sudo* et ce dernier demande alors le mot de passe de *www-data* que l'on ne connait pas.
+Si on tente par exemple de rajouter le paramètre *--file* comme sur le [CTF ICMP]({% link _posts/2022-11-04-Solution-du-CTF-ICMP-de-VulnHub.md %}) on sort de la permission *sudo* et ce dernier demande alors le mot de passe de *www-data* que l'on ne connait pas.
 
 Le binaire est toutefois aussi setuid root mais si on passe *--file* on a un message indiquant que l'option est désactivée quand le bit setuid est actif... sniff.
 

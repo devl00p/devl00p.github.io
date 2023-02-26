@@ -3,7 +3,7 @@ title: "Solution du CTF Who Wants To Be King: 2 de VulnHub"
 tags: [CTF,VulnHub]
 ---
 
-Après avoir solutionné [Who Wants To Be King: 1](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Who%20Wants%20To%20Be%20King%3A%201.md), je me suis penché sur le second opus histoire de voir s'il était aussi mauvais ou non que le premier. C'est par pure curiosité scientifique. je dirais même que je suis dans une approche éthologique humaine.
+Après avoir solutionné [Who Wants To Be King: 1]({% link _posts/2022-11-16-Solution-du-CTF-Who-Wants-To-Be-King-1.md %}), je me suis penché sur le second opus, histoire de voir s'il était aussi mauvais ou non que le premier. C'est par pure curiosité scientifique. Je dirais même que je suis dans une approche éthologique humaine.
 
 ```
 Nmap scan report for 192.168.56.58
@@ -90,7 +90,7 @@ by Ben "epi" Risher 🤓                 ver: 2.4.0
 
 L'URL `/wordpress` redirige vers `http://armbjorn/wordpress/`. Il faut donc rajouter une entrée au `/etc/hosts`.
 
-On peux aussi lancer `wpscan` dessus. Attention à là aussi passer l'option pour la correspondance de l'hôte :
+On peut aussi lancer `wpscan` dessus. Attention à là aussi passer l'option pour la correspondance de l'hôte :
 
 ```bash
 docker run --add-host armbjorn:192.168.56.58 -it --rm wpscanteam/wpscan --url http://armbjorn/wordpress/ -e ap,at,cb,dbe --plugins-detection aggress

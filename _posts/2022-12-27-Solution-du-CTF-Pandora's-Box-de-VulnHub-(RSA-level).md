@@ -3,7 +3,7 @@ title: "Solution du CTF Pandora's Box de VulnHub (RSA level)"
 tags: [CTF,VulnHub]
 ---
 
-[La précédente étape](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(level%205).md) qui nous avait donné un shell root nous avait laissé avec un flag au format txt sur les mains. Voci son contenu :
+[La précédente étape]({% link _posts/2022-12-27-Solution-du-CTF-Pandora's-Box-de-VulnHub-(level-5).md %}) qui nous avait donné un shell root nous avait laissé avec un flag au format txt sur les mains. Voci son contenu :
 
 ```bash
 $ cat fl4gz0r.tXt                                                                                                      

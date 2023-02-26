@@ -3,14 +3,14 @@ title: "Solution du CTF Pandora's Box de VulnHub (level 3)"
 tags: [CTF,VulnHub,binary exploitation]
 ---
 
-Après avoir [écrasé un pointeur dans le heap pour obtenir un write-what-where dans le précédent level](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(levels%201%20et%202).md) nous voici donc face à un autre binaire setuid qui nous donnera les droits de l'utilisateur `level3`.
+Après avoir [écrasé un pointeur dans le heap pour obtenir un write-what-where dans le précédent level]({% link _posts/2022-12-24-Solution-du-CTF-Pandora's-Box-de-VulnHub-(levels-1-et-2).md %}) nous voici donc face à un autre binaire setuid qui nous donnera les droits de l'utilisateur `level3`.
 
 Un petit coup de `strings` sur le binaire nous bombarde d'information et pour cause : le programme est compilé statiquement et pèse 586 octets !
 
 Le fonctionnement du binaire est le suivant :
 
 ```bash
-$  ./level3
+$ ./level3
 ############################
 # Random number game - 1.0 #
 ############################
@@ -20,7 +20,7 @@ guess:
 
 Une fois ouvert avec mon outil de reverse préféré, `Cutter`, je vois que la fonction `main` ne fait qu'appeller une fonction nommée `start_game` avant d'afficher un message d'au revoir.
 
-Ca semble déjà être un choix de conception tourné vers la possibilité d'écraser une adresse de retour :-P
+Ça semble déjà être un choix de conception tourné vers la possibilité d'écraser une adresse de retour :-P
 
 Cette fonction `start_game` commence par obtenir un chiffre pseudo-aléatoire via une fonction custom que je n'ai pas daigné regarder.
 
@@ -350,11 +350,11 @@ guess: $ id
 uid=1003(level3) gid=1001(level1) groups=1003(level3),1001(level1)
 ```
 
-Comme sur le [CTF Pegasus](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pegasus%20de%20VulnHub.md) j'ai utilisé `pwntools` qui a correctement trouvé l'offset auquel les données étaient reflétées.
+Comme sur le [CTF Pegasus]({% link _posts/2022-12-11-Solution-du-CTF-Pegasus-de-VulnHub.md %}) j'ai utilisé `pwntools` qui a correctement trouvé l'offset auquel les données étaient reflétées.
 
 En théorie via `FmtStr` on peut alors simplement spécifier avec la méthode `write` l'adresse où l'on veut écrire et la valeur puis on valide avec `execute_writes`.
 
-Ca a marché effectivement au début mais après j'ai eu encore recours à la méthode plus brute `fmtstr_payload` qui laisse moins de surprises...
+Ça a marché effectivement au début mais après j'ai eu encore recours à la méthode plus brute `fmtstr_payload` qui laisse moins de surprises...
 
 *Publié le 26 décembre 2022*
 

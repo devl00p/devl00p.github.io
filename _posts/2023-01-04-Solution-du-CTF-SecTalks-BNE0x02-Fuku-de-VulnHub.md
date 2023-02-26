@@ -228,13 +228,13 @@ sillyboy         (gizmo)
 
 Les identifiants permettent donc un accès admin sur le Joomla! via le path `/administrator`.
 
-La procédure pour ajouter du code consiste à modifier un fichier de thème et est décrite dans le writeup pour le [CTF Rosee de Wizard Labs](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Rosee%20de%20Wizard%20Labs.md).
+La procédure pour ajouter du code consiste à modifier un fichier de thème et est décrite dans le writeup pour le [CTF Rosee de Wizard Labs]({% link _posts/2020-11-17-Solution-du-CTF-Rosee-de-Wizard-Labs.md %}).
 
 Quand j'ai voulu ajouter une backdoor appelant `system()` ma requête HTTP a été bloquée et les communications avec la VM aussi.
 
 Il doit y avoir un IDS qui a détecté le payload.
 
-J'ai à la place ajouté le code plus générique utilisé par exemple sur le [CTF Underdist #3](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Underdist%20%233%20de%20VulnHub.md#you-got-mail).
+J'ai à la place ajouté le code plus générique utilisé par exemple sur le [CTF Underdist #3]({% link _posts/2023-01-01-Solution-du-CTF-Underdist-3-de-VulnHub.md %}#you-got-mail).
 
 Je peux alors exécuter des commandes de cette façon :
 
@@ -247,7 +247,7 @@ Codename:       vivid
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
-Je remarque aussique certaines commandes semblent remplacées. Par exemple un `which wget` retourne le message suivant :
+Je remarque aussi que certaines commandes semblent remplacées. Par exemple un `which wget` retourne le message suivant :
 
 > haha! FUKU! Only root can run that command.
 
@@ -291,7 +291,7 @@ Le premier est le service qui donne la réponse par défaut. Le fichier de confi
 
 Quand on liste les ports en écoute on s'apperçoit que seul le port 444 est utilisé par `portspoof`. Toutefois je n'ai pas vui de règles de pare-feu donc le fonctionnement reste un mystère.
 
-Le second process m'intéresse car je sais que chkrootkit a été touché par une vulnérabilité d'escalade de privilèges ([Chkrootkit 0.49 - Local Privilege Escalation - Linux local Exploit](https://www.exploit-db.com/exploits/33899)) que j'ai déjà utilise pour [le CTF Froggy de Wizard Labs](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Froggy%20de%20Wizard%20Labs.md).
+Le second process m'intéresse car je sais que chkrootkit a été touché par une vulnérabilité d'escalade de privilèges ([Chkrootkit 0.49 - Local Privilege Escalation - Linux local Exploit](https://www.exploit-db.com/exploits/33899)) que j'ai déjà utilisé pour [le CTF Froggy de Wizard Labs]({% link _posts/2019-05-21-Solution-du-CTF-Froggy-de-Wizard-Labs.md %}).
 
 Ici nous n'avons pas accès en lecture au script `/root/chkrootkit-0.49/run_chkrootkit` donc on suppose qu'il faut créer un script au chemin par défaut `/tmp/update`.
 

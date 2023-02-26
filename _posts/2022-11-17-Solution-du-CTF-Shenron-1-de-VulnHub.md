@@ -52,7 +52,7 @@ Et deuxièmement un Joomla installé à l'adresse `/joomla` (tout simplement)
 
 Il faut se rendre sur `/joomla/administrator` pour accèder au panel d'administration.
 
-On ne croise pas du Joomla très régulièrement sur les CTFs. Heureusement j'ai déjà eu le cas sur le CTF [Rosee de Wizard Labs](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Rosee%20de%20Wizard%20Labs.md#its-all-about-osint-you-fool) par conséquent je me suivre le même cheminement pour éditer le template par défaut et ajouter un fichier PHP qui me donnera mon shell web.
+On ne croise pas du Joomla très régulièrement sur les CTFs. Heureusement j'ai déjà eu le cas sur le CTF [Rosee de Wizard Labs]({% link _posts/2020-11-17-Solution-du-CTF-Rosee-de-Wizard-Labs.md %}#its-all-about-osint-you-fool) par conséquent je vais suivre le même cheminement pour éditer le template par défaut et ajouter un fichier PHP qui me donnera mon shell web.
 
 Transformé à peine une minute plus tard en beau reverse shell avec PTY, j'en profite pour regarder dans `/etc/passwd` :
 
@@ -63,7 +63,7 @@ shenron:x:1002:1002::/home/shenron:/bin/bash
 
 ## Jenny! Jenny! Jenny!
 
-Quand je recherche les fichier de jenny je ne trouve que son dossier personnel et le fichier `/var/www/html/joomla/htaccess.txt`. Ce dernier ne contient rien d'intéressant (juste des règles d'URL rewriting).
+Quand je recherche les fichiers de jenny je ne trouve que son dossier personnel et le fichier `/var/www/html/joomla/htaccess.txt`. Ce dernier ne contient rien d'intéressant (juste des règles d'URL rewriting).
 
 Pour shenron il y a un fichier sans doute intéressant mais non lisible pour le moment :
 

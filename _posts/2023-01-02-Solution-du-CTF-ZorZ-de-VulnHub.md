@@ -3,7 +3,7 @@ title: "Solution du CTF ZorZ de VulnHub"
 tags: [CTF, VulnHub]
 ---
 
-[TopHatSec: ZorZ](https://vulnhub.com/entry/tophatsec-zorz,117/) fait partie de la même série que le CTF [Freshly](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Freshly%20de%20VulnHub.md). On va potentiellement rester sur notre fin aussi car il semble qu'il n'y ait rien prévu pour l'escalade de privilèges... mais sait-on jamais.
+[TopHatSec: ZorZ](https://vulnhub.com/entry/tophatsec-zorz,117/) fait partie de la même série que le CTF [Freshly]({% link _posts/2023-01-02-Solution-du-CTF-Freshly-de-VulnHub.md %}). On va potentiellement rester sur notre faim aussi car il semble qu'il n'y ait rien prévu pour l'escalade de privilèges... mais sait-on jamais.
 
 > This machine will probably test your web app skills once again.
 > 
@@ -32,7 +32,7 @@ Manuellement et par logique je trouve aussi le dossier `uploads1` à la racine.
 
 J'utilise généralement un shell PHP qui contient juste un entête PNG avec ensuite un appel à `system()`. Ce n'est pas une image valide mais le fichier peut passer quelques filtres.
 
-Quoiqu'il en soit ici ça passe comme dans du beurre :
+Quoi qu'il en soit ici ça passe comme dans du beurre :
 
 ```
 File is valid, and was successfully uploaded.
@@ -97,7 +97,7 @@ $dbtype='mysql';
 
 Le mot de passe fonctionne pour l'utilisateur `user` qui est admin car a toutes les autorisations sudo :
 
-```
+```bash
 www-data@zorz:/tmp$ su user
 Password: 
 user@zorz:/tmp$ sudo -l

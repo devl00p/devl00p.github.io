@@ -302,11 +302,11 @@ int main (int argc, char **argv)
 }
 ```
 
-C'est un cas de race condition qui rappelle le [level 10 de Nebula](https://github.com/devl00p/blog/blob/ee15216458f1cf21584daec824d2fbf6ad92e97e/ctf_writeups/Solution%20du%20CTF%20Nebula%20(levels%200%20%C3%A0%2011).md#level-10) sauf qu'ici il y a très peu de marge de manoeuvre entre le test et la lecture (alors qu'une connexion TCP était établie sur le `Nebula`).
+C'est un cas de race condition qui rappelle le [level 10 de Nebula]({% link _posts/2023-01-31-Solution-du-CTF-Nebula-(levels-0-à-11).md %}#level-10) sauf qu'ici il y a très peu de marge de manœuvre entre le test et la lecture (alors qu'une connexion TCP était établie sur le `Nebula`).
 
 Le binaire (qui est setuid `root`) vérifie que le fichier appartient à l'utilisateur `tux` du système (uid 1000) et si c'est le cas il affiche son contenu. Nous, nous souhaitons bien sûr profiter du bit setuid pour afficher le contenu d'un fichier appartenant à root.
 
-A noter que la fonction `stat()` résoud corretement les liens symboliques donc un lien symbolique sur `/etc/passwd` retournera un UID de 0.
+À noter que la fonction `stat()` résoud corretement les liens symboliques donc un lien symbolique sur `/etc/passwd` retournera un UID de 0.
 
 J'ai d'abord repris le code du précédent CTF :
 
@@ -379,7 +379,7 @@ Bref, nous ne sommes pas assez rapides. Un blog indiquait que la seule solution 
 
 [How to change symlinks atomically - Tom Moertel’s Blog](https://blog.moertel.com/posts/2005-08-22-how-to-change-symlinks-atomically.html)
 
-E lisant la manpage de `rename` on rouve une option `RENAME_EXCHANGE` qui fonctionne de manière atomique : deux fichiers peuvent être ainsi permuttés sans passer par un état temporaire.
+En lisant la manpage de `rename` on trouve une option `RENAME_EXCHANGE` qui fonctionne de manière atomique : deux fichiers peuvent être ainsi permutés sans passer par un état temporaire.
 
 J'ai eu un peu de mal à utiliser la fonction `renameat2` qui ne peut visiblement pas s'employer telle quelle mais fonctionne via la fonction `syscall()` :
 
@@ -445,7 +445,7 @@ int main(int argc, char **argv) {
 }
 ```
 
-L'exécutable est dans les même dispositions que les précédents :
+L'exécutable est dans les mêmes dispositions que les précédents :
 
 ```bash
 $ checksec --file pwnme
@@ -453,9 +453,9 @@ RELRO           STACK CANARY      NX            PIE             RPATH      RUNPA
 No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   pwnme
 ```
 
-Si on passe 512 octets au binaire c'est suffisant pour le faire crasher :
+Si on passe 512 octets au binaire, c'est suffisant pour le faire crasher :
 
-```
+```bash
 tux@tux:~/0x03$ gdb -q ./pwnme 
 Reading symbols from ./pwnme...(no debugging symbols found)...done.
 (gdb) r aaaabaaacaaadaaaeaaafaaagaaahaaaiaaajaaakaaalaaamaaanaaaoaaapaaaqaaaraaasaaataaauaaavaaawaaaxaaayaaazaabbaabcaabdaabeaabfaabgaabhaabiaabjaabkaablaabmaabnaaboaabpaabqaabraabsaabtaabuaabvaabwaabxaabyaabzaacbaaccaacdaaceaacfaacgaachaaciaacjaackaaclaacmaacnaacoaacpaacqaacraacsaactaacuaacvaacwaacxaacyaaczaadbaadcaaddaadeaadfaadgaadhaadiaadjaadkaadlaadmaadnaadoaadpaadqaadraadsaadtaaduaadvaadwaadxaadyaadzaaebaaecaaedaaeeaaefaaegaaehaaeiaaejaaekaaelaaemaaenaaeoaaepaaeqaaeraaesaaetaaeuaaevaaewaaexaaeyaaezaafbaafcaaf
@@ -490,13 +490,13 @@ gs             0x33     51
 0xbffff508:     "caaf"
 ```
 
-Grace à la chaine cyclique générée par `pwntools` on détermine que `eip` est écrasé par les 4 avant derniers octets de la chaine (`baaf`) et que `esp` pointe sur les 4 derniers.
+Grâce à la chaine cyclique générée par `pwntools` on détermine que `eip` est écrasé par les 4 avant derniers octets de la chaine (`baaf`) et que `esp` pointe sur les 4 derniers.
 
 Là encore `NX` nous oblige à utiliser une ROP-chain et un appel seul à `system` ne nous donnera pas l'effective UID souhaité.
 
 Il faut donc être en mesure d'appeller `setuid(0)` via des gadgets tout en sachant qu'on ne peut pas placer la valeur 0 sur la stack à cause de `strcpy` qui s'arrête au premier octet nul.
 
-L'autre difficulté majeure c'est qu'on a vu que le programme n'est pas vulnérable si on lui donne plus de 512 octets or au moment où le flux d'exécution est détourné `esp` pointe sur les derniers octets... ça nous laisse très peu de place.
+L'autre difficulté majeure, c'est qu'on a vu que le programme n'est pas vulnérable si on lui donne plus de 512 octets or au moment où le flux d'exécution est détourné `esp` pointe sur les derniers octets... ça nous laisse très peu de place.
 
 Il faut par conséquent commencer par un gadget qui fera pointer `esp` dans les adresses plus basses, sur le début de notre buffer. Voici quelques exemples trouvés :
 
@@ -646,7 +646,7 @@ int main(int argc, char **argv) {
 }
 ```
 
-J'ai eu un peut de mal au début pour comprendre pourquoi `eip` n'était pas écrasé correctement :
+J'ai eu un peu de mal au début pour comprendre pourquoi `eip` n'était pas écrasé correctement :
 
 ```bash
 tux@tux:~/0x04$ python -c 'print "!!" + "A" * 1040' > input 
@@ -809,7 +809,7 @@ void main(int argc, char **argv)
 
 En mémoire 20 octets séparent le premier nom du second nom.
 
-Je met aussi un boût du dump assembleur du `main()` car ce sera utile pour la compréhension de l'exploitation :
+Je mets aussi un boût du dump assembleur du `main()` car ce sera utile pour la compréhension de l'exploitation :
 
 ```nasm
 (gdb) x/30i 0x080484b9
@@ -901,7 +901,7 @@ uid=1000(tux) gid=1000(tux) euid=0(root) groups=1000(tux),24(cdrom),25(floppy),2
 
 ## Level 0x08
 
-On a ce code source qui rappelle très fortement le [heap3 de protostar](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Protostar%20(heap).md#level-3) :
+On a ce code source qui rappelle très fortement le [heap3 de protostar]({% link _posts/2023-01-22-Solution-du-CTF-Protostar-(heap).md %}#level-3) :
 
 ```c
 // gcc -fno-stack-protector pwnme.c -o pwnme
@@ -950,7 +950,7 @@ La technique consiste donc à placer le faux chunk directement dans le bloc de d
 
 Lors de la libération par l'appel à `free()` le pointeur présent sur la stack est écrasé ce qui fait que si le pointeur est utilisé plus tard (par exemple via `strcpy()`) alors on contrôle où l'on écrit.
 
-Cette méthode est drolement futée mais, comme dans l'exemple de `how2heap`, elle repose sur le fait qu'une écriture soit effectuée sur le premier chunk **après** la libération du chunk 2 ce qui n'est pas le cas ici.
+Cette méthode est drôlement futée mais, comme dans l'exemple de `how2heap`, elle repose sur le fait qu'une écriture soit effectuée sur le premier chunk **après** la libération du chunk 2 ce qui n'est pas le cas ici.
 
 Bref ce level n'est en réalité pas exploitable. Il existe d'autres méthodes documentées sur `how2heap` mais la plupart permettent de faire en sorte que `malloc()` retourne une adresse de notre choix ce qui là encore n'est pas applicable pour nous, la copie se faisant uniquement sur le premier chunk.
 

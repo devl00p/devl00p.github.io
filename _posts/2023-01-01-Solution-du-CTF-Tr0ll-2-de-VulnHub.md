@@ -236,7 +236,7 @@ Vu qu'il s'agit de la tache qui gère le cache APT il est possible que certaines
 
 On pourrait s'attendre que les binaires qui appellent `system()` soit vulnérables à *Shellshock* mais ça ne semble pourtant pas être le cas.
 
-L'exploitation du buffer overflow est en tout point similaire à celui du [CTF Underdist #3](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Underdist%20%233%20de%20VulnHub.md) avec les même conditions donc je n'entrerais pas dans les détails : il y a juste le nombre d'octets avant l'adresse de retour et l'adresse de retour à changer.
+L'exploitation du buffer overflow est en tout point similaire à celui du [CTF Underdist #3]({% link _posts/2023-01-01-Solution-du-CTF-Underdist-3-de-VulnHub.md %}) avec les mêmes conditions donc je n'entrerais pas dans les détails : il y a juste le nombre d'octets avant l'adresse de retour et l'adresse de retour à changer.
 
 Rendez-vous sur l'autre writeup pour les détails de l'exploitation.
 

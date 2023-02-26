@@ -3,7 +3,7 @@ title: "Solution du CTF Pandora's Box de VulnHub (level 4)"
 tags: [CTF,VulnHub,binary exploitation]
 ---
 
-Lors du précédent level [on avait eu à exploiter une format string](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(level%203).md) sur un binaire qu'on lançait pour un accès distant.
+Lors du précédent level [on avait eu à exploiter une format string]({% link _posts/2022-12-26-Solution-du-CTF-Pandora's-Box-de-VulnHub-(level-3).md %}) sur un binaire qu'on lançait pour un accès distant.
 
 Ici le binaire à exploiter doit être lancé localement : il prend deux paramètres en entrée qui sont un nom de fichier et un mot de passe.
 
@@ -31,7 +31,7 @@ L'analyse dynamique consiste à poser un breakpoint sur un appel de fonction (`b
 
 On peut voir la valeur de retour de la fonction en faisait un `ni` (`next instruction` qui n'entre pas dans la fonction) puis inspecter la valeur du registre `eax` (`p eax` ou `info reg eax`).
 
-Ca me permet rapidement de voir que le programme fait tout de suite appel à une fonction qui a cette forme :
+Ça me permet rapidement de voir que le programme fait tout de suite appel à une fonction qui a cette forme :
 
 ```c
 void decrypt_file(char *filename, char *password);
@@ -66,11 +66,11 @@ struct fileobj {
 }
 ```
 
-C'est ni plus ni moins ce que l'on avait croisé sur [le level 2](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(levels%201%20et%202).md) mais cette structure n'aura pas d'intérêt majeur pour la suite.
+C'est ni plus ni moins ce que l'on avait croisé sur [le level 2]({% link _posts/2022-12-24-Solution-du-CTF-Pandora's-Box-de-VulnHub-(levels-1-et-2).md %}) mais cette structure n'aura pas d'intérêt majeur pour la suite.
 
 ## Entête à tête
 
-Ce qui nous intéresse c'est plutôt la façon doit les données de la structure sont accédées :
+Ce qui nous intéresse, c'est plutôt la façon doit les données de la structure sont accédées :
 
 ```nasm
 0x08048481      mov eax, dword [fileobj] ; 0x80cc750
@@ -153,7 +153,7 @@ Après ce checksum on a l'appel à la fonction de décryptage suivi de, une nouv
 0x08048530      cmp eax, edx
 ```
 
-Ce qui veut dire que l'on a à peut près ceci :
+Ce qui veut dire que l'on a à peu près ceci :
 
 ```c
 xcrypt(fileobj.ptr + 4, fileobj.size - 4, password);
@@ -171,11 +171,11 @@ Il obtient alors le second checksum attendu qu'il compare au checksum des donné
 
 Mais que fait cette fonction de déchiffrage ? J'ai passé le code assembleur à l'assistant *ChatGPT* qui m'a d'abord indiqué que le code faisait un simple XOR des données avec l'index du caractère...
 
-Hmmm, étonnant. Je lui ait alors indiqué qu'un password était passé et à répondu qu'il s'agissait en fait d'un simple XOR entre input et mot de passe.
+Hmmm, étonnant. Je lui ai alors indiqué qu'un password était passé et a répondu qu'il s'agissait en fait d'un simple XOR entre input et mot de passe.
 
 J'ai regardé plus en détail le code assembleur et en vérité ce que le fait le code c'est un XOR avec le caractère du fichier, le caractère du mot de passe et aussi l'index du caractère du fichier (modulo 256).
 
-J'ai indiqué à ChatGPT que la réponse était un mix de ses deux  explications et il l'a reformulé correctement de cette façon :
+J'ai indiqué à ChatGPT que la réponse était un mix de ses deux explications et il l'a reformulé correctement de cette façon :
 
 1. It calls the `strlen` function to determine the length of the password string passed in as a parameter, and stores the result in the `var_10h` local variable.
 
@@ -329,7 +329,7 @@ On a EIP qui est écrasé à l'offset 4124 de notre buffer et ESP qui pointe jus
 (7128, 1, 4128)
 ```
 
-Le binaire ayant le flag NX on va juste placer une ROP-chain à partir de l'adresse de retour et ça va bien se passer, comme sur le [level 3](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Pandora's%20Box%20de%20VulnHub%20(level%203).md) : le code va pop-er l'adresse de retour que l'on a écrasé qui correspond au début de notre ROP-chain puis pop-er ainsi jusqu'à avoir exécuté tout le shellcode.
+Le binaire ayant le flag NX on va juste placer une ROP-chain à partir de l'adresse de retour et ça va bien se passer, comme sur le [level 3]({% link _posts/2022-12-26-Solution-du-CTF-Pandora's-Box-de-VulnHub-(level-3).md %}) : le code va pop-er l'adresse de retour que l'on a écrasé qui correspond au début de notre ROP-chain puis pop-er ainsi jusqu'à avoir exécuté tout le shellcode.
 
 J'ai utilisé ROPgadget pour générer la ROP-chain et je l'ai un peu adapté (`setreuid` + utilisation de `pop eax` au lieu de 11 `inc eax` qu'il avait mis) :
 

@@ -240,7 +240,7 @@ J'ai donc procédé à un enregistrement en spécifiant la valeur suivante :
 
 Et après quelques minutes j'obtiens effectivement une requête prouvant que le paramètre est vulnérable à un XSS en aveugle.
 
-La suite logique est d'exfiltrer le cookie de l'utilisateur comme j'ai pu le faire sur le CTF [RedCross de HackTheBox](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20RedCross%20de%20HackTheBox.md#call-me). Mais ici j'ai obtenu une réponse vide... C'est peut être dû à l'authentification par JWT que l'on a vu plus tôt ou à l'option httpOnly définie sur le cookie.
+La suite logique est d'exfiltrer le cookie de l'utilisateur comme j'ai pu le faire sur le CTF [RedCross de HackTheBox]({% link _posts/2019-04-13-Solution-du-CTF-RedCross-de-HackTheBox.md %}#call-me). Mais ici j'ai obtenu une réponse vide... C'est peut être dû à l'authentification par JWT que l'on a vu plus tôt ou à l'option httpOnly définie sur le cookie.
 
 J'ai décidé de procédé autrement : je provoque une requête HTTP dans le navigateur d'*Alphonse* pour la page qui m'intéresse, j'obtiens la réponse via XHR puis j'envoie le contenu via le chargement d'une image (on ne peut pas le faire directement via XHR en raison de la *same-origin policy*).
 

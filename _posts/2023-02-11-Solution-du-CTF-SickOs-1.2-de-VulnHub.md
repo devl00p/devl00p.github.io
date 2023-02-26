@@ -150,6 +150,6 @@ root@ubuntu:/tmp# id
 uid=0(root) gid=33(www-data) groups=0(root),33(www-data)
 ```
 
-Pour la faille chkrootkit il y a un exemple dans la [Solution du CTF SecTalks: BNE0x02 - Fuku de VulnHub](https://github.com/devl00p/blog/blob/60492c127f22bed556e62c9ab179657af85a6935/ctf_writeups/Solution%20du%20CTF%20SecTalks:%20BNE0x02%20-%20Fuku%20de%20VulnHub.md#fuku)
+Pour la faille chkrootkit il y a un exemple dans la [Solution du CTF SecTalks: BNE0x02 - Fuku de VulnHub]({% link _posts/2023-01-04-Solution-du-CTF-SecTalks-BNE0x02-Fuku-de-VulnHub.md %}#fuku)
 
 *Publié le 11 février 2023*

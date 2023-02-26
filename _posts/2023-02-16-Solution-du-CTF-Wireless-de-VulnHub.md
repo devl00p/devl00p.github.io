@@ -102,7 +102,7 @@ On a un serveur Apache et deux autres serveurs web inconnus sur les ports 8000 e
 
 Sur le port 80 je trouve via `Feroxbuster` une installation de `CMS Made Simple` sur le chemin `/cmsms`.
 
-J'ai déjà croisé ce CMS sur [le CTF Christophe de VulnHub](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Christophe%20de%20VulnHub.md) et j'avais à cette occasion écrit un exploit pour la vulnérabilité. Il est donc temps de le réutiliser :
+J'ai déjà croisé ce CMS sur [le CTF Christophe de VulnHub]({% link _posts/2022-12-17-Solution-du-CTF-Christophe-de-VulnHub.md %}) et j'avais à cette occasion écrit un exploit pour la vulnérabilité. Il est donc temps de le réutiliser :
 
 ```bash
 $ python devloop-cve-2019-9053.py --current-user http://192.168.56.107/cmsms/
@@ -176,7 +176,7 @@ drwx------ 2 coherer coherer 4.0K Mar 19  2021 .cache
 -rw-r----- 1 coherer coherer   33 Mar 19  2021 local.txt
 ```
 
-L'utilisateur n'a pas d'autres fichier sur le disque. Je regarde au cas où si des logs le concerne :
+L'utilisateur n'a pas d'autres fichiers sur le disque. Je regarde au cas où si des logs le concerne :
 
 ```bash
 www-data@VOIP:/tmp$ grep -r coherer /var/log/ 2> /dev/null 
@@ -221,7 +221,7 @@ var delog = atob('dmFyIF8weGI1YzM9WyJceDZBXHg2OVx4NkVceDZEXHg2Rlx4NzJceDY5IiwiXH
 
 Si on affiche la variable `delog` dans la console des `developper tools` on voit que le JS décodé créé différentes variables dont `u` et `p` qui font penser à `username` et `password`.
 
-Il s'agit bien de celà :
+Il s'agit bien de cela :
 
 ![Code JS déobfusqué](/assets/img/vulnhub/wireless_obfuscated_js.jpg)
 
@@ -346,7 +346,7 @@ Tools | Logs | Whoami | Clear |  Questions
 
 Tout ça n'était pas forcément nécessaire car il y avait en fait une interface web épurée pour un chatbot sur la page d'index 😅
 
-Quoiqu'il en soit si on saisit `tools` on a la liste suivante qui apparait :
+Quoi qu'il en soit si on saisit `tools` on a la liste suivante qui apparait :
 
 ```
 Wireshark | Aircrack-ng | DDoS
@@ -415,7 +415,7 @@ coherer@VOIP:~$ cat local.txt
 
 Bien que l'on dispose du mot de passe, le scénario retenu sur ce CTF pour l'escalade de privilèges n'est pas un sudo mais un `lxd`.
 
-Je reproduis ce que j'ai déjà fait pour le [CTF Djinn: 2](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Djinn%3A%202%20de%20VulnHub.md) :
+Je reproduis ce que j'ai déjà fait pour le [CTF Djinn: 2]({% link _posts/2022-11-25-Solution-du-CTF-Djinn-2-de-VulnHub.md %}) :
 
 ```bash
 coherer@VOIP:~$ id
@@ -464,7 +464,7 @@ bot        build.sh   proof.txt  snap       voip
 ba742c7ad39d517527f49590c02f76k9
 ```
 
-En écrivant ce writeup je me rend compte que l'on peut donc bypasser le `CMS Made Simple` en commençant directement par le port 8000.
+En écrivant ce writeup je me rends compte que l'on peut donc bypasser le `CMS Made Simple` en commençant directement par le port 8000.
 
 ## Alternative Happy Ending
 

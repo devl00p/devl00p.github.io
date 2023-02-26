@@ -3,7 +3,7 @@ title: "Solution du CTF School de VulnHub"
 tags: [CTF,VulnHub]
 ---
 
-Et voici un dernier CTF fait par *foxlox* : [School](https://www.vulnhub.com/entry/school-1,613/). La description semble assez proche de [Netstart ](https://github.com/devl00p/blog/blob/main/ctf_writeups/Solution%20du%20CTF%20Netstart%20de%20VulnHub.md) que j'ai solutionné quelques heures plus tôt :
+Et voici un dernier CTF fait par *foxlox* : [School](https://www.vulnhub.com/entry/school-1,613/). La description semble assez proche de [Netstart ]({% link _posts/2022-11-08-Solution-du-CTF-Netstart-de-VulnHub.md %}) que j'ai résolu quelques heures plus tôt :
 
 > This is a Linux box, running a Web Application, and a Windows application in WINE environment to give Access to Wine from Linux.
 
