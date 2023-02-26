@@ -774,7 +774,7 @@ Je m'en tamponne le dépassement
 
 Par acquis de conscience on va tout de même jeter un œil au buffer-overflow dans la commande CD.  
 
-```asm
+```nasm
  -- Charlie! We are here.
 [0x004014e0]> aaa
 [x] Analyze all flags starting with sym. and entry0 (aa)

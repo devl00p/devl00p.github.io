@@ -150,7 +150,7 @@ Hacker vaillant rien d'impossible
 
 Quand on désassemble la fonction *main()* du binaire on obtient ceci :  
 
-```asm
+```nasm
    0x565561a9 <+0>:     lea    0x4(%esp),%ecx
    0x565561ad <+4>:     and    $0xfffffff0,%esp
    0x565561b0 <+7>:     push   -0x4(%ecx)

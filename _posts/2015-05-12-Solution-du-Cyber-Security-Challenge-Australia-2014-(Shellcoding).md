@@ -51,7 +51,7 @@ On pop immédiatement afin de récupérer cette adresse dans un registre (eax ca
 
 On rajoute une instruction ret finale pour que notre code redonne la main au code légitime ce qui nous donne en assembleur NASM :  
 
-```asm
+```nasm
 section .text
     global _main
 
@@ -73,7 +73,7 @@ ld: AVERTISSEMENT: ne peut trouver le symbole d'entrée _start; utilise par déf
 
 On récupère les opcodes (code hexadécimal des instructions assembleur) via le désassembleur objdump :  
 
-```asm
+```nasm
 $  objdump -D main
 
 main:     format de fichier elf32-i386
@@ -145,7 +145,7 @@ On peut imaginer d'autres utilisations comme la recherche d'une longue ligne de 
 
 J'ai d'abord écrit un shellcode très naïf qui comme attendu cherche le tag puis XOR les octets qui suivent :  
 
-```asm
+```nasm
 section .text
     global _main
 
@@ -191,7 +191,7 @@ Le code du label found est destiné à répéter l'octet de poids faible sur les
 
 Même si techniquement ça fonctionne, ce premier shellcode est loin d'être optimisé :  
 
-```asm
+```nasm
 $ objdump -D shellcode
 
 shellcode:     format de fichier elf32-i386
@@ -238,7 +238,7 @@ Désassemblage de la section .text:
 
 Au passage j'ai aussi fait le petit shellcode suivant qui tente un write(). J'ai essayé différents descripteurs de fichier (stdout, stderr) mais avec le descripteur 4 j'obtiens bien un output (*ABCD* en sens inverse) :  
 
-```asm
+```nasm
 global _start
 
 section .text
@@ -274,7 +274,7 @@ DCBASadly no flag for you this time
 
 En mélangeant ainsi la partie egg-hunter de mon shellcode avec le code d'écriture il est possible de vérifier que le tag est bien retrouvé en mémoire :  
 
-```asm
+```nasm
 section .text
     global _main
 
@@ -330,7 +330,7 @@ Vous trouverez les descriptions de différentes instructions assembleurs [sur ce
 
 Au final j'ai écrit le shellcode suivant... qui fait pile poil 40 octets et laisse le programme du serveur se terminer correctement que le tag ait été trouvé ou non (je n'avais pas assez de place pour rajouter du code qui incrémente un décalage de 0 à 3 du coup il faut tenter jusqu'à ce que le tag soit bien aligné)  
 
-```asm
+```nasm
 section .text
     global _main
 
@@ -391,7 +391,7 @@ Au final mon code de décodage n'allait pas jusqu'au bout et je recevait un SIGS
 
 Pour déboguer le programme du serveur j'ai du écrire un shellcode qui dumpait le code de la fonction obfusquée :  
 
-```asm
+```nasm
 section .text
     global _main
 
@@ -425,7 +425,7 @@ Comme la place du décodage est prise par le code du dump, il faut malheureuseme
 
 Le code décodé le plus vraisemblable est le suivant :  
 
-```asm
+```nasm
      0x00000001    55           push ebp
      0x00000002    89e5         mov ebp, esp
      0x00000004    81ec38010000 sub esp, 0x138 ; 312 octets de variables locales
@@ -497,7 +497,7 @@ Cette étape m'a permis de comprendre que ma boucle de décodage s'arrêtait seu
 
 Voici mon shellcode multi-stage (avec la loop corrigé) qui lit 255 octets sur la socket, s'auto écrase, recherche le tag, décrypte la fonction, dump son code puis l'exécute :  
 
-```asm
+```nasm
 section .text
     global _main
 
@@ -709,7 +709,7 @@ c 0x80c71ee jb str._flag.txt
 d 0x80493d8 mov eax, str._flag.txt
 ```
 
-```asm
+```nasm
 [0x08048e08]> pdf @ 0x80493d8
 / (fcn) sym.load_flag 186
 |          0x080493cc    55           push ebp
@@ -785,7 +785,7 @@ Cette fonction n'étant utilisée nul part il va falloir que notre shellcode l'a
 
 Toute la gestion de la connexion est faite dans le fonction handle\_client :  
 
-```asm
+```nasm
 [0x08048e08]> pdf@sym.handle_client
 / (fcn) sym.sigAlarm 629
 |          0x0804981b    55           push ebp
@@ -948,7 +948,7 @@ Toute la gestion de la connexion est faite dans le fonction handle\_client :
 
 Et la suite :  
 
-```asm
+```nasm
 [0x08048e08]> pdf@0x08049ac9
            ; JMP XREF from 0x08049ad5 (fcn.08049a90)
 / (fcn) fcn.08049a90 390

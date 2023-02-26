@@ -76,7 +76,7 @@ Nope.
 
 Le code assembleur qui nous intéresse (ici désassemblé avec *radare2*) dans le main() est le suivant :  
 
-```asm
+```nasm
  `-> 0x08048372    8b450c       mov eax, dword [ebp + 0xc] ; [:4]=0
      0x08048375    c74424080a0. mov dword [esp + 8], 0xa ; [:4]=0
      0x0804837d    c7442404000. mov dword [esp + 4], 0 ; [:4]=0x10100
@@ -171,7 +171,7 @@ A première vue on a donc un rand() à deviner avec un srand() initialisé à ti
 
 Mais après désassemblage il y a une étape supplémentaire :  
 
-```asm
+```nasm
 0x080484d7    e874ffffff   call sym.imp.rand                                                                                                                                                                                      
    sym.imp.rand()                                                                                                                                                                                                                 
 0x080484dc    8945e8       mov dword [ebp - 0x18], eax                                                                                                                                                                            
@@ -226,7 +226,7 @@ $ nm firefault | grep execute_me
 0804847d T execute_me
 ```
 
-```asm
+```nasm
 / (fcn) sym.main 87
 |          0x08048490    55           push ebp
 |          0x08048491    89e5         mov ebp, esp
@@ -298,7 +298,7 @@ $ nm firebird | grep execute_me
 
 Dans le code assembleur on trouve un pointeur sur fonction qu'il nous suffira d'écraser :  
 
-```asm
+```nasm
 0x080484ee    a124a00408   mov eax, dword [sym.printer] ; [:4]=0x8048461 ; "a...GCC: (Ubuntu 4.8.4-2ubuntu1~14.04) 4.8.4" @ 0x804a024
 0x080484f3    ffd0         call eax
 ```
@@ -321,7 +321,7 @@ That's not the best truck
 
 Ni *ltrace* ni *strace* ne nous sont utiles. On retourne une fois de plus sur *radare2*.
 
-```asm
+```nasm
   `-> 0x0804850b    8b450c       mov eax, dword [ebp + 0xc] ; [:4]=0
       0x0804850e    83c004       add eax, 4
       0x08048511    8b00         mov eax, dword [eax]
@@ -401,7 +401,7 @@ I got 0x44434241. That's not the bytes I was thinking of
 
 Il s'agit d'une simple comparaison :  
 
-```asm
+```nasm
 0x080484d2    8b450c       mov eax, dword [ebp + 0xc] ; [:4]=0
 0x080484d5    83c004       add eax, 4
 0x080484d8    8b00         mov eax, dword [eax]
@@ -452,7 +452,7 @@ L'interface ressemble à ceci :
 
 Voici le code assembleur du main() :  
 
-```asm
+```nasm
      ;-- sym.main:
      0x08048e7f    55           push ebp
      0x08048e80    89e5         mov ebp, esp
@@ -509,7 +509,7 @@ En observant les crashs (via gdb ou simplement via dmesg) on note que c'est ce d
 
 Le code qui nous intéresse est le suivant :  
 
-```asm
+```nasm
 0x08048e19    8b44241c     mov eax, dword [esp + 0x1c] ; ici on a les ordonnées (y) du serpent
 0x08048e1d    c1e004       shl eax, 4                  ; multiplication par 16 (soit une ligne)
 0x08048e20    01d8         add eax, ebx                ; ebx = début du tableau

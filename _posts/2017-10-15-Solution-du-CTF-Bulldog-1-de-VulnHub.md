@@ -272,7 +272,7 @@ L'auteur du code comptait vraisemblablement que l'utilisateur à qui est destin�
 
 Le mot de passe en question est *SUPERultimatePASSWORDyouCANTget*. Il faut retirer les caractères H (0x48) qui correspondent en réalité à l'opcode de l'instruction assembleur mov :  
 
-```asm
+```nasm
 0x004005fc      e88ffeffff     call sym.imp.puts           ; int puts(const char *s)
 0x00400601      bf69074000     mov edi, str.sudo_su_root   ; 0x400769 ; "sudo su root"
 0x00400606      e8a5feffff     call sym.imp.system         ; int system(const char *string)
