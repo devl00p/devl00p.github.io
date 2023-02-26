@@ -373,7 +373,7 @@ Found key ('37', '10', '59', '17')
 Formato invalido!
 ```
 
-On a le bon code mais l'upload de fichier php est refusé... On pourrait uploader un *.htaccess* pour rajouter une extension .yo qui serait interprétée comme PHP (voir [le writeup pour le Xerxes](http://devloop.users.sourceforge.net/index.php?article72/solution-du-ctf-xerxes)) sauf qu'à l'instar du [CTF Homeless](http://devloop.users.sourceforge.net/index.php?article150/solution-du-ctf-homeless-de-vulnhub) tout upload semble supprimer l'upload précédent... donc si on envoie le .yo, bye bye le .htaccess et pas d'interprétation du code.  
+On a le bon code mais l'upload de fichier php est refusé... On pourrait uploader un *.htaccess* pour rajouter une extension .yo qui serait interprétée comme PHP (voir [le writeup pour le Xerxes]({% link _posts/2014-03-07-Solution-du-CTF-Xerxes-de-VulnHub.md %})) sauf qu'à l'instar du [CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %}) tout upload semble supprimer l'upload précédent... donc si on envoie le .yo, bye bye le .htaccess et pas d'interprétation du code.  
 
 La seule solution semble être d'avoir un fichier .htaccess qui puisse provoquer l'exécution directe de code et en fouillant bien je trouve [cette astuce](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20insecure%20files/PHP%20.htaccess) sur le Github de *PayloadsAllTheThings*.  
 

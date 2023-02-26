@@ -87,7 +87,7 @@ succeed {'.01.jpg', '.opml.config', '.jpg', '.gif', '.003.l.jpg', '.thumb.jpg', 
 
 L'extension autorisée qui saute aux yeux est clairement le *.config*. C'est un peu l'équivalent IIS du *.htaccess*. L'extension est notamment mentionnée sur [le guide OWASP pour les failles d'upload de fichier](https://www.owasp.org/index.php/Unrestricted_File_Upload).  
 
-Mais surtout on trouve un article de blog indiquant [qu'il est possible de placer de l'ASP](https://soroush.secproject.com/blog/2014/07/upload-a-web-config-file-for-fun-profit/) dans le fichier *.config* et de le faire exécuter. C'est un peu la version Windows de [ce que j'ai pu faire sur le CTF Darknet](http://devloop.users.sourceforge.net/index.php?article160/solution-du-ctf-darknet-de-vulnhub). Rejoice !  
+Mais surtout on trouve un article de blog indiquant [qu'il est possible de placer de l'ASP](https://soroush.secproject.com/blog/2014/07/upload-a-web-config-file-for-fun-profit/) dans le fichier *.config* et de le faire exécuter. C'est un peu la version Windows de [ce que j'ai pu faire sur le CTF Darknet]({% link _posts/2018-03-27-Solution-du-CTF-Darknet-de-VulnHub.md %}). Rejoice !  
 
 Encore faut-il s'avoir quoi mettre comme instructions ASP... Une recherche rapide permet de s'avoir comment exécuter un programme externe, il suffit alors de coupler ça avec (par exemple) le module web-delivery de Metasploit :  
 

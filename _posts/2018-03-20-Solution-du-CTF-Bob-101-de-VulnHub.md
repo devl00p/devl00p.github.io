@@ -118,7 +118,7 @@ seb:T1tanium_Pa$$word_Hack3rs_Fear_M3
 
 Note: le serveur SSH écoutant sur un port non standard il faut utiliser les options -p et -P pour respectivement ssh et scp.  
 
-On voit dans le dossier *Downloads* de bob une archive extraite *proftpd-1.3.3c* qui correspond à la version backdoorée par *AcidBitchez* de *ProFTPd*. Pour autant la bannière du FTP en écoute ne correspond pas à cette version... D'ailleurs l'exploitation de la faille (voir [le CTF BasicPentesting](http://devloop.users.sourceforge.net/index.php?article143/solution-du-ctf-basic-pentesting-1-de-vulnhub)) ne fonctionne pas ici.  
+On voit dans le dossier *Downloads* de bob une archive extraite *proftpd-1.3.3c* qui correspond à la version backdoorée par *AcidBitchez* de *ProFTPd*. Pour autant la bannière du FTP en écoute ne correspond pas à cette version... D'ailleurs l'exploitation de la faille (voir [le CTF BasicPentesting]({% link _posts/2018-02-05-solution-du-ctf-basic-pentesting-1-de-vulnhub.md %})) ne fonctionne pas ici.  
 
 Sous un path assez long (*Documents/Secret/Keep\_Out/Not\_Porn/No\_Lookie\_In\_Here/notes.sh*) on trouve différentes notes qui pourraient être des passphrases :  
 
