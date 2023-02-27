@@ -6,7 +6,7 @@ tags: [CTF, VulnHub]
 Intro
 -----
 
-Après [le précédent opus](http://devloop.users.sourceforge.net/index.php?article249/solution-du-ctf-driftingblues-1-de-vulnhub) j'attaque donc ce second épisode des CTF DriftingBlues, toujours téléchargeable sur VulnHub  
+Après [le précédent opus]({% link _posts/2022-01-19-Solution-du-CTF-DriftingBlues-1-de-VulnHub.md %}) j'attaque donc ce second épisode des CTF DriftingBlues, toujours téléchargeable sur VulnHub  
 
 ```plain
 PORT   STATE SERVICE VERSION 

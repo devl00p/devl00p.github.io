@@ -152,7 +152,7 @@ Firewall - 192.168.122.5
 The Vault - x
 ```
 
-Tout comme j'ai pu le faire avec [Reddish](http://devloop.users.sourceforge.net/index.php?article189/solution-du-ctf-reddish-de-hackthebox) j'uploade ici un *nmap* avec le fichier *nmap-services* et je scanne les ports du réseau 192.168.122.0/24.  
+Tout comme j'ai pu le faire avec [Reddish]({% link _posts/2019-01-26-Solution-du-CTF-Reddish-de-HackTheBox.md %}) j'uploade ici un *nmap* avec le fichier *nmap-services* et je scanne les ports du réseau 192.168.122.0/24.  
 
 ```plain
 Nmap scan report for 192.168.122.4

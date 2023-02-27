@@ -11,7 +11,7 @@ Après avoir terminé le CTF *Fortress* de [HackTheBox](https://www.hackthebox.e
 
 Cette série de CTF créée par [superkojiman](https://twitter.com/@superkojiman) est sans doute parmi les CTFs les plus difficiles proposés sur *VulnHub*.
 
-L'occasion de retrouver les noms d'utilisateurs *anansi*, *puck* et *reynard* déjà croisés pour [Brainpan #1](http://devloop.users.sourceforge.net/index.php?article105/solution-du-ctf-brainpan-1) et [Brainpan #2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}).
+L'occasion de retrouver les noms d'utilisateurs *anansi*, *puck* et *reynard* déjà croisés pour [Brainpan #1]({% link _posts/2014-08-26-Solution-du-CTF-Brainpan-1-de-VulnHub.md %}) et [Brainpan #2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}).
 
 Au menu : exploitation de chaîne de format (voir [mon tuto](http://devloop.users.sourceforge.net/index.php?article102/pwing-echo-exploitation-d-une-faille-de-chaine-de-format) comme pré-requis), ROP, race-condition et autres joyeusetés.  
 

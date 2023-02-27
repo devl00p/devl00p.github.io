@@ -10,7 +10,7 @@ Un scan des ports de la VM (`sudo nmap -T5 -p- -sCV 192.168.56.40`) révèle tro
 
 Je suis donc passé à la phase d'énumération. Sur le site web on trouve une page de bienvenue avec deux images (une dans la page, l'autre est le favicon), rien de plus.
 
-A l'aide de feroxbuster et des wordlists [raft](https://github.com/Averroes/raft/tree/master/data/wordlists) que j'utilise habituellement (efficaces et suffisemment courtes) j'ai tenté de trouver des fichiers et dossiers cachés en vain.
+À l'aide de feroxbuster et des wordlists [raft](https://github.com/Averroes/raft/tree/master/data/wordlists) que j'utilise habituellement (efficaces et suffisamment courtes) j'ai tenté de trouver des fichiers et dossiers cachés en vain.
 
 J'ai ensuite tenté de bruteforcer un éventuel compte FTP à l'aide d'hydra, toujours sans résultats.
 

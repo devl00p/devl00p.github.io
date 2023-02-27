@@ -118,9 +118,9 @@ On voit que dans cette fonction l'espace alouée pour les variables locales (0x7
 
 On est donc dans un schéma classique de stack-overflow.  
 
-Et enfin comme annoncé plus tôt il n'y a pas de vérification de canary sur cette fonction (pas d'appel à *\_stack\_chk\_fail* comme c'était le cas pour [Brainpan #3](http://devloop.users.sourceforge.net/index.php?article213/solution-du-ctf-brainpan-3-de-vulnhub).  
+Et enfin comme annoncé plus tôt il n'y a pas de vérification de canary sur cette fonction (pas d'appel à *\_stack\_chk\_fail* comme c'était le cas pour [Brainpan #3]({% link _posts/2019-06-18-Solution-du-CTF-Brainpan-3-de-VulnHub.md %}).  
 
-La suite est assez classique. On utilise son débugger préféré (j'ai personnellement utilisé celui de Cutter qui est en béta) pour lancer le programme et on envoit un buffer suffisemment long en entrée pour voir l'état de la stack lors du crash.  
+La suite est assez classique. On utilise son débugger préféré (j'ai personnellement utilisé celui de Cutter qui est en béta) pour lancer le programme et on envoie un buffer suffisamment long en entrée pour voir l'état de la stack lors du crash.  
 
 Pour cela je met un breakpoint sur l'instruction *ret* à la fin de *copy()* et en effet au sommet de la pile je retrouve bien mes octets prêts à écraser cette adresse de retour.  
 

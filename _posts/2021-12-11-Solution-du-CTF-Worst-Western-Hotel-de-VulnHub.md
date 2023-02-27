@@ -287,7 +287,7 @@ Accept-Language: en,*
 Host: 192.168.56.1:8000
 ```
 
-On a l'impression d'avoir affaire à un véritable navigateur. Je vais donc utiliser un code JS similaire à celui du [CTF Proteus](http://devloop.users.sourceforge.net/index.php?article216/solution-du-ctf-proteus-de-vulnhub) :  
+On a l'impression d'avoir affaire à un véritable navigateur. Je vais donc utiliser un code JS similaire à celui du [CTF Proteus]({% link _posts/2019-07-22-Solution-du-CTF-Proteus-de-VulnHub.md %}) :  
 
 ```html
 <script>var img = document.createElement("img");

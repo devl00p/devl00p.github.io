@@ -536,7 +536,7 @@ Final size of elf file: 250 bytes
 Saved as: /tmp/rev_met
 ```
 
-Qu'on uploade et exécute sur la victime. Il faut avoir préalablement lancé le handler dans Metasploit, étape que j'ai oublié de copier ici mais qui peut se voir par exemple dans [le CTF Bobby](http://devloop.users.sourceforge.net/index.php?article74/solution-du-ctf-bobby-1).  
+Qu'on uploade et exécute sur la victime. Il faut avoir préalablement lancé le handler dans Metasploit, étape que j'ai oublié de copier ici mais qui peut se voir par exemple dans [le CTF Bobby]({% link _posts/2014-03-28-Solution-du-CTF-Bobby-1-de-VulnHub.md %}).  
 
 Une fois la session Metasploit récupérée on la met en fond avec la commande *bg* (ou *background*) et on va chercher le module d'escalade de privilège adapté et lui fournir les options nécessaires (l'ID de la session, le payload, etc) :  
 

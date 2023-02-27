@@ -224,7 +224,7 @@ Seulement la clé privée n'est pas affichée dans la console donc une fois la c
 
 Je m'en suis donc remis au site *GTFObins* [qui propose d'utiliser l'option -D du binaire permettant de charger une librairie](https://gtfobins.github.io/gtfobins/ssh-keygen/).  
 
-J'avais réalisé une exploitation assez proche sur le CTF [/dev/random: k2 de VulnHub](http://devloop.users.sourceforge.net/index.php?article154/solution-du-ctf-dev-random-k2-de-vulnhub).  
+J'avais réalisé une exploitation assez proche sur le CTF [/dev/random: k2 de VulnHub]({% link _posts/2018-03-13-Solution-du-CTF-devrandom-k2-de-VulnHub.md %}).  
 
 J'ai écrit le code suivant :  
 

@@ -164,9 +164,9 @@ MariaDB [member]> select * from pdo;
 3 rows in set (0.26 sec)
 ```
 
-Je suis alors parti sur l'idée que *chkrootkit* soit exécuté via un *crontab* puisque je savais qu'une faille existait pour ce logiciel (forcément ça en a fait rigoler quelques uns).  
+Je suis alors parti sur l'idée que *chkrootkit* soit exécuté via un *crontab* puisque je savais qu'une faille existait pour ce logiciel (forcément ça en a fait rigoler quelques-uns).  
 
-Le binaire est bien présent sur le système mais est-il exécuté ? J'ai eu recours une nouvelle fois à mon script de surveillance des process ([voir CTF Homeless](http://devloop.users.sourceforge.net/index.php?article150/solution-du-ctf-homeless-de-vulnhub)) :  
+Le binaire est bien présent sur le système mais est-il exécuté ? J'ai eu recours une nouvelle fois à mon script de surveillance des process ([voir CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %})) :  
 
 ```bash
 23961 root /usr/sbin/CRON -f

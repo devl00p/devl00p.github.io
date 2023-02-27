@@ -309,7 +309,7 @@ Tenter de décoder directement depuis base64 donne effectivement un charabia inv
 
 Le point important ici est la mention de PyInstaller dans la documentation.  
 
-Comme pour le CTF [Uninvited](https://devloop.users.sourceforge.net/index.php?article262/solution-du-ctf-uninvited-de-vulnhub) on peut décompresser le zip pour obtenir les scripts Python compilés.  
+Comme pour le CTF [Uninvited]({% link _posts/2022-02-05-Solution-du-CTF-UnInvited-de-VulnHub.md %}) on peut décompresser le zip pour obtenir les scripts Python compilés.  
 
 J'ai trouvé un site permettant de faire ça, ce qui fait gagner quelques minutes d'installation :  
 

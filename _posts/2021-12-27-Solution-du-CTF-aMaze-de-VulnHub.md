@@ -58,9 +58,9 @@ On ne trouve aucun fichier sur ce serveur qui autorise une connexion anonyme san
 
 Sur le port 80 on trouve après énumération deux fichiers PHP, login et logout qui ne semblent pas vulnérables.  
 
-Un bruteforce ne vous ménera nul part à part rendre la VM inutilisable puisque comme souvent les auteurs du CTF n'ont pas pensé à désactiver les logs qui peuvent occuper la totalité de l'espace disque.  
+Un bruteforce ne vous ménera nulle part à part rendre la VM inutilisable puisque comme souvent les auteurs du CTF n'ont pas pensé à désactiver les logs qui peuvent occuper la totalité de l'espace disque.  
 
-Finalement sur le port 8000 on trouve une installation de Jenkins. Cette application web était déjà à l'honneur [sur le CTF Jeeves de HackTheBox](http://devloop.users.sourceforge.net/index.php?article163/solution-du-ctf-jeeves-de-hackthebox). Je vous renvoit à ce writeup si vous souhaitez avoir quelques images.  
+Finalement sur le port 8000 on trouve une installation de Jenkins. Cette application web était déjà à l'honneur [sur le CTF Jeeves de HackTheBox]({% link _posts/2018-05-24-Solution-du-CTF-Jeeves-de-HackTheBox.md %}). Je vous renvoie à ce writeup si vous souhaitez avoir quelques images.  
 
 J'ai testé manuellement quelques identifiants et je suis parvenu à me connecter avec *jenkins* / *jenkins*.  
 
@@ -120,7 +120,7 @@ root@7b5f8aa938da:/var/jenkins_home/workspace/yolo# ls -a /
 This is not the way
 -------------------
 
-En listant les fichier dans */root* je remarque un dossier *.git* comme quoi le dossier est versionné.  
+En listant les fichiers dans */root* je remarque un dossier *.git* comme quoi le dossier est versionné.  
 
 On peut utiliser les commandes Git pour en savoir plus...  
 
@@ -159,7 +159,7 @@ Ok, on a un token mais pour quoi ? J'ai tenté de le passer dans le formulaire d
 
 De plus le répo ne dispose d'aucun remote associé (*git remote -v*).  
 
-J'ai du chercher une solution sur le web et finalement il fallait utiliser le token sur Github (qui n'était mentionné nul part). J'ai beau déjà avoir utilisé l'API de Github la solution ne me saurait pas venue naturelement à l'esprit.  
+J'ai dû chercher une solution sur le web et finalement il fallait utiliser le token sur Github (qui n'était mentionné nulle part). J'ai beau déjà avoir utilisé l'API de Github la solution ne me saurait pas venue naturelement à l'esprit.  
 
 On peut obtenir des infos sur le compte lié au token avec la requête suivante :  
 
@@ -211,7 +211,7 @@ Escalade Alpine
 
 La clé fonctionne pour ce guest et on trouve dans le dossier de *root* le binaire *docker*.  
 
-Toutefois la configuration par défaut ne semble pas fonctionner car le socket a été placé à un autre endroit. On peut corriger cela par une simple option.  
+Toutefois, la configuration par défaut ne semble pas fonctionner car le socket a été placé à un autre endroit. On peut corriger cela par une simple option.  
 
 ```plain
 root@a97495c67b7e:~/docker# ./docker images ls
@@ -330,7 +330,7 @@ if ($_POST['username'] == 'IamTheAdmin' &&
 }
 ```
 
-Quand au token Github, est-til bien protégé ? Heureusement oui, si on récupère les entêtes lors d'une requête sur l'API on voit que le scope associé est en lecture uniquement :  
+Quant au token Github, est-il bien protégé ? Heureusement oui, si on récupère les entêtes lors d'une requête sur l'API on voit que le scope associé est en lecture uniquement :  
 
 ```plain
 x-oauth-scopes: read:user

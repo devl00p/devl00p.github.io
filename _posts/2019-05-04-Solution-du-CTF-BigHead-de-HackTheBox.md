@@ -25,7 +25,7 @@ La page dispose aussi d'un formulaire de contact vers un domaine *mailer.bighead
 
  Il y a aussi une adresse email en *@bachmanity.htb*. Cela nous donne donc deux domaines possibles à énumérer.  
 
-Pour cela on peut reprendre la méthodologie employée [pour le CTF Bart](http://devloop.users.sourceforge.net/index.php?article166/solution-du-ctf-bart-de-hackthebox).  
+Pour cela on peut reprendre la méthodologie employée [pour le CTF Bart]({% link _posts/2018-07-15-Solution-du-CTF-Bart-de-HackTheBox.md %}).  
 
 Auparavant on peut lancer un petit buster de fichiers/dossiers sur la racine web mais les résultats sont bien minces :  
 
@@ -393,7 +393,7 @@ Le stager ne fait qu'appeler *recv()* pour recevoir un second shellcode qui sera
 
 Le second shellcode a (de mémoire) été généré par Metasploit (le genre *WinExec*) et a l'avantage d'être facilement modifiable (chaîne du programme à exécuter en fin de shellcode).  
 
-Je vous épargne les explications détaillées du code assembleur mais si les shellcodes vous intéressent vous pouvez aussi lire mon article [Solution du Cyber-Security Challenge Australia 2014 (Shellcoding)](http://devloop.users.sourceforge.net/index.php?article116/solution-du-cyber-security-challenge-australia-2014-shellcoding).  
+Je vous épargne les explications détaillées du code assembleur mais si les shellcodes vous intéressent vous pouvez aussi lire mon article [Solution du Cyber-Security Challenge Australia 2014 (Shellcoding)]({% link _posts/2015-05-12-Solution-du-Cyber-Security-Challenge-Australia-2014-(Shellcoding).md %}).  
 
 Pour obtenir les opcodes des instructions assembleur j'ai utilisé *rasm2* (qui fait partie de *radare2*).  
 
@@ -1060,7 +1060,7 @@ Le petit malin ! Il a dissimulé la base KeePass dans l'ADS *Zone.Identifier* du
 
 Cette base est associée à un KeyFile qui est juste une image PNG.  
 
-Il ne reste normalement plus qu'à casser le mot de passe du *KeePass* (on extrait le hash avec *keepass2john* comme on l'avait fait pour [Jeeves](http://devloop.users.sourceforge.net/index.php?article163/solution-du-ctf-jeeves-de-hackthebox)).  
+Il ne reste normalement plus qu'à casser le mot de passe du *KeePass* (on extrait le hash avec *keepass2john* comme on l'avait fait pour [Jeeves]({% link _posts/2018-05-24-Solution-du-CTF-Jeeves-de-HackTheBox.md %})).  
 
 Il y avait tout de même une subtilité puisque la dernière release officielle de JTR Jumbo ne supporte pas les *KeyFile*. Heureusement il existe [un Github plus à jour](https://github.com/magnumripper/JohnTheRipper) (merci *opt1kz*) qui permet de spécifier le *KeyFile* avec l'option -k (youpi) de d'obtenir le flag final :)  
 
@@ -1069,7 +1069,7 @@ Il y avait tout de même une subtilité puisque la dernière release officielle 
 Outro
 -----
 
-Tout comme pour [c0m80](http://devloop.users.sourceforge.net/index.php?article151/solution-du-ctf-c0m80-1-de-vulnhub) (créé aussi par [3mrgnc3](https://twitter.com/@3mrgnc3)) je ne suis pas mécontent d'être arrivé à la fin de celui-là :'D  
+Tout comme pour [c0m80]({% link _posts/2018-03-04-Solution-du-CTF-C0m80-de-VulnHub.md %}) (créé aussi par [3mrgnc3](https://twitter.com/@3mrgnc3)) je ne suis pas mécontent d'être arrivé à la fin de celui-là :'D  
 
 Bonux
 -----

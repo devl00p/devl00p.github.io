@@ -6,7 +6,7 @@ tags: [CTF, VulnHub]
 Nitro
 -----
 
-Après avoir résolu [le second opus](https://devloop.users.sourceforge.net/index.php?article235/solution-du-ctf-corrosion-2-de-vulnhub) il y a presque 1 an de cela, je me suis jeté sur ce CTF en piochant un peu au hasard sur VulnHub.  
+Après avoir résolu [le second opus]({% link _posts/2021-12-26-Solution-du-CTF-Corrosion-2-de-VulnHub.md %}) il y a presque 1 an de cela, je me suis jeté sur ce CTF en piochant un peu au hasard sur VulnHub.  
 
 Le cheminement attendu de l'attaque est des plus classique avec une injection de code PHP dans un fichier de log mais j'ai volontairement bifurqué vers une nouvelle technique d'exploitation des failles d'inclusion locale (LFI) que je considère comme un vrai game-changer et que je pense bien intégrer prochainement dans [Wapiti](https://wapiti-scanner.github.io/) :)  
 
@@ -31,7 +31,7 @@ MAC Address: 08:00:27:CE:E1:62 (Oracle VirtualBox virtual NIC)
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-Scénario on ne plus classique qui laisse présager d'une exploitation web pour avancer. Le site servant une page de défaut, il faut recourir à un outil comme [FeroxBuster](https://github.com/epi052/feroxbuster#readme) pour déceler la présence de dossiers et fichiers sur le serveur.  
+Scénario on ne peut plus classique qui laisse présager d'une exploitation web pour avancer. Le site servant une page de défaut, il faut recourir à un outil comme [FeroxBuster](https://github.com/epi052/feroxbuster#readme) pour déceler la présence de dossiers et fichiers sur le serveur.  
 
 L'un des fichiers découverts est le fichier */tasks/tasks\_todo.txt* qui contient les notes suivantes :  
 

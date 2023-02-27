@@ -118,7 +118,7 @@ Then I would have used cURL to upload my files :
 curl -F 'uploaded_file=@linpeas.sh' http://192.168.56.118/site/upl.php
 ```
 
-This is something I already use to solve [Reddish from HackTheBox](http://devloop.users.sourceforge.net/index.php?article189/solution-du-ctf-reddish-de-hackthebox).  
+This is something I already use to solve [Reddish from HackTheBox]({% link _posts/2019-01-26-Solution-du-CTF-Reddish-de-HackTheBox.md %}).  
 
 Hole punching with FTP (egress)
 -------------------------------

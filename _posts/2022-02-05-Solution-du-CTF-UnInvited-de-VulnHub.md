@@ -6,7 +6,7 @@ tags: [CTF, VulnHub]
 Ouais c'est ça, ouais !
 -----------------------
 
-Après [Ganana](http://devloop.users.sourceforge.net/index.php?article261/solution-du-ctf-ganana-de-vulnhub), je me suis penché sur un autre CTF de [Jeevana Chandra](https://jeevanachandra.github.io/) : [UnInvited](https://www.vulnhub.com/entry/uninvited-1,523/). L'objectif annoncé est de récupérer 3 flags sur la VM.  
+Après [Ganana]({% link _posts/2022-02-04-Solution-du-CTF-Ganana-de-VulnHub.md %}), je me suis penché sur un autre CTF de [Jeevana Chandra](https://jeevanachandra.github.io/) : [UnInvited](https://www.vulnhub.com/entry/uninvited-1,523/). L'objectif annoncé est de récupérer 3 flags sur la VM.  
 
 ```plain
 $ sudo nmap -sCV -T5 -p- 192.168.56.22 

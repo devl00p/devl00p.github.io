@@ -8,7 +8,7 @@ Bons journaux
 
 [Replay](https://www.vulnhub.com/entry/replay-1,278/) est un CTF proposé par *c0rruptedb1t* sur *VulnHub*.  
 
-Le précédent CTF du même auteur [ne m'avait pas fait bonne impression](http://devloop.users.sourceforge.net/index.php?article159/solution-du-ctf-bob-1-0-1-de-vulnhub) mais il ne faut pas rester sur ses à priori :p  
+Le précédent CTF du même auteur [ne m'avait pas fait bonne impression]({% link _posts/2018-03-20-Solution-du-CTF-Bob-101-de-VulnHub.md %}) mais il ne faut pas rester sur ses à priori :p  
 
 Pizza yolo
 ----------

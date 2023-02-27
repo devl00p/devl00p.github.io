@@ -51,7 +51,7 @@ Quand on soumet des données quelconques à ce formulaire on obtient un message 
 
 On va donc placer nos injections XXE dans le champ correspondant à l'adresse email afin d'exfiltrer les données.  
 
-J'ai repris mon exploit écrit pour le [CTF DevOops de HackTheBox](http://devloop.users.sourceforge.net/index.php?article179/solution-du-ctf-devoops-de-hackthebox) et l'ai adapté pour que le format du XML et sa DTD correspondent aux données attendues.  
+J'ai repris mon exploit écrit pour le [CTF DevOops de HackTheBox]({% link _posts/2018-10-14-Solution-du-CTF-DevOops-de-HackTheBox.md %}) et l'ai adapté pour que le format du XML et sa DTD correspondent aux données attendues.  
 
 ```python
 import sys

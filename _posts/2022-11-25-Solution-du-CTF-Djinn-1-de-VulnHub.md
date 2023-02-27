@@ -500,9 +500,9 @@ if __name__ == '__main__':
 
 Et `sam` peut, via une entrée sudo, exécuter le programme `/root/lago` qui correspond à ce code (on le voit lorsque l'on lance le programme avec sudo car sinon les permissions ne permettent pas de lire le fichier).
 
-Il faut donc lancer l'exécutable et saisir un nombre entre 1 et 100 inclus jusqu'à ce qu'on ait suffisemment de chance pour obtenir notre shell.
+Il faut donc lancer l'exécutable et saisir un nombre entre 1 et 100 inclus jusqu'à ce qu'on ait suffisamment de chance pour obtenir notre shell.
 
-J'ai décidé de mettre en oeuvre une solution automatisée mais pour cela il faut d'abord que je créé une clé SSH sans passphrase et je placerais la partie publique dans le `authorized_keys` de l'utilisateur :
+J'ai décidé de mettre en œuvre une solution automatisée mais pour cela il faut d'abord que je crée une clé SSH sans passphrase et je placerais la partie publique dans le `authorized_keys` de l'utilisateur :
 
 ```bash
 ssh-keygen -b 2048 -t rsa -f key_no_pass -q -N ""

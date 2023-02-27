@@ -255,7 +255,7 @@ msf5 auxiliary(scanner/mssql/mssql_login) > run
 
 Point important : il faut que *DOMAIN* soit défini à *QUERIER* dans les options avancées (*show advanced*).  
 
-Maintenant qu'on peut se connecter au SQL on va utiliser la même astuce que sur le CTF [Giddy](http://devloop.users.sourceforge.net/index.php?article182/solution-du-ctf-giddy-de-hackthebox) : on va faire fuiter le hash NetNTLMv2 du service, sauf qu'ici point d'injection SQL.  
+Maintenant qu'on peut se connecter au SQL on va utiliser la même astuce que sur le CTF [Giddy]({% link _posts/2019-02-16-Solution-du-CTF-Giddy-de-HackTheBox.md %}) : on va faire fuiter le hash NetNTLMv2 du service, sauf qu'ici point d'injection SQL.  
 
 Une fois de plus *Metasploit* dispose d'un module rien que pour cela (ça consiste seulement à appeler *xp\_dirtree*) :  
 

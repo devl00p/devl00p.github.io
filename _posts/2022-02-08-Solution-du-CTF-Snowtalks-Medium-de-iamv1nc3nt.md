@@ -6,7 +6,7 @@ tags: [CTF, iamv1nc3nt]
 Cul de sac
 ----------
 
-Après [le précédent CTF](http://devloop.users.sourceforge.net/index.php?article263/solution-du-ctf-snowtalks-easy-de-iamv1nc3nt) trop facile j'ai décidé de continuer sur les CTFs de [iamv1nc3nt](https://iamv1nc3nt.com/) mais avec une difficulté accrue.  
+Après [le précédent CTF]({% link _posts/2022-02-07-Solution-du-CTF-Snowtalks-Easy-de-iamv1nc3nt.md %}) trop facile j'ai décidé de continuer sur les CTFs de [iamv1nc3nt](https://iamv1nc3nt.com/) mais avec une difficulté accrue.  
 
 Le *Snowtalks Medium* se présente (comme son nom l'indique) comme un CTF de difficulté intermédiaire.  
 

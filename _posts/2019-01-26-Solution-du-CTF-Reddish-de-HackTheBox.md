@@ -165,7 +165,7 @@ IPv4 Address : 172.19.0.4
 IPv4 Netmask : 255.255.0.0
 ```
 
-Quand on est sur une image Docker on peut exploiter le socket spécifique quand il est présent comme [sur le CTF Game of Thrones](http://devloop.users.sourceforge.net/index.php?article136/solution-du-ctf-game-of-thrones-1-de-vulnhub), sinon (et c'est le cas ici) on peut essayer de se déplacer de container en container jusqu'à trouver ce que l'on cherche (nos fameux flags).  
+Quand on est sur une image Docker on peut exploiter le socket spécifique quand il est présent comme [sur le CTF Game of Thrones]({% link _posts/2017-11-10-Solution-du-CTF-Game-of-Thrones-1-de-VulnHub.md %}), sinon (et c'est le cas ici) on peut essayer de se déplacer de container en container jusqu'à trouver ce que l'on cherche (nos fameux flags).  
 
 Plus d'infos sur l'exploitation Docker peuvent être trouvées dans [ces slides de la Blackhat 2018](https://i.blackhat.com/us-18/Thu-August-9/us-18-McGrew-An-Attacker-Looks-At-Docker-Approaching-Multi-Container-Applications-wp.pdf).  
 
@@ -278,7 +278,7 @@ J'ai toutefois noté deux problèmes récurrents :
 * L'existence d'autres clés/valeurs dans le Redis peut mener à un fichier PHP avec des problèmes d'encodage qui ne sera alors pas interprété :(
 * Une tâche semble supprimer le fichier uploadé rapidement
 
-Pour régler le premier problème j'ai mis un commentaire ouvrant à la fin de mon script PHP et omis de le fermer (tout comme le tag PHP). PHP est en effet assez permissif, il faillait exploiter l'une de ces caractéristiques pour résoudre [le CTF Homeless](http://devloop.users.sourceforge.net/index.php?article150/solution-du-ctf-homeless-de-vulnhub).  
+Pour régler le premier problème j'ai mis un commentaire ouvrant à la fin de mon script PHP et omis de le fermer (tout comme le tag PHP). PHP est en effet assez permissif, il faillait exploiter l'une de ces caractéristiques pour résoudre [le CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %}).  
 
 Pour le second problème j'ai vu que les dotfiles ne semblent pas supprimées par la tache, il suffit donc de préfixer notre nom de fichier par un point.  
 

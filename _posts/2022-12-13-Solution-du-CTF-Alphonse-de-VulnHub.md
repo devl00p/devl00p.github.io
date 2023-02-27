@@ -139,7 +139,7 @@ J'ai procédé à une énumération web qui a permis de retrouver les URLs suiva
 
 En revanche le dossier `protected` cité dans le code source ne semble pas exister.
 
-Les scripts de l'API sont suffisemment verbeux pour nous indiquer quoi faire :
+Les scripts de l'API sont suffisamment verbeux pour nous indiquer quoi faire :
 
 ```html
 <br />
@@ -183,7 +183,7 @@ Content-Type: application/json; charset=UTF-8
 {"message":"Successful login.","jwt":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJBbHBob25zZSIsImF1ZCI6IlRIRV9BVURJRU5DRSIsImlhdCI6MTY3MDQwNTMwMiwibmJmIjoxNjcwNDA1MzEyLCJleHAiOjE2NzA0MDUzNjIsImRhdGEiOnsiaWQiOiI0MiIsInVzZXJuYW1lIjoiZGV2bG9vcCJ9fQ.fhJ3uJuM0xyA2sMxk_U4eoySYQMaACO4uD9KROqhuYY","username":"devloop","expireAt":1670405362}
 ```
 
-J'obtient un token JWT... Je peux le passer à https://jwt-decoder.com/ qui m'indique l'entête suivant :
+J'obtiens un token JWT... Je peux le passer à https://jwt-decoder.com/ qui m'indique l'entête suivant :
 
 ```json
 {

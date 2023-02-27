@@ -44,7 +44,7 @@ Trying smiley / nathan Time: 00:00:25 <=================> (325 / 325) 100.00% Ti
 
 Ici j'ai utilisé une wordlist contenant les 500 mots de passe les plus utilisés. On peut trouver des listes de ce site sur Github. *Ncrack* dispose d'une liste similaire [qui contient 5000 passwords](https://github.com/nmap/ncrack/blob/master/lists/top50000.pwd).  
 
-Ces identifiants permettent donc d'accéder à la partie admin du site en se rendant sur */wp-admin*. Dans une situation comme celle-ci on peut installer un module Wordpress qui nous facilite la vie comme pour le [CTF Basic Pentesting: 1](http://devloop.users.sourceforge.net/index.php?article143/solution-du-ctf-basic-pentesting-1-de-vulnhub) ou bien aller modifier un script PHP d'un thème existant dans *Appearance > Editor* (*footer.php* par exemple).  
+Ces identifiants permettent donc d'accéder à la partie admin du site en se rendant sur */wp-admin*. Dans une situation comme celle-ci on peut installer un module Wordpress qui nous facilite la vie comme pour le [CTF Basic Pentesting: 1]({% link _posts/2018-02-05-solution-du-ctf-basic-pentesting-1-de-vulnhub.md %}) ou bien aller modifier un script PHP d'un thème existant dans *Appearance > Editor* (*footer.php* par exemple).  
 
 ![Wizard Labs CTF Smiley wordpress theme edit backdoor](/assets/img/htb/smiley_wp_edit.png)
 
@@ -125,7 +125,7 @@ Not vulnerable to CVE-2014-6277 (lcamtuf bug #1)
 Not vulnerable to CVE-2014-6278 (lcamtuf bug #2)
 ```
 
-J'ai aussi testé la faille XTRACE/PS4 utilisée pour le [CTF /dev/random: k2](http://devloop.users.sourceforge.net/index.php?article154/solution-du-ctf-dev-random-k2-de-vulnhub) sans plus de succès.  
+J'ai aussi testé la faille XTRACE/PS4 utilisée pour le [CTF /dev/random: k2]({% link _posts/2018-03-13-Solution-du-CTF-devrandom-k2-de-VulnHub.md %}) sans plus de succès.  
 
 La machine a une autre particularité qui ne peux pas échapper à des yeux avisés :  
 
@@ -143,9 +143,9 @@ Mais j'ai beau eu rajouter une ligne pour faire exécuter un script toutes les m
 
 L'autre point inhabituel sur cette machine c'est que de nombreux binaires classiques sont word-writables...  
 
-Du coup j'ai ressortit le script que j'avais fait pour le [CTF Homeless](http://devloop.users.sourceforge.net/index.php?article150/solution-du-ctf-homeless-de-vulnhub) qui surveille la liste des processus lancés sur le système histoire de voir de bons candidats à la réécriture.  
+Du coup j'ai ressorti le script que j'avais fait pour le [CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %}) qui surveille la liste des processus lancés sur le système histoire de voir de bons candidats à la réécriture.  
 
-Le script montre que les taches CRON sont bien lancées mais bizarrement pas la notre :(  
+Le script montre que les taches CRON sont bien lancées mais bizarrement pas la nôtre :(  
 
 ```plain
 6028 root /usr/sbin/CRON -f
@@ -169,7 +169,7 @@ Le script montre que les taches CRON sont bien lancées mais bizarrement pas la 
 13326 root /bin/sh -e /usr/lib/php5/sessionclean
 ```
 
-Pas bien grave puisque j'ai choisit d'écraser le binaire *sort* par mon script Python initial qui m'a donné un accès root plusieurs minutes plus tard ([voir le Github d'infodox](https://github.com/infodox/python-pty-shells) pour des shells sympas en Python) :  
+Pas bien grave puisque j'ai choisi d'écraser le binaire *sort* par mon script Python initial qui m'a donné un accès root plusieurs minutes plus tard ([voir le Github d'infodox](https://github.com/infodox/python-pty-shells) pour des shells sympas en Python) :  
 
 ```plain
 root@smiley:~# id

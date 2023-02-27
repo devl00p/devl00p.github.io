@@ -64,7 +64,7 @@ Le serveur web ne retournant rien d'intéressant c'est le moment de lancer le cl
 * devloop active le mode +x devloop
 ```
 
-On voit ici que le serveur IRCd est un Unread en version 3.2.8.1, bien connu pour inclure une backdoor ([voir solution du CTF Relativity](http://devloop.users.sourceforge.net/index.php?article71/solution-du-ctf-relativity)).  
+On voit ici que le serveur IRCd est un Unread en version 3.2.8.1, bien connu pour inclure une backdoor ([voir solution du CTF Relativity]({% link _posts/2014-03-04-Solution-du-CTF-Relativity-de-VulnHub.md %})).  
 
 *Metasploit* dispose d'un module pour cette vulnérabilité, il suffit juste de tester quelques payloads pour en trouver un fonctionnel :  
 
