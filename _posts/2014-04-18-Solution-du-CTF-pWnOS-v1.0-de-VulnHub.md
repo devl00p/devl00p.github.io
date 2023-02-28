@@ -53,7 +53,7 @@ Host script results:
 |_smbv2-enabled: Server doesn't support SMBv2 protocol
 ```
 
-On sait qu'il existe quelques exploits pour *Webmin* dont certains sont utilisés [par des bots et des mass-rooters](http://devloop.users.sourceforge.net/index.php?article20/intrusion-du-24-novembre-2006).  
+On sait qu'il existe quelques exploits pour *Webmin* dont certains sont utilisés [par des bots et des mass-rooters]({% link _posts/2011-01-08-Intrusion-du-24-novembre-2006.md %}).  
 
 Faisons tout de même un tour du côté du *Samba* pour voir si on trouve quelque chose d'intéressant.  
 

@@ -164,7 +164,7 @@ uid=0(root) gid=0(root) groups=99(nobody)
 
 Et voilà !   
 
-La version d'Apache / OpenSSL / mod\_ssl est aussi un bon candidat pour certains exploits bien connus (*OpenFuck*, *openssl-too-open*, et les [exploits ASN](http://devloop.users.sourceforge.net/index.php?article42/mass-apache-pwnage-from-romania)).  
+La version d'Apache / OpenSSL / mod\_ssl est aussi un bon candidat pour certains exploits bien connus (*OpenFuck*, *openssl-too-open*, et les [exploits ASN]({% link _posts/2011-01-11-Mass-Apache-pwnage-from-Romania.md %})).  
 
 La librairie openssl étant ce que l'on connaît, les exploits de l'époque ne se compilent pas avec la version actuelle de la librairie.  
 

@@ -377,7 +377,7 @@ On a le bon code mais l'upload de fichier php est refusé... On pourrait uploade
 
 La seule solution semble être d'avoir un fichier .htaccess qui puisse provoquer l'exécution directe de code et en fouillant bien je trouve [cette astuce](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20insecure%20files/PHP%20.htaccess) sur le Github de *PayloadsAllTheThings*.  
 
-Je créé alors une backdoor générique précédemment décrite [dans cet article](http://devloop.users.sourceforge.net/index.php?article128/tales-of-pentest-1-celui-qui-donnait-la-permission-file) :  
+Je créé alors une backdoor générique précédemment décrite [dans cet article]({% link _posts/2017-07-07-Tales-of-PenTest-1-Celui-qui-donnait-la-permission-FILE.md %}) :  
 
 ```python
 from itertools import combinations

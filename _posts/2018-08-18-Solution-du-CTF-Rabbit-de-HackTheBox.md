@@ -215,7 +215,7 @@ Table: users
 +----------+-----------------------------------------------------+
 ```
 
-A ce stade, vu qu'on dispose des droits les plus importants de MySQL et qu'en plus j'ai aussi trouvé le DocumentRoot via un message d'erreur, on serait tenter de poser une backdoor PHP sur le système avec INTO OUTFILE ([voir Tales of pentest #1](http://devloop.users.sourceforge.net/index.php?article128/tales-of-pentest-1-celui-qui-donnait-la-permission-file)).  
+A ce stade, vu qu'on dispose des droits les plus importants de MySQL et qu'en plus j'ai aussi trouvé le DocumentRoot via un message d'erreur, on serait tenter de poser une backdoor PHP sur le système avec INTO OUTFILE ([voir Tales of pentest #1]({% link _posts/2017-07-07-Tales-of-PenTest-1-Celui-qui-donnait-la-permission-FILE.md %})).  
 
 ![HackTheBox Rabbit CTF php file disclosing path](/assets/img/htb/rabbit_repo_error_path.jpg)
 
@@ -399,7 +399,7 @@ msf exploit(multi/script/web_delivery) > [*] 10.10.10.71      web_delivery - Del
 Final pwnage
 ------------
 
-La dernière étape aura été la plus simple. Pour avoir déjà croisé WAMP dans un pentest je sais que [ce dernier fait tourner les scripts avec les droits SYSTEM](http://devloop.users.sourceforge.net/index.php?article128/tales-of-pentest-1-celui-qui-donnait-la-permission-file).  
+La dernière étape aura été la plus simple. Pour avoir déjà croisé WAMP dans un pentest je sais que [ce dernier fait tourner les scripts avec les droits SYSTEM]({% link _posts/2017-07-07-Tales-of-PenTest-1-Celui-qui-donnait-la-permission-FILE.md %}).  
 
 ![HackTheBox Rabbit php code running as SYSTEM](/assets/img/htb/rabbit_whoami_upload_joomla.png)
 

