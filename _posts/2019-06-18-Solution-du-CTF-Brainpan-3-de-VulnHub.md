@@ -13,7 +13,7 @@ Cette série de CTF créée par [superkojiman](https://twitter.com/@superkojiman
 
 L'occasion de retrouver les noms d'utilisateurs *anansi*, *puck* et *reynard* déjà croisés pour [Brainpan #1]({% link _posts/2014-08-26-Solution-du-CTF-Brainpan-1-de-VulnHub.md %}) et [Brainpan #2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}).
 
-Au menu : exploitation de chaîne de format (voir [mon tuto](http://devloop.users.sourceforge.net/index.php?article102/pwing-echo-exploitation-d-une-faille-de-chaine-de-format) comme pré-requis), ROP, race-condition et autres joyeusetés.  
+Au menu : exploitation de chaîne de format (voir [mon tuto]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}) comme pré-requis), ROP, race-condition et autres joyeusetés.  
 
 Houlala 2: la mission
 ---------------------

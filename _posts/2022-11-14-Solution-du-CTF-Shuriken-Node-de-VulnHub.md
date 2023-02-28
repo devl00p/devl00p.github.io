@@ -162,7 +162,7 @@ web@shuriken-node:/home$ find / -user serv-adm -exec file {} \; 2> /dev/null
 
 On peut extraire la clé privée présente dans l'archive zip et ce sans avoir à extraire de mot de passe. La clé privée est par contre protégée par une passphrase. On va la casser avec *John the Ripper*.
 
-```shell-session
+```console
 $ ./john --wordlist=rockyou.txt /tmp/hashes.txt
 Using default input encoding: UTF-8
 Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])

@@ -292,7 +292,7 @@ Quelle est la suite des opérations ? Quand on fait un ps aux on remarque un ex
 
 On a aucun droit sur le dossier */opt/Unreal*. Toutefois avec netstat on remarque que le serveur IRC tourne sur un port standard (6667). Au passage on retrouve le mysqld (3306) ainsi qu'un sendmail (25). Tous écoutent sur le loopback c'est pourquoi on ne les a pas découvert lors du scan.  
 
-Pour rendre le serveur IRC accessible depuis l'extérieur, on va mettre en place un relais. Comme *socat* n'est pas présent sur la machine, je vais rapatrier *KevProxy* (voir mon article [sur le bypass de firewall](http://devloop.users.sourceforge.net/index.php?article27/bypass-de-firewall-sur-le-port-source))  
+Pour rendre le serveur IRC accessible depuis l'extérieur, on va mettre en place un relais. Comme *socat* n'est pas présent sur la machine, je vais rapatrier *KevProxy* (voir mon article [sur le bypass de firewall]({% link _posts/2011-01-09-Bypass-de-firewall-sur-le-port-source.md %}))  
 .
 
 D'abord en local je lance [un serveur HTTP minimaliste python-powered](http://docs.python.org/2/library/simplehttpserver.html) en étant dans le même dossier que *KevProxy.c* :

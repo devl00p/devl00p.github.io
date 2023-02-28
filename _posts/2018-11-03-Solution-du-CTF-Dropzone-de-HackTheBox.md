@@ -13,7 +13,7 @@ Comme vous le verrez par la suite toute la difficulté de ce CTF se concentrait 
 Il y a quelqu'un ?
 ------------------
 
-Etant donné qu'un scan de port TCP ne remonte rien et que le challenge s'appelle Dropzone ou serait tenté d'essayer différentes techniques pour tenter de passer un firewall (fragmentation, [port source spécifique](http://devloop.users.sourceforge.net/index.php?article27/bypass-de-firewall-sur-le-port-source), flags spécifiques...) mais il n'en est rien (j'ai bien croisé un port RDP à un moment mais ça devrait être le fruit d'un autre participant).  
+Etant donné qu'un scan de port TCP ne remonte rien et que le challenge s'appelle Dropzone ou serait tenté d'essayer différentes techniques pour tenter de passer un firewall (fragmentation, [port source spécifique]({% link _posts/2011-01-09-Bypass-de-firewall-sur-le-port-source.md %}), flags spécifiques...) mais il n'en est rien (j'ai bien croisé un port RDP à un moment mais ça devrait être le fruit d'un autre participant).  
 
 On aura plus de chances avec un scan UDP qui révèle un service TFTP (port standard 69).  
 

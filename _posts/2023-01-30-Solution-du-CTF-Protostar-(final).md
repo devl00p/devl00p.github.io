@@ -232,7 +232,7 @@ pstree -ap | grep -B5 21713
 
 ## Final 1
 
-NB: Je n'entre pas ici dans les détails de l'exploitation des chaines de format, veuillez lire [Pwing echo : Exploitation d'une faille de chaîne de format](https://devloop.users.sourceforge.net/index.php?article102/pwing-echo-exploitation-d-une-faille-de-chaine-de-format) pour comprendre les mécanismes permettant d'écrire la valeur que l'on souhaite à l'adresse que l'on souhaite.
+NB: Je n'entre pas ici dans les détails de l'exploitation des chaines de format, veuillez lire [Pwing echo : Exploitation d'une faille de chaîne de format]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}) pour comprendre les mécanismes permettant d'écrire la valeur que l'on souhaite à l'adresse que l'on souhaite.
 
 Il s'agit ici de l'exploitation d'une chaine de format. Pas de `printf` ici mais un `syslog` :
 

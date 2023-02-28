@@ -174,7 +174,7 @@ Par contre on remarque rapidement une nouvelle instruction vulnérable à une fa
     break;
 ```
 
-Pour toute la partie exploitation de chaines de format je vous renvoie vers [mon tutoriel sur le sujet](http://devloop.users.sourceforge.net/index.php?article102/pwing-echo-exploitation-d-une-faille-de-chaine-de-format).  
+Pour toute la partie exploitation de chaines de format je vous renvoie vers [mon tutoriel sur le sujet]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}).  
 
 Ici on va s'attarder un peu sur le fait que le programme est lié dynamiquement (au lieu d'être statique comme dans mon tutoriel).  
 

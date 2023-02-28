@@ -20,7 +20,7 @@ Du coup je suis passé immédiatement à [Chaosreader](http://chaosreader.source
 
 Il faut d'abord créer un dossier (ici *outdir*) où seront stockés les données extraites pour le spécifier à *Chaosreader* :  
 
-```shell_session
+```console
 $ ./chaosreader -D outdir 86590ed37efccf55b78f404ae6be09f0-net01.pcap 
 $* is no longer supported at ./chaosreader line 265.
 Chaosreader ver 0.94
@@ -45,7 +45,7 @@ index.html created.
 
 Et en faisant un simple "file" sur les fichiers de session générés... on trouve la solution dans un tag *EXIF* d'une image :  
 
-```shell_session
+```console
 $ file session_0001.*
 session_0001.part_01.gz:    gzip compressed data, from Unix
 session_0001.part_02.gz:    gzip compressed data, was "43c20729bb03986ca09dc18974c994ec", last modified: Mon Feb 24 01:26:52 2014, from Unix
@@ -104,14 +104,14 @@ Un hexdump rapide permet de déterminer qu'il s'agit bien d'une image disque (d'
 
 Les distributions Linux modernes disposent d'un outil baptisé *kpartx* qui rend vraiment simple le montage de disques :  
 
-```shell_session
+```console
 # kpartx -av diskimage 
 add map loop0p1 (254:2): 0 59392 linear /dev/loop0 128
 ```
 
 Ici une seule partition détectée dans l'image. Le périphérique *loop0p1* a été ajouté au système, il suffit de le monter et d'explorer avec le gestionnaire de fichiers de son choix.  
 
-```shell_session
+```console
 # mount /dev/mapper/loop0p1 /mnt/
 ```
 
@@ -119,7 +119,7 @@ Dans la corbeille (*/mnt/$RECYCLE.BIN/*) on trouve une référence à un fichier
 
 Le démontage se fait de cette façon :  
 
-```shell_session
+```console
 # umount /mnt
 # kpartx -d diskimage
 loop deleted : /dev/loop0
@@ -127,7 +127,7 @@ loop deleted : /dev/loop0
 
 J'ai décidé de passer à l'étape suivante en utilisant *Sleuthkit* à la recherche de fichiers effacés.  
 
-```shell_session
+```console
 # fdisk -l diskimage
 
 Disk diskimage: 32 MiB, 33554432 bytes, 65536 sectors
@@ -143,7 +143,7 @@ diskimage1        128 59519   59392  29M  7 HPFS/NTFS/exFAT
 
 La partition commence au secteur 128. On doit l'indiquer à *fls* pour travailler :  
 
-```shell_session
+```console
 # fls -f ntfs -o 128 diskimage 
 r/r 4-128-4:    $AttrDef
 r/r 8-128-2:    $BadClus
@@ -173,7 +173,7 @@ d/d 768:        $OrphanFiles
 
 On fouille dans le dossier *files* :  
 
-```shell_session
+```console
 $ fls -f ntfs -o 128 diskimage 38-144-8
 ```
 
@@ -187,7 +187,7 @@ Et on trouve une bonne quantité de fichiers dont voici les derniers :
 
 La récupération d'un fichier se fait à l'aide d'*icat* :  
 
-```shell_session
+```console
 $ icat -f ntfs -i raw -o 128 diskimage 589-128-1 > secret.7z
 ```
 
@@ -210,7 +210,7 @@ Headers Size = 135
 
 J'ai généré une timeline de l'activité du disque avec mactime dans l'espoir de découvrir d'autres informations :  
 
-```shell_session
+```console
 $ fls -f ntfs -r -p -m C: -o 128 diskimage > body.txt
 $ mactime -b body.txt > mactime.txt
 ```
@@ -219,7 +219,7 @@ Malheureusement je n'ai pas vu de très intéressant.
 
 Obtenir des infos concernant un fichier sur la partition se fait à l'aide de *istat* :  
 
-```shell_session
+```console
 $ istat -f ntfs -i raw -o 128 diskimage 589
 MFT Entry Header Values:
 Entry: 589        Sequence: 2
@@ -264,7 +264,7 @@ En explorant via fls le dossier *$RECYCLE.BIN* on apperçoit un fichier *$ISH2ZG
 
 Les données de ce fichier contiennent la référence au fichier de mots de passes vu plus tôt.  
 
-```shell_session
+```console
 $ icat -f ntfs -i raw -o 128 -s diskimage 76-128-1 |hexdump -C
 00000000  01 00 00 00 00 00 00 00  f0 03 00 00 00 00 00 00  |................|
 00000010  80 b2 38 db 50 33 cf 01  46 00 3a 00 5c 00 66 00  |..8.P3..F.:.\.f.|

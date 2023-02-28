@@ -312,7 +312,7 @@ Tout comme pour le CTF [CallMe]({% link _posts/2022-11-05-Solution-du-CTF-CallMe
 
 Dans le dossier de l'utilisateur qui faisait tourner le service je trouve un script bash :
 
-```shell
+```console
 fox@netstart:/home/fox$ cat startup 
 #!/bin/bash
 

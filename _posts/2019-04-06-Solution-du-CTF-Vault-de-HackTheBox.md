@@ -362,7 +362,7 @@ Ncat: Connected to 192.168.5.2:987.
 SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.4
 ```
 
-Il faut être en mesure de pouvoir utiliser le client SSH tout en ayant le port source 4444. C'est une situation que j'ai déjà couvert dans mon article [sur le bypass de firewall par port source](http://devloop.users.sourceforge.net/index.php?article27/bypass-de-firewall-sur-le-port-source).  
+Il faut être en mesure de pouvoir utiliser le client SSH tout en ayant le port source 4444. C'est une situation que j'ai déjà couvert dans mon article [sur le bypass de firewall par port source]({% link _posts/2011-01-09-Bypass-de-firewall-sur-le-port-source.md %}).  
 
 Ici j'ai choisi d'utiliser [un socat 32 bits statique trouvé sur Github](https://github.com/ernw/static-toolbox/releases) qui mettra en écoute un port 11111 sur *DNS* et qui se chargera de rediriger le trafic vers *Vault* (192.168.5.2) sur son port 987 :  
 

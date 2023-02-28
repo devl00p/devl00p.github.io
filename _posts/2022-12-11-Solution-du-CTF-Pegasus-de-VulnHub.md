@@ -328,7 +328,7 @@ Ce qui se passe ici c'est que le calculateur demande deux nombres. Il convertit 
 
 Par conséquent si la chaine contient des directives de formattages (comme `%s`, `%x`, `%d`, etc) elles seront appliquées.
 
-On est donc face à une vulnérabilité de format string. Je vous invite à lire [mon tutoriel sur le sujet](https://devloop.users.sourceforge.net/index.php?article102/pwing-echo-exploitation-d-une-faille-de-chaine-de-format) pour en savoir plus.
+On est donc face à une vulnérabilité de format string. Je vous invite à lire [mon tutoriel sur le sujet]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}) pour en savoir plus.
 
 Je regarde aussi si les adresses mémoire sont randomisées (ASLR), ce qui est ici le cas.
 

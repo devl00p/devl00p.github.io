@@ -7,7 +7,7 @@ tags: [CTF,Protostar,binary exploitation]
 
 Le binaire prend un argument sur la ligne de commande et le passe à `sprintf` directement ce qui fait que l'on contrôle une chaine de format.
 
-Je vous invite à lire [Pwing echo : Exploitation d'une faille de chaîne de format](https://devloop.users.sourceforge.net/index.php?article102/pwing-echo-exploitation-d-une-faille-de-chaine-de-format) pour plus d'infos sur ce type de vulnérabilités.
+Je vous invite à lire [Pwing echo : Exploitation d'une faille de chaîne de format]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}) pour plus d'infos sur ce type de vulnérabilités.
 
 Pour résoudre le challenge on dispose de cette indication :
 
