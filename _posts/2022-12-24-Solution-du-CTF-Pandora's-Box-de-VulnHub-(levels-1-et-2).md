@@ -107,7 +107,7 @@ while True:
     r.close()
 ```
 
-Je teste pour chaque position tous les caractères ascii affichables et je conserve celui qui a généré le moins de délais.
+Je teste pour chaque position tous les caractères ascii affichables et je conserve celui qui a généré le moins de délai.
 
 Je réitère ensuite l'opération pour le suivant. L'output ressemble à ceci :
 
