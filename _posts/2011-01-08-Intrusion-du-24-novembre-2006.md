@@ -5,9 +5,9 @@ tags: [honeypot]
 
 ## Exploit kit
 
-Pour plus d'information sur [Kojoney](http://kojoney.sourceforge.net/), un honeypot ssh, reportez-vous à [un de mes précédents billets](http://devloop.users.sourceforge.net/index.php?article11/kojoney).  
+Pour plus d'information sur [Kojoney](http://kojoney.sourceforge.net/), un honeypot ssh, reportez-vous à [un de mes précédents billets]({% link _posts/2011-01-06-Revue-du-honeypot-Kojoney.md%}).  
 
-Une attaque brute force contre les comptes ssh a été lancée le 23 nomvembre aux alentours de 16 heures. La machine attaquante est localisée en norvège. Le FAI est [telenor.no](http://www.telenor.no/).  
+Une attaque brute force contre les comptes ssh a été lancée le 23 nomvembre aux alentours de 16 heures. La machine attaquante est localisée en Norvège. Le FAI est [telenor.no](http://www.telenor.no/).  
 
 L'attaque est plutôt efficace et prend fin à 16h07 après avoir trouvé différents passwords par défaut (`ftp`, `mysql`, `guest`, `admin`).  
 
@@ -128,7 +128,7 @@ Ce script utilise `pscan2` pour trouver des machines ayant un port Webmin ouvert
 
 Là vous vous demandez *mais à quoi sert le binaire do ?*  
 
-Et bien c'est la partie qui automatise l'attaque. Pour chaque adresse IP trouvée dans le fichier passé en paramêtre (ips dans ce cas), l'exploit pour Webmin est lancé et va tenter d'accèder au fichier `/etc/shadow` du serveur. Différentes tentatives sont faites afin de couvrir différents systèmes (par exemple `master.passwd` pour BSD)  
+Et bien c'est la partie qui automatise l'attaque. Pour chaque adresse IP trouvée dans le fichier passé en paramètre (ips dans ce cas), l'exploit pour Webmin est lancé et va tenter d'accèder au fichier `/etc/shadow` du serveur. Différentes tentatives sont faites afin de couvrir différents systèmes (par exemple `master.passwd` pour BSD)  
 
 Les résultats obtenus sont placés dans les fichiers `pass`, `pass2`, `pass3`.  
 

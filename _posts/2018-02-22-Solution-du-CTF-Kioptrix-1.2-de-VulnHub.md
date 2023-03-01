@@ -203,7 +203,7 @@ uid=1000(loneferret) gid=100(users) groups=100(users)
 C'est du gâteau
 ---------------
 
-On sait que l'utilisateur peut lancer [HT Editor](http://devloop.users.sourceforge.net/index.php?article25/tutoriel-d-utilisation-de-ht-editor) en tant que root.  
+On sait que l'utilisateur peut lancer [HT Editor]({% link _posts/2011-01-09-Tutoriel-d-utilisation-de-HT-Editor.md %}) en tant que root.  
 
 *HT* est un désassembler mais aussi un éditeur de texte classique. Il suffit donc d'aller ouvrir le dossier /root puis de lire le flag (*Congrats.txt*).  
 

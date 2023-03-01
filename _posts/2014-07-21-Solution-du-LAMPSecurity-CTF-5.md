@@ -95,7 +95,7 @@ Il y a différents services qui peuvent nous intéresser mais je me suis tourné
 
 Sur ce site on trouve :  
 
-* des urls qui prennent un paramêtre page
+* des urls qui prennent un paramètre page
 * un blog *NanoCMS* sous le path */~andy/*
 * ce qui semble être un *Drupal* sous */events/*
 * Un formulaire d'inscription à une maling-list sous */list/*

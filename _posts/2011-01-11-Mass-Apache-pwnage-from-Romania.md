@@ -3,9 +3,9 @@ title: "Mass Apache pwnage from Romania"
 tags: [honeypot, reverse engineering, shellcoding]
 ---
 
-Ça fait un bon moment que je n'avais [pas donné](http://devloop.users.sourceforge.net/index.php?article23/dernieres-visites-sur-le-honeypot-ssh) [de nouvelles]({% link _posts/2011-01-08-Intrusion-du-24-novembre-2006.md %}) de mon [honeypot SSH](http://devloop.users.sourceforge.net/index.php?article11/kojoney).  
+Ça fait un bon moment que je n'avais [pas donné]({% link _posts/2011-01-08-Dernieres-visites-sur-le-honeypot-SSH.md %}) [de nouvelles]({% link _posts/2011-01-08-Intrusion-du-24-novembre-2006.md %}) de mon [honeypot SSH]({% link _posts/2011-01-06-Revue-du-honeypot-Kojoney.md %}).  
 
-Il faut dire que les visites sont assez rares et généralement peu intéressantes, se terminant par rapatriement d'un [EnergyMech](http://www.energymech.net/), d'un [PsyBNC](http://www.psybnc.co.uk/index.php/Main_Page) voire du [scanner UnixCod](http://devloop.users.sourceforge.net/index.php?article23/dernieres-visites-sur-le-honeypot-ssh) qui continue à faire parler de lui.  
+Il faut dire que les visites sont assez rares et généralement peu intéressantes, se terminant par rapatriement d'un [EnergyMech](http://www.energymech.net/), d'un [PsyBNC](http://www.psybnc.co.uk/index.php/Main_Page) voire du [scanner UnixCod]({% link _posts/2011-01-08-Dernieres-visites-sur-le-honeypot-SSH.md %}) qui continue à faire parler de lui.  
 
 Aujourd'hui j'ai l'occasion de vous parler de quelque chose de plus croustillant, qui tournera principalement sur l'analyse d'un binaire Linux.  
 
@@ -110,7 +110,7 @@ Seul le format (une adresse IP, un header HTTP, une ligne de tirets) est à pren
 
 Bien que j'ai analysé les deux binaires, je me tiendrais ici à l'analyse de l'exécutable `e`, les deux binaires ayant des fonctions très proches. Le binaire fait 75.4 Ko soit 4ko de plus que celui nommé `SCANNER`.  
 
-L'analyse a été faite seulement par désassemblage à l'aide de la dernière version de [HT Editor](http://hte.sourceforge.net/) (2.0.10) en suivant une méthodologie décrite [ici](http://devloop.users.sourceforge.net/index.php?article25/tutoriel-d-utilisation-de-ht-editor).  
+L'analyse a été faite seulement par désassemblage à l'aide de la dernière version de [HT Editor](http://hte.sourceforge.net/) (2.0.10) en suivant une méthodologie décrite [ici]({% link _posts/2011-01-09-Tutoriel-d-utilisation-de-HT-Editor.md %}).  
 
 Bien que le binaire ne semble pas contenir de backdoor, j'ai préféré ne pas exécuter le programme.  
 
