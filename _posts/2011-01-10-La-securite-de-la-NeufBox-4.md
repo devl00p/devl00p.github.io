@@ -28,7 +28,7 @@ Est-il possible d'activer une protection par mot de passe ? Une [page cachée](h
 
 ## Cross-Site Request Forgery
 
-L'absence de mot de passe à saisir pour accéder à la partie administration fait de la NeufBox 4, une cible de choix pour les attaques par [Cross-site request forgery](http://devloop.users.sourceforge.net/index.php?article17/les-attaques-par-cross-site-request-forgery).  
+L'absence de mot de passe à saisir pour accéder à la partie administration fait de la NeufBox 4, une cible de choix pour les attaques par [Cross-site request forgery]({% link _posts/2011-01-08-Les-attaques-par-Cross-Site-Request-Forgery.md %}).  
 
 À l'aide d'une page web malicieuse, il est possible de vous faire changer la configuration de votre modem sans que vous ne vous en rendiez compte.  
 
