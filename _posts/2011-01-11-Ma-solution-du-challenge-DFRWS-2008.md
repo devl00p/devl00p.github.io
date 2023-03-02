@@ -27,7 +27,7 @@ L'équipe sécurité de la boite a récupéré différentes données que vous de
 
 Votre entreprise souhaiterait avoir des réponses aux interrogations suivantes :  
 
-* Quelle activité de l'utilisateur peut être mis en évidence d'après les données ?
+* Quelle activité de l'utilisateur peut être mise en évidence d'après les données ?
 * Est-ce qu'une activité suspecte peut-être décelée sur ce système ?
 * Y a-t-il des preuves de collaboration avec une personne extérieure ? Si oui de quelle façon ?
 * Est-ce que des données sensibles ont été volées ? Sinon peut-on en savoir plus sur la nature des données et la façon dont elles ont été transmises ?
