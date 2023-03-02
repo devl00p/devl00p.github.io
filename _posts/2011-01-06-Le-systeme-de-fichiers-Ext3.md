@@ -3,7 +3,7 @@ title: "Le système de fichiers Ext3"
 tags: [Computer forensics]
 ---
 
-Après [m'être attaqué à Ext2](http://devloop.users.sourceforge.net/index.php?article7/ext2-et-les-effacements-securises), je continue mes études des systèmes de fichiers en vous parlant cette fois de [Ext3](http://en.wikipedia.org/wiki/Ext3), un système de fichiers dont l'objectif était de combler les lacunes de la version précédente.  
+Après [m'être attaqué à Ext2]({% link _posts/2011-01-06-Ext2-et-les-effacements-securises.md %}), je continue mes études des systèmes de fichiers en vous parlant cette fois de [Ext3](http://en.wikipedia.org/wiki/Ext3), un système de fichiers dont l'objectif était de combler les lacunes de la version précédente.  
 
 On dit souvent qu'Ext3 n'est rien de plus qu'un Ext2 avec un système de [journalisation](http://en.wikipedia.org/wiki/Journaling_file_system).  
 
