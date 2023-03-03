@@ -1,0 +1,145 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Graphique comparatif voiture prix contre performance 0 à 100km/h</title>
+    <script src="jquery-1.9.1.js"></script>
+    <script>
+String.prototype.capitalize = function() {
+    return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+};
+
+function uk_to_fr(expr) {
+    if (expr == "petrol") return "essence";
+    if (expr == "electric") return "electrique";
+    if (expr == "front wheel drive") return "traction";
+    if (expr == "rear wheel drive") return "propulsion";
+    if (expr == "all wheel drive") return "intégrale";
+    if (expr == "hybrid") return "hybrid";
+    return expr;
+}
+
+$(document).ready(function() {
+    var options = {
+        chart: {
+            type: 'scatter',
+            zoomType: 'xy',
+            renderTo: 'container',
+        },
+        title: {
+            text: 'Comparaison voitures : prix vs. temps pour le 0 à 100 km'
+        },
+        subtitle: {
+            text: 'Source: autoevolution.com et caradisiac.com 2015'
+        },
+        xAxis: {
+            title: {
+                text: '0 à 100km/h (en secondes)',
+                enabled: true,
+            },
+            startOnTick: true,
+            endOnTick: true,
+            showLastLabel: true
+        },
+        yAxis: {
+            title: {
+                text: 'Prix (en Euros)'
+            },
+            endOnTick: true,
+        },
+        legend: {
+            layout: 'horizontal',
+            align: 'right',
+            verticalAlign: 'top',
+            x: 0,
+            y: 50,
+            width: 200,
+            floating: true,
+            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+            borderWidth: 1
+        },
+        plotOptions: {
+            scatter: {
+                marker: {
+                    radius: 4,
+                    states: {
+                        hover: {
+                            enabled: true,
+                            lineColor: 'rgb(100,100,100)'
+                        }
+                    }
+                },
+                states: {
+                    hover: {
+                        marker: {
+                            enabled: false
+                        }
+                    }
+                }
+            }
+        },
+        tooltip: {
+            useHTML: true,
+            formatter: function() {
+                return "<img src=\"" + this.point.logo + "\"/> <strong>" + this.key + "</strong>&nbsp;&nbsp;&nbsp;<br />" + 
+                    "Temps: " + this.x + " seconds<br />" +
+                    "Prix: " + this.y + " euros<br />" +
+                    "Carburant: " + this.point.carburant + "<br />" +
+                    "Transmission: " + this.point.transmission + "<br />" +
+                    "Boîte: " + this.point.gearbox ;
+            }
+        },
+        series: [{}]
+    };
+
+    var series = new Array();
+    var brand_div = document.getElementById("brand") ;
+    $.getJSON('cars_light.json', function(cars) {
+        for (var brandName in cars) {
+            brand_div.innerHTML = brandName.capitalize();
+            var data_array = new Array();
+
+            for (var model in cars[brandName]) {
+                for (var motorName in cars[brandName][model]) {
+                    var motorSpecs = cars[brandName][model][motorName] ;
+                    if ("price" in motorSpecs) {
+                        var accel = motorSpecs["acceleration 0-62 mph (0-100 kph)"] ;
+                        var price = motorSpecs["price"] ;
+                        if (accel != '-') {
+                            data_array.push(
+                                    {
+                                        "name": motorName,
+                                        "x": parseFloat(accel.substr(0, accel.length - 2)),
+                                        "y": price,
+                                        "carburant": uk_to_fr(motorSpecs["fuel"]),
+                                        "transmission": uk_to_fr(motorSpecs["drive type"]),
+                                        "gearbox": motorSpecs["gearbox"],
+                                        "logo": "logos/" + motorName.split(" ")[0].toLowerCase() + ".png"
+                                    }
+                            );
+                        }
+                    }
+                }
+            }
+            if (data_array.length > 0) {
+                series.push({"name": brandName.capitalize(), "data": data_array});
+            }
+        }
+        options.series = series;
+        var chart = new Highcharts.Chart(options);
+    });
+});
+</script>
+</head>
+<body style="width: 100%; height: 100%; margin: 0px;">
+    <script src="highcharts.js"></script>
+    <!--    <script src="exporting.js"></script> -->
+    <script src="dark-unica.js"></script>
+    <div id="container" style="min-height: 100%; margin: 0; padding: 0px;">
+        <strong>Merci de patienter pendant le chargement des données...</strong><br />
+        <div id="brand"></div>
+    </div>
+    <script>
+    </script>
+
+</body>
+</html>
