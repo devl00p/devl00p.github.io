@@ -93,7 +93,7 @@ Les seuls [outils](http://www.sleuthkit.org/sleuthkit/tools.php) de TSK dont je 
 
 `fls` génère une sortie où chaque ligne correspond à un fichier, par exemple :  
 
-```plain
+```
 0|/etc/init.d/exim4|0|766622|33261|-/-rwxr-xr-x|1|0|0|0|3888|1146225760|1117180771|1145825532|4096|0
 ```
 
@@ -101,7 +101,7 @@ Ce n'est pas super agréable comme lecture (surtout avec un fichier de 28970 lig
 
 `mactime` utilise l'output de fls pour générer sa chronologie, les résultats sont bien plus intéressants, par exemple le 28 avril 2006 à 14h26 :  
 
-```plain
+```
 Fri Apr 28 2006 14:26:12   510089 ..c -/-rwxr-xr-x 1000     1000     896288   /home/jmerchat/
                            510089 ..c -/-rwxr-xr-x 1000     1000     896288   /home/jmerchat/sudo (deleted-realloc)
 Fri Apr 28 2006 14:27:39       67 m.. -/-rw-r--r-- 1000     1000     896289   /home/jmerchat/WDI.pls
@@ -116,7 +116,7 @@ mv sudo ' '
 
 On en déduit qu'à ce moment de la journée, il n'a encore que des droits limités... allons un peu plus loin :  
 
-```plain
+```
 Fri Apr 28 2006 14:42:42    98156 .a. -/-rwxr-xr-x 0        0        456117   /bin/netstat
                             12536 .a. -/-rwxr-xr-x 0        0        51161    /usr/bin/whoami
 Fri Apr 28 2006 14:42:51   510089 .a. -/-rwxr-xr-x 1000     1000     896288   /home/jmerchat/sudo (deleted-realloc)
@@ -127,7 +127,7 @@ Fri Apr 28 2006 14:42:51   510089 .a. -/-rwxr-xr-x 1000     1000     896288   /h
 
 Maintenant que le pirate peut passer root, voyons quelles vont être ses futures actions :  
 
-```plain
+```
 Fri Apr 28 2006 14:49:45       10 .a. l/lrwxrwxrwx 0        0        49503    /usr/bin/touch -> /bin/touch
                             15500 .a. -/-rwxr-xr-x 0        0        912145   /var/cache/apt/aptutils.cache
                              4096 m.c d/drwxr-xr-x 0        0        912132   /var/cache/apt
@@ -146,7 +146,7 @@ De toute évidence, il fait appel à la commande `touch` pour modifier les dates
 
 On voit quelque chose de TRES intéressant : l'utilisation de la commande insmod pour charger un module du noyau !  
 
-```plain
+```
 Fri Apr 28 2006 14:49:48   340608 mac -/-rw-rw-r-- 0        43       913919   /var/log/.wtmp.EVOsc3 (deleted-realloc)
                            258811 .a. -/-rw-r----- 0        4        913890   /var/log/kern.log
                           1013800 m.c -/-rw-r--r-- 1000     1000     146606   /tmp/peercast.2598.log
@@ -166,7 +166,7 @@ Je ne sais pas vous, mais moi j'appelle ça effacer ses traces.
 
 Pour terminer il semble effacer quelques fichiers et rends très certainement le `.bash_history` immuable (avec la commande `chattr`) afin que bash n'ajoute pas de lignes à l'historique des commandes.  
 
-```plain
+```
 Fri Apr 28 2006 14:52:29    30712 .a. -/-rwxr-xr-x 0        0        456123   /bin/rm
 Fri Apr 28 2006 14:52:43    13680 ..c -/-rw-r--r-- 0        0        766469   /etc/modutils.cache
                             13680 ..c -/-rw-r--r-- 0        0        766469   /etc/cron.daily/man-db (deleted-realloc)
@@ -191,7 +191,7 @@ icat disk.img 912145 > /var/cache/apt/aptutils.cache
 
 La commande file nous renseigne sur la nature de ces fichiers :  
 
-```plain
+```
 aptutils.cache: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.2.0, dynamically linked (uses shared libs), for GNU/Linux 2.2.0, not stripped
 modutils.cache: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), not stripped
 fileutils.cache: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), for GNU/Linux 2.2.0, dynamically linked (uses shared libs), for GNU/Linux 2.2.0, stripped
@@ -201,7 +201,7 @@ En d'autres termes, on a deux exécutables et un module (.ko)
 
 Voici un extrait du `strings` sur `fileutils.cache` qui se passe de commentaires :
 
-```plain
+```
 powered by click
         if you want to hide yourself and clean log files:
         usage %s <user> <host> <real_ip>
@@ -227,7 +227,7 @@ kern.log.hm
 
 La même opération sur `aptutils.cache` est plus intéressante :  
 
-```plain
+```
 You need root level (to use raw sockets).
 Utility to connect reverse shell from engelmickey:
 %s ip_dest [port]
@@ -242,7 +242,7 @@ error sending data.
 
 et enfin sur `modutils.cache` :
 
-```plain
+```
 sk_del_node_init
 license=GPL
 vermagic=2.6.8 preempt 686 gcc-3.3
@@ -281,7 +281,7 @@ C'est marrant, mais ce qui nous intéresse, c'est ce `validnivo` de tout à l'he
 
 Dans la doc de `ENYELKM v1.1` on a l'info suivante :  
 
-```plain
+```
 * Consiguiendo root local:
 
 Haciendo: # kill -s 58 12345
@@ -344,7 +344,7 @@ Le seul appel à `analyse_challenge_vn` se fait par la fonction `hide_marcas`.
 
 En analysant le rootkit original, on retrouve à quoi correspond cette fonction :  
 
-```plain
+```
 * Ocultar partes de un fichero:
 
 Se oculta en un fichero todo lo que este entre las marcas:

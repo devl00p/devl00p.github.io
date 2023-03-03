@@ -47,7 +47,7 @@ man sudoers
 
 Une fois notre shell obtenu en tant que *www-data* j'ai vite remarqué différents scripts en relation avec *sudo* ou *su* :  
 
-```plain
+```
 www-data@Devlife:/var/www/html/dev$ w
  13:38:45 up  2:13,  1 user,  load average: 0.00, 0.00, 0.00
 USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
@@ -83,7 +83,7 @@ Stockage du mot de passe... mauvaise idée :p
 
 Les utilisateurs *tedd* et *root* partagent le même mot de passe.  
 
-```plain
+```
 root@Devlife:~# cat /root/root.txt
 d360adc7e9c5ceb3588a79bd88e3cec7a5d14368
 ```

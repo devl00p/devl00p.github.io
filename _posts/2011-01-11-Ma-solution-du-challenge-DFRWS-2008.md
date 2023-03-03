@@ -152,7 +152,7 @@ Dans le cache du navigateur, on retrouve aussi énormément de code javascript o
 
 Au final, on en extrait la conversation suivante avec une certaine *"Faa Tali"* :   
 
-```plain
+```
 Re: Negotiate (Google Docs)
 I apologize for the delay -- I was required to travel recently.
 I agree with your final terms and will contact you via the cell provided to discuss the transfer. I have received your software package and instructions for transfer.
@@ -175,7 +175,7 @@ On apprend par ce mail que notre suspect négocie le prix de différentes inform
 
 Plus tard, *Steve* renverra un message à *Faa Tali* qui est le suivant :  
 
-```plain
+```
 On Sun Dec 16 2007_10:24 PM
 To: faa tali
 Subject: Delivery information
@@ -191,7 +191,7 @@ Dans un sujet pas si éloigné que ça, *Steve Vogon* a aussi effectué une rech
 
 D'après les mêmes données formatées en JSON, on sait qu'il a demandé des renseignements auprès de cette banque :  
 
-```plain
+```
 To: investors@noblebank.pl
 Subject: Minimum account  opening balance
 
@@ -296,7 +296,7 @@ f.close()
 
 Si on regarde à l'intérieur, on voit que l'archive contient les fichiers suivants :  
 
-```plain
+```
 Archive:  archive.zip
   Length     Date   Time    Name
  --------    ----   ----    ----

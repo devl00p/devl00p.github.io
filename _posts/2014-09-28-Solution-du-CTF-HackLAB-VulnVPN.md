@@ -84,7 +84,7 @@ On procède à la suite des instructions comme indiqué sur la page du challenge
 
 Au boût de quelques secondes une nouvelle interface réseau est apparue :  
 
-```plain
+```
 ppp0      Link encap:Point-to-Point Protocol  
           inet addr:10.99.99.2  P-t-P:10.99.99.1  Mask:255.255.255.255
           UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1280  Metric:1
@@ -99,7 +99,7 @@ Enumeration des services
 
 Auparavant la VM ne semblait disposer que du port 81 ouvert. Maintenant si on relance un scan de ports :  
 
-```plain
+```
 Nmap scan report for 10.99.99.1
 Host is up (0.00036s latency).
 Not shown: 65523 closed ports
@@ -271,7 +271,7 @@ Escalade de privilèges #2
 
 Si la précédente méthode ne fonctionne pas (exemple : problème avec le FS sur la VM), on peut s'attaquer au vieux *Webmin* via un module *Metasploit* :  
 
-```plain
+```
 msf exploit(webmin_show_cgi_exec) > show options
 
 Module options (exploit/unix/webapp/webmin_show_cgi_exec):

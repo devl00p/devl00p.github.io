@@ -15,7 +15,7 @@ One time
 
 Deux ports sont ouverts : un SSH ainsi qu'un serveur web servi par Node.js.  
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-05-24 12:08 CEST
 Nmap scan report for 192.168.1.20
 Host is up (0.00023s latency).
@@ -89,7 +89,7 @@ On créé la page index.html suivante avec formulaire auto-submit que l'on livre
 
 On envoie ensuite un message à *spiderman* avec l'URL de notre serveur. On voit rapidement apparaître une requête dans les logs, ça a fonctionné :)  
 
-```plain
+```
 $ python -m SimpleHTTPServer
 Serving HTTP on 0.0.0.0 port 8000 ...
 192.168.1.20 - - [24/May/2014 17:21:14] "GET / HTTP/1.1" 200 -
@@ -101,7 +101,7 @@ On se connecte alors avec l'utilisateur *spiderman* et le mot de passe *hacked* 
 
 Visiblement pirate a fait le travail pour nous :) Il ne reste qu'à se connecter en SSH sur la machine avec *spiderman* et *CrazyPassword!* :  
 
-```plain
+```
 Welcome to Ubuntu 14.04 LTS (GNU/Linux 3.13.0-24-generic i686)
 
  * Documentation:  https://help.ubuntu.com/
@@ -123,7 +123,7 @@ Two time
 
 Avec un *pstree -a* on voit que deux Nodes.js tournent dont l'un en root :  
 
-```plain
+```
   ├─sudo -u spiderman sh -c /usr/local/bin/node /home/spiderman/vnwa/server.js
   │   └─sh -c /usr/local/bin/node /home/spiderman/vnwa/server.js
   │       └─node /home/spiderman/vnwa/server.js
@@ -190,7 +190,7 @@ Il n'y a plus qu'à injecter *;chown root:root /tmp/gotroot;chmod 4755 /tmp/gotr
 
 On lance la backdoor qui nous donne les bons droits...  
 
-```plain
+```
 root@SecOS-1:/root# cat flag.txt 
 Hey,
 

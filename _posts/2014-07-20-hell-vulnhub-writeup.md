@@ -22,7 +22,7 @@ Ready for adventure ?
 So here we go
 -------------
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-07-08 22:15 CEST
 Nmap scan report for 192.168.1.29
 Host is up (0.00016s latency).
@@ -256,7 +256,7 @@ All work and no play makes Jack a dull boy
 
 As we saw before, the *super\_secret* path brings us to a login page. With the help of *dirb(.sf.net)* I found several more scripts :  
 
-```plain
+```
 http://192.168.1.29/super_secret_login_path_muhahaha/check.php
 http://192.168.1.29/super_secret_login_path_muhahaha/index.php
 http://192.168.1.29/super_secret_login_path_muhahaha/login.php
@@ -461,7 +461,7 @@ What if I set the cookie to *intruder=../server.php* ? BANG ! Data from *server.
 
 The script simply calls *str\_replace* to removes attemps to go in parents directory and when I set the intruder cookie value to *....//....//....//....//....//....//....//....//etc/passwd* I finally get :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
 bin:x:2:2:bin:/bin:/bin/sh
@@ -520,7 +520,7 @@ fd.close()
 
 And I get :  
 
-```plain
+```
 Contenu trouve avec /var/log/lastlog
 Contenu trouve avec /var/log/wtmp
 Contenu trouve avec /var/run/utmp
@@ -806,7 +806,7 @@ $ gpg secret.pgp
 
 Here's the decrypted file :  
 
-```plain
+```
 Ok Jack. I've created the account 'milk_4_life' as per your request. Please stop emailing me about this now or I'm going to talk to HR like we discussed. 
 
 The password is '4J0WWvL5nS'
@@ -817,7 +817,7 @@ What else ?
 
 Connected as *milk\_4\_life* I saw a binary with setuid george permission :  
 
-```plain
+```
 ---s--x--x 1 george george 5743 Jun 19 18:24 game
 ```
 
@@ -845,7 +845,7 @@ Port ouverts :
 
 On the server's side a message appeared :  
 
-```plain
+```
 Lol nope
 ```
 
@@ -896,7 +896,7 @@ sock.close()
 
 After some time we obtain a reply that is not a question :  
 
-```plain
+```
 Final Score: 133869
 
 !*!*!*!*! Congratulations, new high score (133869) !*!*!*!*!
@@ -916,7 +916,7 @@ milk_4_life@hell:~$ find /  -newerct '2014-07-12 14:10' 2> /dev/null  | grep -v 
 
 The *lesson101* binary is now setuid george (*George is inside !!!*)  
 
-```plain
+```
 ---s--x--x 1 george george 6531 Jun 19 15:13 /usr/bin/lesson101
 ```
 

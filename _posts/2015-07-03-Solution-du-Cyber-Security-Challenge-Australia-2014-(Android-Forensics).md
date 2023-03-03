@@ -46,7 +46,7 @@ Maintenant que l'on est rassurés on peut s'attaquer à la première question qu
 
 La commande *linux\_psaux* donne (comme son nom l'indique) une liste des processus en cours au moment de la création du dump :  
 
-```plain
+```
 $ python vol.py linux_psaux -f memory.dmp --profile=Linuxgoldfish-2_6_29ARM
 Volatility Foundation Volatility Framework 2.4
 Pid    Uid    Gid    Arguments
@@ -122,7 +122,7 @@ A part ça je note la présence d'un *sh* (pid 1255), d'un *httpmon* (1185) et d
 
 Mais là encore n'y connaissant rien il ne s'agit encore que d'un ressenti :p  
 
-```plain
+```
 $ python vol.py linux_getcwd -f memory.dmp --profile=Linuxgoldfish-2_6_29ARM
 Volatility Foundation Volatility Framework 2.4
 Name              Pid      CWD
@@ -166,7 +166,7 @@ Du coup le processus 1255 semble encore plus suspicieux et montre une relation d
 
 La commande *linux\_pstree* permet d'obtenir une hiérarchie des processus mais ce qui se passe doit être assez générique pour du *Androïd* (on retrouve des *AsyncTask* à plusieurs endroits) :  
 
-```plain
+```
 ..AsyncTask #1       1200            10061
 ...sh                1255            10061
 ..AsyncTask #3       1213            10033
@@ -177,7 +177,7 @@ Sans compter que presque tous les process héritent du process [Zygote](http://a
 
 Je décide d'approfondir la piste *httpmon*. La commande *linux\_lsof* offre des informations intéressantes :  
 
-```plain
+```
 $ python vol.py linux_lsof -f memory.dmp --profile=Linuxgoldfish-2_6_29ARM -p 1185
 
 Volatility Foundation Volatility Framework 2.4
@@ -246,7 +246,7 @@ Pas besoin d'être un expert Androïd pour soupçonner qu'une application légit
 
 On retrouve la présence de ce fichier via la commande *linux\_proc\_maps* de *Volatility* (pour le process 1185) :  
 
-```plain
+```
 1185 0x000000004b88f000 0x000000004b891000 r--       0x1d000     31      1       1063 /data/app/org.jtb.httpmon-1.apk
 1185 0x000000004b891000 0x000000004b8aa000 r--           0x0     31      1       1094 /data/dalvik-cache/data@app@org.jtb.httpmon-1.apk@classes.dex
 1185 0x000000004b8aa000 0x000000004b8c2000 r--           0x0     31      1       1240 /data/data/org.jtb.httpmon/files/rathrazdaeizaztaxchj.dex
@@ -255,13 +255,13 @@ On retrouve la présence de ce fichier via la commande *linux\_proc\_maps* de *V
 
 Au passage via *lsof* j'ai remarqué la présence d'un PDF ouvert via le lecteur PDF *Foobnix* (*com.foobnix.pdf.reader*) :  
 
-```plain
+```
 1141       76 /mnt/sdcard/Download/Application_Whitelisting.pdf
 ```
 
 L'une des commandes les plus intéressantes de *Volatility* est *linux\_find\_file* : elle permet de scanner en mémoire les fichiers mappés et retrouver l'inode à partir du path :  
 
-```plain
+```
 $ python vol.py linux_find_file -f memory.dmp --profile=Linuxgoldfish-2_6_29ARM -F /data/app/org.jtb.httpmon-1.apk
 Volatility Foundation Volatility Framework 2.4
 Inode Number          Inode File Path
@@ -275,7 +275,7 @@ Les fichiers ainsi extraits sont parfois corrompus mais contiennent suffisamment
 
 J'ai extrait un certains nombre de fichiers dont voici une liste rapide :  
 
-```plain
+```
 1210 0xf36bc570 /data/data/org.jtb.httpmon/files/UpdateService.jar
 1230 0xf35c82c0 /data/data/org.jtb.httpmon/files/rathrazdaeizaztaxchj.jar
  621 0xf35f0740 /data/data/com.android.providers.telephony/databases/mmssms.db
@@ -302,7 +302,7 @@ DATE 2014-02-25 05:10:56
 
 La date de lancement de l'application se retrouve via la commande *linux\_pslist* :  
 
-```plain
+```
 0xe102d800 org.jtb.httpmon      1185            10061           10061  0x21024000 2014-02-25 05:10:56 UTC+0000
 ```
 
@@ -373,7 +373,7 @@ Seulement le format zip permet de spécifier deux fois le même fichier... et An
 
 C'est facilement vérifiable avec l'utilitaire unzip :  
 
-```plain
+```
 $ unzip -l org.jtb.httpmon-1.apk
 Archive:  org.jtb.httpmon-1.apk
   Length      Date    Time    Name
@@ -513,13 +513,13 @@ La commande *linux\_dentry\_cache* de *Volatility* peut prendre du temps à s'ex
 
 On retrouve facilement l'emplacement initial du apk malicieux :  
 
-```plain
+```
 0|Download/[Megafileupload]org.jtb.httpmon.apk|174|0|1000|1015|124408|4084033896|4084033904|0|4084033912
 ```
 
 Et dans le fichier *downloads.db* extrait plus tôt on retrouve des informations complémentaires :  
 
-```plain
+```
 sqlite> select * from downloads;
 1|http://172.16.1.80/img/people/kevin.jpg|0|||file:///mnt/sdcard/Download/kevin.jpg||/mnt/sdcard/Download/kevin.jpg|image/jpeg|4||0||200|0|1392952454780|com.android.browser||||||31137|31137|"40b91-79a1-4f2e200d89141"|10004||kevin.jpg|172.16.1.80|1|1|1|-1|1|0|content://media/external/images/media/12|0||1
 2|http://www.asd.gov.au/publications/csocprotect/Application_Whitelisting.pdf|0|||file:///mnt/sdcard/Download/Application_Whitelisting.pdf||/mnt/sdcard/Download/Application_Whitelisting.pdf|application/pdf|4||1||200|0|1393205837399|com.android.browser||||||449709|449709|"6ddda-6dcad-4d13c72f8e600"|10004||Application_Whitelisting.pdf|www.asd.gov.au|1|1|1|-1|1|0|content://media/external/file/157|0||1
@@ -531,7 +531,7 @@ On sait donc que le fichier a été téléchargé depuis le serveur *212.7.194.8
 
 Pour la question c on dispose déjà en partie de la réponse mais le fichier */data/data/com.android.email/databases/EmailProvider.db* donne d'autres informations intéressantes :  
 
-```plain
+```
 sqlite> select * from Account;
 1|k3vin.saunders@gmail.com|k3vin.saunders@gmail.com||-1|15|1|2|2313|0|cc963c62-5175-48a8-a6fd-7e7e18316a44|Kevin Saunders|content://settings/system/notification_sound||0||||0|0|0
 sqlite> select * from HostAuth;
@@ -585,7 +585,7 @@ python vol.py linux_dump_map -f memory.dmp --profile=Linuxgoldfish-2_6_29ARM -p 
 
 Un *strings* retourne les informations (relativement) lisibles suivantes :  
 
-```plain
+```
 card/Download/kevin.jpg > ./k
 listing.pdf > ./a
 */data/data/org.jtb.httpmon/files/a
@@ -620,7 +620,7 @@ Les fichiers volés ont été copiés dans le dossier */data/data/org.jtb.httpmo
 
 Pour le savoir il faut croiser l'output précédent avec le résultat de la commande *dentry* :  
 
-```plain
+```
 0|data/org.jtb.httpmon/files/a|789|0|10061|10061|2048|4084386000|4084386008|0|4084386016
 0|data/org.jtb.httpmon/files/a/a|0|0|0|0|0|0|0|0
 0|data/org.jtb.httpmon/files/a/k|0|0|0|0|0|0|0|0
@@ -631,7 +631,7 @@ Bien que l'on voit un username et password on ne sait pas à quoi ils servent.
 
 Une simple recherche sur ces infos dans le dump mémoire nous donne un extrait plus complet :  
 
-```plain
+```
 Usenet Account information:
 Username: kevins
 Password: s1mpl!c17y
@@ -640,7 +640,7 @@ Account active for 12 months.
 
 Quand au PDF exfiltré il n'y en a pas beaucoup finissant par *listing.pdf* :  
 
-```plain
+```
 /mnt/sdcard/Download/Application_Whitelisting.pdf
 ```
 
@@ -667,7 +667,7 @@ Qui plus est, la commande *linux\_netstat* de *Volatility* est restée désespé
 
 La commande *linux\_route\_cache* retourne la liste suivante :  
 
-```plain
+```
 Interface        Destination          Gateway
 ---------------- -------------------- -------
 eth0             95.211.162.18        10.0.2.2
@@ -722,7 +722,7 @@ eth0             54.243.43.116        10.0.2.2
 
 Après quelques *Whois* on détermine la répartition suivante :  
 
-```plain
+```
 173.194 => google
 74.125 => google
 54.* => amazon AWS
@@ -752,7 +752,7 @@ Dans un premier temps j'ai extrait les deux versions du *classes.dex* depuis l'A
 
 J'ai ensuite converti chaque .dex en .jar via *dex2jar* :  
 
-```plain
+```
 $ d2j-dex2jar.sh classes.dex
 dex2jar classes.dex -> ./classes-dex2jar.jar
 ```
@@ -761,7 +761,7 @@ Ensuite je décompresse bêtement les deux .jar vers des dossiers différents (*
 
 La commande diff permet de connaître les fichiers modifiés, ajoutés ou supprimés :  
 
-```plain
+```
 $ diff -r v1 v2
 Only in v2/org/jtb/httpmon: MonitorService$3.class
 Binary files v1/org/jtb/httpmon/MonitorService.class and v2/org/jtb/httpmon/MonitorService.class differ
@@ -841,7 +841,7 @@ public static void checkUpdates(String[] paramArrayOfString)
 
 Les chaines base64 trouvées en début nous donnent le Saint Graal :  
 
-```plain
+```
 httpmon.androidshare.net:443
 ```
 
@@ -914,7 +914,7 @@ private boolean isNetworkConnected()
 
 Au passage si on fouille dans le dump à la recherche de ce nom d'hôte :  
 
-```plain
+```
 java.net.ConnectException: failed to connect to httpmon.androidshare.net/192.168.43.221 (port 443): connect failed: ETIMEDOUT (Connection timed out)
 ```
 

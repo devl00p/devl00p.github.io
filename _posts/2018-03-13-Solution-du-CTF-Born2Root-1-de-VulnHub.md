@@ -11,7 +11,7 @@ La présentation de ce CTF indique que l'énumération est la clé, alors gardon
 Les clés sous le paillasson
 ---------------------------
 
-```plain
+```
 Nmap scan report for 192.168.2.3
 Host is up (0.00059s latency).
 Not shown: 65509 closed ports
@@ -69,7 +69,7 @@ La page d'index du site fait mention d'une entreprise fictive nommée *Secretsec
 
 Il y a trois noms de contacts qui pourraient éventuellement s'avérer utile :  
 
-```plain
+```
 Martin N
 Hadi M
 Jimmy S
@@ -86,7 +86,7 @@ Finalement en fouillant dans les dossiers classiques d'une installation *Apache*
 
 Cette clé nous permet d'accéder au compte *martin* du système :  
 
-```plain
+```
 $ ssh -i VDSoyuAXiO.txt martin@192.168.2.3
 
 The programs included with the Debian GNU/Linux system are free software;
@@ -128,7 +128,7 @@ Le script en question est */var/tmp/login.py* et il est appelé à la fin du *.b
 
 On retrouve les deux autres utilisateurs sur le système :  
 
-```plain
+```
 uid=1002(jimmy) gid=1002(jimmy) groupes=1002(jimmy)
 uid=1000(hadi) gid=1000(hadi) groupes=1000(hadi),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),108(netdev)
 ```
@@ -140,13 +140,13 @@ Via les process on voit que cron et atd tournent sur le système, ainsi qu'un Ex
 
 L'utilisateur *jimmy* a lui une spool de mails :  
 
-```plain
+```
 -rw-rw---- 1 jimmy mail 18827 mars   3 11:15 /var/mail/jimmy
 ```
 
 Mais le plus intéressant c'est son entrée dans */etc/crontab* :  
 
-```plain
+```
 */5   * * * *   jimmy   python /tmp/sekurity.py
 ```
 
@@ -164,7 +164,7 @@ Fake news
 
 Une fois connecté en tant que *jimmy* on découvre un binaire setuid root dans le dossier personnel :  
 
-```plain
+```
 jimmy@debian:~$ ls -l networker
 -rwsrwxrwx 1 root root 7496 juin   9  2017 networker
 jimmy@debian:~$ ./networker
@@ -200,7 +200,7 @@ echo linux tool version 5
 
 Un strings sur ce binaire remonte notamment les chaînes suivantes :  
 
-```plain
+```
 *** Networker 2.0 *** 
 /sbin/ifconfig
 /bin/ping -c 1  localhost 
@@ -228,7 +228,7 @@ L'ordre de résolution des commandes de bash est le suivant d'après la page de 
 
 On peut tenter d'utiliser la technique que certains ont utilisé sur le CTF [Sleepy]({% link _posts/2017-11-23-Solution-du-CTF-devrandom-Sleepy-de-VulnHub.md %}) et d'exporter des fonctions du nom de ces commandes :  
 
-```plain
+```
 /sbin/ifconfig() { /bin/sh; }; export -f /sbin/ifconfig
 /sbin/ifconfig () { /bin/sh; }; export /sbin/ifconfig
 echo () { /bin/dash; }; export echo
@@ -239,7 +239,7 @@ Mais aucune de ces commandes n'a fonctionné.
 
 Si on récupère [un script de détection de la faille Shellshock](https://github.com/wreiske/shellshocker) ce dernier ne se montre pas convaincant...  
 
-```plain
+```
 jimmy@debian:~$ ./shellshock_test.sh
 CVE-2014-6271 (original shellshock): not vulnerable
 CVE-2014-6277 (segfault): not vulnerable
@@ -252,7 +252,7 @@ CVE-2014-//// (exploit 3 on http://shellshocker.net/): not vulnerable
 
 À ce point là il est intéressant de se pencher sur les versions de la libc et de bash, trouvables via dpkg :  
 
-```plain
+```
 ii  bash                          4.3-11+deb8u1                      i386         GNU Bourne Again SHell
 ii  libc-bin                      2.19-18+deb8u7                     i386         GNU C Library: Binaries
 ```
@@ -265,7 +265,7 @@ Bash étant dans sa version 4.3 ça vaut le coup d'utiliser le même exploit que
 
 Il faut dire que sous Debian /bin/sh redirige vers /bin/dash qui est grosso-modo un bash allégé :  
 
-```plain
+```
 lrwxrwxrwx 1 root root 4 nov.   8  2014 /bin/sh -> dash
 ```
 
@@ -278,7 +278,7 @@ Finalement si on applique quelques règles de base de permutation avec un brute 
 
 A partir de là on fait un *su* avec le même mot de passe qui permet alors de passer root et d'obtenir le flag :  
 
-```plain
+```
 root@debian:~# cat flag.txt
 
 ,-----.                         ,---. ,------.                 ,--.

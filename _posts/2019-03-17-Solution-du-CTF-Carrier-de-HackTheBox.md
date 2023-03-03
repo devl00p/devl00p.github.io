@@ -25,7 +25,7 @@ Le plus remarquable est sans doute l'attaque qui a permi à des auteurs inconnus
 Can I has serial number ?
 -------------------------
 
-```plain
+```
 Nmap scan report for 10.10.10.105
 Host is up (0.031s latency).
 Not shown: 65532 closed ports
@@ -43,7 +43,7 @@ La page d'index affiche un formulaire ainsi que deux codes énigmatiques (45007,
 
 En fouillant sur le serveur web avec un dir-buster quelconque on trouve la page *http://10.10.10.105/debug/index.php* avec des infos toujours bonnes à noter (versions de PHP, du kernel, de la distribution, utilisateur utilisé, racine web) :   
 
-```plain
+```
 PHP Version 7.0.30-0ubuntu0.16.04.1
 Linux web 4.15.0-24-generic #26-Ubuntu SMP Wed Jun 13 08:44:47 UTC 2018 x86_64
 www-data(33)/33
@@ -64,7 +64,7 @@ Il ne nous reste plus qu'à trouver ce numéro de châssis... Est-ce que... ?
 
 En réalité après un scan UDP on voit un port bien connu pour son côté bavard :  
 
-```plain
+```
 Nmap scan report for 10.10.10.105
 Host is up (0.037s latency).
 Not shown: 902 open|filtered ports, 97 closed ports
@@ -121,7 +121,7 @@ Romeo Charlie Echo
 
 La page de diagnostic fait un POST de données en base64 que l'on pourrait résumer comme ça :  
 
-```plain
+```
 POST http://10.10.10.105/diag.php HTTP/1.1
 check=cXVhZ2dh
 ```
@@ -178,7 +178,7 @@ On obtient alors un accès root sur cette machine *Ubuntu 16.04.4 LTS (Xenial)*.
 
 La machine dispose de trois interfaces ethernet :  
 
-```plain
+```
 eth0      Link encap:Ethernet  HWaddr 00:16:3e:d9:04:ea
           inet addr:10.99.64.2  Bcast:10.99.64.255  Mask:255.255.255.0
           inet6 addr: fe80::216:3eff:fed9:4ea/64 Scope:Link
@@ -209,7 +209,7 @@ eth2      Link encap:Ethernet  HWaddr 00:16:3e:20:98:df
 
 Nmap est installé sur la machine et en scannant les réseaux sur *eth1* et *eth2* on peut voir les serveurs BGP qui correspondaient respectivement à *ZaZa* et *CastCom* :  
 
-```plain
+```
 Nmap scan report for 10.78.10.2
 Host is up (0.000033s latency).
 Not shown: 65527 closed ports, 6 filtered ports
@@ -244,7 +244,7 @@ Maintenant il est temps de se retrousser les manches et de plonger dans le vif d
 
 On peut lire la configuration BGP dans */etc/quagga/bgpd.conf* :  
 
-```plain
+```
 !
 ! Zebra configuration saved from vty
 !   2018/07/02 02:14:27

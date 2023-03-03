@@ -162,13 +162,13 @@ Intrusion
 
 On arrive alors sur cette machine Linux avec notre compte *icex64* :   
 
-```plain
+```
 Linux LupinOne 5.10.0-8-amd64 #1 SMP Debian 5.10.46-5 (2021-09-23) x86_64 GNU/Linux
 ```
 
 Je m'intéresse tout de suite aux autres utilisateurs, en particulier Arsène :  
 
-```plain
+```
 uid=1000(arsene) gid=1000(arsene) groups=1000(arsene),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev)
 ```
 
@@ -189,7 +189,7 @@ drwxr-xr-x 3 arsene arsene 4096 Oct  4 12:37 .local
 
 Arsène nous a laissé une note :  
 
-```plain
+```
 Hi my friend Icex64,
 
 Can you please help check if my code is secure to run, I need to use for my next heist.

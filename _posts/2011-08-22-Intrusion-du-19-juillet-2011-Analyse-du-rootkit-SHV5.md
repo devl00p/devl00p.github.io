@@ -336,7 +336,7 @@ Le binaire baptisé `sshd` qui est présent dans l'archive n'est pas un serveur 
 
 Ajouté à ça, un `strings` sur le binaire révèle très peu de choses. En fait on trouve uniquement les chaînes suivantes :
 
-```plain
+```
 Linux
 $Info: This file is the propert of SH-crew team designed for test
 purposes. $
@@ -366,7 +366,7 @@ fi
 
  Le contenu du fichier par défaut est le suivant :
 
-```plain
+```
 2 212.110
 2 195.26
 2 194.143
@@ -393,7 +393,7 @@ Le fichier `file.h` contiendra comme on s'en doute les fichiers à dissimuler su
 
 Son contenu est le suivant :
 
-```plain
+```
 sh.conf
 libsh
 .sh
@@ -901,7 +901,7 @@ Il va alors télécharger la clé SSH à l'adresse http://unixcrew.t35.com/autho
 
 Le contenu est le suivant :
 
-```plain
+```
 ssh-rsa
 AAAAB3NzaC1yc2EAAAABJQAAAIBCkXfcxijdvoA3Ee0Ea0yhphOLuvm0+KtEWowekUuokh
 2w4H72AKniI37DIuPDtgCHbqNAsUsU33SlZE2wrEo4LQaS3KL1z6egwnuT2PIFP5XV5DUb

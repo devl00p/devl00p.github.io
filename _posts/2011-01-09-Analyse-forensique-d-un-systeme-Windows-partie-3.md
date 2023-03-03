@@ -178,7 +178,7 @@ Le poste semble être infecté par un adware. Les caches d'IE m'ont aussi permis
 
 En dehors des sites de _Yahoo!_, _Ethereal_, _NetStumbler_, _Hackoo_, _2600_ etc j'ai relevé les urls suivantes :  
 
-```plain
+```
 file://4.12.220.254/Temp/yng13.bmp
 http://edit.yahoo.com/config/id_check?.fn=Greg&.ln=Schardt&.id=mrevil2000&.u=b568cfp0ic6g0
 ```
@@ -193,7 +193,7 @@ Le compte email de *Mr. Evil* ne contenait que le message de bienvenue après cr
 
 Look@LAN a mémorisé deux adresses :  
 
-```plain
+```
 \$$$PROTO.HIV\Look@LAN\MRUHosts
 LastWrite time: Thu Aug 26 15:05:02 2004
         --> MRU1;REG_SZ;4.12.220.254^@
@@ -204,7 +204,7 @@ Mais qui est 4.12.220.254 ?
 
 Mémoire de *"Exécuter"* :  
 
-```plain
+```
 \$$$PROTO.HIV\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU
 LastWrite time: Thu Aug 26 15:05:15 2004
         --> a;REG_SZ;www.cnn.com\1^@

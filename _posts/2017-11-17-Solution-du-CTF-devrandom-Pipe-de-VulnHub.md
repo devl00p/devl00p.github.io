@@ -12,7 +12,7 @@ C'était donc l'occasion de reprendre cette série avec le Pipe qui date de sept
 Nom d'une pipe !
 ----------------
 
-```plain
+```
 Nmap scan report for 192.168.1.43
 Host is up (0.00031s latency).
 Not shown: 65531 closed ports
@@ -118,7 +118,7 @@ Mais après on l'injecte comment ? Via l'authentification HTTP ? Marche pas :'(
 
 On se dit alors que peut être l'authentification est mal écrite et qu'il est facile de la bypasser. Pou cela je dégaine wapiti3 (version de développement) :  
 
-```plain
+```
 ./bin/wapiti http://192.168.1.43/ -s http://192.168.1.43/index.php -m htaccess --color
 ```
 
@@ -130,7 +130,7 @@ Mégateuf Wayne ! On peut accéder à la page si on effectue par exemple un POST
 
 La page découverte contient un formulaire qui envoie le contenu sérialisé suivant sur elle même :  
 
-```plain
+```
 O:4:"Info":4:{s:2:"id";i:1;s:9:"firstname";s:4:"Rene";s:7:"surname";s:8:"Margitte";s:7:"artwork";s:23:"The Treachery of Images";}
 ```
 
@@ -233,7 +233,7 @@ while True:
 Chasse au trésor !
 ------------------
 
-```plain
+```
 devloop$ python shell.py
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
@@ -297,7 +297,7 @@ Même en ressortant mon *Guide complet du FreeBSD* (superbe livre au passage) su
 
 Un peu plus tard je remarque que les fichiers .BAK ont disparus... Crontab bien sûr :  
 
-```plain
+```
 * * * * * root /root/create_backup.sh
 */5 * * * * root /usr/bin/compress.sh
 ```
@@ -323,7 +323,7 @@ Heureusement ça a finir par faire tilt quand je me suis rappelé le principe de
 
 Je vois bien une option dans la page de man de tar mais elle n'est utilisée que lors d'une décompression :  
 
-```plain
+```
 --to-command=COMMAND
     pipe extracted files to another program
 ```

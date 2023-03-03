@@ -80,7 +80,7 @@ icat -i ewf -o 16 472af4e029380mmc\_challenge.E01 12 > file1.jpg
 
 Après avoir extrait les autres fichiers et lancé un `file`, on obtient des résultats correspondant bien aux extensions... du moins pour les images :  
 
-```plain
+```
 file1.jpg: JPEG image data, JFIF standard 1.01
 file2.jpg: JPEG image data, JFIF standard 1.01
 file4.jpg: JPEG image data, JFIF standard 1.01
@@ -99,7 +99,7 @@ La troisième image est cassée (*"premature end of data segment"*) mais de tout
 
 Quant à notre fichier *ODT* (format *OpenOffice.org*), si on le regarde de plus prêt (avec un héditeur hexadécimal) on remarque quelque chose d'assez particulier :  
 
-```plain
+```
 4b 50 04 03 00 14 00 00  00 00 96 5b 37 44 c6 5e  |KP.........[7D.^|
 0c 32 00 27 00 00 00 27  00 00 00 08 00 00 69 6d  |.2.'...'......im|
 65 6d 79 74 65 70 70 61  6c 70 63 69 74 61 6f 69  |emyteppalpcitaoi|
@@ -199,7 +199,7 @@ $ photorec /debug plop
 
 Les fichiers obtenus et leur somme MD5 sont :  
 
-```plain
+```
 270a0a913fa9603db8121fdf78d63aca  f10258.jpg
 589032f2ec313816ef36772a08808db0  f10318.jpg
 59bcfa18339749f1d25a6d30a2668a64  f10526.jpg
@@ -221,7 +221,7 @@ wrote extracted data to "hidden_data".
 
 Le contenu du fichier texte obtenu est le suivant :  
 
-```plain
+```
 Contact codenaam        e-mail  gsm
 piet    de spier        despier@mail.com        06-11111111
 karel   de gok  degok@mail.com  06-22222222

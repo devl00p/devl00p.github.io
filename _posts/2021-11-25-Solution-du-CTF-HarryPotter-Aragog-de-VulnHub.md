@@ -25,7 +25,7 @@ Wordpress troué
 
 Evidemment il y a un port 80 découvert via Nmap  
 
-```plain
+```
 Not shown: 65534 closed tcp ports (reset)
 PORT   STATE SERVICE VERSION
 80/tcp open  http    Apache httpd 2.4.46 ((Debian))
@@ -35,7 +35,7 @@ PORT   STATE SERVICE VERSION
 
 évidemment il y a un blog après une énumération avec *Feroxbuster*  
 
-```plain
+```
 301        9l       28w      311c http://192.168.2.13/blog
 ```
 
@@ -49,7 +49,7 @@ Intéressant. Sauf que là plus rien : [WPScan](https://wpscan.com/wordpress-sec
 
 J'ai dégainé ce valeureux Wapiti et son module *wp\_enum*... Et vous savez quoi ?  
 
-```plain
+```
 [*] Lancement du module wp_enum
 Enumération des extensions WordPress :
 wp-file-manager 6.0 détecté
@@ -129,7 +129,7 @@ Par défaut il exploite la vulnérabilité pour uploader un bête webshell qui p
 
 Sans trop de surprise on a les droits de l'user web :  
 
-```plain
+```
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
@@ -149,20 +149,20 @@ Mon royaume pour un shell
 
 Je relève deux utilisateurs sur le système :  
 
-```plain
+```
 uid=1001(ginny) gid=1001(ginny) groups=1001(ginny)
 uid=1000(hagrid98) gid=1000(hagrid98) groups=1000(hagrid98)
 ```
 
 Le premier n'a aucun fichier d'intéressant sur le système. Le second a en revanche un horcrux (les flags du challenge) qui est world-readable :  
 
-```plain
+```
 -rw-r--r-- 1 hagrid98 hagrid98   91 Apr  1  2021 horcrux1.txt
 ```
 
 Le contenu est le suivant :  
 
-```plain
+```
 horcrux_{MTogUmlkRGxFJ3MgRGlBcnkgZEVzdHJvWWVkIEJ5IGhhUnJ5IGluIGNoYU1iRXIgb2YgU2VDcmV0cw==}
 ```
 
@@ -181,7 +181,7 @@ On peut faire forwarder des ports car le programme est en fait un serveur SSH é
 
 Je l'ai lancé depuis la VM sans argument (*./myssh*). Et j'ai utilisé la commande suivante pour m'y connecter (avec le client SSH standard) :  
 
-```plain
+```
 $ ssh -oHostKeyAlgorithms=ssh-rsa -p 31337 wordpress.aragog.hogwarts
 The authenticity of host '[wordpress.aragog.hogwarts]:31337 ([192.168.2.13]:31337)' can't be established.
 RSA key fingerprint is SHA256:QwzZMdzodLOJ1mnDdK3UfWjrpeHqDaD2vSsvfP9+6+s.
@@ -203,7 +203,7 @@ J'ai lancé *LinEnum* qui n'a rien trouvé d'intéressant. Les permissions sur l
 
 Il ne me reste qu'à fouiller dans la base de données MySQL :  
 
-```plain
+```
 MariaDB [wordpress]> select * from wp_users;
 +----+------------+------------------------------------+---------------+--------------------------+----------+---------------------+---------------------+-------------+--------------+
 | ID | user_login | user_pass                          | user_nicename | user_email               | user_url | user_registered     | user_activation_key | user_status | display_name |
@@ -214,7 +214,7 @@ MariaDB [wordpress]> select * from wp_users;
 
 Voilà qui est mieux. Ça se casse en moins de deux avec JtR :  
 
-```plain
+```
 $ ./john --format=phpass --wordlist=rockyou.txt hash.txt
 Using default input encoding: UTF-8
 Loaded 1 password hash (phpass [phpass ($P$ or $H$) 128/128 AVX 4x3])
@@ -234,7 +234,7 @@ J'ai finalement eu recours à [pspy](https://github.com/DominicBreuker/pspy) pou
 
 L'utilisateur root doit avoir une entrée dans sa crontab :  
 
-```plain
+```
 2021/11/25 20:48:01 CMD: UID=0    PID=3736   | /usr/sbin/CRON -f 
 2021/11/25 20:48:01 CMD: UID=0    PID=3737   | /usr/sbin/CRON -f 
 2021/11/25 20:48:01 CMD: UID=0    PID=3738   | /bin/sh -c bash -c "/opt/.backup.sh" 
@@ -243,7 +243,7 @@ L'utilisateur root doit avoir une entrée dans sa crontab :
 
 Avec cette info il n'y a plus qu'à éditer le script pour lui faire ajouter ma clé publique SSH dans le fichier *authorized\_keys* de root. On attend un peu et on se connecte :  
 
-```plain
+```
 ssh root@192.168.2.13
 Enter passphrase for key '/home/devloop/.ssh/id_rsa': 
 Linux Aragog 4.19.0-16-amd64 #1 SMP Debian 4.19.181-1 (2021-03-19) x86_64

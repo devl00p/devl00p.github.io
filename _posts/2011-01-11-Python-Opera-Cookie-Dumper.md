@@ -11,7 +11,7 @@ Finalement je suis parvenu à écrire un script *Python* qui extrait les donnée
 
 La sortie générée ressemble à ça :  
 
-```plain
+```
 Opera Cookie Dumper
 File version: 1.0
 Application version: 2.1

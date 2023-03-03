@@ -15,7 +15,7 @@ Level 1
 
 C'est parti pour le sempiternel scan de ports :  
 
-```plain
+```
 Nmap scan report for 10.10.10.84
 Host is up (0.027s latency).
 Not shown: 47967 filtered ports, 17554 closed ports
@@ -86,7 +86,7 @@ Ce script est largement vulnérable puisque si l'on saisit */etc/passwd* dans le
 
 Parmi les scripts déjà présents le fichier *listfiles.php* liste le contenu du dossier courant (la racine web) et indique la présence du fichier *pwdbackup.txt* que voici :  
 
-```plain
+```
 This password is secure, it's encoded atleast 13 times.. what could go wrong really..
 
 Vm0wd2QyUXlVWGxWV0d4WFlURndVRlpzWkZOalJsWjBUVlpPV0ZKc2JETlhhMk0xVmpKS1IySkVU
@@ -109,7 +109,7 @@ Ukd4RVdub3dPVU5uUFQwSwo=
 
 Il suffit de lancer un interpréteur Python, mettre cette chaîne dans une variable et faire une boucle de décodage base64 jusqu'à une exception de décodage arrive :  
 
-```plain
+```
 >>> while True:
 ...   s = b64decode(s).decode()
 ...
@@ -124,7 +124,7 @@ binascii.Error: Incorrect padding
 
 Ce mot de passe nous permet de nous connecter via ssh (et oui déjà !) :  
 
-```plain
+```
 devloop@kali:~$ ssh charix@10.10.10.84
 Password for charix@Poison:
 Last login: Mon Aug 20 18:07:20 2018 from :9
@@ -150,14 +150,14 @@ Dans le home de l'utilisateur se trouve une archive protégée par mot de passe 
 
 Cela nous donne un fichier *secret* dont le contenu est le suivant :  
 
-```plain
+```
 $ hexdump -C secret
 00000000  bd a8 5b 7c d5 96 7a 21                           |..[|..z!|
 ```
 
 Et dans le dossier *.vnc* de l'utilisateur on trouve aussi un fichier passwd :  
 
-```plain
+```
 $ hexdump -C passwd
 00000000  60 d7 57 ef 13 4f ff 41                           |`.W..O.A|
 ```
@@ -170,7 +170,7 @@ C'est toujours un peu déstabilisant de se retrouver sur du BSD en raison des op
 
 Plutôt que de fouiller dans les pages de manuel les bonnes options c'est parfois plus simple d'utiliser une commande alternative. Exemple pour remplacer netstat -lntp :  
 
-```plain
+```
 charix@Poison:~ % sockstat -4 -l
 USER     COMMAND    PID   FD PROTO  LOCAL ADDRESS         FOREIGN ADDRESS
 www      httpd      913   4  tcp4   *:80                  *:*
@@ -193,7 +193,7 @@ root     syslogd    390   7  udp4   *:514                 *:*
 
 La recherche classique sur les fichiers n'ayant rien remonté on remarque la présence d'un Xvnc dans les process avec l'utilisation d'un fichier *passwd* présent dans un dossier *.vnc* :  
 
-```plain
+```
 Xvnc :1 -desktop X -httpd /usr/local/share/tightvnc/classes -auth /root/.Xauthority -geometry 1280x800 -depth 24 -rfbwait 120000 -rfbauth /root/.vnc/passwd -rfbport 5901 -localhost -nolisten...
 ```
 

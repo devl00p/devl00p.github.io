@@ -89,7 +89,7 @@ void handle_client(int client_socket)
 
 Si l'on rentre un mot de passe invalide le hash à obtenir est affiché comme indiqué dans la source :  
 
-```plain
+```
 $ ncat 192.168.1.64 12345 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:12345.
@@ -119,7 +119,7 @@ for i in range(0, 100000000):
 
 On finit par trouver un mot de passe qui correspond à nos attentes :  
 
-```plain
+```
 $ ncat 192.168.1.64 12345 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:12345.
@@ -146,7 +146,7 @@ Roseau entre les lignes... Mouais :| Faute de connaissances sur le sujet je n'ai
 
 Premier réflexe : regarder les données EXIF avec différents outils... et là rien d'intéressant :  
 
-```plain
+```
 Marqueurs EXIF dans'image_cysca.jpg' (ordre des octets 'Intel') :
 --------------------+----------------------------------------------------------
 Marqueur            |Valeur
@@ -160,7 +160,7 @@ Espace des couleurs |Non calibré
 --------------------+----------------------------------------------------------
 ```
 
-```plain
+```
 $ exiftool image_cysca.jpg 
 ExifTool Version Number         : 9.70
 File Name                       : image_cysca.jpg
@@ -198,7 +198,7 @@ J'ai préféré jeter un œil aux quelques indices officiels laissés aux partic
 
 Premier indice :  
 
-```plain
+```
 Tip #1. No stego
 Tip #2. M (i+j)%3
 Tip #3. Length=32,Encoding=byte
@@ -601,7 +601,7 @@ print repr(ba.tobytes()[:length])
 
 Ce qui nous donne :  
 
-```plain
+```
 Format info = 0b111101011001
 EC level: Medium
 Pattern Mask: (i + j) % 3 == 0

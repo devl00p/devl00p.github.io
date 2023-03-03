@@ -13,7 +13,7 @@ Le précédent CTF du même auteur [ne m'avait pas fait bonne impression]({% lin
 Pizza yolo
 ----------
 
-```plain
+```
 Nmap scan report for 192.168.2.2
 Host is up (0.00029s latency).
 Not shown: 65530 closed ports
@@ -36,7 +36,7 @@ PORT      STATE    SERVICE
 
 Cette archive contient deux fichiers :  
 
-```plain
+```
 Archive:  bob_bd.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
@@ -61,7 +61,7 @@ Analyse en très molo
 
 Quand on lance le binaire il nous demande de saisir l'adresse IP du service. Ça donne ceci :  
 
-```plain
+```
 IP: 192.168.2.2
 Enter Password: toto
 Command to be executed: echo Hello World, you are currently running as: ;whoami
@@ -82,7 +82,7 @@ Cela se détermine aisément en appliquant un *strings* sur le binaire. Au passa
 
 On remarque aussi d'autres chaines d'intérêt :  
 
-```plain
+```
 
 Enter Password:
 sendmsgkeyencodexornotes00admincmd;echo Hello World, you are currently running as: ;whoami
@@ -242,13 +242,13 @@ nano users.passwd
 
 Ce fichier contient la ligne suivante :  
 
-```plain
+```
 bob:b0bcat_1234567890:1100:1100::/ftp:/bin/false
 ```
 
 Ce mot de passe permet de passer root via *sudo su* et ainsi obtenir le contenu de */flag.txt* :  
 
-```plain
+```
                    __
                   / \--..____
                    \ \       \-----,,,..

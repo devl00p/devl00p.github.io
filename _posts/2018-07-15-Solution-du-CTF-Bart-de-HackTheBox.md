@@ -17,7 +17,7 @@ Le site est quasi vide, d'ailleurs la plupart des liens n'amènent nul part. On 
 
 Par acquis de conscience je note les différents noms et adresses mentionnées dans la page :  
 
-```plain
+```
 Address 77 W Houston St New York, NY 10012, USA
 Phone +99 555 999
 Mail info@bart.htb
@@ -152,13 +152,13 @@ Cette application de chat est très sommaire toutefois en regardant le code sour
 
 On peut s'en assurer avec cette erreur verbose lorsque l'on spécifie le *boot.ini* comme fichier de log :  
 
-```plain
+```
 Warning: file_put_contents(../../../../../../../boot.ini): failed to open stream: Permission denied in C:\inetpub\wwwroot\internal-01\log\log.php on line 41
 ```
 
 On a effectivement le write-where mais quand est-il du what ? Si on logue dans un nouveau fichier (*log.php?filename=abcd.txt&username=harvey*) et qu'on le consulte ensuite on trouve un contenu comme celui-çi :  
 
-```plain
+```
 [2018-04-26 17:28:02] - harvey - Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0
 [2018-04-26 17:28:05] - harvey - Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0
 ```
@@ -173,7 +173,7 @@ Dans notre *Meterpreter* on s’aperçoit que l'on est *NT AUTHORITY\IUSR*... au
 
 On trouve 3 utilisateurs sur le système :  
 
-```plain
+```
 C:\inetpub\wwwroot\internal-01\log>net users
 net users
 
@@ -188,7 +188,7 @@ The command completed with one or more errors.
 
 Il semble toutefois qu'ils n'aient pas tous leur dossier personnel :  
 
-```plain
+```
  Directory of C:\Users
 
 04/10/2017  09:13    <DIR>          .
@@ -228,14 +228,14 @@ define('PSM_BASE_URL', 'http://monitor.bart.htb');
 
 Après la mise en place d'une redirection de ports depuis le Meterpreter :  
 
-```plain
+```
 meterpreter > portfwd add -L 127.0.0.1 -l 3306 -p 3306 -r 127.0.0.1
 [*] Local TCP relay created: 127.0.0.1:3306 <-> 127.0.0.1:3306
 ```
 
 J'ai pu me connecter avec les identifiants MySQL pour fouiller d'avantage :  
 
-```plain
+```
 MySQL [sysmon]> select * from _config;
 +----------------------+------------------------------------------+
 | key                  | value                                    |
@@ -330,7 +330,7 @@ On en apprend plus sur ce hash dans *internal-01\simple\_chat\includes\validatio
 
 On peut alors stocker les hashs dans un fichier :  
 
-```plain
+```
 faeff13072fffdb78ec3b08427678f18295ee28b8b0befc63eea2135eee85df3:8h@tr-waswe_aT#9TaCHuPhU
 e15929d8ce341f2dfa07ac7a0b6f32379e43868631f2aebc05a3a97b235d6dcc:8h@tr-waswe_aT#9TaCHuPhU
 f7dbfae1e05efda233b872e9b7f709d3a0f1b042813be01d7e5b9e9788c7c801:8h@tr-waswe_aT#9TaCHuPhU
@@ -349,7 +349,7 @@ Au lieu de passer du temps à fouiller en direct j'ai fait un gros *reg export* 
 
 On trouve ainsi une entrée intéressante avec un bon vieux grep sur password :  
 
-```plain
+```
 "DefaultPassword"="3130438f31186fbaf962f407711faddb"
 ```
 

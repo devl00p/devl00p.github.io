@@ -81,7 +81,7 @@ Le paramètre qui doit être passé au script (`$1`) est une adresse IP comme no
 
 Le fichier `vuln.txt` ressemble à ceci :  
 
-```plain
+```
 200.241.116.58
 HTTP/1.1 200 OK
 Date: Thu, 14 Jun 2007 14:42:51 GMT
@@ -118,7 +118,7 @@ Une fois à l'intérieur du `main`, la première chose que fait le programme est
 
 On en apprend plus sur les paramètres par le biais des chaines de caractères utilisées dans un bout de code que j'ai baptisé `usage` et qui `puts()` les chaines suivantes :  
 
-```plain
+```
   -h, --help          - prints this help
   -r, --hostname      - which box you want hacked ?
                         (default: name returned by hostname function)
@@ -275,7 +275,7 @@ Le programme effectue ensuite une pause d'une seconde avant d'envoyer le shellco
 
 Voici un hexdump du shellcode une fois extrait du binaire :  
 
-```plain
+```
 90 90 90 90 90 90 90 90  90 90 90 90 90 90 90 90  |................|
 eb 0e 5a 4a 31 c9 b1 99  80 34 11 fa e2 fa eb 05  |..ZJ1....4......|
 e8 ed ff ff ff 13 7d fa  fa fa a5 cb 33 4f fe 73  |......}.....3O.s|
@@ -317,7 +317,7 @@ Le code effectue un saut vers l'instruction call à l'adresse 20. Le call le ram
 Tout le code à partir de cette adresse est décodé à l'aide d'un XOR avec `0xfa` sur une longueur de 153 (`0x99`) octets.  
 Une fois décodé, le code qui nous manquait est :  
 
-```plain
+```
 e9 87 00 00 00 5f 31 c9  b5 04 89 cb 51 31 c9 b1  |....._1.....Q1..|
 03 31 d2 31 c0 b0 37 cd  80 89 c6 89 c2 80 ce 08  |.1.1..7.........|
 41 31 c0 b0 37 cd 80 89  ca 8d 4f 08 89 d0 48 cd  |A1..7.....O...H.|

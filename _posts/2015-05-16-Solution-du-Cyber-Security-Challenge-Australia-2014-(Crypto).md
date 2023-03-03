@@ -20,7 +20,7 @@ Voici l'annonce de cette exercice de crypto :
 
 La connexion au serveur est révélatrice :  
 
-```plain
+```
 $ ncat 192.168.1.64 12433 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:12433.
@@ -157,7 +157,7 @@ sock.close()
 
 Utilisation :  
 
-```plain
+```
 $ python client.py "ls -al"
 Sending command ls -al
 total 28
@@ -178,7 +178,7 @@ Compression Session (200 points)
 
 > Perform a white box evaluation of the Fortcerts highly secure key generation server. Identify and exploit any vulnerabilities in the implementation that will lead to a disclosure of secret data. The server is running at 192.168.1.64:9999
 
-```plain
+```
 $ ncat 192.168.1.64 9999 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:9999.
@@ -282,7 +282,7 @@ print "Extracted:", known
 
 L'exécution est rapide :  
 
-```plain
+```
 $ time python crime.py 
 Extracted: Key:DrizzleVerandaFinger576Key
 
@@ -300,7 +300,7 @@ Cette fois pas de code à disposition.
 
 Deux commandes sont disponibles sur le serveur. L'une retourne vraisemblablement le flag chiffré avec un IV (vecteur d'initialisation) l'autre permet de chiffrer les données que l'on soumet mais on ne peut pas choisir l'IV nous même.  
 
-```plain
+```
 $ ncat 192.168.1.64 1337 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:1337.
@@ -333,7 +333,7 @@ On est donc en présence d'une attaque à texte clair choisi.
 
 Pour un même texte clair c'est difficile de faire la corrélation entre l'algo et l'IV...  
 
-```plain
+```
 E,aaaaaaaa
 81ab:002e998b49589ce8
 E,aaaaaaaa
@@ -348,7 +348,7 @@ E,aaaaaaaa
 
 J'ai choisi d'envoyer a, puis aa, puis aaa... et à chaque fois essayer autant de fois que nécessaire jusqu'à ce que le serveur utilise l'IV que je souhaite (une chance sur 65536...) ce qui s'est avéré payant :  
 
-```plain
+```
 E,a
 0000:7d
 E,aa
@@ -426,7 +426,7 @@ Forcément ça prend un peu de temps puisqu'en comptant sur une chance normale l
 
 Heureusement on n'a pas à refaire une connexion TCP à chaque tentative.  
 
-```plain
+```
 $ time python chop.py
 
 Final result: FriendNoticeBelfast52

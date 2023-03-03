@@ -17,7 +17,7 @@ ScanNe Mes Ports
 
 Bien sûr on commence par scanner les ports de la machine. *Nmap* est de la partie :  
 
-```plain
+```
 Nmap scan report for 10.10.10.92
 Host is up (0.027s latency).
 
@@ -62,7 +62,7 @@ Le site requiert une authentification et si on cherche d'autres dossiers et fich
 
 Bien sûr on peut se fendre d'un petit *Patator* pour essayer de trouver des credentials valides :  
 
-```plain
+```
 $ patator http_fuzz url=http://10.10.10.92:3366/ user_pass=test:FILE0 0=top500.txt -x ignore:code=401
 11:39:02 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2018-10-20 11:39 CEST
 11:39:02 patator    INFO -
@@ -75,7 +75,7 @@ Ici j'essaye de trouver un pass pour un utilisateur *test* car le *realm* (prés
 
 Hmmmm et aucun port UDP n'est ressorti... En tout cas lors du premier scan car un nouvel essai s'avère plus expressif :  
 
-```plain
+```
 $ sudo nmap -T5 -sU 10.10.10.92
 Starting Nmap 7.70 ( https://nmap.org ) at 2018-10-20 11:56 CEST
 Nmap scan report for 10.10.10.92
@@ -89,7 +89,7 @@ Dès lors on peut se servir de différents outils pour extraire les infos du por
 
 J'ai eu recours au module *auxiliary/scanner/snmp/snmp\_enum* de *Metasploit* qui m'a retourné entre autres ces informations :  
 
-```plain
+```
 Host IP                       : 10.10.10.92
 Hostname                      : Mischief
 Description                   : Linux Mischief 4.15.0-20-generic #21-Ubuntu SMP Tue Apr 24 06:16:15 UTC 2018 x86_64
@@ -102,7 +102,7 @@ System date                   : 2018-10-20 10:01:12.0
 
 Des infos concernant l'interface réseau :  
 
-```plain
+```
 Interface                     : [ up ] Intel Corporation 82545EM Gigabit Ethernet Controller (Copper)
 Id                            : 2
 Mac Address                   : 00:50:56:b9:cb:07
@@ -115,7 +115,7 @@ Out octets                    : 95284197
 
 On note ici l'absence d'IPv6. Suit alors les ports en écoute :  
 
-```plain
+```
 [*] TCP connections and listening ports:
 
 Local address       Local port          Remote address      Remote port         State
@@ -169,7 +169,7 @@ Il y a aussi [un article de Cisco sur le sujet](http://docwiki.cisco.com/wiki/Ho
 
 Via *snmpwalk* on a ça :  
 
-```plain
+```
 $ snmpwalk -c public -v 2c 10.10.10.92 1.3.6.1.2.1.4.34.1.3
 iso.3.6.1.2.1.4.34.1.3.1.4.10.10.10.92 = INTEGER: 2
 iso.3.6.1.2.1.4.34.1.3.1.4.10.10.10.255 = INTEGER: 2
@@ -181,7 +181,7 @@ iso.3.6.1.2.1.4.34.1.3.2.16.254.128.0.0.0.0.0.0.2.80.86.255.254.185.68.58 = INTE
 
 On a par exemple les chiffres 254.128 qui correspondent au début d'adresse (fe80). C'est bien plus agréable avec *Enyx* :  
 
-```plain
+```
 $ python enyx.py 2c public 10.10.10.92
 ###################################################################################
 #                                                                                 #
@@ -214,7 +214,7 @@ Le site web a une page de login et le mot de passe ne fonctionne pas avec l'util
 
 Cette fois pas d'authentification HTTP basic alors on se base sur un match du contenu pour écarter les logins échoués avec *Patator* (j'ai du ajouter une entrée à */etc/hosts* car *Patator* digère mal les IP v6) :  
 
-```plain
+```
 $ patator http_fuzz url='http://mischief.htb/login.php' method=POST body='user=FILE0&password=FILE1' 0=users.txt 1=password.txt -x ignore:fgrep='those credentials do not match'
 13:51:24 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2018-10-21 13:51 CEST
 13:51:24 patator    INFO -
@@ -267,7 +267,7 @@ Si j'connaissais l'con qu'a fait sauter le pont...
 
 Via ces identifiants on peut finalement obtenir un accès SSH en tant que *loki* et accéder au premier flag (apparemment certains ont eu la consigne de ne plus poster les flags donc je m'adapte) :  
 
-```plain
+```
 loki@Mischief:~$ md5sum user.txt
 1db6b29e3f4246e5b4c1ae0a082dca98  user.txt
 ```
@@ -329,14 +329,14 @@ On s'empresse d'essayer se password pour obtenir le root mais on découvre que l
 
 En se penchant sur les binaires on remarque ce petit *plus* (héhé) ajouté par l'administrateur :  
 
-```plain
+```
 -rwsr-xr-x+ 1 root root  44664 Jan 25  2018 /bin/su
 -rwsr-xr-x+ 1 root root 149080 Jan 18  2018 /usr/bin/sudo
 ```
 
 Il y a donc des ACLs qui ont été rajoutés sur les fichiers. Ces derniers sont consultables avec *getfacl* :  
 
-```plain
+```
 # file: bin/su
 # owner: root
 # group: root
@@ -367,7 +367,7 @@ J'ai d'abord pensé à de la *black magic fuckery* lié à la présence de *LXC*
 
 Il est peut être temps de fouiller dans la base de données :  
 
-```plain
+```
 mysql> show tables;
 +-------------------+
 | Tables_in_dbpanel |
@@ -404,7 +404,7 @@ J'ai même changé le mot de passe de l'utilisateur root de MySQL ainsi que sa m
 
 Finalement j'ai fait un reset de la box et là c'est apparu devant mes yeux ébahis :  
 
-```plain
+```
 loki@Mischief:~$ cat .bash_history
 python -m SimpleHTTPAuthServer loki:lokipasswordmischieftrickery
 exit
@@ -435,7 +435,7 @@ Sereinement on affiche le contenu du fichier *root.txt* et on a un message comme
 
 Heureusement on n'a pas besoin de chercher bien loin (ça m'a fatigué ces bêtises) :  
 
-```plain
+```
 root@Mischief:~# find / -name "root.txt" 2> /dev/null
 /usr/lib/gcc/x86_64-linux-gnu/7/root.txt
 /root/root.txt

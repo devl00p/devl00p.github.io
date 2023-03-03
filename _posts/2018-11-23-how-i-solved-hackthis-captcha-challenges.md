@@ -326,7 +326,7 @@ If a character can't be found, *8* is used as a substitution.
 
 It works well :  
 
-```plain
+```
 $ python solve.py
 xOUlx*&gHHNofGbfKTNnQcHcGDdmmZWi#O&MXW-W
 ```
@@ -444,7 +444,7 @@ for letter_image in natsorted(glob.glob("guessdata/*.png")):
 
 And of course it works !  
 
-```plain
+```
 python bisolve.py
 :s :p :D :p ;) :@ :p :o <3 :) <3 :o ;) <3 :/
 ```
@@ -713,7 +713,7 @@ print("match:", corresp)
 
 We have a winner !  
 
-```plain
+```
 min distance: 0
 match: 25
 ```
@@ -722,7 +722,7 @@ We can now modify our *write.php* script to do the 25 iterations of blur.
 
 Using *pHash* to solve this challenge would be a bad idea though. Images are made of 5 characters that can be letters or digits so we have :  
 
-```plain
+```
 pow(len(string.ascii_letters + string.digits), 5) == 916132832
 ```
 
@@ -746,7 +746,7 @@ To compute images with a 'H' in second position we only have to compute combinat
 
 Sum of those reduced combinations is :  
 
-```plain
+```
 pow(62, 2) + pow(62, 3) + pow(62, 3) + pow(62, 3) + pow(62, 2) == 722672
 ```
 

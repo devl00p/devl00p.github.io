@@ -11,7 +11,7 @@ Finalement j'ai trouvé l'astuce suivante qui peut vous intéresser ;-)
 
 Soit l'arborescence suivante :  
 
-```plain
+```
 .
 |-- launcher.py
 `-- modules
@@ -58,7 +58,7 @@ for mod_name in modules.__all__:
 
 Son lancement provoque la sortie suivante :  
 
-```plain
+```
 Constructeur de plop
 run() de plop
 Fonction special() de plop

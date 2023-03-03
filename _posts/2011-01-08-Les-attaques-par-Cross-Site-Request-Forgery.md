@@ -13,7 +13,7 @@ L'exemple le plus simple est celui des scripts de déconnexion présents sur les
 
 Généralement ces scripts ne font rien pour vérifier que l'utilisateur a suivi une procédure dans les règles pour se déconnecter. Ainsi un membre d'un forum fictif pourrait poster un message de la forme :  
 
-```plain
+```
 [url=http://exemple.com/forum/logout.php]La bande anonce du dernier James Bond[/url]
 ```
 

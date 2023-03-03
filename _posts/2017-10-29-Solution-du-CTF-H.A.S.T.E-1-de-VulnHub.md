@@ -23,7 +23,7 @@ Le synopsis est le suivant :
 ... in a VM from VulnHub
 ------------------------
 
-```plain
+```
 Nmap scan report for 192.168.1.36
 Host is up (0.00092s latency).
 Not shown: 65501 closed ports, 33 filtered ports
@@ -71,7 +71,7 @@ Arrivé sur le site web on a le texte suivant suivi d'un formulaire de contact :
 
 Dans le dossier *spukcab* indiqué dans le *robots.txt* on trouve deux fichiers : *index.bak* et *oldconfig.bak*. Le dernier contient une configuration Apache qui pourrait nous être utile :  
 
-```plain
+```
 <VirtualHost *:80>
 ServerAdmin webmaster@convert.me
 ServerName convert.me
@@ -95,7 +95,7 @@ allow from all
 
 Après avoir lancé une première fois [Wapiti](http://wapiti.sourceforge.net/) sans résultats et testé quelques injections de commande et SQLi sur le formulaire, je lance un buster afin de trouver d'autres dossiers intéressants.  
 
-```plain
+```
   `==\. dvbuster v1.0 ./=='
       ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
 20469 lines to process.
@@ -130,7 +130,7 @@ La commande nous retourne le même site, la piste n'est pas bonne.
 
 Le formulaire *receipt.php* nous redirige après la soumission des données vers *receipt.**shtml***. On va fouiller de ce côté :  
 
-```plain
+```
 http://192.168.1.36/index.shtml - HTTP 200 (35 bytes, plain)
 http://192.168.1.36/receipt.shtml - HTTP 200 (761 bytes, gzip)
 http://192.168.1.36/ssi.shtml - HTTP 200 (296 bytes, gzip)
@@ -144,7 +144,7 @@ Voilà qui est plus intéressant ! Le fichier *index.shtml* comporte du SSI (*Se
 
 Ici il manque un point d'exclamation pour que le SSI puisse fonctionner. Le fichier *ssi.shtml* semble quand à lui fonctionner. Un message d'erreur donne le même indice sur les SSI :  
 
-```plain
+```
 Hello total 16
 -rw------- 1 root root    0 Oct 28 09:04 002f859fefa6d
 drwxrwxrwt 2 root root 4096 Oct 28 08:58 VMwareDnD
@@ -223,13 +223,13 @@ La récupération de certaines données ne semblait pas fonctionner, c'est pour 
 
 Dans le fichier */etc/passwd* on remarque un utilisateur *starfire*.  
 
-```plain
+```
 starfire:x:1000:1000:admin,,,:/home/starfire:/bin/bash
 ```
 
 Le kernel ne semble pas vulnérable à DirtyC0w :'(   
 
-```plain
+```
 Linux ConverterPlus 4.10.0-28-generic #32~16.04.2-Ubuntu SMP Thu Jul 20 10:19:13 UTC 2017 i686 i686 i686 GNU/Linux
 ```
 

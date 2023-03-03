@@ -13,7 +13,7 @@ Objectif: vérifier la sécurité du système, obtenir les privilèges root et o
 Préface
 -------
 
-```plain
+```
 Nmap scan report for 192.168.2.5
 Host is up (0.00057s latency).
 Not shown: 65532 closed ports
@@ -86,7 +86,7 @@ $bad_words = array("pwd", "ls", "netcat", "ssh", "wget", "ping", "traceroute", "
 
 Sous la racine web on trouve un fichier *.hint* avec le contenu suivant :
 
-```plain
+```
 Have you tried spawning a tty shell?
 Also don't forget to check for hidden files ;)
 ```
@@ -96,7 +96,7 @@ En mode détective
 
 Comme d'habitude on note quelques utilisateurs dans */etc/passwd* :  
 
-```plain
+```
 c0rruptedb1t:x:1000:1000:c0rruptedb1t,,,:/home/c0rruptedb1t:/bin/bash
 bob:x:1001:1001:Bob,,,,Not the smartest person:/home/bob:/bin/bash
 jc:x:1002:1002:James C,,,:/home/jc:/bin/bash
@@ -111,7 +111,7 @@ Le premier ayant probablement été utilisé uniquement pour mettre en place le 
 
 Dans le dossier personnel de bob, on trouve un fichier *.old\_passwordfile.html* avec des identifiants nous permettant d'avoir un accès SSH :  
 
-```plain
+```
 jc:Qwerty
 seb:T1tanium_Pa$$word_Hack3rs_Fear_M3
 ```
@@ -143,13 +143,13 @@ Or il y a aussi un fichier chiffré *login.txt.gpg* dans le dossier *Documents* 
 
 On trouve aussi un même hash correspondant au mot de passe de bob pour le FTP dans */etc/proftpd/bobftp* et */home/bob/Downloads/.bobftp.bak* :  
 
-```plain
+```
 bob:$1$Qiy3X9sL$0U5QdO1kxUaU2CrzXAy8W0:1001:1001::/home/bob:/bin/false
 ```
 
 Ce dernier se casse facilement :  
 
-```plain
+```
 $ /opt/john-1.8.0-jumbo-1/run/john -w /opt/wordlists/rockyou.txt --format=md5crypt /tmp/hash.txt
 Loaded 1 password hash (md5crypt, crypt(3) $1$ [MD5 128/128 AVX 12x])
 Will run 4 OpenMP threads
@@ -161,7 +161,7 @@ Mais le pass ne fonctionne ni pour FTP, ni pour SSH/su, ni pour déchiffrer le G
 
 Enfin pour terminer avec bob, il y a des notes dans *Documents/staff.txt* :  
 
-```plain
+```
 Seb:
 
 Seems to like Elliot
@@ -195,7 +195,7 @@ alias testing='echo testing right back at you'
 
 il y a des commandes que l'on peut lancer via sudo :  
 
-```plain
+```
 User jc may run the following commands on debian-Lab:
     (ALL) NOPASSWD: /usr/bin/service apache2 *
     (root) NOPASSWD: /bin/systemctl start ssh
@@ -223,7 +223,7 @@ J'ai demandé un indice à l'auteur du CTF qui a indiqué de regarder la premiè
 
 On obtient alors les identifiants *bob:b0bcat\_* permettant l'accès SSH pour bob puis passer root via sudo.  
 
-```plain
+```
 root@debian-Lab:/home/bob# cat /flag.txt
 CONGRATS ON GAINING ROOT
 

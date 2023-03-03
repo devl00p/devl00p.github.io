@@ -28,7 +28,7 @@ Brute-forcer du SHA-256 ne me dit rien qui vaille donc la solution est probablem
 
 Dans la classe principale (*PRMain*) on trouve une méthode *loginSuccessful* qui défini le contenu à afficher si l'authentification réussit :  
 
-```plain
+```
     String content = this.contentService.getContent(session);
     this.frame.getContentPanel().setProtectedContent(content);
 ```
@@ -63,7 +63,7 @@ Ici on voit que le nom d'utilisateur est utilisé comme clé pour effectuer un X
 
 Il suffit de reproduire l'opération en Python :  
 
-```plain
+```
 >>> l = [30, 0, 21, 8, 90, 86, 4, 0, 10, 6, 80, 92, 38, 53, 30, 26, 80, 88, 113, 87, 67]
 >>> key = "Hero33"
 >>> "".join([chr(x ^ ord(key[i%6])) for i, x in enumerate(l)])
@@ -97,7 +97,7 @@ Mais que fait cette boucle ?
 
 D'abord il y a la mise en place d'une protection anti-debug :  
 
-```plain
+```
 0x080491cb    8b4508       mov eax, dword [ebp + 8] ; [:4]=0
 0x080491ce    a390b00408   mov dword [0x804b090], eax ; [:4]=0xffffff00
 0x080491d3    c74424049c9. mov dword [esp + 4], 0x804919c ; [:4]=0x10100
@@ -117,7 +117,7 @@ Ainsi si le code met trop de temps à s'exécuter (typiquement le code est débo
 
 La fonction appelée ensuite est assez parlante :  
 
-```plain
+```
 |          ; CALL XREF from 0x08049239 (fcn.08049218)
 / (fcn) sub.fclose_616 150
 |          0x08049616    55           push ebp
@@ -175,7 +175,7 @@ L'étape suivante consiste pour le programme à lire 4 octets sur la socket.
 
 Le cœur de notre problème se concentre sur ces quelques lignes avec les fonctions appelées :  
 
-```plain
+```
 |  |   |    ; JMP XREF from 0x080492af (fcn.08049218)
 |  |   `--> 0x080492d4    8b45e4       mov eax, dword [ebp - 0x1c]
 |  |        0x080492d7    8b55e8       mov edx, dword [ebp - 0x18]
@@ -237,7 +237,7 @@ Dans ce code on a les variables locales suivantes :
 
 La fonction *fcn.080495e4* qui prend en paramètre les 4 octets envoyés plus tôt au client et le compteur a le code suivant :  
 
-```plain
+```
 |          0x080495e4    55           push ebp
 |          0x080495e5    89e5         mov ebp, esp
 |          0x080495e7    83ec10       sub esp, 0x10
@@ -281,7 +281,7 @@ La fonction *fcn.08049440* est donc bien mystérieuse mais quand on y jette un �
 
 Tout se joue sur l'appel à htons() :  
 
-```plain
+```
 
 0x080494ef    8b4508       mov eax, dword [ebp + 8] ; [:4]=0
 0x080494f2    8b0485c49a0. mov eax, dword [eax*4 + 0x8049ac4] ; [:4]=0xd5e
@@ -294,7 +294,7 @@ On voit que le compteur passé en argument sert d'index pour un tableau d'entier
 
 Ce tableau est hardcodé et on peut l'afficher avec la commande *px* depuis *radare* :  
 
-```plain
+```
 [0x0804a340]> px @ 0x8049ac4
 - offset -   0 1  2 3  4 5  6 7  8 9  A B  C D  E F  0123456789ABCDEF
 0x08049ac4  5e0d 0000 b411 0000 2317 0000 2609 0000  ^.......#...&...
@@ -377,7 +377,7 @@ D'après un *srch\_strings* le binaire a aussi du code en commun avec le binaire
 
 On trouve quelques chaines intéressantes :  
 
-```plain
+```
 Connection Timeout
 <Not Authenticated>
 LUK_MURPHY
@@ -406,7 +406,7 @@ Pour permettre l'exécution du programme il faut :
 
 On lance alors le programme avec *ltrace* pour voir ce qu'il fait dans le ventre :  
 
-```plain
+```
 __libc_start_main(0x804c01f, 1, 0xbfb5dbc4, 0x804c7c0, 0x804c830 <unfinished ...>
 _ZNSt8ios_base4InitC1Ev(0x8050234, 0x200246, 0xbfb5dbc4, 1, 0x5c2ff4)              = 0x3c7990
 __cxa_atexit(0x80497a0, 0x8050234, 0x8050158, 1, 0x5c2ff4)                         = 0
@@ -446,7 +446,7 @@ On va devoir aussi utiliser l'option -f pour suivre les processus fils sinon on 
 
 On reprend le traçage :  
 
-```plain
+```
 [pid 7536] memset(0xbf958a4c, '\000', 16)                                                         = 0xbf958a4c
 [pid 7536] htons(7821, 0, 16, 0x804c37e, 3)                                                       = 36126
 [pid 7536] bind(3, 0xbf958a4c, 16, 0x804c37e, 3)                                                  = 0
@@ -494,7 +494,7 @@ L'analyse se fait donc de la façon suivante : on trace le programme, on regarde
 
 Ainsi si on lui envoie 64 octets on a un appel de fonction supplémentaire :  
 
-```plain
+```
 [pid 8208] strcasecmp("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"..., "LUK_MURPHY")
 ```
 
@@ -515,7 +515,7 @@ s.close()
 
 On a cette fois un retour différent :  
 
-```plain
+```
 [pid 8644] send(4, 0xbfc7d12c, 4, 0, 0)                                                           = 4
 [pid 8644] recv(4, 0xbfc7d174, 20, 0, 0)                                                          = 20
 [pid 8644] SHA1_Init(0xbfc7d0cc, 0xbfc7d174, 20, 0, 0)                                            = 1
@@ -538,7 +538,7 @@ Ainsi le code fait sha1(données envoyées + 22 octets à 0x804c8c5 + données e
 
 Les 22 octets en question sont l'une des chaines vu plus tôt :  
 
-```plain
+```
 [0x080499c0]> px @ 0x804c8c5
 - offset -   0 1  2 3  4 5  6 7  8 9  A B  C D  E F  0123456789ABCDEF
 0x0804c8c5  2121 215a 6572 3049 7354 6865 436f 6f6c  !!!Zer0IsTheCool
@@ -551,7 +551,7 @@ La page de manuel pour *ltrace.conf* nous renseigne sur la syntaxe à utiliser.
 
 Sous *openSUSE* j'ai créé le fichier */usr/share/ltrace/libcrypto.so.con*f avec le contenu suivant :  
 
-```plain
+```
 addr SHA1(string(array(char, arg2)*), ulong, addr);
 int SHA1_Init(addr);
 int SHA1_Update(addr, string(array(char, arg3)*), ulong);
@@ -567,7 +567,7 @@ Dans le code, la partie concernant le hashage se retrouve à *0x08049f31*.
 
 Il s'avère que les 4 octets envoyés sont un nonce généré aléatoirement.  
 
-```plain
+```
 |    `----> 0x0804a040    8d85e8feffff lea eax, dword [ebp - 0x118]
 |           0x0804a046    89442404     mov dword [esp + 4], eax ; [:4]=0x10100 ; SHA_CTX struct
 |           0x0804a04a    8d45d0       lea eax, dword [ebp - 0x30]
@@ -721,7 +721,7 @@ s.recv(1)
 
 Pour vérifier que le *RC4* a été correctement mis en place chez le client, le serveur suit les opérations suivantes :  
 
-```plain
+```
 [pid 16149] [0x804a0ab] RC4_set_key(0xffaf1a98, 20, "\027EC&d\227g\016\270\031W\300\330\232\370Z\a\225r\034")                   = <void>
 [pid 16149] [0x804a0c6] strncpy(0xffaf1a1c, "Test12345678", 16)                                                                 = 0xffaf1a1c
 [pid 16149] [0x804a2c7] RC4(0xffaf1a98, 16, "Test12345678\0\0\0\0", 0xffaf1988)                                                 = <void>
@@ -739,7 +739,7 @@ A ce stade on a fait une bonne partie. Ensuite le serveur attend 5 octets (chiff
 
 La lecture qui suit semble se faire via des blocks de 256 octets (256 \* la taille spécifiée) . Ainsi si on envoie *"\x04\x00\x00\x00\x01"* chiffré en *RC4* :  
 
-```plain
+```
 [pid 16149] [0x804a341] recv(4, 0xffaf1a27, 5, 0)                                      = 5
 [pid 16149] [0x804a361] alarm(30)                                                      = 0
 [pid 16149] [0x804a2c7] RC4(0xffaf1a98, 5, "1\026R\314\177", 0xffaf1a03)     = <void>
@@ -752,7 +752,7 @@ Une fois qu'il a lu ses 256 octets ils les déchiffre via *RC4* puis il procède
 
 Je me suis aussi rendu compte assez vite que si le premier des 5 octets précédent vaut 0 alors on semble entrer dans un mode de débogage :  
 
-```plain
+```
 RE03: Unknown Command Type: SeqID:0
 Arg(0) = chaine_avant_point_virgule
 Arg(1) = chaine_apres_point_virgule
@@ -762,7 +762,7 @@ On sait donc à quoi correspond les paquets que l'on envoie :)
 
 Le parseur de ces 5 octets se trouve à l'adresse *0x0804aadb* où l'on trouve un switch/case sur le premier octet :  
 
-```plain
+```
 |    0x0804aa0b    0fb6c0       movzx eax, al
 |    0x0804aa0e    83f805       cmp eax, 5
 |,=< 0x0804aa11    0f87a4000000 ja 0x804aabb
@@ -772,7 +772,7 @@ Le parseur de ces 5 octets se trouve à l'adresse *0x0804aadb* où l'on trouve u
 
 L'adresse de saut pour chacun des cas s'obtient facilement avec *radare2* ou *gdb* :  
 
-```plain
+```
 (gdb) x/6wx 0x804c9c0
 0x804c9c0:      0x0804aabb      0x0804aa5c      0x0804aa20      0x0804aa3e
 0x804c9d0:      0x0804aa7e      0x0804aaa0
@@ -793,7 +793,7 @@ L'idée est donc de placer dans la mémoire du processus local une nonce et un h
 
 Mais on ne peut pas le faire n'importe comment : le programme a besoin de s'initialiser. On va donc commencer par mettre un breakpoint sur l'adresse de la fonction principale du programme (celle qui commence par *getuid* soit *0x0804be54*) avant de forcer le saut vers les instructions que voici qui mettent sur la pile les arguments pour notre fonction cible :  
 
-```plain
+```
 0x0804a075    89542408     mov dword [esp + 8], edx ; [:4]=0
 0x0804a079    89442404     mov dword [esp + 4], eax ; [:4]=0x10100
 0x0804a07d    8b85e4feffff mov eax, dword [ebp - 0x11c]
@@ -814,7 +814,7 @@ Ensuite on break après l'appel de *scramble\_key()* (par exemple à *0x0804a097
 
 Mettons que la nonce soit *0xc0aa44f7*, que la hash soit 2f510f61f09285f01f59b4816ced908b4fb1a0c7 et que l'on souhaite écrire en mémoire à partir de l'adresse *0xfffdd000* alors on aura le fichier de commandes GDB suivant :  
 
-```plain
+```
 b *0x0804be54
 b *0x0804a075
 r
@@ -926,7 +926,7 @@ s.close()
 
 Résultat :  
 
-```plain
+```
 [*] Connecting to server
 [i] AUTH nonce = c41433df
 [i] AUTH: success
@@ -954,7 +954,7 @@ Breakpoint 3, 0x0804a097 in ?? ()
 
 Yes ! On change ensuite l'argument pour *thisistheflag.txt* et l'octet de commande de 3 à 4 :  
 
-```plain
+```
 [*] Connecting to server
 [i] AUTH nonce = 4161302f
 [i] AUTH: success

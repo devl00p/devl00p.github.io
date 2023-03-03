@@ -159,7 +159,7 @@ hexdump journal
 
 Malheureusement, c'est loin d'être la gloire... on retrouve tout de même quelques octets correspondants aux métadonnées du fichier :  
 
-```plain
+```
 0001580 81a4 0000 0000 0000 a034 44a6 a0ed 44a6
 0001590 a0ed 44a6 a0ed 44a6 0000 0000 0000 0000
 00015a0 0000 0000 0000 0000 0000 0000 0000 0000

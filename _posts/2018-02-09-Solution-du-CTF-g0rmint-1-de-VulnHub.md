@@ -13,7 +13,7 @@ Il s'agit d'un boot2root qui a au moins le bénéfice de ne pas compter un port 
 Tout ça pour ça
 ---------------
 
-```plain
+```
 PORT      STATE    SERVICE    VERSION
 22/tcp    open     ssh        OpenSSH 7.2p2 Ubuntu 4ubuntu2.2 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey:
@@ -40,7 +40,7 @@ Un check rapide de ce dossier à la racine web et sous */g0rmint* ne semble rien
 
 Une recherche de fichiers PHP permet de retrouver d'autres pages:  
 
-```plain
+```
 http://192.168.1.42/g0rmint/config.php - HTTP 200 (0 bytes, plain)
 http://192.168.1.42/g0rmint/dummy.php - HTTP 302 (0 bytes, plain) redirects to ../login.php
 http://192.168.1.42/g0rmint/footer.php - HTTP 200 (45 bytes, plain)
@@ -76,7 +76,7 @@ On sait que le serveur web est un Apache et on sait qu'Apache a l'habitude de r�
 
 Or il s'avère qu'on a des codes d'erreur différents selon le répertoire :  
 
-```plain
+```
 $ curl -I http://192.168.1.42/s3cretbackupdirect0ry/.htaccess
 HTTP/1.1 404 Not Found
 Date: Fri, 08 Feb 2018 20:21:33 GMT
@@ -86,7 +86,7 @@ Content-Type: text/html; charset=iso-8859-1
 
 contre
 
-```plain
+```
 $ curl -I http://192.168.1.42/g0rmint/s3cretbackupdirect0ry/.htaccess
 HTTP/1.1 403 Forbidden
 Date: Fri, 09 Feb 2018 20:22:18 GMT
@@ -238,7 +238,7 @@ Baby don't hurt me
 
 Finalement j'ai eu recourt à [un exploit de halfdog](https://www.exploit-db.com/exploits/43775/) pour une vulnérabilité touchant la fonction *realpath()* de la libc :  
 
-```plain
+```
 www-data@ubuntu:/tmp$ ./whatislove
 ./whatislove: setting up environment ...
 Detected OS version: "16.04.3 LTS (Xenial Xerus)"
@@ -267,7 +267,7 @@ Give me feedback @nomanriffat
 
 Après avoir consulté d'autres walkthrough il s'avère qu'il y avait un autre fichier *backup.zip* contenant un identifiant pour l'utilisateur du système *g0rmint* membre du groupe sudo.  
 
-```plain
+```
 # find /var/www/ -name "backup.zip"
 /var/www/html/g0rmint/s3cretbackupdirect0ry/backup.zip
 /var/www/backup.zip

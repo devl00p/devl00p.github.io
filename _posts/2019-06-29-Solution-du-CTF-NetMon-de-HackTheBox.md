@@ -15,7 +15,7 @@ Free Flag
 
 On lance un masscan qui nous trouve les classiques ports Windows ainsi qu'un serveur FTP :  
 
-```plain
+```
 $ sudo masscan -e tun0 --rate 1000 -p1-65535 10.10.10.152
 
 Starting masscan 1.0.4 (http://bit.ly/14GZzcT)
@@ -46,7 +46,7 @@ PRTGWUT?
 
 En explorant le disque on voit différents fichiers en relation avec PRTG, comme *c:\windows\restart.bat* :  
 
-```plain
+```
 net stop PRTGCoreService
 copy "c:\Windows\PRTG Configuration.dat" "C:\ProgramData\Paessler\PRTG Network Monitor"
 net start PRTGCoreService
@@ -71,7 +71,7 @@ On s'empresse de tester ce mot de passe et il ne fonctionne pas... On essaye *Pr
 
 Si le service était aussi souvent indisponible c'est que certains participants ont du chercher PRTG via *searchsploit* ou autre et on eu le résultat suivant :  
 
-```plain
+```
 $ searchsploit prtg
 ------------------------------------------------------------------------ ----------------------------------------
  Exploit Title                                                          |  Path
@@ -89,7 +89,7 @@ Quoiqu'il en soit l'objectif est de créer une notification via le menu *Setup*.
 
 Seulement deux programmes sont proposés à l'exécution : un script bat que voici :  
 
-```plain
+```
 REM Demo 'BAT' Notification for Paessler Network Monitor
 REM Writes current Date/Time into a File
 REM
@@ -113,7 +113,7 @@ Echo  %DATE% %TIME% >%1%
 
 ou sa version *Powershell* que voici :  
 
-```plain
+```
 if ($Args.Count -eq 0) {
 
   #No Arguments. Filename must be specified.
@@ -157,7 +157,7 @@ Finalement on peut définir notre notification parmi les notifications de base (
 
 Une fois qu'on s'est battu pour que personne n'ai supprimé / modifié la notification ou changé le mot de passe tout est ok et on peut obtenir le flag root :  
 
-```plain
+```
 $ PYTHONPATH=. python examples/smbexec.py NETMON/devloop:Uns3cUr3@10.10.10.152
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 

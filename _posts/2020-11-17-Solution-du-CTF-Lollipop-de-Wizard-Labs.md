@@ -12,7 +12,7 @@ Pour cela j'ai porté mon dévolu sur [les listes raft de fuzzdb](https://github
 
 On trouve ainsi un dossier caché *.ssh* avec la clé qui va avec :  
 
-```plain
+```
 /index.html (Status: 200)
 /mail.php (Status: 200)
 /function.php (Status: 200)
@@ -27,7 +27,7 @@ Je tiens à préciser que malgré tous mes efforts ce script ne semble pas vuln�
 
 La clé SSH est malheureusement protégée par une passphrase. On est alors tenté d'utiliser l'utilitaire *ssh2john* pour tenter de la retrouver :  
 
-```plain
+```
 $ /usr/share/john/ssh2john.py id_rsa 
 id_rsa:$sshng$1$16$0AF431720D358A422BF9C1D77BDF72DF$1200$f5dce6fe7--- snip ---16ec902cb75a90ab0
 ```
@@ -50,7 +50,7 @@ Tous ces éléments réunis nous permettent un accès SSH sur la machine en tant
 
 En fouillant les binaires setuid du système je remarque un dossier où les binaires semblent *upgradés* (notez le *s* dans les permissions) à intervalle régulier :D   
 
-```plain
+```
 mrl0llipop@Lollip0p:/suided_binaries$ ls -l
 total 184
 -rwxrwxrwx 1 root root  44304 Jan  6 09:26 mount
@@ -63,7 +63,7 @@ total 184
 
 Moi aussi je veux jouer, on va juste copier un *bash* dans ce dossier :  
 
-```plain
+```
 mrl0llipop@Lollip0p:/suided_binaries$ ls -l
 total 204
 -rwsrwxrwx 1 root root  16664 Jan  8 02:20 devloop

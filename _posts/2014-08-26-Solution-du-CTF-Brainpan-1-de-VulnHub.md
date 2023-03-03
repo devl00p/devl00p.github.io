@@ -53,7 +53,7 @@ fd.close()
 
 L'output du script est le suivant :  
 
-```plain
+```
 [*] Testing storm98
 [*] Testing srfrgrl
 [*] Testing sophia09
@@ -94,7 +94,7 @@ Heureusement j'avais lancé *dirb* en parallèle qui me trouve un dossier */bin*
 
 Et dedans un exécutable *brainpan.exe* : Oui ! Il s'agit bien d'un binaire Windows !  
 
-```plain
+```
 PE32 executable (console) Intel 80386 (stripped to external PDB), for MS Windows
 ```
 
@@ -118,7 +118,7 @@ L'instruction Python suivante permet de générer une chaîne pour déterminer c
 
 Et cette fois EIP est rempli de D :  
 
-```plain
+```
 Unhandled exception: page fault on read access to 0x44444444 in 32-bit code (0x44444444).
 Register dump:
  CS:0023 SS:002b DS:002b ES:002b FS:0063 GS:006b
@@ -286,7 +286,7 @@ Who do you want to be today? (aka hk.exe ;-)
 
 Les utilisateurs donnent un air de déjà vu :  
 
-```plain
+```
 reynard:x:1000:1000:Reynard,,,:/home/reynard:/bin/bash
 anansi:x:1001:1001:Anansi,,,:/home/anansi:/bin/bash
 puck:x:1002:1002:Puck,,,:/home/puck:/bin/bash
@@ -322,7 +322,7 @@ validating input...passed.
 
 Il s'agit d'un binaire Linux classique :  
 
-```plain
+```
 validate: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
 dynamically linked (uses shared libs), for GNU/Linux 2.6.15,
 BuildID[sha1]=c4b7d3019dda6ebc259c4e4b63a336e00a63b949, not stripped
@@ -330,7 +330,7 @@ BuildID[sha1]=c4b7d3019dda6ebc259c4e4b63a336e00a63b949, not stripped
 
 *nm* fait état d'une fonction *validate* ainsi que de l'utilisation de fonctions connues :  
 
-```plain
+```
 08048538 T main
          U printf@@GLIBC_2.0                                                                                                                                                                                   
          U puts@@GLIBC_2.0                                                                                                                                                                                     
@@ -414,7 +414,7 @@ Si on passe la chaine *"A" \* 112 + "B" \*4 + "C" \* 4* (toujours du Python) on 
 
 Cette fois c'est le registre eax qui pointe vers notre chaîne :  
 
-```plain
+```
 (gdb) x/s $eax
 0xffffcf48:     'A' <repeats 112 times>, "BBBBCCCC"
 ```
@@ -470,7 +470,7 @@ Where [action] is one of:
 
 On trouve les chaines de caractères suivantes dans le binaire :  
 
-```plain
+```
 /sbin/ip
 /usr/bin/man
 /usr/bin/top

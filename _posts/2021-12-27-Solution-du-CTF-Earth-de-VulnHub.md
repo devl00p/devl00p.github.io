@@ -10,7 +10,7 @@ James Webb
 
 L'objectif est de devenir root sur la machine et de récupérer deux flags.  
 
-```plain
+```
 Nmap scan report for 192.168.56.16
 Host is up (0.00039s latency).
 Not shown: 65447 filtered tcp ports (no-response), 85 filtered tcp ports (admin-prohibited)
@@ -55,7 +55,7 @@ Bien qu'écrit en C et datant de 13 ans au moment de ces lignes il compile et fo
 
 Cet outil se base sur des tables de fréquence des caractères. Par défaut la seule table présente est générée à partir de codes sources Linux mais c'est déjà suffisant pour casser l'un des cryptogrammes.  
 
-```plain
+```
 $ ./xor-analyze dump2 freq/linux-2.2.14-int-m0.freq 
 xor-analyze version 0.4 by Thomas Habets <thomas@habets.pp.se>
 Counting coincidences... 20 / 20
@@ -67,7 +67,7 @@ Probable key: "iudlyduckyduckyducky"
 
 Au vu de la répétition on devine que la vrai clé utilisé est *ducky*. On peut utiliser l'utilitaire *xor-dec* du même projet pour déchiffrer le fichier.  
 
-```plain
+```
 $ ./xor-dec ducky dump2 clear_text
 ```
 
@@ -92,7 +92,7 @@ Comme vu précédemment les deux DNS retournent le même contenu sur le port 80 
 
 Pour *terratest.earth.local* on obtient un message *Test site, please ignore.*. On lance une énumération avec *feroxbuster* et on trouve un fichier *robots.txt* qui contient entre autres cette entrée :  
 
-```plain
+```
 Disallow: /testingnotes.*
 ```
 
@@ -154,7 +154,7 @@ Dragonfly
 
 Pas grand chose à dire sur les fichiers du site qui étaient présent. Il y a une appli Python ainsi que le premier flag :  
 
-```plain
+```
 bash-5.1$ pwd 
 /etc/httpd/conf.d
 bash-5.1$ ls
@@ -188,13 +188,13 @@ C'est assez fréquent qu'un compte ait été utilisé juste pour la création du
 
 En revanche il y a un binaire setuid root que LinPEAS remonte :  
 
-```plain
+```
 -rwsr-xr-x. 1 root root 24K Oct 12 23:18 /usr/bin/reset_root (Unknown SUID binary)
 ```
 
 Il y a quelques chaines intéressantes dans ce binaire mais rien de suffisamment compréhensible :  
 
-```plain
+```
 bash-5.1$ strings /usr/bin/reset_root
 /lib64/ld-linux-x86-64.so.2
 setuid
@@ -221,7 +221,7 @@ RESET FAILED, ALL TRIGGERS ARE NOT PRESENT.
 
 Le plus simple est de le récupérer (sftp sur le tunnel ReverseSSH) et de le tracer avec *ltrace* :  
 
-```plain
+```
 $ ltrace ./reset_root 
 puts("CHECKING IF RESET TRIGGERS PRESE"...CHECKING IF RESET TRIGGERS PRESENT...
 )                                                                                       = 38
@@ -235,7 +235,7 @@ puts("RESET FAILED, ALL TRIGGERS ARE N"...RESET FAILED, ALL TRIGGERS ARE NOT PRE
 
 Le programme teste la présence de trois fichiers qui doivent être les triggers mentionnés. Les noms sont-ils générés dynamiquement ? C'est le moment de tester.  
 
-```plain
+```
 bash-5.1$ touch /dev/shm/kHgTFI5G /dev/shm/Zw7bV9U5 /tmp/kcM0Wewe
 bash-5.1$ /usr/bin/reset_root
 CHECKING IF RESET TRIGGERS PRESENT...

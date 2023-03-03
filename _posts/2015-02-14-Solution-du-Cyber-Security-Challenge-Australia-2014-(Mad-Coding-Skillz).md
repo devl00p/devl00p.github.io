@@ -18,7 +18,7 @@ La description du level est la suivante :
 
 On a donc un serveur qui nous demande de retrouver des anagrammes. Voici un aperçu ce qu'on obtient à la connexion :  
 
-```plain
+```
                 Welcome to the jumbled word server.
                 ==============================
 [+] Unjumble 50 words sequentially within 60 seconds.
@@ -61,7 +61,7 @@ print buff
 
 Output du programme :  
 
-```plain
+```
 dstoaniucnition => discontinuation
 iuhillcytmeapes => euphemistically
 ticsosatntnolui => constitutionals
@@ -83,7 +83,7 @@ Ainsi dès ce second level on fait un énorme saut dans la difficulté.
 
 Voici les instructions reçues lors de la connexion au serveur :  
 
-```plain
+```
 Welcome to the Fortcerts secure server. This server is protected by a challenge response authentication method.
 At Fortcerts we do not believe in security by obscurity: the response must sum to zero.
 Possible responses are a list of integers separated by spaces or the string 'no solution' (because the server is ultra-secure sometimes there may not be a solution).
@@ -100,7 +100,7 @@ On doit choisir nos N entiers parmi la liste de telle façon que leur somme donn
 
 Ainsi pour l'exemple précédent on peut trouver au moins 3 solutions :  
 
-```plain
+```
 [-781, -505, -480, -438, -360, -192, -123, -56, 29, 202, 330, 378, 400, 622, 974]
 [-781, -505, -480, -438, -360, -192, -123, -118, -56, 29, 202, 442, 637, 647, 1096]
 [-781, -505, -480, -438, -360, -192, -123, -118, -56, 29, 202, 330, 622, 914, 956]
@@ -145,7 +145,7 @@ J'ai écrit un programme de benchmark qui teste pour 17 cas (dont 3 sans solutio
 
 J'obtiens les moyennes de temps suivantes :  
 
-```plain
+```
 Original: 4.3500373644
 Sorted: 1.45088425805
 Sorted and reversed: 5.99907659082
@@ -377,7 +377,7 @@ J'ai utilisé quatre machines pour lancer l'attaque :
 
 Le résultat généré est assez verbeux :  
 
-```plain
+```
 recu Round: 1
 Required response length: 16
 Challenge: 628 1138 413 -389 725 -133 1059 676 427 175 197 -609 1004 -16 483 550 898 709 -521 496 -345 875 -227 984 307 -373 -110 654
@@ -439,7 +439,7 @@ Spelunking! (280 points)
 
 On a donc un scénario [de sortie de labyrinthe](https://en.wikipedia.org/wiki/Maze_solving_algorithm). Quand on se connecte au serveur on peut communiquer en utilisant un nombre limité de commandes :  
 
-```plain
+```
 Please wait while the map loads...
 Map loaded.
 help
@@ -482,7 +482,7 @@ Arrivé à ce stade du développement je suis en mesure d'explorer un étage, tr
 
 La saisie de la clé provoque un décompte dont on est averti de cette façon :  
 
-```plain
+```
 You picked up the key.
 The ceiling starts to collapse.
 Get out of here!
@@ -1016,7 +1016,7 @@ if __name__ == "__main__":
 
 La dernière ligne obtenue par le bot est la suivante :  
 
-```plain
+```
 ['YOU ESCAPED!', 'Key: TroubleStudentsRealize972Get out of here!\nThere is a locked door here.']
 ```
 

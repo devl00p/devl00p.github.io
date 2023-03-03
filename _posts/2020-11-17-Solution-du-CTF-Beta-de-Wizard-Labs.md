@@ -14,7 +14,7 @@ Beta
 
 Voici le résultat (épuré) d'un scan Nmap lancé avec *--script safe* :  
 
-```plain
+```
 Nmap scan report for 10.1.1.15
 Host is up (0.051s latency).
 Not shown: 62210 closed ports, 3311 filtered ports
@@ -274,7 +274,7 @@ Delta
 
 Qu'en est-il de cette fameuse faille SMB ? Metasploit dispose de plusieurs exploits pour cette faille largement connue sous le nom d'*EternalBlue* :  
 
-```plain
+```
 msf5 exploit(windows/smb/ms17_010_eternalblue) > show options
 
 Module options (exploit/windows/smb/ms17_010_eternalblue):
@@ -343,7 +343,7 @@ Un autre exploit est disponible dans le framework Metasploit qui s'appelle *ms17
 
 L'exploit échoue faute de trouver ou accéder à l'un de ces pipes. On peut alors utiliser les identifiants de *Russel* pour accéder aux pipes et permettre l'exploitation qui a réussie avec un payload assez basique.  
 
-```plain
+```
 msf5 exploit(windows/smb/ms17_010_psexec) > show options
 
 Module options (exploit/windows/smb/ms17_010_psexec):

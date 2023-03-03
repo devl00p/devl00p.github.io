@@ -68,7 +68,7 @@ Un survol du pcap permet d'y discerner une communication IRC sur le port 6667 ai
 
 La conversation IRC est la suivante :  
 
-```plain
+```
 CAP LS
 NICK otherbadguy
 USER dishadmin dishadmin 172.16.1.80 :dishadmin
@@ -179,7 +179,7 @@ $ fls -f ntfs -o 128 diskimage 38-144-8
 
 Et on trouve une bonne quantité de fichiers dont voici les derniers :  
 
-```plain
+```
 -/r * 589-128-1:        secret.7z
 -/r * 591-128-1:        secret.db
 -/r * 592-128-1:        secret.png
@@ -193,7 +193,7 @@ $ icat -f ntfs -i raw -o 128 diskimage 589-128-1 > secret.7z
 
 Seulement l'archive 7z est protégée par mot de passe... shit !  
 
-```plain
+```
 Path = secret.7z
 Type = 7z
 Method = LZMA 7zAES
@@ -296,7 +296,7 @@ Il suffit alors d'extraire la MFT via *icat* (la MFT a l'index 0), d'appeler des
 
 Après une longue série de FILE0 on finit par tomber sur ça :  
 
-```plain
+```
 FILE0
 j9Bb
 FILE0
@@ -374,7 +374,7 @@ while True:
 
 On obtient des lignes comme celles-ci avec la direction du flux, l'ID de la requête DNS et le nom de domaine demandé.  
 
-```plain
+```
 > ID AACE aaaaabqaaaaaaaaaaaaaaaaa-0ba3b5e1a2890d89.badguy.com
 > ID C101 aaaaabyaaaaaaaaaaaaaaaaa-3c54c28c7e41d37f.badguy.com
 > ID CBC5 aaaaacaaaaaaaaaaaaaaaaaa-2262036a89a89375.badguy.com
@@ -387,7 +387,7 @@ Evidemment on remarque tout de suite des données hexadécimales. La première p
 
 A ces requêtes il y a parfois un retour sous la forme d'un enregistrement TXT en base64 :  
 
-```plain
+```
 < ID 042D AAAADAAAAAwAAAN4nGNgYEgBAABoAGU=
 < ID BEAB AAAAWAAAABQAAAV4nEu2iinPzEvJLy+OSQQAHhAEwg==
 < ID BEAB AAAAWAAAABQAAAV4nEu2iinPzEvJLy+OSQQAHhAEwg==
@@ -395,14 +395,14 @@ A ces requêtes il y a parfois un retour sous la forme d'un enregistrement TXT e
 
 dans beaucoup de cas la réponse a une taille fixe et est sans doute une sort d'ACK.  
 
-```plain
+```
 < ID 0C38 AAAADwAAAAAAAAA=
 < ID 5B6E AAAAEAAAAAAAAAA=
 ```
 
 Enfin on trouve des requêtes DNS en base32 de très longue taille :  
 
-```plain
+```
 > ID 169B aaaacjiaaaammaaaaz4jzdopjvv4eqaqy3yxwig74e4svrbyxnexyq54eqgxrm.auqwp---snip---q4c.vd6wykuiuti4a34bao3wlimtzh2pcu5wrdz4f6punu3skkcedlyk5x4nawlx-c8.badguy.com
 ```
 
@@ -510,7 +510,7 @@ if data:
 
 Cela génère des fichiers 0 à 10 dont voici le contenu :  
 
-```plain
+```
 mkdir c:\\windows\\a
 c:\windows\a
 @echo off 
@@ -550,7 +550,7 @@ Une recherche DDG sur le hash MD5 du fichier (070d15cd95c14784606ecaa88657551e) 
 
 Après l'envoi de l'exécutable d'autres flux sont envoyés :  
 
-```plain
+```
 dir
 rename 070d15cd95.dat a.exe
 rename 31c9a36cdb.dat 2.bat
@@ -587,7 +587,7 @@ data += body
 
 Le dump permet d'obtenir le résultat des commandes vues précédemment :  
 
-```plain
+```
 VICTIM
  SESSIONNAME       USERNAME                 ID  STATE   TYPE        DEVICE
  services                                    0  Disc
@@ -640,13 +640,13 @@ On trouve aussi les partages réseau, services et processus en cour parmi lesque
 
 Il y a aussi une connexion RDP établie avec la machine attaquante (10.0.0.103).  
 
-```plain
+```
   TCP    10.10.10.150:3389      10.0.0.103:52350       ESTABLISHED     1080
 ```
 
 Et dans les variables d'environnement on note ce qui est probablement le pseudo du pirate :  
 
-```plain
+```
 CLIENTNAME=ZERF-LAPTOP
 ```
 
@@ -654,7 +654,7 @@ A la fin de la capture on retrouve des requêtes DNS du même type mais avec une
 
 Et bingo ! Cette fois le dump nous sort une archive rar protégée par le mot de passe vu tout à l'heure qui contient deux fichiers :  
 
-```plain
+```
 Details: RAR 4, encrypted headers
 
  Attributes      Size    Date   Time   Name

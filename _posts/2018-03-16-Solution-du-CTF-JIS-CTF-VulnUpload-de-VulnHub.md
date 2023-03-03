@@ -12,7 +12,7 @@ Fast and furious
 
 Deux ports ouverts et de nombreux indices dans un *robots.txt* :  
 
-```plain
+```
 22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.1 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey:
 |   2048 af:b9:68:38:77:7c:40:f6:bf:98:09:ff:d9:5f:73:ec (RSA)
@@ -28,7 +28,7 @@ Deux ports ouverts et de nombreux indices dans un *robots.txt* :
 
 A l'adresse */admin\_area/* on trouve des identifiants pour la page de login (l'index du site en fait) :  
 
-```plain
+```
 <!--	username : admin
 	password : 3v1l_H@ck3r
 	The 2nd flag is : {7412574125871236547895214}
@@ -47,13 +47,13 @@ Python n'est pas présent sur le système mais perl y est. Avec [dc.pl](https://
 
 Dans */var/www/html* il y a un flag qu'on ne peut pas lire :  
 
-```plain
+```
 -rw-r----- 1 technawi technawi 132 Apr 21  2017 flag.txt
 ```
 
 Cet utilisateur a l'air intéressant, fouillons dans les pages du site :  
 
-```plain
+```
 $ grep -r technawi * 2> /dev/null
 hint.txt:try to find user technawi password to read the flag.txt file, you can find it in a hidden file ;)
 index.php:            <a class="tzine" href="http://www.technawi.net">Powered by : Technawi[dot]net</a>
@@ -65,7 +65,7 @@ dans ce même fichier *hint.txt* un autre flag :
 
 Toujours autour du même user :  
 
-```plain
+```
 $ find / -user technawi 2> /dev/null
 /etc/mysql/conf.d/credentials.txt
 /var/www/html/flag.txt
@@ -87,7 +87,7 @@ Ces identifiants permettent d'avoir un accès SSH :)
 
 On peut enfin accéder au flag qui nous restait :  
 
-```plain
+```
 The 5th flag is : {5473215946785213456975249}
 
 Good job :)

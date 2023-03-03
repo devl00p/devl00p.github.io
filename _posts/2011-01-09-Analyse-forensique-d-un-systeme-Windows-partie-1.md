@@ -104,7 +104,7 @@ Les ruches spécifiques aux utilisateurs sont les fichiers `NTUSER.DAT` se trouv
 
 La correspondance entre les ruches et l'arborescence du registre est la suivante :  
 
-```plain
+```
 Default : HKEY_USERS\.Default
 SAM : HKEY_LOCAL_MACHINE\SAM
 Security : HKEY_LOCAL_MACHINE\Security
@@ -115,7 +115,7 @@ NTUSER.DAT : KKEY_CURRENT_USER
 
 Avec la commande `perl regp.pl WINDOWS/system32/config/software` on affiche le contenu de `HKEY_LOCAL_MACHINE\Software` dans lequel on trouve :  
 
-```plain
+```
 \$$$PROTO.HIV\Microsoft\Windows NT\CurrentVersion
 LastWrite time: Fri Aug 27 15:08:22 2004
         --> CurrentBuild;REG_SZ;1.511.1 () (Obsolete data - do not use)^@
@@ -161,7 +161,7 @@ Pour savoir où fouiller dans la base de registres j'ai trouvé deux documents P
 
 On trouve l'information dans la ruche `system` :  
 
-```plain
+```
 \$$$PROTO.HIV\ControlSet001\Control\TimeZoneInformation
 LastWrite time: Thu Aug 19 17:20:02 2004
         --> Bias;REG_DWORD;360
@@ -186,7 +186,7 @@ Comme nous l'avons vu précédemment, dans `Software\Microsoft\Windows NT\Curren
 
 Réponse dans la ruche `system` :  
 
-```plain
+```
 \$$$PROTO.HIV\ControlSet001\Control\ComputerName\ComputerName
 LastWrite time: Thu Aug 19 22:20:03 2004
         --> ComputerName;REG_SZ;N-1A9ODN6ZXK4LQ^@
@@ -196,7 +196,7 @@ LastWrite time: Thu Aug 19 22:20:03 2004
 
 Le domaine Windows utilisé par défaut est mémorisé par `WinLogon` (ruche software) :  
 
-```plain
+```
 \$$$PROTO.HIV\Microsoft\Windows NT\CurrentVersion\Winlogon
 LastWrite time: Fri Aug 27 15:08:20 2004
         --> DefaultDomainName;REG_SZ;N-1A9ODN6ZXK4LQ^@
@@ -207,7 +207,7 @@ LastWrite time: Fri Aug 27 15:08:20 2004
 
 Toujours dans la base de registre Windows qui est une véritable mine d'information (ruche `system`):   
 
-```plain
+```
 \$$$PROTO.HIV\ControlSet001\Control\Windows
 LastWrite time: Fri Aug 27 15:46:33 2004
         --> Directory;REG_EXPAND_SZ;%SystemRoot%^@

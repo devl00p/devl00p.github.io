@@ -6,7 +6,7 @@ tags: [CTF, VulnHub]
 
 Je continue sur ma lignée des CTFs conçus par *foxlox* avec celui-ci : [Callme: 1 ~ VulnHub](https://www.vulnhub.com/entry/callme-1,615/)
 
-```plain
+```
 Nmap scan report for 192.168.56.46
 Host is up (0.00022s latency).
 Not shown: 65532 closed tcp ports (reset)

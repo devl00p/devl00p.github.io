@@ -8,7 +8,7 @@ Kyoto Frift
 
 Ça manque un peu d'originalité mais comme le précédent on va partir sur du Samba :  
 
-```plain
+```
 Nmap scan report for 192.168.56.7
 Host is up (0.00017s latency).
 Not shown: 65531 closed tcp ports (reset)
@@ -73,7 +73,7 @@ Quand on tente de décompresser le zip ce dernier réclame un mot de passe. On a
 
 Ça se casse bien :  
 
-```plain
+```
 $ ./john --wordlist=rockyou.txt  hash.txt 
 Using default input encoding: UTF-8
 Loaded 1 password hash (PKZIP [32/64])
@@ -114,7 +114,7 @@ Dokyo Trift
 
 Un utilisateur heisenberg est présent sur le système. Il possède notamment le premier flag (*6346c6d19751f1a3195f1e4b4b609544*) :  
 
-```plain
+```
 drwxr-xr-x 4 heisenberg heisenberg 4096 Oct  2  2020 .
 drwxr-xr-x 3 root       root       4096 Oct  2  2020 ..
 -rw-r--r-- 1 heisenberg heisenberg  220 Apr  4  2018 .bash_logout
@@ -128,7 +128,7 @@ drwx------ 3 heisenberg heisenberg 4096 Oct  2  2020 .gnupg
 
 Cette fois pas d'environnement Docker. *LinPEAS* remonte la faille sudo que j'ai mentionné sur d'autres CTFs :  
 
-```plain
+```
 [+] [CVE-2021-3156] sudo Baron Samedit
 
    Details: https://www.qualys.com/2021/01/26/cve-2021-3156/baron-samedit-heap-based-overflow-sudo.txt

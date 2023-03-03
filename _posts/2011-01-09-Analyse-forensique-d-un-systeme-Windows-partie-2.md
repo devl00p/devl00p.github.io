@@ -62,7 +62,7 @@ Cela s'ajoute à l'hypothèse qu'une seule personne utilise le portable.
 ## List the network cards used by this computer  
 Dans la ruche system, sous `\ControlSet001\Services\Tcpip\Parameters\Interfaces` on trouve les différentes interfaces réseau :  
 
-```plain
+```
 {6E4090C2-FAEF-489A-8575-505D21FC1049}
 {86FC0C96-3FF2-4D59-9ABA-C602F213B5D2}
 {F9356994-E82B-49FC-BFE9-59568F68F497}
@@ -81,7 +81,7 @@ C'est de loin la partie qui m'a posée le plus de problèmes. Windows ne semble 
 
 La carte ethernet est visiblement configuré pour avoir une adresse IP attribuée par DHCP :  
 
-```plain
+```
 \ControlSet001\Services\{6E4090C2-FAEF-489A-8575-505D21FC1049}\Parameters\Tcpip
 LastWrite time: Fri Aug 27 15:30:17 2004
         --> EnableDHCP;REG_DWORD;1
@@ -107,7 +107,7 @@ Dans le fichier `Program Files/Look@LAN/irunin.ini` on a des informations nous a
 
 La configuration de Ethereal (`Documents and Settings/Mr. Evil/Application Data/Ethereal/preferences`) nous informe que l'interface Wireless est plus souvent utilisée pour les attaques :  
 
-```plain
+```
 ####### Capture ########
 # Default capture device
 capture.device: ORINOCO PC Card (Microsoft's Packet Scheduler) : \Device\NPF_{86FC0C96-3FF2-4D59-9ABA-C602F213B5D2}
@@ -115,13 +115,13 @@ capture.device: ORINOCO PC Card (Microsoft's Packet Scheduler) : \Device\NPF_{86
 
 tout comme celles de Cain (`\Software\Cain\Settings`) :  
 
-```plain
+```
 Adapter;REG_SZ;\Device\NPF_{86FC0C96-3FF2-4D59-9ABA-C602F213B5D2}
 ```
 
 Une information précieuse est présente dans les *event logs* du système (fichiers `Evt`) :  
 
-```plain
+```
 Record nb : 11
 Time Generated : Thu Aug 19 22:50:32 2004 GMT
 Time Written : Thu Aug 19 22:52:02 2004 GMT
@@ -161,7 +161,7 @@ En fouillant dans les fichiers présents dans le cache d'Internet Explorer (cert
 
 Ces informations se situent dans la ruche `NTUSER.DAT` :  
 
-```plain
+```
 \$$$PROTO.HIV\Software\Microsoft\Windows\CurrentVersion\UnreadMail\whoknowsme@sbcglobal.net
 LastWrite time: Fri Aug 20 21:18:30 2004
         --> MessageCount;REG_DWORD;0

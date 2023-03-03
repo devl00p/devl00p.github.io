@@ -86,7 +86,7 @@ print radix64.r64decode(c)
 
 On obtient :  
 
-```plain
+```
 TGEgbW9kZSBlc3QgdW5lIGZvcm1lIGRlIGxhaWRldXIgc2kgaW50b2zDqXJhYmxl
 IHF1J2lsIGZhdXQgZW4gY2hhbmdlciB0b3VzIGxlcyBzaXggbW9pcy4KCS0rLSBP
 c2NhciBXaWxkZSAtKy0=

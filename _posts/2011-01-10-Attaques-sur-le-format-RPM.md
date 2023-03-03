@@ -182,7 +182,7 @@ Nous retrouvons facilement notre entrée dans le fichier RPM (267 = 0x10B) :
 
 On passe le 10B en 20B et on réessaye :  
 
-```plain
+```
 erreur: netcat-0.7.1-1.i386.rpm: Hachage de l'entête SHA1: BAD
 Expected(d7c18efe6738936c307e957412af73f644e343cc) != (e533a19829c98b3a42d1692aec1b2f5dee17fe32)
 erreur: netcat-0.7.1-1.i386.rpm ne peut être installé

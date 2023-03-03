@@ -16,7 +16,7 @@ L'objectif est de récupérer 5 flags chacun avec un nom d'arme d'Avenger (en fa
 Sceptre
 -------
 
-```plain
+```
 Nmap scan report for 192.168.56.17
 Host is up (0.00020s latency).
 Not shown: 65531 closed tcp ports (reset)
@@ -68,19 +68,19 @@ Je n'ai rien trouvé en explorant les différents messages de commit. En fait il
 
 Je lance Wapiti sur le port 80 et je remarque qu'il a trouvé via exploration un fichier *ravagers.html* à la racine du site qui vient le texte suivant :  
 
-```plain
+```
 61 67 65 6e 74 3a 61 76 65 6e 67 65 72 73
 ```
 
 C'est bien sûr de l'hexadécimal qui se traduit en  
 
-```plain
+```
 agent:avengers
 ```
 
 On verra plus tard quoi en faire. En attendant fouillons un peu plus ce serveur web.  
 
-```plain
+```
 $ feroxbuster -u http://192.168.56.17/ -w DirBuster-0.12/directory-list-2.3-big.txt -n
 
  ___  ___  __   __     __      __         __   ___
@@ -111,7 +111,7 @@ Le fichier est composé de whitespaces qui me font penser au langage de programm
 
 Sauf qu'ici une recherche sur *spammimic* nous amène à [ce script en ligne](https://www.spammimic.com/decodespace.cgi) qui décode le fichier en flag :  
 
-```plain
+```
 Scepter:{469F1394A349DCF8A742653CE093FA80}
 ```
 
@@ -152,7 +152,7 @@ L'étape obligé c'est l'obtention d'un hash avec *zip2john* puis on y passe la 
 
 J'ai donc utilisé *Cewl* pour générer une wordlist à partir de la page web du site :  
 
-```plain
+```
 docker run -it --rm -v "${PWD}:/host" cewl http://192.168.56.17/ > avengers.txt
 ```
 
@@ -168,7 +168,7 @@ La solution officielle consistait à collecter manuellement des infos sur la pag
 
 Le flag correspondant :  
 
-```plain
+```
 Mjølnir:{4A3232C59ECDA21AC71BEBE3B329BF36}
 ```
 
@@ -179,7 +179,7 @@ Au tour de Splunk maintenant !
 
 Un tour sur exploit-db remonte quelques trucs. Les codes ne sont pas toujours beaux à voir, il est sans doute préférable de regarder du côté de Metasploit.  
 
-```plain
+```
 
    #  Name                                       Disclosure Date  Rank       Check  Description
    -  ----                                       ---------------  ----       -----  -----------
@@ -197,7 +197,7 @@ C'est notemment expliqué en images... [sur le blog de l'auteur du CTF](https://
 
 Une fois un shell récupéré et un *LinPEAS* exécuté on voit quelques vulnérabilités sur le système :  
 
-```plain
+```
 ╔══════════╣ USBCreator
 ╚ https://book.hacktricks.xyz/linux-unix/privilege-escalation/d-bus-enumeration-and-command-injection-privilege-escalation
 Vulnerable!!
@@ -205,7 +205,7 @@ Vulnerable!!
 
 Ou encore la fameuse faille *Sudo Baron Samedit* mais il y a surtout un binaire setuid à un endroit inhabituel :  
 
-```plain
+```
 -rwsr-xr-x 1 root root 8.2K Sep 17  2019 /opt/ignite (Unknown SUID binary)
 ```
 
@@ -217,7 +217,7 @@ Le fichier texte a le contenu suivant :
 
 20 et 14, surement les coordonnées d'une cellule dans le tableur. Et effectivement en 20N je retrouve le flag :  
 
-```plain
+```
 Yaka Arrow:{74E57403424607145B9B77809DEB49D0}
 ```
 
@@ -226,7 +226,7 @@ Storm Breaker
 
  Au tour de ce binaire setuid qui fait exécuter *ifconfig* sans path absolu :  
 
-```plain
+```
 splunk@ubuntu:/tmp$ /opt/ignite 
 enp0s17: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 192.168.56.17  netmask 255.255.255.0  broadcast 192.168.56.255

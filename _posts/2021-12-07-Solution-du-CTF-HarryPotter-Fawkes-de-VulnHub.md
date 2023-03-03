@@ -10,7 +10,7 @@ pour la manche finale de cette série de CTF autour de la saga Harry Potter.
 
 [La VM](https://www.vulnhub.com/entry/harrypotter-fawkes,686/) de cet article est baptisé *Fawkes* (en français *Fumseck*, le phénix de *Dumbledore*) et contient 3 horcrux (flags) à trouver.  
 
-```plain
+```
 Nmap scan report for 192.168.56.3
 Host is up (0.00032s latency).
 Not shown: 65530 closed tcp ports (reset)
@@ -73,7 +73,7 @@ L'output Nmap retourne bien des informations. On a ainsi un serveur FTP permetta
 
 Il s'agit en fait d'un binaire pour Linux :  
 
-```plain
+```
 server_hogwarts: ELF 32-bit LSB executable, Intel 80386, version 1 (GNU/Linux), statically linked, BuildID[sha1]=1d09ce1a9929b282f26770218b8d247716869bd0, for GNU/Linux 3.2.0, not stripped
 ```
 
@@ -138,7 +138,7 @@ Par conséquent en utilisant un gadget de type *call eax* ou *jmp eax* je sauter
 
 [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) me trouve deux instructions courtes qui correspondent à mes besoins :  
 
-```plain
+```
 0x08049019 : call eax
 0x08054ad6 : jmp eax
 ```
@@ -245,13 +245,13 @@ Escape the container
 
 On remarque vite un fichier typique d'un environnement conteneurisé à la racine :  
 
-```plain
+```
 -rwxr-xr-x    1 root     root             0 Apr 24  2021 .dockerenv
 ```
 
 Il y a d'autres signes distinctifs comme cette adresse IP commençant par 172 :  
 
-```plain
+```
 4: eth0@if5:  mtu 1500 qdisc noqueue state UP 
  link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
  inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
@@ -260,13 +260,13 @@ Il y a d'autres signes distinctifs comme cette adresse IP commençant par 172 :
 
 Le nom d'hôte qui semble généré aléatoirement :  
 
-```plain
+```
 Linux 2b1599256ca6 4.19.0-16-amd64 #1 SMP Debian 4.19.181-1 (2021-03-19) x86_64 Linux
 ```
 
 et pour terminer le contenu de */etc/issue* :  
 
-```plain
+```
 Welcome to Alpine Linux 3.13
 Kernel \r on an \m (\l)
 ```
@@ -277,7 +277,7 @@ Ce dernier peut être utilisé pour accéder au compte via le port SSH 2222 ce q
 
 Passer root sur le conteneur est simple comme un *sudo su* :  
 
-```plain
+```
 
 2b1599256ca6:~$ sudo -l
 User harry may run the following commands on 2b1599256ca6:
@@ -311,13 +311,13 @@ fi
 
 Dans le dossier de *root* se trouve le premier horcrux :  
 
-```plain
+```
 horcrux_{NjogSGFSclkgUG90VGVyIGRFc1RyT3llZCBieSB2b2xEZU1vclQ=}
 ```
 
 Ainsi qu'une note :  
 
-```plain
+```
 Hello Admin!!
 
 We have found that someone is trying to login to our ftp server by mistake.
@@ -326,7 +326,7 @@ You are requested to analyze the traffic and figure out the user.
 
 Ecoutons donc ce qu'il se passe sur ce port 21 :  
 
-```plain
+```
 2b1599256ca6:~# tcpdump -X "tcp port 21"
 tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
 listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
@@ -359,7 +359,7 @@ listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
 
 Cette fois ces identifiants donnent accès au SSH sur le port 22 et il ne s'agit pas du container :  
 
-```plain
+```
 $ ip addr
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
@@ -387,7 +387,7 @@ $ ip addr
 
 On y récupère le second horcrux :  
 
-```plain
+```
 horcrux_{NzogTmFHaU5pIHRIZSBTbkFrZSBkZVN0cm9ZZWQgQnkgTmVWaWxsZSBMb25HYm9UVG9t}
 ```
 
@@ -414,7 +414,7 @@ En cherchant sur exploit-db on trouve deux vulnérabilités qui peuvent toucher 
 
 [La seconde](https://www.exploit-db.com/exploits/49521) baptisée *Baron Samedit* a différents exploits trouvés ici et là. Ceux de exploit-db n'ont mené nul part, le module de Metasploit a échoué aussi. Finalement [ce dernier](https://github.com/worawit/CVE-2021-3156) est passé comme une lettre à la poste :  
 
-```plain
+```
 $ python3 exploit_nss.py
 # id
 uid=0(root) gid=0(root) groups=0(root),1000(neville)

