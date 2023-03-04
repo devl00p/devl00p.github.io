@@ -40,7 +40,7 @@ Fonctionnement de ProtoScan
 
 Le rôle de `ProtoScan` est de déterminer quels sont les protocoles supportés par une machine distante. Pour cela, il va délibérément provoquer des erreurs qui lui permettront de recevoir les messages ICMP concernant les protocoles supportés.  
 
-ProtoScan va envoyer des paquets malformés. Ces paquets ne sont toutefois pas générés au hazard : ils s'arrêtent à l'entête IP (aucun protocole ne se trouve après).  
+`ProtoScan` va envoyer des paquets malformés. Ces paquets ne sont toutefois pas générés au hazard : ils s'arrêtent à l'entête IP (aucun protocole ne se trouve après).  
 
 Pour observer le comportement d'une machine face à ces paquets malformés, nous allons faire des tests avec [Hping](http://www.hping.org/), un logiciel qui permet de générer ses propres paquets (il faut être root).
 
@@ -81,7 +81,7 @@ Pour connaître tous les protocoles supportés par une machine distante il suffi
 
 Théoriquement cela fait 256 possibilités. En pratique il n'y a que 136 protocoles reconnus pour l'instant (Les protocoles et leur numéro sont définis dans le fichier `/etc/protocols` sur un système Linux).  
 
-ProtoScan se charge de tester toutes les possibilités et affiche les résultats dans un format compréhensible. Pour utiliser correctement `Protoscan` il suffit de passer l'adresse de la machine en argument :
+`ProtoScan` se charge de tester toutes les possibilités et affiche les résultats dans un format compréhensible. Pour utiliser correctement `Protoscan` il suffit de passer l'adresse de la machine en argument :
 
 ```console
 # ./protoscan 127.0.0.1

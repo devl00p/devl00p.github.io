@@ -76,13 +76,13 @@ Avec Ngrok
 
 [Ngrok](https://ngrok.com/) se présente comme un *"tunnel sécurisé vers localhost"*.  
 
-Un peu comme les deux solutions que l'on a vu précédemment, Ngrok offre un point de rendez-vous entre la cible et son attaquant.  
+Un peu comme les deux solutions que l'on a vues précédemment, Ngrok offre un point de rendez-vous entre la cible et son attaquant.  
 
-On peut utiliser Ngrok pour rendre accessible un service derrière un NAT. Dans ce cas Ngrok va créer soit un sous domaine de ngrok.io (pour les tunnels HTTP et HTTPS) qui redirigera les requêtes vers votre service local, soit ouvrir un port sur *x*.tcp.ngrok.io (*x* étant un entier commençant à 0) qui redirigera les paquets vers votre service local.  
+On peut utiliser Ngrok pour rendre accessible un service derrière un NAT. Dans ce cas Ngrok va créer soit un sous domaine de ngrok.io (pour les tunnels HTTP et HTTPS) qui redirigera les requêtes vers votre service local, soit ouvrir un port sur `x.tcp.ngrok.io` (`x` étant un entier commençant à 0) qui redirigera les paquets vers votre service local.  
 
-La création d'un tunnel se fait via une connexion sur le port 443 de tunnel.us.ngrok.com (le serveur dépend probablement de la région que vous sélectionnez).  
+La création d'un tunnel se fait via une connexion sur le port 443 de `tunnel.us.ngrok.com` (le serveur dépend probablement de la région que vous sélectionnez).  
 
-Quand quelqu'un se connecte au sous domaine ou au port sur x.tcp.ngrok.io, les données sont retransmises sur le tunnel qui a été préalablement établit.  
+Quand quelqu'un se connecte au sous domaine ou au port sur `x.tcp.ngrok.io`, les données sont retransmises sur le tunnel qui a été préalablement établit.  
 
 On peut donc utiliser Ngrok dans deux configurations :  
 
@@ -202,7 +202,7 @@ D'après mes tests si on tente de faire passer un Meterpreter http via le tunnel
 
 Retranchons-nous maintenant vers les tunnels TCP.  
 
-Il suffit de remplacer *http* par *tcp* dans la commande : *./ngrok tcp 7777*  
+Il suffit de remplacer `http` par `tcp` dans la commande : `./ngrok tcp 7777`  
 
 Cette fois il y a des étapes supplémentaires :  
 
@@ -223,7 +223,7 @@ Il faut donc se rendre sur la page *https://ngrok.com/signup* et créer un compt
 Les bons points :  
 
 * On peut accéder au site via Tor, VPN, etc
-* On a une adresse email à saisir mais aucune vérification n'est faite (l'adresse mail peut ne pas exister)
+* On a une adresse email à saisir, mais aucune vérification n'est faite (l'adresse mail peut ne pas exister).
 * Pas de captcha
 * On peut avoir des informations de statut sur le tunnel via le site
 
@@ -298,6 +298,5 @@ Cette API permet d'avoir un état des tunnels, des statistiques, etc. On peut d�
 ```yaml
 web_addr: false
 ```
-
 
 *Published July 22 2017 at 15:16*

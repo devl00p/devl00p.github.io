@@ -320,11 +320,11 @@ puis il a protégé par mot de passe en utilisant la commande `zipcloak`
 zipcloak archive.zip
 ```
 
-J'ai donc fouillé dans la mémoire en cherchant l'image de ces processus mais je n'ai vu aucun mot de passe autour des commandes `zip` ou `zipcloak`.  
+J'ai donc fouillé dans la mémoire en cherchant l'image de ces processus, mais je n'ai vu aucun mot de passe autour des commandes `zip` ou `zipcloak`.  
 
-Comme on n'est jamais mieux servi que par soit même (en tout cas dans mon cas sous Linux), j'ai tenté de casser le mot de passe en utilisant [lzcrack](http://devloop.lyua.org/releases/lzcrack-1.0.tar.gz), un casseur de pass d'archives zip que j'ai développé il y a un certain temps, mais je n'ai obtenu aucun résultat.  
+Comme on n'est jamais mieux servi que par soit même (en tout cas dans mon cas sous Linux), j'ai tenté de casser le mot de passe en utilisant [lzcrack]({% link _posts/2010-09-05-Quelques-utilitaires.md %}), un casseur de pass d'archives zip que j'ai développé il y a un certain temps, mais je n'ai obtenu aucun résultat.  
 
-J'ai aussi tenté de trouver les fichiers en clair (avant compression) dans l'image de la mémoire mais aucun document xls ni aucun traffic TCP ni étaient présents.  
+J'ai aussi tenté de trouver les fichiers en clair (avant compression) dans l'image de la mémoire, mais aucun document xls ni aucun traffic TCP ni étaient présents.  
 
 ## Got r00t ?  
 
