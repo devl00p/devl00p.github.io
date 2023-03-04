@@ -757,7 +757,7 @@ COMMIT
 
 So what ? Nothing ! Notice too that netstat was removed, netcat is not installed and of course nmap neither :'(  
 
-So I used [my own port scanning script in Python](http://devloop.users.sourceforge.net/index.php?article2/dvscan-python-port-scanner) I use twice in a year (you have to edit the script to add the 1337 port a the list) :  
+So I used [my own port scanning script in Python]({% link _posts/2011-01-04-dvscan.py-Un-scanneur-de-port-en-Python.md %}) I use twice in a year (you have to edit the script to add the 1337 port a the list) :  
 
 ```bash
 jack@hell:/tmp$ python dvscan.py 127.0.0.1

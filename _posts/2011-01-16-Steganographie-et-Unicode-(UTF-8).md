@@ -158,7 +158,7 @@ Les caractères où la différence n'est pas visible (avec la bonne police) sont
 
 [utf8hide.py](/assets/data/utf8hide.py) permet comme son nom l'indique de cacher des données dans un texte.  
 
-Il demande deux arguments : le fichier dont il faut cacher le contenu et un fichier texte **au format ISO-8859-1 au ASCII**. Un troisième argument (*"html"*) peut être passé si on souhaite ensuite injecter le résultat dans une page web.  
+Il demande deux arguments : le fichier dont il faut cacher le contenu et un fichier texte **au format ISO-8859-1 ou ASCII**. Un troisième argument (*"html"*) peut être passé si on souhaite ensuite injecter le résultat dans une page web.  
 
 J'ai repris l'idée de l'implémentation PHP qui propose d'utiliser seulement 5 bits pour coder un caractère à cacher en la poussant plus loin et sans les limitations.  
 

@@ -292,7 +292,7 @@ Il y a aussi deux emails, l'un pour indiquer que l'entreprise est passée à *Op
 
 Les indices sont donc assez explicites et on va devoir envoyer un document ODT piégé à l'un des utilisateurs afin d'obtenir un shell.  
 
-La première chose que j'ai essayé c'est l'inclusion de référence à des documents distants dans le document. C'est la même technique qui peut servir [à désanonymiser des utilisateurs de Tor](http://devloop.users.sourceforge.net/index.php?article131/les-questions-cons-du-hacking-comment-desanonymiser-un-utilisateur-de-tor).  
+La première chose que j'ai essayé c'est l'inclusion de référence à des documents distants dans le document. C'est la même technique qui peut servir [à désanonymiser des utilisateurs de Tor]({% link _posts/2017-08-31-Les-Questions-Cons-du-Hacking-Comment-desanonymiser-un-utilisateur-de-Tor.md %}).  
 
 Pour cela on crée d'abord un fichier HTML :  
 

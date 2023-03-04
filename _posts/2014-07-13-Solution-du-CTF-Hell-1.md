@@ -752,7 +752,7 @@ COMMIT
 
 Ça semble plutôt limité pour le moment... On remarque aussi que netstat a été retiré, netcat n'est pas présent et nmap encore moins :'(  
 
-J'ai eu recours à [mon script Python de scan de port](http://devloop.users.sourceforge.net/index.php?article2/dvscan-python-port-scanner) que j'utilise deux fois l'an :  
+J'ai eu recours à [mon script Python de scan de port]({% link _posts/2011-01-04-dvscan.py-Un-scanneur-de-port-en-Python.md %}) que j'utilise deux fois l'an :  
 
 ```bash
 jack@hell:/tmp$ python dvscan.py 127.0.0.1
