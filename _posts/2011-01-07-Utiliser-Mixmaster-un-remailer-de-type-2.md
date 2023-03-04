@@ -1,6 +1,6 @@
 ---
 title: "Utiliser Mixmaster : un remailer de type 2"
-tags: [Cryptographie]
+tags: [Cryptographie, Vie privée et anonymat]
 ---
 
 Il existe différentes façons de protéger sa vie privée et/ou son anonymat sur Internet.  
@@ -97,11 +97,11 @@ Une fois revenu au menu principal, tapez `P` pour poster un message sur Usenet e
 
 Pour éditer le corps du message, tapez `E`. Mixmaster lance alors Vi. À vous de modifier le fichier et de l'enregistrer en quittant. Vous pouvez aussi sélectionner le chemin à faire emprunter à vos messages (touche `C`). Prenez de préférence ceux qui ont un bon pourcentage. Par défaut Mixmaster prend un chemin aléatoire, mais généralement de bonne qualité.  
 
-![](/assets/img/mix4.jpg)  
+![Mixmaster usage](/assets/img/mix4.jpg)  
 
-![](/assets/img/mix5.jpg)
+![Mixmaster usage](/assets/img/mix5.jpg)
 
-![](/assets/img/mix6.jpg)  
+![Mixmaster usage](/assets/img/mix6.jpg)  
 
 Validez votre message en appuyant sur M. Vous vous retrouvez au menu principal. Appuyez sur `S` pour envoyer les messages.  
 
@@ -112,7 +112,7 @@ En théorie votre message sera accessible sur Usenet dans quelque temps (passez 
 Je dis bien *"en théorie"* car Mixmaster est loin d'être performant. Sur plus de 25 messages que j'ai envoyés lors d'un test (en utilisant différentes nodes), seul les messages 3, 5, 8, 14, 18, 20 et 22 ont effectivement été postés soit environ 75% de pertes.  
 Le message 3 a mis plus d'une heure à arriver à destination. Le premier arrivé est le 14 :  
 
-![](/assets/img/mix7.jpg)
+![Email sent through Mixmaster](/assets/img/mix7.jpg)
 
 La source du message est la suivante :  
 

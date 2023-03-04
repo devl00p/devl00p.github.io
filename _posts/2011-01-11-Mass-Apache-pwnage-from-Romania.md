@@ -57,7 +57,7 @@ Là encore, le visiteur ne fera pas de vieux os. Il a toutefois tenté de rappat
 
 ## scan.tar
 
-Contrairement à ce que l'extension du fichier laissait supposer, le fichier est bien compressé à l'aide de gzip. Une fois décompressé, l'analyse de l'archive `scan.tar` ne nous apprend rien de particulier (voir mon article sur [l'analyse de fichiers tar](http://devloop.users.sourceforge.net/index.php?article24/tarhison)). L'archive est au format `ustar` mais les noms d'user/group sont vides. Ce qui ne nous aurait pas appris grand-chose de toute façon car l'archive semble avoir été créée en tant que root. Par contre, on connait les dates de dernière modification des fichiers contenues dans l'archive sur le système du pirate.  
+Contrairement à ce que l'extension du fichier laissait supposer, le fichier est bien compressé à l'aide de gzip. Une fois décompressé, l'analyse de l'archive `scan.tar` ne nous apprend rien de particulier (voir mon article sur [l'analyse de fichiers tar]({% link _posts/2011-01-08-Tarhison.md %})). L'archive est au format `ustar` mais les noms d'user/group sont vides. Ce qui ne nous aurait pas appris grand-chose de toute façon car l'archive semble avoir été créée en tant que root. Par contre, on connait les dates de dernière modification des fichiers contenues dans l'archive sur le système du pirate.  
 
 Les fichiers présents dans l'archive sont les suivants :  
 
