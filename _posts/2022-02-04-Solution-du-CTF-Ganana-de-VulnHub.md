@@ -8,7 +8,7 @@ Onboarding
 
 [Ganana](https://www.vulnhub.com/entry/ganana-1,497/), conçu par [Jeevana Chandra](https://jeevanachandra.github.io/) est un CTF de type boot2root téléchargeable sur VulnHub.  
 
-```
+```console
 $ sudo nmap -sCV -p- -T5 192.168.56.21 
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.21 
@@ -52,7 +52,7 @@ PORT     STATE  SERVICE  VERSION
 
 Le port 443 semble identique au port 80 donc on oublie aussitôt. Le port SSH est quand à lui fermé ce qui nous compliquera éventuellement la tache. Pour finir un serveur FTP écoute sur le port 6777 et autorise les connexions anonymes.  
 
-```
+```console
 $ ftp 192.168.56.21 -P 6777 
 Connected to 192.168.56.21. 
 220 (vsFTPd 3.0.3) 
@@ -101,7 +101,7 @@ On ne peut pas déposer de fichiers sur le serveur et le fichier obtenu ne nous 
 
 Faute de mieux c'est parti pour une énumération :  
 
-```
+```console
 $ feroxbuster -u http://192.168.56.21/ -w /tools/fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-directories.txt  -n
 
  ___  ___  __   __     __      __         __   ___
@@ -188,7 +188,7 @@ Soit le texte suivant décodé en base64 : *@lways-@-Sup3r-Secur3-p@SSw0Rd!!*
 
 J'ai mis le peu d'utilisateurs et mots de passe à ma disposition dans des fichiers et lancé Hydra pour voir s'ils étaient utiles. Il y a déjà un mot de passe réutilisé :  
 
-```
+```console
 $ hydra -L users.txt -P pass.txt ftp://192.168.56.21:6777 
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway). 
 
@@ -233,9 +233,9 @@ On peut utiliser ces identifiants pour accéder à la base de données car, comm
 
 C'est dans la table *wp-users* que je trouve un autre utilisateur pour le Wordpress : *charleywalker*. Aucun doute qu'il s'agisse de l'administrateur.  
 
-Son hash, bien que simple MD5 de type Unix (*$1$*) ne semble pas tomber même avec la wordlist *hashesorg2019* de Penglab.  
+Son hash, bien que simple MD5 de type Unix (`$1$`) ne semble pas tomber même avec la wordlist *hashesorg2019* de Penglab.  
 
-J'ai donc écrasé son hash par celui de *jarretlee* ce qui me permet de me connecter sur l'interface admin avec le mot de passe *NoBrUtEfOrCe\_\_R3Qu1R3d\_\_*.  
+J'ai donc écrasé son hash par celui de *jarretlee* ce qui me permet de me connecter sur l'interface admin avec le mot de passe `NoBrUtEfOrCe__R3Qu1R3d__`.  
 
 La suite est classique, *Appearance* puis *Theme Editor* qui permet d'éditer un des fichiers PHP et de finalement obtenir notre exécution de commande.  
 
@@ -249,9 +249,9 @@ jarretlee:x:1000:1000:,,,:/home/jarretlee:/bin/bash
 
 On dispose justement du mot de passe de l'utilisateur *jeevan* (*hannahmontana*). On peut changer d'utilisateur via la commande *su*.  
 
-Cette utilisateur est membre du groupe Docker. On va créer un container en indiquant que l'on veut monter le disque de la machine. L'accès root obtenu dans le container nous permettra d'accéder au système de fichier de l'hôte.  
+Cet utilisateur est membre du groupe Docker. On va créer un container en indiquant que l'on veut monter le disque de la machine. L'accès root obtenu dans le container nous permettra d'accéder au système de fichier de l'hôte.  
 
-```
+```console
 jeevan@debian:/$ docker images  
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE 
 bash                latest              0980cb958276        20 months ago       13.1MB 
@@ -293,7 +293,7 @@ root    ALL=(ALL:ALL) ALL
 
 Avec cette ligne ajoutée au fichier *sudoers* je peux obtenir un shell root :  
 
-```
+```console
 jeevan@debian:/$ sudo su 
 [sudo] password for jeevan:  
 root@debian:/# id 

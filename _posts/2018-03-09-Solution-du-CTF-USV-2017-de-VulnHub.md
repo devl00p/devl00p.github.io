@@ -5,7 +5,7 @@ tags: [CTF, VulnHub]
 
 Ce CTF [disponible sur VulnHub](https://www.vulnhub.com/entry/usv-2017,219/) a été initialement créé par l'*Université de Suceava* (Roumanie) et la société *Safetech Innovations*.  
 
-Le challenge était destiné à des étudiants. Même s'il n'était pas d'un grand niveau technique il était sympa à faire avec la recherche de 5 flags différents portant des noms de pays.  
+Le challenge était destiné à des étudiants. Même s'il n'était pas d'un grand niveau technique, il était sympa à faire avec la recherche de 5 flags différents portant des noms de pays.  
 
 Italie
 ------
@@ -82,11 +82,11 @@ Network Distance: 1 hop
 Service Info: Host: localhost; OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-Les points qui sautent au yeux sont la présence d'au moins deux ports web et la présence de services XMPP.  
+Les points qui sautent aux yeux sont la présence d'au moins deux ports web et la présence de services XMPP.  
 
-Quand on se rend sur le port 80 on est rapidement mis dans le thème du challenge à savoir l'utilisation des [Minions](https://fr.wikipedia.org/wiki/Les_Minions) qui nous demandent de libérer l'un des leurs.  
+Quand on se rend sur le port 80 on est rapidement mis dans le thème du challenge, à savoir l'utilisation des [Minions](https://fr.wikipedia.org/wiki/Les_Minions) qui nous demandent de libérer l'un des leurs.  
 
-Un dirbuster plus tard on trouve le dossier */admin2/* qui demande un mot de passe.  
+Un dirbuster plus tard on trouve le dossier `/admin2/` qui demande un mot de passe.  
 
 Derrière ce formulaire se cache le code Javascript suivant :  
 
@@ -138,13 +138,14 @@ function validate() {
 }
 ```
 
-On comprend vite que si on veut obtenir le flag de l'Italie il faut que la variable *\_0xb252x4* vaille 1079950212331060.  
+On comprend vite que si on veut obtenir le flag de l'Italie il faut que la variable `_0xb252x4` vaille `1079950212331060`.  
 
-On serait tenté de se dire qu'il suffit de faire le calculer l'inverse à savoir (1079950212331060 / 1988) + 234562221224 - 4469 pour le rentrer dans le formulaire et obtenir le flag.  
+On serait tenté de se dire qu'il suffit de faire le calculer l'inverse à savoir `(1079950212331060 / 1988) + 234562221224 - 4469` pour le rentrer dans le formulaire et obtenir le flag.  
 
-Sauf que la première addition réalisée est en réalité une concaténation. Du coup au lieu de saisir ce que l'on pensait d'abord être 777796730000 il faut rentrer 77779673 ce qui nous donne le flag suivant :  
+Sauf que la première addition réalisée est en réalité une concaténation. Du coup au lieu de saisir ce que l'on pensait d'abord être `777796730000` il faut rentrer `77779673` ce qui nous donne le flag suivant :  
 
 **Italy:46202df2ae6c46db8efc0af148370a78**
+
 Croatie
 -------
 
@@ -157,19 +158,19 @@ https://192.168.2.2:15020/vault/
 
 La première adresse parle d'elle-même, la seconde est une arborescence bien chargée où chaque dossier a un nombre important de sous dossiers.  
 
-J'ai décidé de me concentrer d'abord sur le blog. Ce dernier a des liens cassés mais globalement le format d'URL pour les articles est le suivant :  
+J'ai décidé de me concentrer d'abord sur le blog. Ce dernier a des liens cassés, mais globalement le format d'URL pour les articles est le suivant :  
 
 ```
 https://192.168.2.2:15020/blog/post.php?id=3
 ```
 
-En particulier ici on tombe sur le journal de *Kevin*. En commentaire de l'article on peut lire *I keep a flag.txt in my house* et commenté dans le code HTML se trouve une référence à *download.php*.  
+En particulier ici on tombe sur le journal de *Kevin*. En commentaire de l'article on peut lire *I keep a flag.txt in my house* et commenté dans le code HTML se trouve une référence à `download.php`.  
 
-Le script *download.php* nous retourne l'erreur *'image' parameter is empty. Please provide file path in 'image' parameter*.  
+Le script `download.php` nous retourne l'erreur *'image' parameter is empty. Please provide file path in 'image' parameter*.  
 
-Si on passe la variable *image* en paramètre, même résultat. Il faut donc envoyer le paramètre par POST (en gros via formulaire pour les non-initiés).  
+Si on passe la variable `image` en paramètre, même résultat. Il faut donc envoyer le paramètre par POST (en gros via formulaire pour les non-initiés).  
 
-Avec la commande suivante on peut donc récupérer le flag présent dans le dossier personnel de Kevin :  
+Avec la commande suivante, on peut donc récupérer le flag présent dans le dossier personnel de Kevin :  
 
 ```bash
 curl -X POST https://192.168.2.2:15020/blog/download.php --data "image=/home/kevin/flag.txt" -k
@@ -177,7 +178,7 @@ curl -X POST https://192.168.2.2:15020/blog/download.php --data "image=/home/kev
 
 **Croatia: e4d49769b40647eddda2fe3041b9564c**  
 
-J'en profite pour récupérer le fichier /etc/passwd dont voici un extrait :  
+J'en profite pour récupérer le fichier `/etc/passwd` dont voici un extrait :  
 
 ```
 teo:x:1000:1000:teo,,,:/home/teo:/bin/bash
@@ -188,7 +189,7 @@ oana:x:1002:1002::/home/oana:
 
 En dehors de kevin les deux autres utilisateurs n'ont pas de shell définit. On a aussi un path pour le serveur jabber au cas où.  
 
-Et on remarque via */etc/group* que *teo* est le seul utilisateur intéressant :  
+Et on remarque via `/etc/group` que *teo* est le seul utilisateur intéressant :  
 
 ```
 cdrom:x:24:teo
@@ -208,7 +209,7 @@ J'ai décidé de fouiller du côté de la configuration *Apache*. Au lieu d'écr
 
 Dans *ZAP* on fait un click-droit sur la requête puis *Attaquer* puis *Générer du bruit*. On sélectionne ensuite la valeur bidon de la requête initiale et on la définie comme zone de fuzzing.  
 
-Il faut ensuite sélectionner un dictionnaire contenant des paths de fichiers intéressants (j'en ai un perso mais ça peut se trouver sur le web).  
+Il faut ensuite sélectionner un dictionnaire contenant des paths de fichiers intéressants (j'en ai un perso, mais ça peut se trouver sur le web).  
 
 ![ZAP generate noise location](/assets/img/ctf2017_zap_brute.png)
 
@@ -216,11 +217,11 @@ Quand le fuzz a fini on fait un simple tri sur la taille des pages retournées c
 
 ![ZAP fuzzing results](/assets/img/ctf2017_dir_traversal_zap.png)
 
-On en déduit facilement le chemin (heureusement celui par défaut) pour le sites-enabled : */etc/apache2/sites-enabled/000-default.conf* contenant le *DocumentRoot* (*/var/www/html*).  
+On en déduit facilement le chemin (heureusement celui par défaut) pour le sites-enabled : `/etc/apache2/sites-enabled/000-default.conf` contenant le `DocumentRoot` (`/var/www/html`).  
 
-Pas mal mais ce qui nous intéresse c'est surtout la configuration pour la partie SSL du site qui nous permettrait de fouiller par exemple dans le fichier */blog/admin/login.php*.  
+Pas mal, mais ce qui nous intéresse, c'est surtout la configuration pour la partie SSL du site qui nous permettrait de fouiller par exemple dans le fichier `/blog/admin/login.php`.  
 
-A la mano et après quelques essais rapides je trouve le bon chemin : */etc/apache2/sites-enabled/default-ssl.conf*. Ce fichier a quelques infos comme :  
+À la mano et après quelques essais rapides, je trouve le bon chemin : `/etc/apache2/sites-enabled/default-ssl.conf`. Ce fichier a quelques infos comme :  
 
 ```
 DocumentRoot /var/www/ssl
@@ -228,13 +229,13 @@ SSLCertificateFile /etc/ssl/localcerts/apache.pem
 SSLCertificateKeyFile /etc/ssl/localcerts/apache.key
 ```
 
-J'en profite pour lire le contenu du code PHP pour le blog et dans le fichier */var/www/ssl/blog/admin/index.php* je trouve un autre flag :  
+J'en profite pour lire le contenu du code PHP pour le blog et dans le fichier `/var/www/ssl/blog/admin/index.php` je trouve un autre flag :  
 
 **Philippines: 551d3350f100afc6fac0e4b48d44d380**  
 
-Il s'avère à posteriori que je n'étais pas sensé trouver ce flag comme ça... encore un *Kansas City Shuffle* involontaire :p   
+Il s'avère a posteriori que je n'étais pas censé trouver ce flag comme ça... encore un *Kansas City Shuffle* involontaire :p   
 
-Le fichier */var/www/ssl/blog/classes/db.php* est celui qui contient les identifiants SQL :  
+Le fichier `/var/www/ssl/blog/classes/db.php` est celui qui contient les identifiants SQL :  
 
 ```php
 <?php
@@ -245,7 +246,7 @@ Le fichier */var/www/ssl/blog/classes/db.php* est celui qui contient les identif
 ?>
 ```
 
-Mais de tous ceux que j'ai dumpé, le plus prometteur était */var/www/ssl/blog/admin/edit.php* :  
+Mais de tous ceux que j'ai dumpé, le plus prometteur était `/var/www/ssl/blog/admin/edit.php` :  
 
 ```php
 <?php                                                                                                                                                                                                                                         
@@ -282,7 +283,7 @@ $post = Post::find($sql);
 ?>
 ```
 
-avec la fonction *find()* utilisée :  
+avec la fonction `find()` utilisée :  
 
 ```php
 function find($id) {
@@ -295,7 +296,7 @@ function find($id) {
 }
 ```
 
-On a ici une faille SQL protégée à la va vite par le retrait de certains mots clés. Le truc c'est qu'on ne peut pas accéder directement au script car *classes/auth.php* nous bloque l'accès en vérifiant l'authentification :  
+On a ici une faille SQL protégée à la va vite par le retrait de certains mots clés. Le truc, c'est qu'on ne peut pas accéder directement au script, car `classes/auth.php` nous bloque l'accès en vérifiant l'authentification :  
 
 ```php
 <?php
@@ -329,9 +330,9 @@ On a ici une faille SQL protégée à la va vite par le retrait de certains mots
 
 Evidemment les identifiants vus plus tôt ne permettent pas l'accès à la section admin... et la présence du captcha *Securimage* rend compliqué le brute force des identifiants... mais pas impossible.  
 
-Je m'explique : on a accès aux fichiers du serveurs avec les droits d'Apache. Les données liés au cookies sont stockées au format JSON sur le serveur du coup si *Securimage* stocke la valeur attendue d'un captcha dans un cookie on peut la retrouver dans le bon fichier de session.  
+Je m'explique : on a accès aux fichiers du serveur avec les droits d'Apache. Les données liées au cookies sont stockées au format JSON sur le serveur du coup si *Securimage* stocke la valeur attendue d'un captcha dans un cookie, on peut la retrouver dans le bon fichier de session.  
 
-Il nous faut d'abord retrouver le chemin des sessions PHP défini dans le fichier de configuration... à retrouver aussi, ce qui n'est pas bien difficile quand on sait à quel distrib on a à faire : */etc/php/7.0/apache2/php.ini*.  
+Il nous faut d'abord retrouver le chemin des sessions PHP défini dans le fichier de configuration... à retrouver aussi, ce qui n'est pas bien difficile quand on sait à quel distrib on a affaire : `/etc/php/7.0/apache2/php.ini`.  
 
 Les lignes qui nous intéressent le plus :  
 
@@ -341,17 +342,17 @@ allow_url_include = Off
 ;session.save_path = "/var/lib/php/sessions"
 ```
 
-Certes le chemin est commenté mais c'est celui par défaut. Je vois avec *EditMyCookie* que mon identifiant de session PHPSESSID est *mvmt1duldlu7fvrs5jm38hpel0*. Dès lors je dumpe le contenu du fichier */var/lib/php/sessions/sess\_mvmt1duldlu7fvrs5jm38hpel0* :  
+Certes le chemin est commenté, mais c'est celui par défaut. Je vois avec *EditMyCookie* que mon identifiant de session `PHPSESSID` est `mvmt1duldlu7fvrs5jm38hpel0`. Dès lors je dumpe le contenu du fichier `/var/lib/php/sessions/sess\_mvmt1duldlu7fvrs5jm38hpel0` :  
 
 ```
 securimage_code_disp|a:1:{s:7:"default";s:6:"reDMGY";}securimage_code_value|a:1:{s:7:"default";s:6:"redmgy";}securimage_code_ctime|a:1:{s:7:"default";i:1519726037;}securimage_code_audio|a:1:{s:7:"default";N;}
 ```
 
-Bingo ! Je retrouve bien le code attendu par le *Securimage* (reDMGY) donc je pourrais brute-forcer le formulaire de login moyennant une requête intermédiaire...  
+Bingo ! Je retrouve bien le code attendu par le *Securimage* (`reDMGY`) donc je pourrais brute-forcer le formulaire de login moyennant une requête intermédiaire...  
 
-Mais avant de faire un second *Kansas City Shuffle* :'D je préfère voir ailleurs si il n'y a pas un autre moyen d'accéder à cette section admin.  
+Mais avant de faire un second *Kansas City Shuffle* :'D je préfère voir ailleurs s'il n'y a pas un autre moyen d'accéder à cette section admin.  
 
-Au pire je perd un peu de temps et l'article s'enrichit de cette approche originale :)  
+Au pire je perds un peu de temps et l'article s'enrichit de cette approche originale :)  
 
 Laos
 ----
@@ -375,7 +376,7 @@ Ce qui nous amène deux fichiers :
 ./192.168.2.2:15020/vault/Door223/Vault1/rockyou.zip
 ```
 
-Ouvert avec Wireshark le fichier cap est une capture d'un trafic 802.11 (wifi) quand à rockyou c'est la wordlist bien connue... Il faut donc lancer *aircrack-ng* à l'aide de ces deux fichiers :  
+Ouvert avec Wireshark le fichier cap est une capture d'un trafic 802.11 (wifi) quant à rockyou c'est la wordlist bien connue... Il faut donc lancer `aircrack-ng` à l'aide de ces deux fichiers :  
 
 ```bash
 aircrack-ng -w rockyou.txt ctf.cap
@@ -403,17 +404,17 @@ Et ça tombe :
 
 Avec le password WPA ainsi obtenu je m'attendais à trouver quelque chose d'utile dans le trafic [déchiffré](https://wiki.wireshark.org/HowToDecrypt802.11)... mais rien à voir.  
 
-Et là les identifiants *admin* / *minion.666* permettent l'accès à l'administration du blog :p   
+Et là les identifiants `admin` / `minion.666` permettent l'accès à l'administration du blog :p   
 
-C'était donc à ce moment là que j'aurais du obtenir le flag des *Philippines*.  
+C'était donc à ce moment-là que j'aurais dû obtenir le flag des *Philippines*.  
 
-Le substitution en place pour la protection SQL est plutôt facile à passer. Ainsi si on place deux espaces entre *union* et *select* ça passe :  
+La substitution en place pour la protection SQL est plutôt facile à passer. Ainsi si on place deux espaces entre `union` et `select` ça passe :  
 
 ```
 /blog/admin/edit.php?id=10%20union%20%20select%201,2,user(),3;
 ```
 
-L'utilisateur MySQL courant est *mini@localhost* et la base *blog* mais on le sait déjà. Il faut fouiller dans la classe PHP *User* pour savoir où fouiller :  
+L'utilisateur MySQL courant est `mini@localhost` et la base `blog` mais on le sait déjà. Il faut fouiller dans la classe PHP *User* pour savoir où fouiller :  
 
 ```php
 <?php
@@ -441,7 +442,7 @@ class User {
 ?>
 ```
 
-On part alors sur l'injection *union select 1,login,password,3 from users where id=1* pour obtenir le premier utilisateur du blog puis on incrémente :  
+On part alors sur l'injection `union select 1,login,password,3 from users where id=1` pour obtenir le premier utilisateur du blog puis on incrémente :  
 
 admin / 8ae100f50c9bbcfeb2ab87b72a03273d  
 
@@ -449,7 +450,7 @@ admin / 8ae100f50c9bbcfeb2ab87b72a03273d
 
 Gotcha !  
 
-On aura pu se servir de sqlmap pour dumper le contenu des bases mais écrire un tamper script pour si peu... bof.
+On aura pu se servir de sqlmap pour dumper le contenu des bases, mais écrire un tamper script pour si peu... bof.
 
 France
 ------

