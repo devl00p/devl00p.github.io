@@ -201,7 +201,7 @@ sammy:$5$Ebkn8jlK$i6SSPa0.u7Gd.0oJOT4T421N2OvsfXqAT1vCoYUOigB:6445::::::
 sunny:$5$iRMbpnBv$Zh7s6D7ColnogCdiVE5Flz9vCZOMkUFxklRhhaShxv3:17636::::::
 ```
 
-Si on cherche des mentions de l'utilisateur *sammy* sur le système on en trouve dans le fichier */var/sadm/system/logs/install\_log* :  
+Si on cherche des mentions de l'utilisateur *sammy* sur le système, on en trouve dans le fichier `/var/sadm/system/logs/install_log` :  
 
 ```
 <OM Apr 15 14:22:31> /sbin/install-finish  -B '/a' -R '$5$WVmHMduo$nI.KTRbAaUv1ZgzaGiHhpA2RNdoo3aMDgPBL25FZcoD' -n 'sammy' -l 'sammy' -p '$5$Ebkn8jlK$i6SSPa0.u7Gd.0oJOT4T421N2OvsfXqAT1vCoYUOigB' -G '10' -U '101'

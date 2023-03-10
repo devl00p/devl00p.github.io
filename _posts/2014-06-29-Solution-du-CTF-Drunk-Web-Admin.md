@@ -63,9 +63,9 @@ On tente alors l'attaque la plus basique : uploader directement un fichier php.
 
 La réponse ne se fait pas tarder : **Invalid file extension!**  
 
-On obtient la même erreur avec un nom de fichier comme *truc.nawak*. Il semble donc qu'il y ait un système de liste blanche d'extensions.  
+On obtient la même erreur avec un nom de fichier comme `truc.nawak`. Il semble donc qu'il y ait un système de liste blanche d'extensions.  
 
-J'essaye d'uploader une backdoor PHP basique (*<?php system($\_GET['cmd']); ?>*) avec l'extension *.php.png*, cette fois j'ai l'erreur suivante :  
+J'essaye d'uploader une backdoor PHP basique (`<?php system($_GET['cmd']); ?>`) avec l'extension `.php.png`, cette fois j'ai l'erreur suivante :  
 
 **Ohhh you are naughty!**  
 

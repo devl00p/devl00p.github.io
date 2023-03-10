@@ -70,7 +70,7 @@ The */personal/* URL is in fact a website dedicated to *g0tmi1k* (*VulnHub*'s cr
 
 ![g0tmi1k fan club](/assets/img/hell_1.png)
 
-Under the */super\_secret\_login\_path\_muhahaha/* URL we find an *"Admin"* section asking us for credentials.  
+Under the `/super_secret_login_path_muhahaha/` URL we find an *"Admin"* section asking us for credentials.  
 
 Neither *Wapiti* nor *sqlmap* found ways to exploit the login form.  
 
@@ -542,11 +542,11 @@ Contenu trouve avec /etc/php5/apache2/php.ini
 Contenu trouve avec /var/log/faillog
 ```
 
-We have no read access on the *Apache* logs... How can we transform the include() vulnerability in a RCE (remote code execution) one ?  
+We have no read access on the *Apache* logs... How can we transform the `include()` vulnerability in a RCE (remote code execution) one ?  
 
 The hint is to use the *notes.php* script stroring the data we submit to a *note.txt* file in a *"temporary storage"*.  
 
-Indeed when I submitted *<?php system($\_get["cmd"]); ?>* to *notes.php* just before exploiting the *intruder* vulnerability to include */tmp/note.txt* I was then able to execute commands on the system.  
+Indeed when I submitted `<?php system($_get["cmd"]); ?>` to `notes.php` just before exploiting the *intruder* vulnerability to include `/tmp/note.txt` I was then able to execute commands on the system.  
 
 Some more Python code can give us a poor man's shell to the server :  
 

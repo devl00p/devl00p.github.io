@@ -64,7 +64,7 @@ J'ai lancé le module htaccess de *Wapiti* pour voir s'il était possible de byp
 
 J'ai alors décidé de lancer *dirb* qui a découvert quelques dossiers sans grand intérêt (css, images, libraries...)  
 
-J'ai aussi utilisé le module de *Metasploit* destiné à énumérer les éventuels utilisateurs (dans le cas où *mod\_userdir* aurait été activé) : nada.  
+J'ai aussi utilisé le module de *Metasploit* destiné à énumérer les éventuels utilisateurs (dans le cas où `mod_userdir` aurait été activé) : nada.  
 
 Avec *DirBuster* (un équivalent en Java de dirb) j'ai eu des résultats plus intéressants puisqu'il m'a trouvé les scripts suivants :  
 
@@ -106,7 +106,7 @@ Après avoir bien fait attention aux logs au lancement de la VM sous *VirtualBox
 
 Ok, on recommence depuis *VMPlayer* et là pas de messages d'erreurs.  
 
-Cela dis ça ne m'avance pas plus. Je suis donc partis en quête d'un indice que j'ai trouvé sur la page Wiki du projet du CTF sur Sourceforge (voir intro) : le script *gate2.php* est vulnérable à une injection SQL.  
+Cela dis ça ne m'avance pas plus. Je suis donc parti en quête d'un indice que j'ai trouvé sur la page Wiki du projet du CTF sur Sourceforge (voir intro) : le script *gate2.php* est vulnérable à une injection SQL.  
 
 Planté de baton
 ---------------
@@ -186,7 +186,7 @@ while True:
         break
 ```
 
-Pour le fichier */var/www/config.php* on obtient (avec beaucoup de patience) :  
+Pour le fichier `/var/www/config.php` on obtient (avec beaucoup de patience) :  
 
 ```php
 <?php
@@ -266,9 +266,9 @@ class Bot():
 --- snip ---
 ```
 
-On ajoutera un fichier *authorized\_keys* à l'utilisateur *Botter* pour obtenir un shell digne de ce nom.  
+On ajoutera un fichier `authorized_keys` à l'utilisateur *Botter* pour obtenir un shell digne de ce nom.  
 
-Dans les processus on retrouve le ssh, un *Exim* (101 = utilisateur spécifique exim) et le bot Python :  
+Dans les processus, on retrouve le ssh, un *Exim* (101 = utilisateur spécifique exim) et le bot Python :  
 
 ```
 root      2661  0.0  0.2   6464  1084 ?        Ss   00:16   0:00 /usr/sbin/sshd
@@ -278,7 +278,7 @@ root      3101  0.0  0.2   3488  1440 ?        S    00:16   0:00 sudo -u botter 
 
 Dans */home/botter* se trouve un fichier *gen.sh* dont voici le contenu :  
 
-```
+```console
 $ cat gen.sh
 ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2substr(rand(),0,5);}' | awk '{print $0"\n"$0}' | passwd
 ```
@@ -300,7 +300,7 @@ addr:192.168.1.290.19
 addr:192.168.1.290.19
 ```
 
-En fait seul les deux derniers caractères sont générés aléatoirement, les autres sont fixes ou liés à l'IP.  
+En fait seuls les deux derniers caractères sont générés aléatoirement, les autres sont fixes ou liés à l'IP.  
 
 Faire rentrer le crapaud dans la bouteille
 ------------------------------------------
@@ -334,7 +334,7 @@ fd.close()
 
 On teste ça avec la dernière version de *THC-Hydra* :  
 
-```
+```console
 $ ./hydra -f -l root -P ../dict.txt -e nsr ssh://192.168.1.29
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -350,7 +350,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2014-06-09 11:17:58
 
 Et on applique :  
 
-```
+```console
 botter@Bitbot:~$ su -
 Password: 
 root@Bitbot:~# id

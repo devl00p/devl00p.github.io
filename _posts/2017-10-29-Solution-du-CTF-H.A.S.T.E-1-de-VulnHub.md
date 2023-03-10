@@ -165,7 +165,7 @@ On voit que le champ target du formulaire est vulnérable, notamment avec les ex
 <!--#echo var="SCRIPT_FILENAME" -->
 ```
 
-La dernière ligne nous retourne le path */var/www/html/convert.me/public\_html/receipt.shtml*  
+La dernière ligne nous retourne le path `/var/www/html/convert.me/public_html/receipt.shtml`  
 
 En revanche les directives qui nous intéressent vraiment ne marchent pas :  
 

@@ -148,7 +148,7 @@ Sauf que la première addition réalisée est en réalité une concaténation. D
 Croatie
 -------
 
-Cette fois on se rend sur le port 15020 (Apache en HTTPS), on lance à nouveau un dirbuster et on trouve les dossiers suivants :  
+Cette fois, on se rend sur le port 15020 (Apache en HTTPS), on lance à nouveau un dirbuster et on trouve les dossiers suivants :  
 
 ```
 https://192.168.2.2:15020/blog/
@@ -458,7 +458,7 @@ Le seul flag restant est la France... c'est ballot.
 
 Quand il y a plusieurs flags à trouver il y en a un généralement caché... juste devant nous. Ça n'a pas raté :  
 
-```
+```console
 $ openssl s_client -connect 192.168.2.2:15020
 CONNECTED(00000003)
 depth=0 C = FR, ST = Paris, L = Paris, O = CTF, CN = a51f0eda836e4461c3316a2ec9dad743, emailAddress = ctf@root.local

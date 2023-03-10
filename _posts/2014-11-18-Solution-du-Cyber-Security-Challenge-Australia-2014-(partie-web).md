@@ -273,7 +273,7 @@ Hypertextension (260 points)
 
 Cette fois l'objectif est d'attraper le flag en obtenant un accès au panel de cache.  
 
-L'utilisation de *DirBuster* ou du module *mod\_negotiation\_brute* de *Metasploit* nous apprend rapidement qu'il y a un script *cache.php* à la racine. Si on tente d'y accéder on est bêtement redirigés vers l'index (l'espoir fait vivre).  
+L'utilisation de *DirBuster* ou du module `mod_negotiation_brute` de *Metasploit* nous apprend rapidement qu'il y a un script `cache.php` à la racine. Si on tente d'y accéder on est bêtement redirigés vers l'index (l'espoir fait vivre).  
 
 On a tout de même récupéré une information essentielle dans la précédente attaque : une clé d'API.  
 
@@ -507,11 +507,11 @@ Elle concatène donc l'hôte avec l'URI demandée (ce qui donner par exemple *se
 
 Notez que le cache est vide par défaut et sa récupération est donc sans intérêts.  
 
-Par contre il y a un point intéressant dont tout le monde n'est pas forcément au courant : la variable PHP *$\_SERVER['HTTP\_HOST']* ne vient pas par magie d'un fichier de configuration quelconque.  
+Par contre, il y a un point intéressant dont tout le monde n'est pas forcément au courant : la variable PHP `$_SERVER['HTTP_HOST']` ne vient pas par magie d'un fichier de configuration quelconque.  
 
-Le *HTTP\_HOST* est en réalité repris directement depuis l'entête *Host* envoyé dans la requête HTTP donc contrôlable par un attaquant.  
+Le `HTTP_HOST` est en réalité repris directement depuis l'entête *Host* envoyé dans la requête HTTP donc contrôlable par un attaquant.  
 
-Pour ce qui est de la mise en cache, le cheminement commence par le panel d'administration du cache (*cache.php*).  
+Pour ce qui est de la mise en cache, le cheminement commence par le panel d'administration du cache (`cache.php`).  
 
 Ce script dispose d'un formulaire permettant de spécifier une URL et un titre.  
 
@@ -544,7 +544,7 @@ if (!empty($_POST)) {
 
 Déjà le titre est limité à 40 caractères. Ensuite la méthode *cachePage* est appelée avec l'URL et le titre postés sous notre contrôle.  
 
-Voici la fonction *cachePage* :  
+Voici la fonction `cachePage` :  
 
 ```php
 function cachePage($uri, $title) {
@@ -579,7 +579,7 @@ Ensuite l'hôte spécifié dans l'URL doit correspondre à l'hôte du serveur du
 
 Enfin après ces vérifications un hash MD5 est calculé de la même façon est utilisé pour appeler *setCache*.  
 
-L'URL est aussi passée à la fonction mais encodée... En fin de compte on a de véritable contrôle que sur *$title* (limité à 40 caractères) et... *$data* car on peut jouer avec HTTP pour forcer le système de cache à lire le contenu d'une adresse nous appartenant.  
+L'URL est aussi passée à la fonction, mais encodée... En fin de compte, on a de véritable contrôle que sur *$title* (limité à 40 caractères) et... *$data* car on peut jouer avec HTTP pour forcer le système de cache à lire le contenu d'une adresse nous appartenant.  
 
 Pour en finir avec le code PHP voici la fonction *setCache* :  
 
@@ -626,11 +626,11 @@ print r.status_code, r.reason
 print r.content
 ```
 
-Et cela... n'a pas fonctionné car */var/www* ne correspondait finalement pas au *DocumentRoot*. J'ai testé différents sous-dossiers avant de me rendre compte qu'en utilisant simplement un nom de fichier (sans path) ça écrivait dans le même dossier que *cache.php* (donc à la vrai racine web).  
+Et cela... n'a pas fonctionné car `/var/www` ne correspondait finalement pas au *DocumentRoot*. J'ai testé différents sous-dossiers avant de me rendre compte qu'en utilisant simplement un nom de fichier (sans path) ça écrivait dans le même dossier que *cache.php* (donc à la vrai racine web).  
 
 Avec la backdoor PHP ainsi placée on pouvait alors facilement mettre en place un *tshd* et accéder ensuite au serveur :  
 
-```
+```console
 $ ./tsh 192.168.1.64
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)

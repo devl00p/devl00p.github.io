@@ -30,7 +30,7 @@ En terme d'attaque de VPN les outils plus classiques comme *THC-Hydra* et *Medus
 
 Après quelques recherches sur le web et la lecture de la manpage je trouve les options nécessaires pour récupérer la clé PSK chiffrée et l'exporter dans un fichier key (note : il faut être root car le port source 500 est utilisé) :  
 
-```bash
+```console
 # ./ike-scan -A -M -I ike-vendor-ids -Pkey 192.168.0.10 
 Starting ike-scan 1.9 with 1 hosts (http://www.nta-monitor.com/tools/ike-scan/)
 192.168.0.10    Aggressive Mode Handshake returned
@@ -45,9 +45,9 @@ Starting ike-scan 1.9 with 1 hosts (http://www.nta-monitor.com/tools/ike-scan/)
 Ending ike-scan 1.9: 1 hosts scanned in 0.007 seconds (148.61 hosts/sec).  1 returned handshake; 0 returned notify
 ```
 
-On utilise ensuite l'outil *psk-crack* qui fait partie d'*ike-scan* :  
+On utilise ensuite l'outil `psk-crack` qui fait partie d'`ike-scan` :  
 
-```bash
+```console
 # ./psk-crack -d psk-crack-dictionary key 
 Starting psk-crack [ike-scan 1.9] (http://www.nta-monitor.com/tools/ike-scan/)
 Running in dictionary cracking mode
@@ -55,9 +55,9 @@ key "123456" matches SHA1 hash 3d0062d2d5565a9ab9b9c6cba66cdd62c8d4cfc0
 Ending psk-crack: 36 iterations in 0.000 seconds (89330.02 iterations/sec)
 ```
 
-La clé PSK est *123456*. On corrige le fichier *ipsec.secrets* et on lance le service *ipsec*. On lance ensuite spécifiquement la connexion VPN spécifiée dans les fichiers de configuration (nommée ici *vpn*) :  
+La clé PSK est *123456*. On corrige le fichier `ipsec.secrets` et on lance le service `ipsec`. On lance ensuite spécifiquement la connexion VPN spécifiée dans les fichiers de configuration (nommée ici *vpn*) :  
 
-```bash
+```console
 # systemctl start ipsec
 # ipsec auto --up vpn
 003 "vpn" #1: multiple DH groups were set in aggressive mode. Only first one used.
@@ -77,12 +77,12 @@ On note que la connexion est bien établie en mode transport.
 
 On procède à la suite des instructions comme indiqué sur la page du challenge :  
 
-```bash
+```console
 # systemctl start xl2tpd
 # ./start-vpn.sh
 ```
 
-Au boût de quelques secondes une nouvelle interface réseau est apparue :  
+Au bout de quelques secondes une nouvelle interface réseau est apparue :  
 
 ```
 ppp0      Link encap:Point-to-Point Protocol  
@@ -210,7 +210,7 @@ Sur le port 80 on trouve un *wordpress* sur lequel je ne me suis pas attardé.
 
 Il y a un export NFS sur la machine pour l'utilisateur bob :  
 
-```bash
+```console
 # showmount -e 10.99.99.1
 Export list for 10.99.99.1:
 /home/bob *
@@ -218,7 +218,7 @@ Export list for 10.99.99.1:
 
 A tout hazard j'ai essayé de me connecter en SSH avec bob/bob... bingo !  
 
-```bash
+```console
 # ssh bob@10.99.99.1
 The authenticity of host '10.99.99.1 (10.99.99.1)' can't be established.
 ECDSA key fingerprint is ec:56:85:f2:5a:cc:64:2a:bb:a4:20:24:a5:6d:fd:1e.
@@ -254,17 +254,17 @@ Escalade de privilèges #1
 -------------------------
 
 En moins de temps qu'il n'en faut pour dire *"chez les papous il y a des papous pouned et des papous pas pouned"* j'ai trouvé un moyen de passer root.
-Le script cron *wp-backup.sh* est world writable. Il suffit d'y placer ses commandes et de patienter (les tâches journalières sont exécutées tous les jours à 6h25 d'après /etc/crontab).  
+Le script cron `wp-backup.sh` est world writable. Il suffit d'y placer ses commandes et de patienter (les tâches journalières sont exécutées tous les jours à 6h25 d'après /etc/crontab).  
 
 L'export wordpress se révèle être vide (gzip d'un fichier de 0 octets) donc d'aucune utilité.  
 
-Toutefois en nous connectant avec les identifiants MySQL récupérés on retrouve le hash *$P$BvxcqU.WcR9CEJrqTPXJdAJ6SSeWVE1* pour l'utilisateur admin.  
+Toutefois en nous connectant avec les identifiants MySQL récupérés on retrouve le hash `$P$BvxcqU.WcR9CEJrqTPXJdAJ6SSeWVE1` pour l'utilisateur admin.  
 
-Les caractères *$P$* indiquent un format *phpass* (en fonction d'où on place la césure on peut marquer ou pas son aversion pour le langage PHP).  
+Les caractères `$P$` indiquent un format *phpass* (en fonction d'où on place la césure on peut marquer ou pas son aversion pour le langage PHP).  
 
 J'ai tenté de casser le hash avec *HashCat* malheureusement je n'ai eu aucun résultat.  
 
-gcc n'est pas présent sur la machine ce qui oblige à compiler en statique 32 bits les binaires dont on a besoin puis de les envoyer via scp.  
+`gcc` n'est pas présent sur la machine ce qui oblige à compiler en statique 32 bits les binaires dont on a besoin puis de les envoyer via scp.  
 
 Escalade de privilèges #2
 -------------------------
@@ -324,6 +324,6 @@ cat trophy.txt
 6dbabffbbabf0868f3bdcf3b192a3511
 ```
 
-C'est plus bourrin mais plus besoin d'attendre 6h25 :)
+C'est plus bourrin, mais plus besoin d'attendre 6h25 :)
 
 *Published September 28 2014 at 14:51*

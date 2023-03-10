@@ -215,7 +215,7 @@ La seconde variable nommée `@ts` est une liste contenant trois valeurs : 't', '
 
 Ensuite la variable `$startURL` contient l'URL correspondant à la recherche sur le moteur Google. La variable de l'URL contenant le motif à rechercher est la variable 'q'.  
 
-La recherche concerne donc le chaine suivante : `'allinurl%3A+%22viewtopic.php%22+%22' . $ts[int(rand(@ts))] . '%3D' . int(rand(30000)) . '%22'`  
+La recherche concerne donc la chaine suivante : `'allinurl%3A+%22viewtopic.php%22+%22' . $ts[int(rand(@ts))] . '%3D' . int(rand(30000)) . '%22'`  
 
 Les quelques fonctions perl qui restent dans l'URL sont des fonctions d'aléatoires. La première permet de choisir au hazard une des valeurs de la liste `@ts`. La seconde opération renvoie un chiffre pris au hazard entre 0 et 30000.  
 

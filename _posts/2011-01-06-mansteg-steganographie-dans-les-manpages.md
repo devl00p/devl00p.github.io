@@ -50,7 +50,7 @@ On retrouve notre message encodé, suivi d'une série d'astérisques, ajoutés p
 
 Pour récupérer notre message, rien de plus simple :
 
-```
+```console
 # python extract.py /usr/share/man/man1/wget.1.gz
 Steganography is the art and science of writing hidden messages in such a way
 that no one apart from the intended recipient knows of the existence of the

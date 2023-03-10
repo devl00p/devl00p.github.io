@@ -23,7 +23,7 @@ L'autre ~~gros bug~~ fonctionnalité de PHP concernait l'initialisation des vari
 
 Peut-être pensait-il que cela inciterait les développeurs à être plus vigilants... évidemment ce ne fut pas le cas et l'option est maintenant désactivée par défaut.  
 
-Plusieurs mécanismes de sécurité ont été mis en place *par dessus* pour tenter de corriger les erreurs, comme le `safe_mode`. Malheureusement quand ce ne sont pas les développeurs qui sont fautifs, c'est le langage lui-même. PHP a un très lourd passif en termes de failles de sécurité et des méthodes permettant de passer au travers du safe\_mode sont découvertes régulièrement.  
+Plusieurs mécanismes de sécurité ont été mis en place *par dessus* pour tenter de corriger les erreurs, comme le `safe_mode`. Malheureusement quand ce ne sont pas les développeurs qui sont fautifs, c'est le langage lui-même. PHP a un très lourd passif en termes de failles de sécurité et des méthodes permettant de passer au travers du `safe_mode` sont découvertes régulièrement.  
 
 Pour certaines failles, on peut se demander à qui incombe la responsabilité : PHP ou le programmeur ?  
 Les failles relatives à l'upload de fichier en font partie. Les scripts permettant à l'internaute d'envoyer un fichier sur le serveur sont souvent mal pensés, reposent sur des à-priori et sont la plupart du temps faillibles. C'est pour cela que [Wapiti](http://wapiti.sourceforge.net/) informe automatiquement quand il en trouve un, même s'il ne peut pas tester leur sécurité.  

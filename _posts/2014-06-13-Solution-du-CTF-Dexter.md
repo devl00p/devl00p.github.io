@@ -309,12 +309,12 @@ Pour le second cas (la chaîne *encodeme* en seconde position) le script me reto
 $encodeme;#
 ```
 
-Un préfixe et un suffixe sont rajoutés mais le principal est que l'on est finalement pas en présence d'une injection en aveugle :)  
+Un préfixe et un suffixe sont rajoutés, mais le principal est que l'on n'est finalement pas en présence d'une injection en aveugle :)  
 
 I've imagined her naked plenty times, but never like this
 ---------------------------------------------------------
 
-Ni une ni deux, je code un exploit me permettant de lire un fichier sur le système en injecter un *LOAD\_FILE()* :  
+Ni une ni deux, je code un exploit me permettant de lire un fichier sur le système en injecter un `LOAD_FILE()` :  
 
 ```python
 import requests
@@ -533,7 +533,7 @@ root:$6$gN9t1RCt$dYj80MPAWCeWkh9kTpoPHuUU.x5hfaXfrB.UUWkMQDQpjDfAHO4D2RLWvG00wjU
 
 Quant à l'explication sur le lancement de *antitamper.py* :  
 
-```
+```console
 root@dexter:~# tail -1 /var/spool/cron/crontabs/root 
 */1 * * * * python /var/www/antitamper.py
 ```

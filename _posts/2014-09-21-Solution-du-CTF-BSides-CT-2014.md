@@ -9,16 +9,16 @@ Introduction
 
 Histoire de changer un peu, je me suis tourné vers le CTF de la conférence *BSides CT (Connecticut) 2014*.  
 
-Les fichiers du CTF ayant été [mis en ligne sur GitHub](https://github.com/SkeyeLlama/BSides-CT-2014---CTF-Challenges), il est facile de mettre en place chez soit les 4 niveaux du challenge. Vous aurez juste besoin d'un serveur web avec PHP activé et de votre boîte à outils habituelle.  
+Les fichiers du CTF ayant été [mis en ligne sur GitHub](https://github.com/SkeyeLlama/BSides-CT-2014---CTF-Challenges), il est facile de mettre en place chez soi les 4 niveaux du challenge. Vous aurez juste besoin d'un serveur web avec PHP activé et de votre boîte à outils habituelle.  
 
 Le challenge est assez simple. Il propose deux niveaux d'exploitation web, un niveau inforensique classique et un dernier niveau d'inforensique réseau avec de la crypto.  
 
 Level 1
 -------
 
-Comme indiqué sur *GitHub* il faut avoir dézippé les fichiers dans un dossier *chal1* à la racine du serveur web.  
+Comme indiqué sur *GitHub* il faut avoir dézippé les fichiers dans un dossier `chal1` à la racine du serveur web.  
 
-Une fois le navigateur lancé à la bonne adresse on trouve une page avec le titre *"Echo Tool v0.3"* qui demande de saisir soit le mot de passe de l'administrateur, soit *guest*.  
+Une fois le navigateur lancé à la bonne adresse, on trouve une page avec le titre *"Echo Tool v0.3"* qui demande de saisir soit le mot de passe de l'administrateur, soit *guest*.  
 
 Vu que la simple pose des fichiers permet de mettre en place le challenge on se doute qu'il n'y aura pas de SQL dans l'affaire.  
 
@@ -32,7 +32,7 @@ Le cookie *role* contient un hash SHA-1 qui après recherche sur *DuckDuckGo* se
 
 J'édite la valeur de ce cookie pour mettre le hash de *admin* mais je suis redirigé quand je rafraîchi la page.  
 
-Je retente avec le hash de *administrator* et cette fois j'obtiens le flag *key{6e17f3d9348623234cbbd2dd4a900fc7}*.  
+Je retente avec le hash de *administrator* et cette fois j'obtiens le flag `key{6e17f3d9348623234cbbd2dd4a900fc7}`.  
 
 Level 2
 -------
@@ -43,7 +43,7 @@ Un formulaire permet l'upload de fichiers mais affirme n'accepter que les fichie
 
 L'autre formulaire permet de dresser la liste des fichiers qui ont été mis en ligne.  
 
-Toutefois on ne voit pas immédiatement les formulaires car quand on affiche le code source HTML on trouve du Javascript obfusqué, la partie HTML est elle une coquille vide.  
+Toutefois, on ne voit pas immédiatement les formulaires car quand on affiche le code source HTML on trouve du Javascript obfusqué, la partie HTML est elle une coquille vide.  
 
 C'était sans compter sur les outils de développement des navigateurs modernes : click-droit sur la page puis *"Inspecter l'élément"* permet de voir les deux formulaires qui ont été rajoutés au DOM par le javascript.  
 
@@ -56,11 +56,11 @@ Le second formulaire (utilisé pour lister les fichiers) attire mon attention :
 </form>
 ```
 
-Toujours via les outils de développement je modifie la valeur du champ caché *"dir"* pour mettre *"."*  
+Toujours via les outils de développement, je modifie la valeur du champ caché *"dir"* pour mettre *"."*  
 
-Je soumets le formulaire qui révèle alors la présence d'un fichier baptisé *topsecretkey*.  
+Je soumets le formulaire qui révèle alors la présence d'un fichier baptisé `topsecretkey`.  
 
-Le fichier */chal2/topsecretkey* a le contenu *key{6fafa4aa597adac7974f11fabf2a5754}*  
+Le fichier `/chal2/topsecretkey` a le contenu `key{6fafa4aa597adac7974f11fabf2a5754}`  
 
 Level 3
 -------
@@ -75,13 +75,13 @@ Avec *ghex* (un éditeur hexadécimal) on voit les lettres *NTFS*. Une recherche
 
 On monte le disque très facilement :  
 
-```
+```bash
 mount -t ntfs -o ro flash.img /mnt/
 ```
 
-Seulement on ne trouve qu'un fichier *IMG\_182891.png* que la morale m’empêche de poster ici (lol)  
+Seulement on ne trouve qu'un fichier `IMG_182891.png` que la morale m’empêche de poster ici (lol)  
 
-Par conséquent j'ai préféré passer *photorec* sur l'image disque. Ce dernier retrouve des images supplémentaires : schémas de missiles et une image contenant le flag *key{3eee9d1cbd5b0062aa6b8e6398108072}*.  
+Par conséquent j'ai préféré passer *photorec* sur l'image disque. Ce dernier retrouve des images supplémentaires : schémas de missiles et une image contenant le flag `key{3eee9d1cbd5b0062aa6b8e6398108072}`.  
 
 Level 4
 -------
@@ -92,9 +92,9 @@ On dispose aussi d'une capture réseau au format *pcapng*. Une première lecture
 
 J'ai décidé d'exporter la capture dans l'ancien format *pcap* (*tcpdump*) puis de la passer à la moulinette de [chaosreader](http://www.brendangregg.com/chaosreader.html) pour faciliter l'analyse.  
 
-On remarque vite en naviguant parmi les requêtes HTTP que les infos intéressantes sont envoyées vers un script */Gh98zret.php*.  
+On remarque vite en naviguant parmi les requêtes HTTP que les infos intéressantes sont envoyées vers un script `/Gh98zret.php`.  
 
-La plupart des requêtes sont du type *Gh98zret.php?filename=Exhibit - A (1).gif&originalMD5=C699083BAF4FC584667DD8F25061C2F1* qui indique ici qu'un fichier gif a été chiffré.  
+La plupart des requêtes sont du type `Gh98zret.php?filename=Exhibit - A (1).gif&originalMD5=C699083BAF4FC584667DD8F25061C2F1` qui indique ici qu'un fichier gif a été chiffré.  
 
 La requête et la réponse sont les suivantes :  
 
@@ -139,7 +139,7 @@ Gh98zret.php?victiminsideip=10.255.1.74&sys=1
 Gh98zret.php?victimoutsideip=55.43.2.18&sys=1
 ```
 
-Les requêtes *crypt\_init* se retrouvent dans les sessions 2020 à 2023 de *ChaosReader*. Les réponses correspondantes disposent dans le body de données encodées en base64 qui une fois décodées sont les suivantes :  
+Les requêtes `crypt_init` se retrouvent dans les sessions 2020 à 2023 de *ChaosReader*. Les réponses correspondantes disposent dans le body de données encodées en base64 qui une fois décodées sont les suivantes :  
 
 ```
 Crypt_Init - AES

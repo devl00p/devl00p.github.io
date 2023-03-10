@@ -151,7 +151,7 @@ Host script results:
 
 On se dit *"super, on va jouer un peu avec NFS !"* sauf que quand on appelle showmount il n'y a aucun partage exporté :'(  
 
-SNMP est quant à lui plus bavard. La chaine de communauté a été laissée à public. Le module snmp\_enum de Metasploit donne énormément d'informations notamment les processus qui tournent, l'espace disque sur les partitions, les interfaces réseau, ports en écoute ou connectés et les processus :  
+SNMP est quant à lui plus bavard. La chaine de communauté a été laissée à public. Le module `snmp_enum` de Metasploit donne énormément d'informations notamment les processus qui tournent, l'espace disque sur les partitions, les interfaces réseau, ports en écoute ou connectés et les processus :  
 
 ```
 msf auxiliary(snmp_enum) > exploit
@@ -219,7 +219,7 @@ J'ai décidé de bouder les applications volontairement vulnérables qui donnent
 Un pied dans la porte
 ---------------------
 
-Du côté du Webmin ce dernier est vulnérable au module *file\_disclosure* de *Metasploit*, on peut ainsi récupérer le /etc/shadow :  
+Du côté du Webmin ce dernier est vulnérable au module `file_disclosure` de *Metasploit*, on peut ainsi récupérer le /etc/shadow :  
 
 ```
 root:*:16137:0:99999:7:::

