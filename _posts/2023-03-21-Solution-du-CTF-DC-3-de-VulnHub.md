@@ -301,7 +301,7 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
-Pour la suite il faut se connecter en admin sur la page `/administrator` puis éditer un fichier PHP (ou en créer un nouveau) comme décrit sur [ma solution du CTF Rosee de Wizard Labs](https://devl00p.github.io/posts/Solution-du-CTF-Rosee-de-Wizard-Labs/).
+Pour la suite il faut se connecter en admin sur la page `/administrator` puis éditer un fichier PHP (ou en créer un nouveau) comme décrit sur [ma solution du CTF Rosee de Wizard Labs]({% link _posts/2020-11-17-Solution-du-CTF-Rosee-de-Wizard-Labs.md %}).
 
 ## JoomKit
 
