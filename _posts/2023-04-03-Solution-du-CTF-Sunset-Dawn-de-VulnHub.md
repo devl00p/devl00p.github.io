@@ -294,7 +294,7 @@ flag{3a3e52f0a6af0d6e36d7c1ced3a9fd59}
 
 ## Solutions alternatives
 
-Il apparait qu'en fait www-data a aussi une permission sudo :
+Il apparait qu'en fait `www-data` a aussi une permission sudo :
 
 ```console
 www-data@dawn:/tmp$ sudo -l
