@@ -155,63 +155,59 @@ Le dossier `/logs/` que Nmap a détecté contient différents fichiers, mais seu
 
 On comprend à son contenu qu'il s'agit de l'output de la commande `pspy64` :
 
-{% raw %}
 ```
 Config: Printing events (colored=true): processes=true | file-system-events=false ||| Scannning for processes every 100ms and on inotify events ||| Watching directories: [/usr /tmp /etc /home /var /opt] (recursive) | [] (non-recursive)
 Draining file system events due to startup...
 done
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=99     | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=98     | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=96     | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=9      | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=8      | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=759    | /usr/sbin/cups-browsed [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=758    | /usr/sbin/cupsd -l [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=6      | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=590    | /usr/sbin/smbd --foreground --no-process-group [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=59     | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=585    | /usr/sbin/smbd --foreground --no-process-group [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=583    | /usr/sbin/smbd --foreground --no-process-group [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=112  PID=576    | /usr/sbin/mysqld [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=522    | /usr/sbin/smbd --foreground --no-process-group [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=50     | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=493    | /usr/sbin/apache2 -k start [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=49     | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=48     | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=404    | /root/pspy64 [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=4      | [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=391    | /bin/sh -c /root/pspy64 > /var/www/html/logs/management.log [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=387    | /sbin/agetty -o -p -- \u --noclear tty1 linux [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=107  PID=385    | avahi-daemon: chroot helper [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=378    | /usr/sbin/nmbd --foreground --no-process-group [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=368    | /usr/sbin/CRON -f [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=363    | /sbin/dhclient -4 -v -i -pf /run/dhclient.enp0s3.pid -lf /var/lib/dhcp/dhclient.enp0s3.leases -I -df /var/lib/dhcp/dhclient6.enp0s3.leases enp0s3 [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=360    | /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=359    | /usr/sbin/cron -f [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=107  PID=358    | avahi-daemon: running [dawn.local] [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=356    | /usr/sbin/rsyslogd -n -iNONE [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=355    | /lib/systemd/systemd-logind [0m
-2023/04/03 08:33:19 [31;1mCMD: UID=104  PID=349    | /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only [0m
+2023/04/03 08:33:19 CMD: UID=0    PID=99     | 
+2023/04/03 08:33:19 CMD: UID=0    PID=98     | 
+2023/04/03 08:33:19 CMD: UID=0    PID=96     | 
+2023/04/03 08:33:19 CMD: UID=0    PID=9      | 
+2023/04/03 08:33:19 CMD: UID=0    PID=8      | 
+2023/04/03 08:33:19 CMD: UID=0    PID=759    | /usr/sbin/cups-browsed 
+2023/04/03 08:33:19 CMD: UID=0    PID=758    | /usr/sbin/cupsd -l 
+2023/04/03 08:33:19 CMD: UID=0    PID=6      | 
+2023/04/03 08:33:19 CMD: UID=0    PID=590    | /usr/sbin/smbd --foreground --no-process-group 
+2023/04/03 08:33:19 CMD: UID=0    PID=59     | 
+2023/04/03 08:33:19 CMD: UID=0    PID=585    | /usr/sbin/smbd --foreground --no-process-group 
+2023/04/03 08:33:19 CMD: UID=0    PID=583    | /usr/sbin/smbd --foreground --no-process-group 
+2023/04/03 08:33:19 CMD: UID=112  PID=576    | /usr/sbin/mysqld 
+2023/04/03 08:33:19 CMD: UID=0    PID=522    | /usr/sbin/smbd --foreground --no-process-group 
+2023/04/03 08:33:19 CMD: UID=0    PID=50     | 
+2023/04/03 08:33:19 CMD: UID=0    PID=493    | /usr/sbin/apache2 -k start 
+2023/04/03 08:33:19 CMD: UID=0    PID=49     | 
+2023/04/03 08:33:19 CMD: UID=0    PID=48     | 
+2023/04/03 08:33:19 CMD: UID=0    PID=404    | /root/pspy64 
+2023/04/03 08:33:19 CMD: UID=0    PID=4      | 
+2023/04/03 08:33:19 CMD: UID=0    PID=391    | /bin/sh -c /root/pspy64 > /var/www/html/logs/management.log 
+2023/04/03 08:33:19 CMD: UID=0    PID=387    | /sbin/agetty -o -p -- \u --noclear tty1 linux 
+2023/04/03 08:33:19 CMD: UID=107  PID=385    | avahi-daemon: chroot helper 
+2023/04/03 08:33:19 CMD: UID=0    PID=378    | /usr/sbin/nmbd --foreground --no-process-group 
+2023/04/03 08:33:19 CMD: UID=0    PID=368    | /usr/sbin/CRON -f 
+2023/04/03 08:33:19 CMD: UID=0    PID=363    | /sbin/dhclient -4 -v -i -pf /run/dhclient.enp0s3.pid -lf /var/lib/dhcp/dhclient.enp0s3.leases -I -df /var/lib/dhcp/dhclient6.enp0s3.leases enp0s3 
+2023/04/03 08:33:19 CMD: UID=0    PID=360    | /sbin/wpa_supplicant -u -s -O /run/wpa_supplicant 
+2023/04/03 08:33:19 CMD: UID=0    PID=359    | /usr/sbin/cron -f 
+2023/04/03 08:33:19 CMD: UID=107  PID=358    | avahi-daemon: running [dawn.local] 
+2023/04/03 08:33:19 CMD: UID=0    PID=356    | /usr/sbin/rsyslogd -n -iNONE 
+2023/04/03 08:33:19 CMD: UID=0    PID=355    | /lib/systemd/systemd-logind 
+2023/04/03 08:33:19 CMD: UID=104  PID=349    | /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only 
 ```
-{% endraw %}
 
 Ne voyant toujours rien d'intéressant après de longues minutes je décide de redémarrer la machine, et c'est mieux :
 
-{% raw %}
 ```
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=571    | /usr/sbin/cron -f [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=1000 PID=585    | /bin/sh -c /home/dawn/ITDEPT/product-control [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=584    | /bin/sh -c /home/ganimedes/phobos [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=583    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/web-control [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=582    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/product-control [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=581    | /usr/sbin/CRON -f [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=1000 PID=580    | /bin/sh -c /home/dawn/ITDEPT/product-control [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=579    | /bin/sh -c /home/ganimedes/phobos [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=578    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/web-control [0m
-2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=577    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/product-control [0m
-2023/04/03 08:05:02 [31;1mCMD: UID=33   PID=596    | /bin/sh -c /home/dawn/ITDEPT/web-control [0m
+2023/04/03 08:04:01 CMD: UID=0    PID=571    | /usr/sbin/cron -f 
+2023/04/03 08:04:01 CMD: UID=1000 PID=585    | /bin/sh -c /home/dawn/ITDEPT/product-control 
+2023/04/03 08:04:01 CMD: UID=0    PID=584    | /bin/sh -c /home/ganimedes/phobos 
+2023/04/03 08:04:01 CMD: UID=0    PID=583    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/web-control 
+2023/04/03 08:04:01 CMD: UID=0    PID=582    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/product-control 
+2023/04/03 08:04:01 CMD: UID=0    PID=581    | /usr/sbin/CRON -f 
+2023/04/03 08:04:01 CMD: UID=1000 PID=580    | /bin/sh -c /home/dawn/ITDEPT/product-control 
+2023/04/03 08:04:01 CMD: UID=0    PID=579    | /bin/sh -c /home/ganimedes/phobos 
+2023/04/03 08:04:01 CMD: UID=0    PID=578    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/web-control 
+2023/04/03 08:04:01 CMD: UID=0    PID=577    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/product-control 
+2023/04/03 08:05:02 CMD: UID=33   PID=596    | /bin/sh -c /home/dawn/ITDEPT/web-control 
 ```
-{% endraw %}
 
 On voit non seulement que root change les permissions sur les scripts `web-control` et `product-control` actuellement absents, mais qu'en plus ils sont exécutés par d'autres utilisateurs.
 
