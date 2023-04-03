@@ -155,6 +155,7 @@ Le dossier `/logs/` que Nmap a détecté contient différents fichiers, mais seu
 
 On comprend à son contenu qu'il s'agit de l'output de la commande `pspy64` :
 
+{% raw %}
 ```
 Config: Printing events (colored=true): processes=true | file-system-events=false ||| Scannning for processes every 100ms and on inotify events ||| Watching directories: [/usr /tmp /etc /home /var /opt] (recursive) | [] (non-recursive)
 Draining file system events due to startup...
@@ -192,9 +193,11 @@ done
 2023/04/03 08:33:19 [31;1mCMD: UID=0    PID=355    | /lib/systemd/systemd-logind [0m
 2023/04/03 08:33:19 [31;1mCMD: UID=104  PID=349    | /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only [0m
 ```
+{% endraw %}
 
 Ne voyant toujours rien d'intéressant après de longues minutes je décide de redémarrer la machine, et c'est mieux :
 
+{% raw %}
 ```
 2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=571    | /usr/sbin/cron -f [0m
 2023/04/03 08:04:01 [31;1mCMD: UID=1000 PID=585    | /bin/sh -c /home/dawn/ITDEPT/product-control [0m
@@ -208,6 +211,7 @@ Ne voyant toujours rien d'intéressant après de longues minutes je décide de r
 2023/04/03 08:04:01 [31;1mCMD: UID=0    PID=577    | /bin/sh -c chmod 777 /home/dawn/ITDEPT/product-control [0m
 2023/04/03 08:05:02 [31;1mCMD: UID=33   PID=596    | /bin/sh -c /home/dawn/ITDEPT/web-control [0m
 ```
+{% endraw %}
 
 On voit non seulement que root change les permissions sur les scripts `web-control` et `product-control` actuellement absents, mais qu'en plus ils sont exécutés par d'autres utilisateurs.
 
