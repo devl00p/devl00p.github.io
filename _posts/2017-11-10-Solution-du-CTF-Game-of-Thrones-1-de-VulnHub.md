@@ -288,7 +288,7 @@ Avec l'aide d'une wordlist (ex: *rockyou*) on retrouve facilement le mot de pass
 
 On peut alors déchiffrer le second fichier chiffré avec mcrypt :  
 
-```bash
+```console
 $ file the_wall.txt.nc
 the_wall.txt.nc: mcrypt 2.5 encrypted data, algorithm: rijndael-128, keysize: 32 bytes, mode: cbc,
 $ sudo apt-get install mcrypt

@@ -19,7 +19,7 @@ Reconnaissance et énumération
 
 On lance un scan rapide du serveur qui nous indique la présence d'un serveur web ainsi qu'un serveur SSH (mais écoutant sur le port 23).  
 
-```bash
+```console
 $ sudo nmap -T5 --open 192.168.3.190
 
 Starting Nmap 7.01 ( https://nmap.org ) at 2017-10-14 14:23 CEST
@@ -38,7 +38,7 @@ La page d'index est une notice d'information informant du hack récent. La note 
 
 Afin de trouver d'autres URLs je lance mon script maison *brute\_web* (qu'il faut que je mette au propre et que je release) afin de découvrir la présence d'autres dossiers sur le serveur :
 
-```bash
+```console
 $ python2 brute_web.py -u http://192.168.3.190/ -w /opt/dirb222/wordlists/big.txt
   `==\. dvbuster v1.0 ./=='
         ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
@@ -152,7 +152,7 @@ G0t r00t?
 
 Une fois le shell récupéré on part à la recherche du fameux antivirus qui tourne toutes les minutes.  
 
-```bash
+```console
 django@bulldog:~/bulldog$ ls /etc/cron.d
 mdadm  popularity-contest  runAV
 django@bulldog:~/bulldog$ cat /etc/cron.d/runAV
@@ -187,7 +187,7 @@ J'aurais pu utiliser + de la lib standard de Python mais j'ai eu la flemme de re
 
 Il ne nous reste que le fameux flag :  
 
-```bash
+```console
 root@bulldog:~# cat congrats.txt
 Congratulations on completing this VM :D That wasn't so bad was it?
 
@@ -211,7 +211,7 @@ Edit -- fin alternative
 
 Une fois l'accès au compte django obtenu on voit que l'on peut fouiller dans les fichiers de l'utilisateur bulldogadmin :  
 
-```bash
+```console
 django@bulldog:~$ ls /home/bulldogadmin/ -al
 total 44
 drwxr-xr-x 5 bulldogadmin bulldogadmin 4096 Oct 19 11:04 .
@@ -288,7 +288,7 @@ Le mot de passe en question est *SUPERultimatePASSWORDyouCANTget*. Il faut retir
 
 Il suffit alors d'appeler sudo et de saisir le mot de passe :  
 
-```bash
+```console
 django@bulldog:~$ sudo id
 [sudo] password for django:
 uid=0(root) gid=0(root) groups=0(root)

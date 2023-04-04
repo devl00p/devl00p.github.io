@@ -795,7 +795,7 @@ gpg:      clefs secrètes importées : 1
 
 On utilisera le mot de passe de *Jack* lors du déchiffrement :  
 
-```bash
+```console
 $ gpg secret.pgp
 ```
 

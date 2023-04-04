@@ -13,7 +13,7 @@ Un brute force est effectué depuis une adresse IP située en Russie. [Le FAI](h
 
 L'attaquant est venu depuis une adresse IP roumaine depuis le FAI [RDS](http://rdsnet.ro/solutii/solutii.htm).  
 
-Les commandes lançées sont très certainement l'œuvre d'un bot :  
+Les commandes lancées sont très certainement l'œuvre d'un bot :  
 
 ```bash
 uname -a
@@ -146,7 +146,7 @@ cd tmp
 cat /etc/passwd
 ```
 
-reconnexion du visiteur  
+Reconnexion du visiteur  
 
 ```bash
 cd videos

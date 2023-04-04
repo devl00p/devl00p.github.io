@@ -18,7 +18,7 @@ Je n'entrerais pas dans les détails de la mise en place de la VM. Référez-vou
 Tour du propriétaire
 --------------------
 
-```bash
+```console
 $ nmap -A -T4 192.168.1.24
 
 Starting Nmap 6.40 ( http://nmap.org ) at 2014-03-09 11:46 CET
@@ -235,7 +235,7 @@ msg_root "username" "this message is for root"
 
 Si on exécute le programme de cette façon :  
 
-```bash
+```console
 $ ./msg_root "plop" "ceci est mon message"
 ```
 
@@ -249,7 +249,7 @@ L'ouverture du fichier semble se faire en mode append et on se dit que l'on a ra
 
 On récupère le fichier via le client tsh sur la machine hôte :  
 
-```bash
+```console
 $ ./tsh 192.168.1.21 get /home/reynard/msg_root .
 8999 done.
 ```

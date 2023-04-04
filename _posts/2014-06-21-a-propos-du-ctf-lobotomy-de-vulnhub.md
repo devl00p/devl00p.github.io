@@ -28,14 +28,14 @@ Sur le serveur web on trouve des liens pointant vers des analyses du bot dont on
 
 <https://malwr.com/analysis/ZTQyOWYyZTQxYmNlNDkwNWE3ZWZhY2QxNmM2NTJhMTk/>  
 
-Ce qui nous intéresse principalement ici c'est la requête HTTP effectuée par le bot car elle contient le nom des variables passées à un script.  
+Ce qui nous intéresse principalement ici, c'est la requête HTTP effectuée par le bot car elle contient le nom des variables passées à un script.  
 
-Aditionnellement, une indication sur la page précise qu'un navigateur headless (ici basé sur *SlimmerJS*) simule la connexion d'une personne sur le panel de contrôle du bot.  
+Additionnellement, une indication sur la page précise qu'un navigateur headless (ici basé sur *SlimmerJS*) simule la connexion d'une personne sur le panel de contrôle du bot.  
 
 La première chose à faire est d'essayer de trouver où a été placé ce fameux panel. Un scan avec *dirb* permet de trouver rapidement un dossier *m* :  
 
-```bash
-./dirb http://192.168.1.57/ wordlists/big.txt
+```console
+$ ./dirb http://192.168.1.57/ wordlists/big.txt
 http://192.168.1.57/m/
 http://192.168.1.57/m/adm/
 http://192.168.1.57/m/inc/
@@ -192,7 +192,7 @@ Le couple *adname* / *adpass* est celui destiné à l'administrateur alors que *
 
 L'injection SQL dans uid permet de placer un OUTFILE mais les droits sur la racine web sont bien réglés... Ca passe dans /tmp mais pas ailleurs :(  
 
-Il aura fallu faire un autre *dirb* pour trouve où s'authentifier sur le panel (en l’occurrence c'était */m/adm/auth.php*)  
+Il aura fallu faire un autre *dirb* pour trouver où s'authentifier sur le panel (en l’occurrence c'était */m/adm/auth.php*)  
 
 ```bash
 ./dirb http://192.168.1.57/m/ ../wordlists/Filenames_or_Directories_All.wordlist

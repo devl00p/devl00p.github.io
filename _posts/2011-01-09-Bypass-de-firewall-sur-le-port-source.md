@@ -31,18 +31,18 @@ netcat -v -p 20 192.168.0.3 80
 
 Cela va ouvrir une connexion à destination du port 80 de la machine filtrée et avec le port source 20.  
 
-Le premier souci c'est que netcat récupère ce qu'il doit envoyer sur l'entrée standard. Pour les protocoles utilisant des caractères ASCII ça va encore mais dans la majorité des cas il faut avoir recours à des redirections d'entrées/sorties.  
+Le premier souci, c'est que netcat récupère ce qu'il doit envoyer sur l'entrée standard. Pour les protocoles utilisant des caractères ASCII ça va encore mais dans la majorité des cas il faut avoir recours à des redirections d'entrées/sorties.  
 On pourrait alors chainer deux netcat, l'un écoutant sur un port en renvoyant ce qu'il reçoit vers l'entrée du second netcat (avec la commande précédente).  
 
-Le second souci c'est que netcat ne fonctionne pas comme un serveur qui tournerait en fond pour réceptionner en continu les requêtes et convient mal à certains protocoles qui effectuent des connexions courtes et nombreuses (HTTP par exemple).  
+Le second souci, c'est que netcat ne fonctionne pas comme un serveur qui tournerait en fond pour réceptionner en continu les requêtes et convient mal à certains protocoles qui effectuent des connexions courtes et nombreuses (HTTP par exemple).  
 La version Windows de netcat a bien une option `-L` pour l'écoute continue mais on croise à nouveau le problème des redirections.  
 
 **KevProxy**  
 [KevProxy](http://www.bournemouthbynight.co.uk/tools/kp.c) comble avec succès les lacunes que l'on avait avec netcat.  
 
-Le programme a certes moins de fonctionnalités mais fait exactement ce dont on a besoin pour cet exercice. Il ouvre un port en local en créant un thread pour chaque connexion. Chaque connexion est renvoyée sur une ip et un port spécifié en prenant soin de modifier le port source.  
+Le programme a certes moins de fonctionnalités, mais fait exactement ce dont on a besoin pour cet exercice. Il ouvre un port en local en créant un thread pour chaque connexion. Chaque connexion est renvoyée sur une ip et un port spécifié en prenant soin de modifier le port source.  
 
-Pour l'utiliser dans notre cas on utilisera la commande suivante :  
+Pour l'utiliser dans notre cas, on utilisera la commande suivante :  
 
 ```bash
 kp 8080 192.168.0.3 80 20 v

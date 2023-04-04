@@ -160,7 +160,7 @@ server.listen(9000, '127.0.0.1', function() {
 });
 ```
 
-On créé un tunnel SSH afin de rediriger notre port 8888 local vers le port interne 9000 de la VM :  
+On crée un tunnel SSH afin de rediriger notre port 8888 local vers le port interne 9000 de la VM :  
 
 ```bash
 ssh -L 8888:127.0.0.1:9000 spiderman@192.168.1.20

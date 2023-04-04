@@ -567,11 +567,11 @@ hunter2 (200 points)
 > 
 > Example answer format: [/dir/dir/stagedir/] [username/password] [/dir/dir/filename.ext]
 
-On quitte donc la partie *"comment c'est arrivé"* pour la partie *"que s'est t-il passé..."*  
+On quitte donc la partie *"comment c'est arrivé"* pour la partie *"que s'est-il passé..."*  
 
 La présence du processus sh dans le dossier de l'APK backdooré indique que le pirate a récupéré un shell depuis le *Meterpreter*.  
 
-J'ai eu recours à la commande *linux\_proc\_maps* de *Volatility* pour lister les zones mémoires du processus shell :  
+J'ai eu recours à la commande `linux_proc_maps` de *Volatility* pour lister les zones mémoires du processus shell :  
 
 ```bash
 python vol.py linux_proc_maps -f memory.dmp --profile=Linuxgoldfish-2_6_29ARM -p 1255
@@ -583,7 +583,7 @@ C'est dans le heap que j'ai trouvé le plus d'informations intéressantes :
 python vol.py linux_dump_map -f memory.dmp --profile=Linuxgoldfish-2_6_29ARM -p 1255 -s 0x00000000beb41000 -D /tmp/output
 ```
 
-Un *strings* retourne les informations (relativement) lisibles suivantes :  
+Un `strings` retourne les informations (relativement) lisibles suivantes :  
 
 ```
 card/Download/kevin.jpg > ./k

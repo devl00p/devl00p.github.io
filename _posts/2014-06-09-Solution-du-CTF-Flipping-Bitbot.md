@@ -85,7 +85,7 @@ Avec *DirBuster* (un équivalent en Java de dirb) j'ai eu des résultats plus in
 
 Notez que c'est seulement une question de wordlists et d'options utilisées ainsi avec *dirb* on peut aussi obtenir des résultats satisfaisant de cette façon (avec l'une des wordlists par défaut) :  
 
-```bash
+```console
 $ ./dirb http://192.168.1.29/ wordlists/vulns/cgis.txt -r -X .php
 ```
 
@@ -93,7 +93,7 @@ Mais j'ai trouvé d'autres wordlists qui s'avèrent très pratiques [sur ce site
 
 Bien sûr j'ai cherché des vulnérabilités dans le site qui est le C&C du botnet avec la page de connexion pour la gestion des bots à /admin.  
 
-*Wapiti* et *sqlmap* n'ont révélé aucune vulnérabilités :(  
+*Wapiti* et *sqlmap* n'ont révélé aucunes vulnérabilités :(  
 
 Des scripts Python fait-maison de brute-force et un autre pour tester les paramètres web les plus communs plus tard... toujours bredouille (ou plutôt *brocouille* comme on dit dans le *Bouchonnois*).  
 
