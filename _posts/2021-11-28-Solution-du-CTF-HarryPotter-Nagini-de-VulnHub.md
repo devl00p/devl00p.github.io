@@ -256,7 +256,7 @@ Tu n'as pas eu le mémo ?
 
 Force est de constater que j'ai raté un élément lors de l'énumération. *Feroxbuster* permettant aussi de balancer quelques suffixes il m'aura permis de retrouver un fichier *note.txt* à la racine du site.  
 
-```bash
+```console
 $ feroxbuster -u http://192.168.2.14/ -w DirBuster-0.12/directory-list-2.3-big.txt -n -x html,php,txt
 ```
 

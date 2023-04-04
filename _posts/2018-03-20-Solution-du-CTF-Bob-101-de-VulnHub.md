@@ -185,7 +185,7 @@ Try and get him fired
 Besoin d'un indice
 ------------------
 
-Assez pour bob, intéressons nous aux comptes dont on dispose. En dehors de l'alias embêtant pour *cat* dans les .bashrc (un *unalias* et on n'en parle plus) :  
+Assez pour bob, intéressons-nous aux comptes dont on dispose. En dehors de l'alias embêtant pour *cat* dans les .bashrc (un *unalias* et on n'en parle plus) :  
 
 ```bash
 alias cat='echo hey \n there'

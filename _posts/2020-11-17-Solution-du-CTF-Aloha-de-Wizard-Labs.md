@@ -66,7 +66,7 @@ On garde en tête le possible nom d'utilisateur *alex* et on se rend sur l'URL m
 
 On a donc un formulaire qui va charger une URL. Le premier réflexe est de mettre un port en écoute et voir comment est formatée la requête HTTP :  
 
-```bash
+```console
 $ ncat -l -p 8080 -v
 Ncat: Version 7.70 ( https://nmap.org/ncat )
 Ncat: Listening on :::8080
@@ -194,7 +194,7 @@ La clé SSH dans le dossier *.dev* permet de nous connecter au système.
 
 Sans l'intervention d'*Alex* on aurait de toute façon tilté sur le nombre d'interfaces réseau :  
 
-```bash
+```console
 alex@aloha:~$ ifconfig
 ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 10.1.1.60  netmask 255.255.255.0  broadcast 10.1.1.255
@@ -263,7 +263,7 @@ Il suffit donc de reproduire les étapes de l'article. La seule différence c'es
 
 Le principe de l'exploitation est similaire à ce qu'il peut se faire avec Docker : on va créer un nouveau container sur lequel le système de fichier hôte sera accessible en totalité. Une fois dans le container on est en quelque sorte *upgradés* au lieu de *downgradés* :p   
 
-```bash
+```console
 alex@aloha:/tmp/.devloop$ lxc image list
 +-------+--------------+--------+--------------------------------------+--------+----------+------------------------------+
 | ALIAS | FINGERPRINT  | PUBLIC |             DESCRIPTION              |  ARCH  |   SIZE   |         UPLOAD DATE          |

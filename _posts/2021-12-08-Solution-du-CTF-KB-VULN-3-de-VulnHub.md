@@ -50,7 +50,7 @@ Host script results:
 
 Hack-Me ? Oui oui !  
 
-```bash
+```console
 $ smbclient -U "" -N -L //192.168.56.7
 
         Sharename       Type      Comment
@@ -150,7 +150,7 @@ En revanche le programme */bin/systemctl* est setuid et setgid root. Il existe u
 
 Je me suis mis sous la racine web où j'avais un accès en écriture et commencé par un petit test :  
 
-```bash
+```console
 www-data@kb-server:/var/www/html/sitemagic$ cat yolo.service 
 [Unit]
 Description=root
@@ -188,7 +188,7 @@ J'obtiens bien mon fichier créé par *root* :)
 
 Je modifie le service pour que la commande copie ma clé publique SSH sur */root/.ssh/authorized\_keys* et je relance. Systemctl voit une modification et demande un rechargement :  
 
-```bash
+```console
 www-data@kb-server:/var/www/html/sitemagic$ systemctl start yolo.service
 Warning: The unit file, source configuration file or drop-ins of yolo.service changed on disk. Run 'systemctl daemon-reload' to reload units.
 

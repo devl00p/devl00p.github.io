@@ -251,7 +251,7 @@ Les règles de pare feu semblent aussi nous empêcher d'obtenir un reverse shell
 import socket;[socket.socket().connect_ex(('10.10.13.178', i)) for i in range(0,65536)]
 ```
 
-Du coup on oublie pour le moment et on s'en remet au contenu du fichier *credentials* que l'on peut obtenir de la façon suivante pour éviter l'un des filtres présents :  
+Du coup, on oublie pour le moment et on s'en remet au contenu du fichier *credentials* que l'on peut obtenir de la façon suivante pour éviter l'un des filtres présents :  
 
 ```bash
 cat /home/loki/cred* #

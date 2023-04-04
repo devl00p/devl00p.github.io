@@ -229,7 +229,7 @@ print("Payload sent")
 
 On aura préalablement lancé un Ncat :  
 
-```bash
+```console
 $ ncat -l -p 31337 -v
 Ncat: Version 7.92 ( https://nmap.org/ncat )
 Ncat: Listening on :::31337

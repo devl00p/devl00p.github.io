@@ -375,7 +375,7 @@ int main(void) {
 }
 ```
 
-Je compile, je met les bits set(u|g)id et je met sur le partage NFS :  
+Je compile, je mets les bits set(u|g)id et je mets sur le partage NFS :  
 
 ```bash
 gcc -o setuid_david setuid_david.c -static

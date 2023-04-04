@@ -37,7 +37,7 @@ http://10.10.10.112/backend/ - HTTP 302 (161 bytes, plain) redirects to http://1
 
 Inutile d'insister, passons tout de suite aux sous-domaines pour *bighead.htb* :  
 
-```bash
+```console
 $ patator http_fuzz url="http://10.10.10.112/" method=GET header="Host: FILE0.bighead.htb" 0=/usr/share/sublist3r/subbrute/names.txt -x ignore:size=11378 -x ignore:size=11373
 17:48:24 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2018-11-25 17:48 CET
 17:48:24 patator    INFO -
@@ -208,11 +208,11 @@ Il aura fallut qu'on m'indique de fouiller sur Github pour obtenir la solution :
 
 Je trouve ça dommage d'avoir à faire ce genre de recherches, d'une part parce que sur un boot2root on s'attend pas à ce genre d'étapes (c'est plutôt *batteries included*), d'autre part on a un sous-domaine qui s'appelle ici *code* et un dossier qui s'appelait *dev*... autant dire que ça aurait du être l'emplacement des fichiers en question.  
 
-Ce dépôt a eu 4 commits dont deux concernent un fichier *BHWS\_Backup.zip*.  
+Ce dépôt a eu 4 commits dont deux concernent un fichier `BHWS_Backup.zip`.  
 
 Cette archive zip contient des fichiers protégés par mot de passe. On peut utiliser l'utilitaire *zip2john* (présent avec la version Jumbo de JTR) qui permet d'obtenir un hash à casser :  
 
-```bash
+```console
 $ zip2john BHWS_Backup.zip
  BHWS_Backup.zip->BHWS_Backup/ is not encrypted!
  BHWS_Backup.zip->BHWS_Backup/conf/ is not encrypted!
@@ -221,7 +221,7 @@ $ zip2john BHWS_Backup.zip
 
 Et pour casser ce hash :  
 
-```bash
+```console
 $ john --wordlist=/opt/wordlists/rockyou.txt hash.txt
 Loaded 1 password hash (ZIP, WinZip [PBKDF2-SHA1 8x SSE2])
 Will run 4 OpenMP threads
@@ -306,7 +306,7 @@ C'est le moment de se pencher sur l'exploitation de cette vulnérabilité et vu 
 
 Cela est confirmé avec *rabin* (le copain de *Botman* ?) :  
 
-```bash
+```console
 $ rabin2 -I BigheadWebSvr.exe
 arch     x86
 binsz    51431

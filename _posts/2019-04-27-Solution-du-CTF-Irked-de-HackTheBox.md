@@ -139,7 +139,7 @@ Le fichier *Documents/.backup* contient un mot de passe avec un indice laissant 
 And furious
 -----------
 
-Le fichier */home/ircd/.bash\_history* semble contenir des commandes de plus fort intérêt :  
+Le fichier `/home/ircd/.bash_history` semble contenir des commandes de plus fort intérêt :  
 
 ```bash
 echo '#!/bin/sh' > who

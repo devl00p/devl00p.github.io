@@ -347,7 +347,7 @@ Et comme si ça ne suffisait pas on trouve ce fichier dans le même dossier :
 
 Et son contenu :  
 
-```bash
+```console
 $ cat test.conf
 /tmp
 ```

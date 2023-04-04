@@ -117,7 +117,7 @@ if len(sys.argv) < 2:
 attack(sys.argv[1], None if len(sys.argv) < 3 else sys.argv[2])
 ```
 
-Sur le blog on remarque le nom d'hôte *wordpress.aragog.hogwarts* que j'ai ajouté à mon */etc/hosts* au cas où.  
+Sur le blog, on remarque le nom d'hôte *wordpress.aragog.hogwarts* que j'ai ajouté à mon */etc/hosts* au cas où.  
 
 L'exploit s'utilise de cette manière :   
 
@@ -125,7 +125,7 @@ L'exploit s'utilise de cette manière :
 $ python exploit.py http://wordpress.aragog.hogwarts/blog/
 ```
 
-Par défaut il exploite la vulnérabilité pour uploader un bête webshell qui prend la commande à exécuter dans le paramètre *cmd*. Mais on peut rajouter comme second argument un nom de fichier à uploader à la place, ce qui est bien pratique pour rapatrier des outils supplémentaires :)  
+Par défaut, il exploite la vulnérabilité pour uploader un bête webshell qui prend la commande à exécuter dans le paramètre *cmd*. Mais on peut rajouter comme second argument un nom de fichier à uploader à la place, ce qui est bien pratique pour rapatrier des outils supplémentaires :)  
 
 Sans trop de surprise on a les droits de l'user web :  
 
@@ -166,12 +166,12 @@ Le contenu est le suivant :
 horcrux_{MTogUmlkRGxFJ3MgRGlBcnkgZEVzdHJvWWVkIEJ5IGhhUnJ5IGluIGNoYU1iRXIgb2YgU2VDcmV0cw==}
 ```
 
-dont une partie de décode en base64 comme 
+dont une partie se décode en base64 comme 
 > 1: RidDlE's DiAry dEstroYed By haRry in chaMbEr of SeCrets
 
-Bon, à un moment il faut quitter le webshell et passer à quelque chose de beau avec un PTY.  
+Bon, à un moment, il faut quitter le webshell et passer à quelque chose de beau avec un PTY.  
 
-A une époque j'utilise le fabuleux [Tiny Shell (tsh)](https://github.com/creaktive/tsh) mais il existe plusieurs projets similaires et à jour. J'ai jeté mon dévolu sur [reverse-ssh](https://github.com/Fahrj/reverse-ssh) qui est tout autant fantastique :  
+À une époque j'utilisait le fabuleux [Tiny Shell (tsh)](https://github.com/creaktive/tsh) mais il existe plusieurs projets similaires et à jour. J'ai jeté mon dévolu sur [reverse-ssh](https://github.com/Fahrj/reverse-ssh) qui est tout autant fantastique :  
 
 * Communications chiffrées
 * Terminal (support PTY)
@@ -214,7 +214,7 @@ MariaDB [wordpress]> select * from wp_users;
 
 Voilà qui est mieux. Ça se casse en moins de deux avec JtR :  
 
-```
+```console
 $ ./john --format=phpass --wordlist=rockyou.txt hash.txt
 Using default input encoding: UTF-8
 Loaded 1 password hash (phpass [phpass ($P$ or $H$) 128/128 AVX 4x3])
@@ -241,10 +241,10 @@ L'utilisateur root doit avoir une entrée dans sa crontab :
 2021/11/25 20:48:01 CMD: UID=0    PID=3739   | /bin/bash /opt/.backup.sh 
 ```
 
-Avec cette info il n'y a plus qu'à éditer le script pour lui faire ajouter ma clé publique SSH dans le fichier *authorized\_keys* de root. On attend un peu et on se connecte :  
+Avec cette info, il n'y a plus qu'à éditer le script pour lui faire ajouter ma clé publique SSH dans le fichier *authorized\_keys* de root. On attend un peu et on se connecte :  
 
-```
-ssh root@192.168.2.13
+```console
+$ ssh root@192.168.2.13
 Enter passphrase for key '/home/devloop/.ssh/id_rsa': 
 Linux Aragog 4.19.0-16-amd64 #1 SMP Debian 4.19.181-1 (2021-03-19) x86_64
 

