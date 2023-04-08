@@ -1,6 +1,6 @@
 ---
 title: "Solution du CTF Sunset: Dawn2 de VulnHub"
-tags: [CTF, VulnHub]
+tags: [CTF, VulnHub, binary exploitation]
 ---
 
 [Sunset: Dawn2](https://vulnhub.com/entry/sunset-dawn2,424/) est un CTF qui m'a donné plus de difficultés que j'imaginais au début. Certes on entre très vite sur l'exploitation d'un stack overflow mais cette dernière est triviale.

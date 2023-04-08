@@ -1,7 +1,7 @@
 ---
 title: Solution du CTF BigHead de HackTheBox
 date: 2019-05-04 17:04:00
-tags: [CTF, HackTheBox]
+tags: [CTF, HackTheBox, binary exploitation]
 ---
 
 Concise scan is concise

@@ -1,7 +1,7 @@
 ---
 title: "Solution du CTF C0m80: 1 de VulnHub"
 date: 2018-03-04 16:23:00
-tags: [CTF, VulnHub]
+tags: [CTF, VulnHub, binary exploitation]
 ---
 
 Le CTF C0m80 téléchargeable [sur VulnHub](https://www.vulnhub.com/entry/c0m80-1,198/) est un boot2root créé par [3mrgnc3](https://twitter.com/@3mrgnc3).  

