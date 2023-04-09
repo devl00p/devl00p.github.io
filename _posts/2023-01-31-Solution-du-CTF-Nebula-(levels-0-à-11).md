@@ -462,7 +462,7 @@ level07   3218  0.0  0.0   4184   792 pts/0    S+   01:43   0:00 grep --color=au
 
 Voici un extrait du fichier de conf du `thttpd` :
 
-```apacheconf
+```apache
 # /etc/thttpd/thttpd.conf: thttpd configuration file
 
 # This file is for thttpd processes created by /etc/init.d/thttpd.

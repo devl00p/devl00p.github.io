@@ -133,7 +133,7 @@ dc7user@dc-7:~$ find /var/www/ -type d -writable 2> /dev/null
 
 Malheureusement, il faut faire avec les restrictions présentes dans le `.htaccess` situé à la racine :
 
-```apacheconf
+```apache
 # Protect files and directories from prying eyes.
 <FilesMatch "\.(engine|inc|install|make|module|profile|po|sh|.*sql|theme|twig|tpl(\.php)?|xtmpl|yml)(~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\.(?!well-known).*|Entries.*|Repository|Root|Tag|Template|composer\.(json|lock))$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig|\.save)$">
   <IfModule mod_authz_core.c>

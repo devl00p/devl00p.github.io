@@ -227,15 +227,15 @@ Il s'agit bien de cela :
 
 Soit le nom d'utilisateur `jinmori` et le mot de passe `Taekwondo`.
 
-On peut alors se connecter à la zone Admin sur l'appli web mais je n'y trouve rien de bien intéressant.
+On peut alors se connecter à la zone Admin sur l'appli web, mais je n'y trouve rien de bien intéressant.
 
 ## Enumération à gogo
 
 En fait il y a une section `VOIP LOGS` sur laquelle on trouve des données de communications SMS. Tout est encodé en hexadécimal donc le décodage est trivial. L'un des messages mentionne le nom DNS `wireless.com`.
 
-C'est une information qui a eu peu d'impact à ce moment car je l'avais déjà croisé dans le fichier `/etc/apache2/sites-available/cmsms.conf` :
+C'est une information qui a eu peu d'impact à ce moment, car je l'avais déjà croisé dans le fichier `/etc/apache2/sites-available/cmsms.conf` :
 
-```apacheconf
+```apache
 <VirtualHost *:80>
  ServerAdmin admin@wireless.com
  DocumentRoot /var/www/html/cmsms

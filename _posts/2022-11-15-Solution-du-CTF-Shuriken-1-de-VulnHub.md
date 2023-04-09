@@ -102,9 +102,9 @@ Dans les process je remarque qu'un utilisateur `server-management` fait tourner 
 server-+   730  0.2  2.5 612356 25972 ?        Ssl  Nov14   2:25 node /home/server-management/Shuriken/server.js
 ```
 
-Comme on n'est pas root on ne peux pas obtenir la liste des processus qui écoute sur chacun des ports mais on peut valider l'hypothèse en regardant les sites activés pour `Apache` :
+Comme on n'est pas root on ne peut pas obtenir la liste des processus qui écoute sur chacun des ports, mais on peut valider l'hypothèse en regardant les sites activés pour `Apache` :
 
-```apacheconf
+```apache
 <VirtualHost *:80>
         ServerAdmin webmaster@localhost
         ServerName shuriken.local

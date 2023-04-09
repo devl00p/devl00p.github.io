@@ -276,7 +276,7 @@ $ file /home/rene/backup/*
 
 En attendant voici la config qui nous bloquait l'accès à Apache :  
 
-```apacheconf
+```apache
 $ cat .htaccess
 AuthUserFile /var/www/html/.htpasswd
 AuthName "index.php"
@@ -289,9 +289,9 @@ $ cat .htpasswd
 rene:$apr1$wfYjXf4U$0ZZ.qhGGrtkOxvKr5WFqX/
 ```
 
-Le hash semble trop complexe à casser donc on déplace juste le .htaccess et on n'est plus embêté :)   
+Le hash semble trop complexe à casser donc on déplace juste le `.htaccess` et on n'est plus embêté :)   
 
-Les fichiers .BAK (que l'on retrouve aussi dans l'archive .tar.gz) ne semblent pas correspondre à grand chose. Un coup d'œil via un éditeur hexa ne nous met sur aucune piste.  
+Les fichiers .BAK (que l'on retrouve aussi dans l'archive .tar.gz) ne semblent pas correspondre à grand-chose. Un coup d'œil via un éditeur hexa ne nous met sur aucune piste.  
 
 Même en ressortant mon *Guide complet du FreeBSD* (superbe livre au passage) sur la section des backups je n'ai rien trouvé qui pourrait me diriger sur le sujet. De plus *dump* et *restore* ne sont pas présents sur le système.  
 

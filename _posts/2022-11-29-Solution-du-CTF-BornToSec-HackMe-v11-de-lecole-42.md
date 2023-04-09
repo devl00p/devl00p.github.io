@@ -172,11 +172,11 @@ J'ai procédé à la même opération pour le fichier `/etc/os-release` pour ide
 
 `Ubuntu precise (12.04.5 LTS)`
 
-Une petite recherche sur le web permet de déterminer comment est organisé la configuration Apache sur ce système. Heureusement le nom du fichier de configuration par défaut pour le virtual host n'a pas été changé (`/etc/apache2/sites-enabled/000-default`).
+Une petite recherche sur le web permet de déterminer comment est organisée la configuration Apache sur ce système. Heureusement le nom du fichier de configuration par défaut pour le virtual host n'a pas été changé (`/etc/apache2/sites-enabled/000-default`).
 
 En voici les grandes lignes :
 
-```apacheconf
+```apache
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
     ServerName BorntoSec

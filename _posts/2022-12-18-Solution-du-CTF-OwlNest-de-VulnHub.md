@@ -315,7 +315,7 @@ Une fois connecté on voit qu'en effet nos fichiers uploadés n'appartenaient pa
 
 Cela s'explique par l'utilisation du `suexec` dans la configuration d'Apache :
 
-```apacheconf
+```apache
         SuexecUserGroup rmp rmp
         <Directory "/var/www/application/">
                 AllowOverride None
