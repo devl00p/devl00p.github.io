@@ -1,5 +1,5 @@
 ---
-title: "Solution du CTF Sunset: Solstice VulnHub"
+title: "Solution du CTF Sunset: Solstice de VulnHub"
 tags: [CTF, VulnHub]
 ---
 
