@@ -62,7 +62,7 @@ PORT      STATE SERVICE     VERSION
 46813/tcp open  mountd      1-3 (RPC #100005) 
 ```
 
-On a beaucoup de ports liés aux services RPC. Evidemment seul NFS semble intéressant dans le lot. Testé via *smbclient*, Samba ne semble pas partager de disques.  
+On a beaucoup de ports liés aux services RPC. Évidemment seul NFS semble intéressant dans le lot. Testé via `smbclient`, Samba ne semble pas partager de disques.  
 
 Il est temps de jeter un œil plus curieux sur les partages NFS :  
 
@@ -87,7 +87,7 @@ cp: impossible de créer le fichier standard '/mnt/.ssh/authorized_keys': Systè
 
 Raté... En fouillant dans les fichiers, on ne remarque rien de vraiment critique. Dans le dossier *Downloads* se trouve une archive `qdPM_9.1.zip` qui est [une webapp de gestion de projet](https://qdpm.net/).  
 
-Étrangement, il y a un dossier `.mozilla` avec les données de navigation de Firefox. Je les copie donc et tente d'extraire les potentiels mots de passes enregistrés avec [firefox\_decrypt](https://github.com/devl00p/firefox_decrypt) (j'ai forké le projet car le mainteneur ne souhaite pas maintenir une compatibilité avec les versions moins récentes de Python 3).  
+Étrangement, il y a un dossier `.mozilla` avec les données de navigation de Firefox. Je les copie donc et tente d'extraire les potentiels mots de passes enregistrés avec [firefox_decrypt](https://github.com/devl00p/firefox_decrypt) (j'ai forké le projet car le mainteneur ne souhaite pas maintenir une compatibilité avec les versions moins récentes de Python 3).  
 
 ```console
 $ python3 firefox_decrypt.py /tmp/mozilla_dir/firefox/ 
@@ -128,15 +128,15 @@ Finalement on n'est pas plus avancés...
 Car Jack
 --------
 
-La page d'index du site ne donnant rien de probant, je trouve via Feroxbuster le dossier `/forms/` avec deux scripts PHP, chacun donne une erreur *Unable to load the "PHP Email Form" Library!*. Cassés donc.  
+La page d'index du site ne donnant rien de probant, je trouve via _Feroxbuster_ le dossier `/forms/` avec deux scripts PHP, chacun donne une erreur *Unable to load the "PHP Email Form" Library!*. Cassés donc.  
 
-Comme un nom d'hôte apparaissant dans le code HTML (*cheeseyjack.local*) j'ai tenté d'énumérer les hôtes virtuels, là encore sans succès :  
+Comme un nom d'hôte apparaissant dans le code HTML (`cheeseyjack.local`) j'ai tenté d'énumérer les hôtes virtuels, là encore sans succès :  
 
 ```bash
 $ ffuf -w /fuzzdb/discovery/dns/alexaTop1mAXFRcommonSubdomains.txt -u http://192.168.56.3/ -H "Host: FUZZ.cheeseyjack.local" -fs 7247
 ```
 
-Finalement en utilisant la wordlist *directory-list-2.3-big.txt* (que vous trouverez facilement sur Github) je trouve déjà ce fichier */it\_security/note.txt* :  
+Finalement en utilisant la wordlist `directory-list-2.3-big.txt` (que vous trouverez facilement sur Github) je trouve déjà ce fichier `/it_security/note.txt` :  
 
 > Cheese you complete idiot. You hired me to ensure your webapp project stayed secure and you use a weak password like that?  
 > 
@@ -146,13 +146,13 @@ Finalement en utilisant la wordlist *directory-list-2.3-big.txt* (que vous trouv
 > 
 >  -crab
 
-Ainsi qu'un dossier `/project_management` qui semble être une installation de *qdPM* mentionné plus tôt.  
+Ainsi qu'un dossier `/project_management` qui semble être une installation de `qdPM` mentionné plus tôt.  
 
 Avec la note précédente, on va donc tenter de trouver un compte valide pour le webapp. J'ai été un peu trompé par l'indice indiquant d'utiliser [Cewl](https://github.com/digininja/cewl) qui ne m'a mené à rien.  
 
 L'appli demande un email pour nom d'utilisateur donc certainement `cheese@cheeseyjack.local` ou `ch33s3m4n@cheeseyjack.local` (rapport au nom d'utilisateur Unix).  
 
-Avec le dernier et le mot de passe *qdpm* je parviens finalement à me connecter sur l'application.  
+Avec le dernier et le mot de passe `qdpm` je parviens finalement à me connecter sur l'application.  
 
 Lumber Jack
 -----------
