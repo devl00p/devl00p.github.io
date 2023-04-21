@@ -1,6 +1,6 @@
 ---
 title: "Solution du CTF Pinky's Palace v2 de VulnHub"
-tags: [CTF, VulnHub]
+tags: [CTF, VulnHub, binary exploitation]
 ---
 
 ## Nitro
