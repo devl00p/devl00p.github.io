@@ -140,7 +140,7 @@ uname -a
 Linux pinkys-palace 4.9.0-6-686 #1 SMP Debian 4.9.82-1+deb9u3 (2018-03-02) i686 GNU/Linux
 ```
 
-J'ai ensuite rapatrié un [Fahrj/reverse-ssh: Statically-linked ssh server with reverse shell functionality for CTFs and such](https://github.com/Fahrj/reverse-ssh). Pour ce faire je suis passé par le ncat qui était présent sur le système (écoute sur la VM et envoi depuis ma machine).
+J'ai ensuite rapatrié un [Fahrj/reverse-ssh: Statically-linked ssh server with reverse shell functionality for CTFs and such](https://github.com/Fahrj/reverse-ssh). Pour ce faire je suis passé par le `ncat` qui était présent sur le système (écoute sur la VM et envoi depuis ma machine).
 
 Malgré son nom, cet outil permet aussi d'écouter sur un port (par défaut le 31337) et agit comme un serveur SSH classique pour lequel le mot de passe est `letmeinbrudipls`.
 
@@ -263,7 +263,7 @@ LISTEN     0      32                                                            
 
 Ils sont liés à Apache comme indiqué dans le fichier `ports.conf` :
 
-```apacheconf
+```apache
 # If you just change the port or add more ports here, you will likely also
 # have to change the VirtualHost statement in
 # /etc/apache2/sites-enabled/000-default.conf
@@ -283,7 +283,7 @@ Listen 127.0.0.1:65334
 
 On peut voir dans `sites-available/000-default.conf` qu'ils servent des fichiers appartenant à l'utilisateur `pinksec` :
 
-```apacheconf
+```apache
 <VirtualHost 127.0.0.1:80>
     # The ServerName directive sets the request scheme, hostname and port that
     # the server uses to identify itself. This is used when creating
@@ -328,7 +328,7 @@ On peut voir dans `sites-available/000-default.conf` qu'ils servent des fichiers
 </VirtualHost>
 ```
 
-Sur l'un on trouve une mire de login demandant login, mot de passe et code PIN de 5 chiffres et sur l'autre juste une page `DATABASE Under Development` qui semble retourné pour tout ce qu'on lui demande.
+Sur l'un on trouve une mire de login demandant login, mot de passe et code PIN de 5 chiffres et sur l'autre juste une page avec le message *DATABASE Under Development* qui semble retournée même en cas de 404.
 
 Pour être plus à l'aise je forwarde le port 80 sur le port 8080 de ma machine en passant par le `reverse-ssh` :
 
@@ -392,7 +392,7 @@ Mon script remontait tous les cas qui n'avaient pas cette réponse :
 <p>Incorrect Username Or Password Or Pin.</p>
 ```
 
-Et effectivement il aurait trouvé le cas où le mot de passe et le nim d'utilisateur était correct, mais pas le PIN :
+Et effectivement il aurait trouvé le cas où le mot de passe et le nom d'utilisateur était correct, mais pas le PIN :
 
 ```html
 <p>Incorrect Username Or Password or Pin.
