@@ -583,7 +583,7 @@ P.sendline(p64(CHMOD))
 
 Je ne suis pas parvenu à faire fonctionne *pwntools* sur le ReverseSSH qui écoutait sur le port 31337 avec l'utilisateur *Boe*. J'ai donc utilisé à la place le vrai serveur SSH avec l'utilisateur *Joxter* mais pour qu'il puisse accéder au binaire *ropit* j'ai du changer auparavant les permissions sur */home/Boe*.  
 
-Avant l'exécution je créé un lien symbolique *zR* pointant vers */bin/bash* :  
+Avant l'exécution je crée un lien symbolique *zR* pointant vers */bin/bash* :  
 
 ```
 Joxter@moee:~$ ln -s /bin/bash zR 

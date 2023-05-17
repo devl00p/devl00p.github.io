@@ -281,13 +281,13 @@ $dolibarr_main_db_pass='toor';
 $dolibarr_main_db_type='mysqli';
 ```
 
-C'est mieux. Je me connecte sur /phpmyadmin/ avec ces identifiants et j'essaye d'utiliser *INTO OUTFILE* pour placer une backdoor PHP mais sans succès :(  
+C'est mieux. Je me connecte sur /phpmyadmin/ avec ces identifiants et j'essaye d'utiliser `INTO OUTFILE` pour placer une backdoor PHP, mais sans succès :(  
 
-Dans la base de données pour le drupal6 je trouve un user drupal6 avec le hash ab57944b510148c7299a13f6cb31ef6e. Une recherche Google nous donne le password correspondant : drupal6 :p  
+Dans la base de données pour le drupal6 je trouve un user drupal6 avec le hash `ab57944b510148c7299a13f6cb31ef6e`. Une recherche Google nous donne le password correspondant : `drupal6` :p  
 
-J'édite un des posts existant pour ajouter ma backdoor PHP en attachement mais celle-ci est renommée en .php.txt :(  
+J'édite un des posts existant pour ajouter ma backdoor PHP en attachement, mais celle-ci est renommée en .php.txt :(  
 
-Dans *Administer > Site configuration > Files uploads* j'ai pu ajouter le type phtml puis finalement uploader la backdoor (drupal l'a placée dans */drupal6/sites/default/files/*).  
+Dans `Administer > Site configuration > Files uploads` j'ai pu ajouter le type phtml puis finalement uploader la backdoor (drupal l'a placée dans */drupal6/sites/default/files/*).  
 
 Netcat est installé sur le système, mais ne dispose pas de l'option -e pour y attacher un shell.  
 
