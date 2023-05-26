@@ -383,7 +383,7 @@ On obtient des lignes comme celles-ci avec la direction du flux, l'ID de la requ
 > ID 34D9 aaaaacyaaaaaaaaaaaaaaaaa-dbd8b82da7db86f7.badguy.com
 ```
 
-Evidemment on remarque tout de suite des données hexadécimales. La première partie du nom de domaine semble s'incrémenter et je me suis dis que le seul objectif est d’empêcher une mise en cache, je ne suis donc pas allé plus loin. Quand aux ID DNS j'ai estimé qu'ils étaient générés automatiquement par une librairie utilisée et n'avaient donc pas d'importance.  
+Évidemment on remarque tout de suite des données hexadécimales. La première partie du nom de domaine semble s'incrémenter et je me suis dis que le seul objectif est d’empêcher une mise en cache, je ne suis donc pas allé plus loin. Quand aux ID DNS j'ai estimé qu'ils étaient générés automatiquement par une librairie utilisée et n'avaient donc pas d'importance.  
 
 A ces requêtes il y a parfois un retour sous la forme d'un enregistrement TXT en base64 :  
 

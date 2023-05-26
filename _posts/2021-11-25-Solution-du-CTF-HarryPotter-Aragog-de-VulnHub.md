@@ -23,7 +23,7 @@ Comme on veut tous casser la gueule de cette face de rat de *Voldemort*, trêve 
 Wordpress troué
 ---------------
 
-Evidemment il y a un port 80 découvert via Nmap  
+Évidemment il y a un port 80 découvert via Nmap  
 
 ```
 Not shown: 65534 closed tcp ports (reset)

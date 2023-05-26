@@ -97,7 +97,7 @@ RSA key fingerprint is SHA256:ouF/tUjdBRFlHLkk1CgdY/xcer/6epVHyR9k0gDiNeI.
 This key is not known by any other names
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added '[127.0.0.1]:8888' (RSA) to the list of known hosts.
-sirius@127.0.0.1's password: 
+devloop@127.0.0.1's password: 
 tomcat@miletus:/$ id
 uid=999(tomcat) gid=999(tomcat) groups=999(tomcat)
 ```

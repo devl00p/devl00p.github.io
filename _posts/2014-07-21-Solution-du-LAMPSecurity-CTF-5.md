@@ -179,7 +179,7 @@ while True:
 fd.close()
 ```
 
-Evidemment à vous de remplir préalablement le fichier `logs.txt` avec des paths de fichiers intéressants (les `.ssh/id_rsa` des utilisateurs par exemple).  
+Évidemment à vous de remplir préalablement le fichier `logs.txt` avec des paths de fichiers intéressants (les `.ssh/id_rsa` des utilisateurs par exemple).  
 
 J'obtiens l'output suivant :  
 

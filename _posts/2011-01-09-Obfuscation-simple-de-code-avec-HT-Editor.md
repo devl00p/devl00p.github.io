@@ -18,7 +18,7 @@ Ce code est ensuite transformé en [langage machine](http://fr.wikipedia.org/wik
 
 Comme ces instructions ne font pas toutes la même taille et ne reçoivent pas le même nombre d'arguments, on ne peut pas lire le code binaire en le prenant n'importe où. Il faut partir du début du code et le lire linéairement, instructions après instructions.  
 
-Evidemment le langage assembleur permet de faire des sauts dans le code et lors de l'exécution du binaire, le processeur n'aura aucun mal à suivre les instructions. En revanche pour un logiciel désassembleur il est difficile d'analyser tous les branchements possibles et il va donc faire une lecture linéaire du code.  
+Évidemment le langage assembleur permet de faire des sauts dans le code et lors de l'exécution du binaire, le processeur n'aura aucun mal à suivre les instructions. En revanche pour un logiciel désassembleur il est difficile d'analyser tous les branchements possibles et il va donc faire une lecture linéaire du code.  
 
 Une technique utilisée pour rendre l'analyse de code plus difficile consiste à fausser cette lecture linéaire par exemple un plaçant un saut inconditionnel immédiatement suivi de données aléatoires qui vont casser la séquence d'instructions.  
 

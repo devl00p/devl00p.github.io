@@ -346,7 +346,7 @@ Avec les droits dont on dispose, on peut consulter la discussion sur le bug 6 po
 
 ![C0m80 MantisBT capture](/assets/img/c0m80/c0m80_bug3.png)
 
-Evidemment le lien vers le CVE est là pour nous troller :p  
+Évidemment le lien vers le CVE est là pour nous troller :p  
 
 Bon, on sait qu'il faut exploiter une faille dans le serveur FTP... mais l'exécutable que j'ai est corrompu....  
 

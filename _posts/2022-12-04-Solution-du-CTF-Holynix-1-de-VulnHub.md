@@ -262,7 +262,7 @@ Parameter: password (POST)
 web server operating system: Linux Ubuntu 8.04 (Hardy Heron)
 web application technology: PHP 5.2.4, Apache 2.2.8
 back-end DBMS: MySQL >= 4.1
-[16:15:27] [INFO] fetched data logged to text files under '/home/sirius/.sqlmap/output/192.168.242.135'
+[16:15:27] [INFO] fetched data logged to text files under '/home/devloop/.sqlmap/output/192.168.242.135'
 
 [*] ending @ 16:15:27 /2022-12-04/
 ```

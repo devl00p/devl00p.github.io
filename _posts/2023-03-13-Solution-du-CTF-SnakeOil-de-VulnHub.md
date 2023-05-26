@@ -5,11 +5,8 @@ tags: [CTF, VulnHub]
 
 [digitalworld.local: snakeoil](https://vulnhub.com/entry/digitalworldlocal-snakeoil,738/) est un autre CTF proposé par *Donavan* et récupérable sur la plateforme VulnHub.
 
-```
-Nmap scan report for 192.168.56.1
-Host is up.
-Nmap done: 256 IP addresses (3 hosts up) scanned in 1.58 seconds
-sirius@linux-vyoc:/tmp> sudo nmap -sCV -T5 -p- 192.168.56.123
+```console
+$ sudo nmap -sCV -T5 -p- 192.168.56.123
 Starting Nmap 7.93 ( https://nmap.org ) at 2023-03-12 17:01 CET
 Nmap scan report for 192.168.56.123
 Host is up (0.00012s latency).

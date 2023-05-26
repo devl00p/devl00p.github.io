@@ -20,7 +20,7 @@ On exclut aussi le tunneling de ninja par [DNS](https://github.com/sensepost/DNS
 
 Par anonyme on entendra ici que l'adresse IP du connect-back n'est pas celle de l'attaquant et qu'il est en mesure d'utiliser plusieurs relais pour dissimuler sa véritable adresse IP.  
 
-Evidemment on suppose qu'il dissimule déjà son IP avec sa RCE, sinon ça n'a pas grand intérêt :D  
+Évidemment on suppose qu'il dissimule déjà son IP avec sa RCE, sinon ça n'a pas grand intérêt :D  
 
 ### Pourquoi vouloir un reverse shell ?
 

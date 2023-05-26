@@ -101,7 +101,7 @@ MAC Address: 08:00:27:62:F1:E2 (Oracle VirtualBox virtual NIC)
 
 ```
 
-Evidemment on est tenté par le NFS (partage de fichiers Unix) alors on dégaine showmount :  
+Évidemment on est tenté par le NFS (partage de fichiers Unix) alors on dégaine showmount :  
 
 ```
 $ showmount -a 192.168.3.2

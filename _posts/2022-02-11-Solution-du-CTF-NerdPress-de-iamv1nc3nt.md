@@ -145,7 +145,7 @@ mysql> select * from wp_users;  
 5 rows in set (0.00 sec)
 ```
 
-Evidemment cela ne nous sert à rien de casser ces hashs à moins qu'ils soient utilisés aussi pour des comptes locaux :  
+Évidemment cela ne nous sert à rien de casser ces hashs à moins qu'ils soient utilisés aussi pour des comptes locaux :  
 
 ```
 www-data@nerdpress:/var/www/html$ cat /etc/passwd | grep home 
@@ -218,7 +218,7 @@ User swozniak may run the following commands on nerdpress:
     (root) /usr/bin/ssh-keygen
 ```
 
-Evidemment si on peut utiliser *ssh-keygen* on peut créer une nouvelle clé pour root et c'est dans la poche, hmm ?  
+Évidemment si on peut utiliser *ssh-keygen* on peut créer une nouvelle clé pour root et c'est dans la poche, hmm ?  
 
 Seulement la clé privée n'est pas affichée dans la console donc une fois la clé générée on ne peut pas la lire et je n'ai pas vu d'options dans la page de manuel qui provoquerait cet affichage ou effectuerait une backup de cette clé.  
 

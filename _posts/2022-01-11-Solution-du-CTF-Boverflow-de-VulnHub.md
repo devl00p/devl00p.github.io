@@ -184,7 +184,7 @@ int main()
 
 ```
 
-Evidemment si on effectue un strings sur le fichier on obtient des chaines sensiblement différentes (le mot de passe attendu a été changé).  
+Évidemment si on effectue un strings sur le fichier on obtient des chaines sensiblement différentes (le mot de passe attendu a été changé).  
 
 On peut aussi débugger le binaire avec gdb, désassembler la méthode *echo* et placer les breakpoints sur les appels à *strcmp*.  
 

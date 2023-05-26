@@ -137,7 +137,7 @@ uid_t getuid(void) {
 }
 ```
 
-Evidemment ça ne marche pas sur le binaire à son emplacement originel car il est setuid. L'utilisation de `LD_PRELOAD` se détective sur les setuid sans quoi ce serait la journée portes ouvertes.
+Évidemment ça ne marche pas sur le binaire à son emplacement originel car il est setuid. L'utilisation de `LD_PRELOAD` se détective sur les setuid sans quoi ce serait la journée portes ouvertes.
 
 ```bash
 level13@nebula:/tmp$ LD_PRELOAD=/tmp/libuid.so /home/flag13/flag13

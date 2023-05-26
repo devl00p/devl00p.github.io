@@ -76,7 +76,7 @@ Les deux derniers dossiers sont listables. Dans le premier on peut trouver une c
 > 
 > Nick
 
-La capture réseau correspond à une connexion réussie sur le port FTP. Evidemment le mot de passe est en clair, il n'y avait aucune difficulté sur cette partie.  
+La capture réseau correspond à une connexion réussie sur le port FTP. Évidemment le mot de passe est en clair, il n'y avait aucune difficulté sur cette partie.  
 
 ```
 220 (vsFTPd 3.0.3)

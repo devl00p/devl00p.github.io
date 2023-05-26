@@ -433,7 +433,7 @@ Utiliser l'adresse qui a été réservée par *malloc()* au tout début du progr
 
 Si les adresses ne sont pas randomisées alors on peut avoir un ordre d'idée de l'adresse retournée par le malloc(121) en début de programme (cette adresse ne changera pas énormément d'un système à un autre d'après mes tests persos).  
 
-Evidemment il faut relancer la VM à chaque tentative. Malheureusement... ça n'a pas fonctionné.  
+Évidemment il faut relancer la VM à chaque tentative. Malheureusement... ça n'a pas fonctionné.  
 
 Voyons voir ce que ce programme a d'autre dans le ventre :  
 

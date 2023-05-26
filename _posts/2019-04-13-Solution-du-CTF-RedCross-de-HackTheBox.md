@@ -100,7 +100,7 @@ Ta mère elle va dumper
 
 Une fois connecté on se retrouve sur ce qui s'apparente plus ou moins à une boîte de messagerie avec un message rappelant que notre compte est en attente de création.  
 
-La page contient une zone de texte avec un label *UserID* et un bouton *filter*. Evidemment tout bon hacker qui se respecte s'empresse de rentrer apostrophe et guillemet pour voir comment le script répond et ça paye aussitôt :  
+La page contient une zone de texte avec un label *UserID* et un bouton *filter*. Évidemment tout bon hacker qui se respecte s'empresse de rentrer apostrophe et guillemet pour voir comment le script répond et ça paye aussitôt :  
 
 > DEBUG INFO: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '5' or dest like '"'') LIMIT 10' at line 1
 

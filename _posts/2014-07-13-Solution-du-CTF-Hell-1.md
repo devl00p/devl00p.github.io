@@ -850,7 +850,7 @@ Ensuite le serveur pose des questions du type *"Quick what's... 514 x 23?"*.
 
 Le but du jeu est de répondre aux questions (uniquement des multiplications) le plus vite possible pour battre le meilleur score.  
 
-Evidemment pour cela il faut (encore) écrire du code :  
+Évidemment pour cela il faut (encore) écrire du code :  
 
 ```python
 import socket

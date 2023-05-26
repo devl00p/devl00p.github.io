@@ -560,7 +560,7 @@ Congratulations on rooting BRAVERY. :)
 Qui peut le moins peut le plus
 ------------------------------
 
-Evidemment on aurait pu mettre directement un binaire setuid root sur le partage NFS et shunter David :  
+Évidemment on aurait pu mettre directement un binaire setuid root sur le partage NFS et shunter David :  
 
 ```
 [david@bravery nfsshare]$ ./setuid_root 

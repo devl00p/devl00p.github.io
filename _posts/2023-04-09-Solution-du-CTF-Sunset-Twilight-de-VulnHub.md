@@ -58,7 +58,7 @@ CSP is not set
 [*] Launching module permanentxss
 
 [*] Generating report...
-A report has been generated in the file /home/sirius/.wapiti/generated_report
+A report has been generated in the file /home/devloop/.wapiti/generated_report
 Open /home/devloop/.wapiti/generated_report/192.168.56.165_04092023_0735.html with a browser to see this report.
 ```
 

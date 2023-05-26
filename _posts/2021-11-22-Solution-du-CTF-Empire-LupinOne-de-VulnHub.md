@@ -114,7 +114,7 @@ On aurait pu trouver le fichier avec rockyou de cette façon :
 $ ffuf -u http://192.168.2.5/~secret/.FUZZ.txt -w /tools/wordlists/rockyou.txt -mc 200
 ```
 
-Evidemment utiliser ce type de wordlist pour ce type de recherche c'est comme se servir d'un sous marin nucléaire pour débloquer un filtre à huile récalcitrant (et je sais de quoi je parle).  
+Évidemment utiliser ce type de wordlist pour ce type de recherche c'est comme se servir d'un sous marin nucléaire pour débloquer un filtre à huile récalcitrant (et je sais de quoi je parle).  
 
 Décodage
 --------

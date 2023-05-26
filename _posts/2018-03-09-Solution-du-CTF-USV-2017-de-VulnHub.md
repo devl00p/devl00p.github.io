@@ -328,7 +328,7 @@ On a ici une faille SQL protégée à la va vite par le retrait de certains mots
 ?>
 ```
 
-Evidemment les identifiants vus plus tôt ne permettent pas l'accès à la section admin... et la présence du captcha *Securimage* rend compliqué le brute force des identifiants... mais pas impossible.  
+Évidemment les identifiants vus plus tôt ne permettent pas l'accès à la section admin... et la présence du captcha *Securimage* rend compliqué le brute force des identifiants... mais pas impossible.  
 
 Je m'explique : on a accès aux fichiers du serveur avec les droits d'Apache. Les données liées au cookies sont stockées au format JSON sur le serveur du coup si *Securimage* stocke la valeur attendue d'un captcha dans un cookie, on peut la retrouver dans le bon fichier de session.  
 

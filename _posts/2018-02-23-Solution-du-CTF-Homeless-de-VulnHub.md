@@ -170,7 +170,7 @@ Done
 
 Et on obtient 213 fichiers binaires avec du contenu différents faisant tous 1556 octets et la même somme MD5 (cb94cc8711348558ba49ae9dcf10ecdb). Que demande le peuple ?  
 
-Evidemment il faut pouvoir passer ces données au formulaire, ce qui n'est qu'une formalité pour moi qui écrit du code de ce type tous les jours :  
+Évidemment il faut pouvoir passer ces données au formulaire, ce qui n'est qu'une formalité pour moi qui écrit du code de ce type tous les jours :  
 
 ```python
 import requests

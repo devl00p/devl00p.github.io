@@ -515,7 +515,7 @@ Il semble qu'on ne peut pas mettre n'importe quoi, il faut vraiment écrire des 
 
 Avant d'aller plus loin j'ai choisi de dumper la totalité du code du binaire. Il suffit de définir *start* dans le code Python plus haut à *0x08048000* et de laisser tourner jusqu'à ce que le service bloque.  
 
-On peut alors ouvrir le binaire obtenu dans [Cutter](https://github.com/radareorg/cutter). Evidemment le code obtenu est assez chaotique à cause des octets nuls.  
+On peut alors ouvrir le binaire obtenu dans [Cutter](https://github.com/radareorg/cutter). Évidemment le code obtenu est assez chaotique à cause des octets nuls.  
 
 Le plus dérangeant étant de ne pas disposer des noms des fonctions lors des *call*, toutefois on peut voir avec un éditeur hexa la liste des noms de fonctions importées de la libc et par déduction retrouver le nom correspondant.  
 
