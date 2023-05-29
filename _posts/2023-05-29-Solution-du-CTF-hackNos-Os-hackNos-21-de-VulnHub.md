@@ -24,7 +24,7 @@ PORT   STATE SERVICE VERSION
 |_http-server-header: Apache/2.4.29 (Ubuntu)
 ```
 
-Contrairelent à ce qu'on pourrait immaginer on y trouve un Wordpress.
+Contrairement à ce qu'on pourrait imaginer on y trouve un Wordpress.
 
 Un petit coup d'œil au code source montre l'utilisation d'un plugin :
 
