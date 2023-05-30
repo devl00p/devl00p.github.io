@@ -7,7 +7,7 @@ tags: [CTF,VulnHub]
 
 ## Sean Reconnery
 
-Une fois n'est pas coutume je commande par un Nuclei :
+Une fois n'est pas coutume je commence par un `Nuclei` :
 
 ```console
 $ nuclei -u http://192.168.56.222/
