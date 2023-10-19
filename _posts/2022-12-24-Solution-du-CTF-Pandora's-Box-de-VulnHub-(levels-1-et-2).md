@@ -69,7 +69,7 @@ r.close()
 
 J'ai testé avec la wordlist rockyou mais ça n'a rien trouvé ! Le programme ne semble pas non plus vulnérable à une format string.
 
-Finalement j'ai trouvé un indice sur le web : le programme répond moins vite pour chaque mauvais caractère saisi.
+Finalement, j'ai trouvé un indice sur le web : le programme répond moins vite pour chaque mauvais caractère saisi.
 
 J'ai donc adapté mon code de cette façon :
 
