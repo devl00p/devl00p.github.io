@@ -1,5 +1,5 @@
 ---
-title: "Cross-Site Scripting (reflected) dans le plugin Wordpress Posts Logs and tracking"
+title: "Injection SQL dans le plugin Wordpress Posts Logs and tracking"
 tags: [vulnérabilité]
 ---
 
