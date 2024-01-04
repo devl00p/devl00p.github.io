@@ -41,7 +41,7 @@ Cette classe a un constructeur qui hooke différentes fonctions :
         register_activation_hook(__FILE__,array(&$this, 'NTRAcustomPages'));
 ```
 
-Le hook destiné aux templates inclus le template nommé `summary.php` :
+Le hook destiné aux templates inclut le template nommé `summary.php` :
 
 ```php
     function NTRAcontactPageTemplate( $template ) {
