@@ -1,6 +1,6 @@
 ---
 title: "Solution du challenge Salta de SadServers.com"
-tags: [CTF,AdminSys,SadServers
+tags: [CTF,AdminSys,SadServers]
 ---
 
 **Scenario:** "Salta": Docker container won't start.

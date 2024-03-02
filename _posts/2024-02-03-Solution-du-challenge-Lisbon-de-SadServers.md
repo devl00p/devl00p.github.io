@@ -1,6 +1,6 @@
 ---
 title: "Solution du challenge Lisbon de SadServers.com"
-tags: [CTF,AdminSys,SadServers
+tags: [CTF,AdminSys,SadServers]
 ---
 
 **Scenario:** "Lisbon": etcd SSL cert troubles

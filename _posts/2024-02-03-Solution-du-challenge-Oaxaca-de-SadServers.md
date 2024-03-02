@@ -1,6 +1,6 @@
 ---
 title: "Solution du challenge Oaxaca de SadServers.com"
-tags: [CTF,AdminSys,SadServers
+tags: [CTF,AdminSys,SadServers]
 ---
 
 **Scenario:** "Oaxaca": Close an Open File

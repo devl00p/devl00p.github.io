@@ -1,6 +1,6 @@
 ---
 title: "Solution du challenge Melbourne de SadServers.com"
-tags: [CTF,AdminSys,SadServers
+tags: [CTF,AdminSys,SadServers]
 ---
 
 **Scenario:** "Melbourne": WSGI with Gunicorn

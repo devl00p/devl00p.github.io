@@ -1,6 +1,6 @@
 ---
 title: "Solution du challenge Manhattan de SadServers.com"
-tags: [CTF,AdminSys,SadServers
+tags: [CTF,AdminSys,SadServers]
 ---
 
 **Scenario:** "Manhattan": can't write data into database.

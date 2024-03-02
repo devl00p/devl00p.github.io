@@ -1,6 +1,6 @@
 ---
 title: "Solution du challenge Cape Town de SadServers.com"
-tags: [CTF,AdminSys,SadServers
+tags: [CTF,AdminSys,SadServers]
 ---
 
 **Scenario:** "Cape Town": Borked Nginx
