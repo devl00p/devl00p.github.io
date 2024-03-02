@@ -1,6 +1,6 @@
 ---
 title: "Solution des scénarios Easy de SadServers.com"
-tags: [CTF,AdminSys]
+tags: [CTF,AdminSys,SadServers]
 ---
 
 [SadServers](https://sadservers.com/) change des CTF de hacking classique : ici, vous avez à disposition un serveur cassé (avec une fonction qui ne marche pas comme il faut) et votre mission est de le réparer.
