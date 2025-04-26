@@ -2,6 +2,10 @@
 
 source "https://rubygems.org"
 
+gem "csv"
+gem "logger"
+gem "base64"
+gem "bigdecimal"
 gem "jekyll", "~> 4.3.2"
 gem "jekyll-theme-chirpy", "~> 5.5", ">= 5.5.2"
 gem 'google-protobuf', '>= 3.22.0', '< 3.25.0'
