@@ -196,6 +196,7 @@ service:
 
 Dans `templates/configmap.yaml` on trouve la configuration qui doit normalement placer le contenu HTML où il faut...
 
+{% raw %}
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -210,9 +211,11 @@ data:
     <h1>Hi! I got deployed successfully</h1>
     </html>
 ```
+{% endraw %}
 
 Pour terminer, le fichier `templates/deployment.yaml` rassemble les différentes resources que l'on a vu via des références :
 
+{% raw %}
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -239,6 +242,7 @@ spec:
               containerPort: 80
               protocol: TCP
 ```
+{% endraw %}
 
 Ce qu'on peut noter ici, c'est que le fichier configmap ne semble pas inclus dans le déploiement.
 
@@ -311,6 +315,7 @@ Events:  <none>
 
 Pour corriger ça il faut rajouter un volume qui utilise le configMap :
 
+{% raw %}
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -344,6 +349,7 @@ spec:
             - name: config-volume
               mountPath: /usr/share/nginx/html/
 ```
+{% endraw %}
 
 Il faut aussi changer la version de la release dans `Chart.yaml`. On peut ensuite faire un nouveau paquet :
 
