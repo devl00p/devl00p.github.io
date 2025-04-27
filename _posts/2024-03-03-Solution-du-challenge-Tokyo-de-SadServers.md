@@ -70,7 +70,7 @@ root@ip-172-31-21-14:/# curl -v 127.0.0.1:80
 
 Cette fois, j'ai un problème d'accès. On doit avoir des pistes dans `/etc/apache2/apache2.conf`.
 
-```apacheconf
+```apache
 <Directory />
         Options FollowSymLinks
         AllowOverride None

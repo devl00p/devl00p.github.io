@@ -231,7 +231,7 @@ On peut alors se connecter à la zone Admin sur l'appli web, mais je n'y trouve 
 
 ## Enumération à gogo
 
-En fait il y a une section `VOIP LOGS` sur laquelle on trouve des données de communications SMS. Tout est encodé en hexadécimal donc le décodage est trivial. L'un des messages mentionne le nom DNS `wireless.com`.
+En fait, il y a une section `VOIP LOGS` sur laquelle on trouve des données de communications SMS. Tout est encodé en hexadécimal donc le décodage est trivial. L'un des messages mentionne le nom DNS `wireless.com`.
 
 C'est une information qui a eu peu d'impact à ce moment, car je l'avais déjà croisé dans le fichier `/etc/apache2/sites-available/cmsms.conf` :
 
