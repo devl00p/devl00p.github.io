@@ -217,7 +217,7 @@ Cette fois, j'ai assez de temps pour aller éditer un fichier du thème courant 
 
 ![TheFinals webshell](/assets/img/hackmyvm/TheFinals_theme_editor.png)
 
-Avec cet accès je peux trouver la config du site :
+Avec cet accès, je peux trouver la config du site :
 
 ```php
   'host' => 'localhost',
@@ -316,7 +316,7 @@ Broadcast to eth0 192.168.56.104:1337
 
 Mon premier réflexe a été de mettre en écoute le port 1337 en TCP mais il est resté désespérément silencieux.
 
-Finalement j'ai eu un retour avec UDP :
+Finalement, j'ai eu un retour avec UDP :
 
 ```console
 $ nc -l -p 1337 -u -v
