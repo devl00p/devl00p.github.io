@@ -9,7 +9,7 @@ SingDanceRap est un CTF créé par un certain `he110wor1d`.
 
 La VM provenant de HackMyVM, on ne dispose pas de descriptif ou d'objectifs ce qui est bien dommage.
 
-Une fois la VM importée et démarrée on commence par un ping-scan :
+Une fois la VM importée et démarrée, on commence par un ping-scan :
 
 ```console
 $ sudo nmap -T5 -sP 192.168.56.1/24
@@ -751,7 +751,7 @@ On n'a pas moyen de contrôler ce qui est passé à `system`, surtout que la com
 
 L'idée est plus d'écraser l'adresse de retour par `sing_dance_rap` pour déclencher setuid/setgid puis enchainer avec un ret2libc pour appeler `system`.
 
-Déjà si on passe 20 fois l'adresse de `sing_dance_rap` à scanf on observe bien le détournement du flot d'exécution:
+Déjà si on passe 20 fois l'adresse de `sing_dance_rap` à `scanf`, on observe bien le détournement du flot d'exécution :
 
 ```console
 he110wor1d@singdancerap:~$ python -c 'print(b"\x13\x92\x04\x08"*20)' | thekey2root/thekey2root
