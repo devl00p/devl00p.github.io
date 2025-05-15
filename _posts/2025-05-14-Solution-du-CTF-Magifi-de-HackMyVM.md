@@ -659,7 +659,7 @@ Une fois le tunnel établi, le client envoi ses identifiants à travers ce tunne
 
 L'idée de l'attaque ici est d'usurper le certificat fournit par l'AP légitime. C'est un procédé expliqué sur ces deux sites :
 
-[Attacking WPA Enterprise | Shuciran Pentesting Notes](https://shuciran.github.io/posts/Attacking-WPA-Enterprise/)
+[Attacking WPA Enterprise - Shuciran Pentesting Notes](https://shuciran.github.io/posts/Attacking-WPA-Enterprise/)
 
 [Evil Twin Enterprise WiFi Network using Hostapd-Mana](https://tbhaxor.com/evil-twin-wifi-network-using-hostapd-mana/)
 
