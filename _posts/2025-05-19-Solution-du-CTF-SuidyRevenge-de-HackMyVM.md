@@ -48,7 +48,7 @@ Mais je n'ai pas trouvé de `weevely.php` dans ce dossier `/supersecure`.
 
 Brute-forcer à l'aide d'une wordlist semble peu efficace, alors j'ai fouiné un peu sur le web et j'ai trouvé des infos sur ce package kali Linux :
 
-https://www.kali.org/tools/webshells/
+[https://www.kali.org/tools/webshells/](https://www.kali.org/tools/webshells/)
 
 On y trouve une liste de backdoors web présentes sur kali.
 
@@ -65,7 +65,7 @@ Ce script mentionnait qu'il avait besoin d'un paramètre `file`. Je lui ai pass�
 Du coup, je lui ai passé ce filtre PHP pour obtenir le contenu de `simple-backdoor.php` en base64 :
 
 ```
-php://filter/convert.base64-encode/resource=simple-backdoor.php`
+php://filter/convert.base64-encode/resource=simple-backdoor.php
 ```
 
 Voici le code :
