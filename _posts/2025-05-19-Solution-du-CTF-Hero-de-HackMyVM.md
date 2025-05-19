@@ -118,8 +118,6 @@ J'ai trouvé cette description du projet :
 
 [Explore n8n Docs: Your Resource for Workflow Automation and Integrations | n8n Docs](https://docs.n8n.io/#about-n8n)
 
-> ## About n8n
-> 
 > n8n (pronounced n-eight-n) helps you to connect any app with an API with any other, and manipulate its data with little or no code.
 > 
 > - Customizable: highly flexible workflows and the option to build custom nodes.
