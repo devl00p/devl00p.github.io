@@ -229,7 +229,7 @@ J'ai tenté de brute-forcer les comptes sur le SSH mais ça allait prendre une �
 
 J'ai trouvé cet article de Rapid7 qui indique que l'on peut dumper les hash des utilisateurs pour les casser :
 
-[A Penetration Tester's Guide to IPMI and BMCs | Rapid7 Blog](https://www.rapid7.com/blog/post/2013/07/02/a-penetration-testers-guide-to-ipmi/)
+[A Penetration Tester's Guide to IPMI and BMCs - Rapid7 Blog](https://www.rapid7.com/blog/post/2013/07/02/a-penetration-testers-guide-to-ipmi/)
 
 N'ayant pas envie de lancer Kali + Metasploit, j'ai fouillé sur Github et j'ai trouvé ce script Python :
 
@@ -478,7 +478,7 @@ Use the "--show" option to display all of the cracked passwords reliably
 Session completed.
 ```
 
-Cette fois on tient notre root :
+Cette fois, on tient notre root :
 
 ```console
 onida@atom:/var/www/html$ su root
