@@ -570,7 +570,7 @@ $ python drupal.py -t http://192.168.1.8/drupal/ -u toto -p toto
 
 Une fois le compte créé, on peut jouer avec les paramètres de l'appli pour obtenir une exécution de code.
 
-La méthode est décrite ici : [Solution du CTF DC: 1 de VulnHub]({% _posts/2023-03-20-Solution-du-CTF-DC-1-de-VulnHub.md %})
+La méthode est décrite ici : [Solution du CTF DC: 1 de VulnHub]({% link _posts/2023-03-20-Solution-du-CTF-DC-1-de-VulnHub.md %})
 
 ### CUPS
 
