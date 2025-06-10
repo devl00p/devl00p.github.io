@@ -307,7 +307,7 @@ root:$6$ncNrfMmFicrVYnMJ$eRxtK.IK.8vvnkzP8PMhc6HOpXWlSFs4vMyj5yz2qmIgQMAi6Zjv0vT
 
 Mais après avoir laissé tourner JtR un moment, j'ai abandonné.
 
-J'ai choisis la même approche que sur [Magifi]({% link _posts/2025-05-14-Solution-du-CTF-Magifi-deHackMyVM.md %}#alohomora), à savoir ajouter une ligné à `sudoers` :
+J'ai choisis la même approche que sur [Magifi]({% link _posts/2025-05-14-Solution-du-CTF-Magifi-de-HackMyVM.md %}#alohomora), à savoir ajouter une ligné à `sudoers` :
 
 ```console
 umzyyds@Umz:~$ echo -e "\numzyyds ALL=(ALL) NOPASSWD: /usr/bin/bash" >> sudoers_copy 
