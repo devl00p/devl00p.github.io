@@ -5,7 +5,7 @@ tags: [CTF,HackMyVM]
 
 ### DevOops I did (not do) it again
 
-En téléchargeant le CTF DevOops sur HackMyVM.eu j'avais un peu peur qu'il s'agisse du même CTF que celui disponible sur HackTheBox à une époque (voir mon [writeup]({% link _posts/2018-10-14-Solution-du-CTF-DevOops-de-HackTheBox.md _%})).
+En téléchargeant le CTF DevOops sur HackMyVM.eu j'avais un peu peur qu'il s'agisse du même CTF que celui disponible sur HackTheBox à une époque (voir mon [writeup]({% link _posts/2018-10-14-Solution-du-CTF-DevOops-de-HackTheBox.md %})).
 
 Mais le scénario était d'emblée différent avec seulement un port HTTP ouvert.
 
