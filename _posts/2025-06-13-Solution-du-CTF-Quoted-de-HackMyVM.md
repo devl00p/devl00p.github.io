@@ -199,6 +199,7 @@ D:(A;;CCLCSWRPWPDTLOCRRC;;;SY)(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;BA)(A;;CCLCSWLOCR
 ```
 
 D'après différentes IA ce ne sera pas possible :
+
 -------------------------------
 
 You've provided the SDDL string for the `PEService` using `sc.exe sdshow PEService`:
