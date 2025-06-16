@@ -171,7 +171,7 @@ J'aurais bien fait une énumération aggressive des plugins, mais le serveur web
 
 Une recherche sur exploit-db pour un plugin "Editor" pour Wordpress ne retourne rien de probant.
 
-Cependant, quand on va lire le readme trouvé par wpscan on voit qu'il s'appelle en fait `Site Editor` :
+Cependant, quand on va lire le readme trouvé par wpscan, on voit qu'il s'appelle en fait `Site Editor` :
 
 ```
 === Site Editor - WordPress Site Builder - Theme Builder and Page Builder ===
