@@ -162,7 +162,7 @@ Toutefois, déjà à ce stade, on peut utiliser le directory traversal pour réc
 
 L'accès qui nous reste désormais, c'est le RDP, et il fonctionne !
 
-Vu le nom du CTF, on se doute que l'on va utiliser la commande `runas` avec des identifiants gardés dans le coffre de Windows, ce qui est expliqué chez [HackTricks]([Windows Local Privilege Escalation - HackTricks](https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#credentials-manager--windows-vault)).
+Vu le nom du CTF, on se doute que l'on va utiliser la commande `runas` avec des identifiants gardés dans le coffre de Windows, ce qui est expliqué chez [HackTricks](https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#credentials-manager--windows-vault).
 
 ![RunAs cached credentials](/assets/img/hackmyvm/runas_hmv.png)
 
