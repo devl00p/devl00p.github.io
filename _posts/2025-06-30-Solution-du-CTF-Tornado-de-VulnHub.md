@@ -302,7 +302,7 @@ Pour terminer, les chiffres, caractères spéciaux, espaces... ne sont pas modif
 
 En fin de compte, c'est assez simple. Il suffit de copier le chiffré sur https://rot13.com/ et de choisir le décalage de `1` qui correspond à la majorité des caractères. On obtient alors `idkrootpussxord`.
 
-On devine que `u` est la clé car le `a` de `password` a été emplacé. `x` étant au-dessus de `u` il ne devait pas être décalé de 1 donc le mot de passe est `idkrootpassword`. C'est le mot de passe root :
+On devine que `u` est la clé, car le `a` de `password` a été emplacé. `x` étant au-dessus de `u` il ne devait pas être décalé de 1 donc le mot de passe est `idkrootpassword`. C'est le mot de passe root :
 
 ```console
 catchme@tornado:~$ su root
