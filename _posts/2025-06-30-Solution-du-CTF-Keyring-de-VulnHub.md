@@ -261,7 +261,7 @@ lrwxrwxrwx john/john         0 2025-06-30 19:39 shadow -> /etc/shadow
 
 ### Lucky Star
 
-On pourrait sans doute tricher là dessus, mais on va plutôt procéder à une injection d'option similaire au CTF [/dev/random: Pipe]({% link _posts/2017-11-17-Solution-du-CTF-devrandom-Pipe-de-VulnHub.md _%}).
+On pourrait sans doute tricher là dessus, mais on va plutôt procéder à une injection d'option similaire au CTF [/dev/random: Pipe]({% link _posts/2017-11-17-Solution-du-CTF-devrandom-Pipe-de-VulnHub.md %}).
 
 J'ai d'abord créé un script `evil.sh` puis nommé quelques fichiers après des options. Quand je lance `compress`, le binaire lance `tar` depuis `bash`. Ce dernier voit la présence du caractère `*` dans la commande `/bin/tar cf archive.tar *` et va remplacer le caractère par les fichiers présents. Certains noms correspondant à des options, `tar` les interprète comme tel :
 
