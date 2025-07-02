@@ -1,3 +1,8 @@
+---
+title: Solution du CTF Funbox Next Level de VulnHub
+tags: [CTF, VulnHub]
+---
+
 ### Je ne suis pas celle que vous croyez
 
 [Funbox: Next Level](https://vulnhub.com/entry/funbox-next-level,547/) est le numéro 5 des CTFs "Funbox".

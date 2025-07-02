@@ -1,3 +1,8 @@
+---
+title: Solution du CTF Funbox-CTF de VulnHub
+tags: [CTF, VulnHub]
+---
+
 ### NOWAY
 
 [Funbox: CTF](https://www.vulnhub.com/entry/funbox-ctf,546/) est le quatrième de la série.
