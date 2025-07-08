@@ -1,5 +1,5 @@
 ---
-title: Solution du CTF hacksudo #2 (HackDudo) de VulnHub
+title: Solution du CTF hacksudo 2 (HackDudo) de VulnHub
 tags: [CTF, VulnHub]
 ---
 
