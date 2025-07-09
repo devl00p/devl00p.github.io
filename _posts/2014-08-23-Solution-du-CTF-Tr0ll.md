@@ -180,7 +180,7 @@ Hydra (http://www.thc.org/thc-hydra) starting at 2014-08-22 08:08:31
 Hydra (http://www.thc.org/thc-hydra) finished at 2014-08-22 08:08:37
 ```
 
-Une fois l'accès obtenu on voit que plusieurs utilisateurs ont été créés :  
+Une fois l'accès obtenu, on voit que plusieurs utilisateurs ont été créés :  
 
 ```
 troll:x:1000:1000:Tr0ll,,,:/home/troll:/bin/bash

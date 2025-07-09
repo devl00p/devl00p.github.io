@@ -299,7 +299,7 @@ for url in lines:
     print "==============================="
 ```
 
-Interesting results are thoses returned for *panel.php* :
+Interesting results are those returned for *panel.php* :
 
 ```html
 <HTML>
@@ -544,9 +544,9 @@ Contenu trouve avec /var/log/faillog
 
 We have no read access on the *Apache* logs... How can we transform the `include()` vulnerability in a RCE (remote code execution) one ?  
 
-The hint is to use the *notes.php* script stroring the data we submit to a *note.txt* file in a *"temporary storage"*.  
+The hint is to use the *notes.php* script storing the data we submit to a *note.txt* file in a *"temporary storage"*.  
 
-Indeed when I submitted `<?php system($_get["cmd"]); ?>` to `notes.php` just before exploiting the *intruder* vulnerability to include `/tmp/note.txt` I was then able to execute commands on the system.  
+Indeed, when I submitted `<?php system($_get["cmd"]); ?>` to `notes.php` just before exploiting the *intruder* vulnerability to include `/tmp/note.txt` I was then able to execute commands on the system.  
 
 Some more Python code can give us a poor man's shell to the server :  
 
@@ -755,7 +755,7 @@ COMMIT
 # Completed on Fri Jun 20 11:13:53 2014
 ```
 
-So what ? Nothing ! Notice too that netstat was removed, netcat is not installed and of course nmap neither :'(  
+So what ? Nothing ! Notice also that netstat was removed, netcat is not installed and of course nmap neither :'(  
 
 So I used [my own port scanning script in Python]({% link _posts/2011-01-04-dvscan.py-Un-scanneur-de-port-en-Python.md %}) I use twice in a year (you have to edit the script to add the 1337 port a the list) :  
 
@@ -782,7 +782,7 @@ Port ouverts :
 
 Hmmm... Obviously the only thing left to do is to break the PGP crypted message. We have the pair of keys (and it's a good thing to have the full pair...) so it should not be complicated.  
 
-The key is tagged as *PGP* but it's still possible to use it from *GnuPG* using the *--import* option (don't try to install PGP for Linux... bad experience) :  
+The key is tagged as *PGP*, but it's still possible to use it from *GnuPG* using the *--import* option (don't try to install PGP for Linux... bad experience) :  
 
 ```console
 $ gpg --import public.pkr
