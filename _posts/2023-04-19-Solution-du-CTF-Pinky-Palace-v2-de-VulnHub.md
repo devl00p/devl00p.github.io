@@ -52,11 +52,13 @@ Dans les dossiers que Nmap a trouvés via son script Lua d'énumération, il y a
 
 J'ai logiquement essayé de contacter les ports dans l'ordre, mais je ne voyais aucun changement.
 
-Finalement j'ai jeté un œil à la VM et j'ai du lancer le `knockd` qui n'écoutait pas sur la bonne interface :
+Finalement, j'ai jeté un œil à la VM et j'ai dû lancer le `knockd` qui n'écoutait pas sur la bonne interface :
 
-`knockd -i <interface réseau> -d`
+```bash
+knockd -i <interface réseau> -d
+```
 
-Autre déception, les ports de la liste n'étaient pas ordonnés correctement, mais heureusement ils ne sont que trois :
+Autre déception, les ports de la liste n'étaient pas ordonnés correctement, mais heureusement, ils ne sont que trois :
 
 ```console
 $ ncat -v -z 192.168.56.185 7000; ncat -v -z 192.168.56.185 666; ncat -v -z 192.168.56.185 8890; ncat -v 192.168.56.185 4655
@@ -88,7 +90,7 @@ On trouve alors un serveur SSH sur le port 4655, mais aussi un Nginx et une appl
 
 ## Brocouille
 
-Sur le Nginx on trouve une mire de connexion, mais avant j'ai décidé de me plonger sur les autres ports.
+Sur le Nginx, on trouve une mire de connexion, mais avant j'ai décidé de me plonger sur les autres ports.
 
 Un coup d'œil au code source du Wordpress révèle sa version :
 
@@ -595,5 +597,3 @@ root@Pinkys-Palace:~# cat root.txt
 [+] Type: CTF || [Realistic]
 [+] Hopefully you enjoyed this and gained something from it as well!!!
 ```
-
-

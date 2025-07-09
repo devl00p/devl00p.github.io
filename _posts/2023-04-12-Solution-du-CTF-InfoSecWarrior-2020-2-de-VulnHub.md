@@ -268,7 +268,7 @@ $ ls -al /mnt/dash
 $ sudo umount /mnt
 ```
 
-Une fois renvoyée sur la VM je peux monter l'image et exécuter le shell setuid :
+Une fois renvoyée sur la VM, je peux monter l'image et exécuter le shell setuid :
 
 ```console
 bla1@ck04:/home/bla2$ mount /var/tmp/disk.img 
@@ -301,7 +301,7 @@ Send your report at our e-mail address : ctf@infosecwarrior.com & vishalbiswas42
 
 ## La méthode pspy
 
-Dans la crontab de root il y a cette entrée :
+Dans la crontab de root, il y a cette entrée :
 
 ```
 * * * * * cd /home/bla1 && ./run.sh

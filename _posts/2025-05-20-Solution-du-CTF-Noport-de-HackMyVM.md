@@ -133,14 +133,14 @@ Dedans, on trouve différents fichiers :
 ```console
 $ ls -al
 total 28
-drwxr-xr-x 1 sirius users   106 20 mai   09:12 .
+drwxr-xr-x 1  devloop users   106 20 mai   09:12 .
 drwxrwxrwt 1 root   root   9700 20 mai   09:13 ..
--rw-r--r-- 1 sirius users  1044 20 mai   09:12 ctf.conf
-drwxr-xr-x 1 sirius users   128 20 mai   09:12 .git
--rw-r--r-- 1 sirius users   307 20 mai   09:12 .htaccess
--rw-r--r-- 1 sirius users  3951 20 mai   09:12 index.php
--rwxr-xr-x 1 sirius users  1535 20 mai   09:12 nginx.conf
--rw-r--r-- 1 sirius users 12288 20 mai   09:12 .test.php.swp
+-rw-r--r-- 1  devloop users  1044 20 mai   09:12 ctf.conf
+drwxr-xr-x 1  devloop users   128 20 mai   09:12 .git
+-rw-r--r-- 1  devloop users   307 20 mai   09:12 .htaccess
+-rw-r--r-- 1  devloop users  3951 20 mai   09:12 index.php
+-rwxr-xr-x 1  devloop users  1535 20 mai   09:12 nginx.conf
+-rw-r--r-- 1  devloop users 12288 20 mai   09:12 .test.php.swp
 ```
 
 ### De la config et du code

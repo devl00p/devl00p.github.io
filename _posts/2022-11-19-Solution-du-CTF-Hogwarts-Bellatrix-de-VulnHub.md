@@ -20,7 +20,7 @@ PORT   STATE SERVICE VERSION
 |_http-server-header: Apache/2.4.46 (Ubuntu)
 ```
 
-Sur le site web on trouve ce texte :
+Sur le site web, on trouve ce texte :
 
 ```
 ikilledsiriusblackikilledsiriusblackikilledsiriusblackikilledsiriusblack

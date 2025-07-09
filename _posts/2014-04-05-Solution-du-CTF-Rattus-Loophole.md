@@ -13,7 +13,7 @@ Le CTF [Loophole](http://vulnhub.com/entry/rattus_loophole,27/) propose de s'int
 
 La première difficulté de ce challenge (les mauvaises langues diront la seule), c'est de parvenir à configurer la VM car l'ISO fournit n'utilise pas DHCP et a une adresse IP statique en 10.8.7.  
 
-Finalement il faudra seulement aller dans *Fichier > Paramètres > Réseau* dans *VirtualBox* et créer un réseau privé hôte qui reprend ces infos (j'ai mis .4 et ça a marché, mais dans la logique, il faut sans mettre .0 si c'est pour le réseau) :  
+Finalement, il faudra seulement aller dans *Fichier > Paramètres > Réseau* dans *VirtualBox* et créer un réseau privé hôte qui reprend ces infos (j'ai mis .4 et ça a marché, mais dans la logique, il faut sans mettre .0 si c'est pour le réseau) :  
 
 ![Congiguration VirtualBox](/assets/img/vboxnet0.png)
 

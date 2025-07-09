@@ -253,7 +253,7 @@ msf exploit(sphpblog_file_upload) > exploit
 
 Il suffit de reprendre les identifiants nouvellement créés, de se connecter et d'uploader nous même une backdoor PHP dans le dossier `images`.  
 
-Pour l'accès root on procédera de la même façon que précédemment.  
+Pour l'accès root, on procédera de la même façon que précédemment.  
 
 
 *Published April 21 2014 at 09:40*

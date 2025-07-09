@@ -209,7 +209,7 @@ Host: 192.168.56.1
 
 En revanche tenter d'obtenir le `document.cookie` semble échouer. Ce dernier doit être en `httpOnly`.
 
-Plus tard je me suis penché plus en détails sur cette exploitation et effectivement le formulaire faillible demande beaucoup d'infos et la définition du mot de passe semble se faire sur une étape ultérieure.
+Plus tard, je me suis penché plus en détails sur cette exploitation et effectivement le formulaire faillible demande beaucoup d'infos et la définition du mot de passe semble se faire sur une étape ultérieure.
 
 Dans un cas d'exploitation réelle, ce serait plus intelligent d'utiliser la faille XSS pour modifier l'adresse email de l'utilisateur par la nôtre puis forcer la réinitialisation du mot de passe.
 
@@ -357,7 +357,7 @@ Toutefois, ce script n'a pas la permission `o+x`. Faut-il obtenir le compte `max
 2023/05/07 19:41:01 CMD: UID=0    PID=10524  | mysql -h localhost -u root -ptoor sentrifugo
 ```
 
-Finalement j'ai écrit le script suivant pour bruteforcer les URLs selon l'algorithme de _Scarpine_ :
+Finalement, j'ai écrit le script suivant pour bruteforcer les URLs selon l'algorithme de _Scarpine_ :
 
 ```python
 import string
@@ -592,4 +592,4 @@ casper.thenEvaluate(function(){
 casper.run();
 ```
 
-Comme dis plus tôt ça fonctionne, mais l'exploitation est compliquée. La VM étant en host-only (sans accès internet) je n'ai pas cherché à passer par la réinitialisation du mot de passe.
+Comme dit plus tôt ça fonctionne, mais l'exploitation est compliquée. La VM étant en host-only (sans accès internet) je n'ai pas cherché à passer par la réinitialisation du mot de passe.

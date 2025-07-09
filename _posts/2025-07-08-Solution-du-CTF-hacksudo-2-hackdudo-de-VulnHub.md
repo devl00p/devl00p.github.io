@@ -5,7 +5,7 @@ tags: [CTF, VulnHub]
 
 ### hacksudo: 2 (HackDudo)
 
-[hacksudo: 2 (HackDudo) ](https://vulnhub.com/entry/hacksudo-2-hackdudo,667/) est un CTF simple et très classique. Les habitués de CTFs n'apprendront sans doute rien. À réserver aux nouveaux.
+[hacksudo: 2 (HackDudo)](https://vulnhub.com/entry/hacksudo-2-hackdudo,667/) est un CTF simple et très classique. Les habitués de CTFs n'apprendront sans doute rien. À réserver aux nouveaux.
 
 ```console
 $ sudo nmap -sCV --script vuln -T5 -p- 192.168.56.132
