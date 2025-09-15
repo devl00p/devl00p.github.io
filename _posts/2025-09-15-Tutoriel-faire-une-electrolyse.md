@@ -86,7 +86,7 @@ Avant de tout relier électriquement il y a plusieurs précautions à prendre :
 
 On en vient à la raison pour laquelle il faut une batterie pour réaliser l'opération : les chargeurs de batterie modernes sont dit "intelligents" car ils sont capables de voir s'ils sont connectés à un objet qui supporte la charge. Ils peuvent adapter le courant en fonction, afin que la batterie charge de façon douce et sûre.
 
-Par conséquent, si vous allumez le chargeur de batterie et que vous mesurez la tension à ses bornes à l'aide de voltmètre, ce n'est pas anormal de mesure approximativement 1 volt alors que le chargeur est censé délivrer 14 volts (comme un alternateur).
+Par conséquent, si vous allumez le chargeur de batterie et que vous mesurez la tension à ses bornes à l'aide d'un voltmètre, ce n'est pas anormal de mesurer approximativement 1 volt alors que le chargeur est censé délivrer 14 volts (comme un alternateur).
 
 Pour tromper le chargeur, on le branchera à une batterie de voiture et les fils menant à chaque pièce en métal seront branchés en parallèle. C'est-à-dire que sur la cosse positive de la batterie, vous aurez à la fois le cable positif (rouge) du chargeur de batterie et le fil menant à la pièce sacrificielle. Inversement sur la borne négative de la batterie, vous aurez à la fois le cable négatif (noir) du chargeur et le fil menant à la pièce à récupérer.
 
