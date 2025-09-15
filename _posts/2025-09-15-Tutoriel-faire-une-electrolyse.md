@@ -1,5 +1,5 @@
 ---
-title: "Tutoriel : : Faire une électrolyse"
+title: "Tutoriel : Faire une électrolyse"
 tags: [Mécanique]
 ---
 
