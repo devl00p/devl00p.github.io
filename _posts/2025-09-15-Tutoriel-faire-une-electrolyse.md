@@ -40,7 +40,7 @@ On voit déjà mieux comment s'y prendre. Pour commencer, il faut déjà être �
 - un morceau de métal sacrificiel (boîte de conserve)
 - deux fils électriques (genre fil en cuivre solide pour la maison)
 - une brosse métallique
-- un sceau d'eau propre
+- un seau d'eau propre
 
 Et pas obligatoire, mais tout de même bien pratique pour faire bien les choses :
 
