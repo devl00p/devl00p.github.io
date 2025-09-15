@@ -66,7 +66,7 @@ J'ai utilisé une grosse boîte de conserve et j'ai fait différents trous, déj
 
 Évitez les canettes avec un imprimé du type coca/fanta : la peinture rend le métal difficilement conducteur. Pour s'assurer que tout est OK, on peut se servir d'un multimètre en fonction ohmmètre.
 
-Assurez-vous que les fils sont bien en contact avec les objets. Comme expliqué dans la partie théorique, on doit avoir un fil relié à la pièce à récupérer. L'autre extrémité de ce fil ira à la borne négative de la batterie.
+Assurez-vous que les fils soient bien en contact avec les objets. Comme expliqué dans la partie théorique, on doit avoir un fil relié à la pièce à récupérer. L'autre extrémité de ce fil ira à la borne négative de la batterie.
 
 Pour la pièce sacrificielle, le fil sera bien sûr reliée à la borne positive.
 
