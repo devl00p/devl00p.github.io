@@ -68,7 +68,7 @@ J'ai utilisé une grosse boîte de conserve et j'ai fait différents trous, déj
 
 Assurez-vous que les fils soient bien en contact avec les objets. Comme expliqué dans la partie théorique, on doit avoir un fil relié à la pièce à récupérer. L'autre extrémité de ce fil ira à la borne négative de la batterie.
 
-Pour la pièce sacrificielle, le fil sera bien sûr reliée à la borne positive.
+Pour la pièce sacrificielle, le fil sera bien sûr relié à la borne positive.
 
 ![Pièces métalliques dans leur bain d'électrolyse](/assets/img/mecanique/electrolyse_bain.jpg)
 
