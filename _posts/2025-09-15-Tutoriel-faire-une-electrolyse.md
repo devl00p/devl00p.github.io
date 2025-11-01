@@ -52,7 +52,7 @@ Et pas obligatoire, mais tout de même bien pratique pour faire bien les choses 
 
 La première étape consiste à préparer le mélange eau + bicarbonate de soude. C'est mieux de disposer d'un contenant qu'on puisse fermer comme ça on peut mettre l'eau et le bicarbonate puis secouer franchement sans crainte. Avec une simple touillette ça ne va pas bien se mélanger et le succès de l'électrolyse dépend beaucoup du mélange.
 
-Dans quelles proportions mélanger l'eau avec le bicarbonate de soude ? Pas de science exacte là-dessus mais il faut que l'eau soit suffisamment trouble. Dans mon cas j'ai dû mettre 500g de bicarbonate pour 8 litres d'eau.
+Dans quelles proportions mélanger l'eau avec le bicarbonate de soude ? Pas de science exacte là-dessus, mais il faut que l'eau soit suffisamment trouble. Dans mon cas j'ai dû mettre 500g de bicarbonate pour 8 litres d'eau.
 
 L'avantage de commencer par le mélange, c'est que ça laisse le temps au bicarbonate de bien se diluer dans l'eau.
 
