@@ -145,7 +145,7 @@ Il est assez compliqué à placer, toujours parce que la poulie fait face au ch�
 
 Une fois l'outil placé, on y met une barre de force (breaker bar) dont la rotation sera bloquée par le sol. De mémoire la mienne fait 80 cm, car plus c'est long, plus c'est bon.
 
-Une fois que la barre est bien calée, on place la clé et ça douille longue sur la vis de poulie et on y met toute sa force. Comme mentionné plus haut, j'ai mis toute la force de ma jambe tout en me tenant à un élément sous la voiture qui permet normalement de la tracter.
+Une fois que la barre est bien calée, on place la clé et sa douille longue sur la vis de poulie et on y met toute sa force. Comme mentionné plus haut, j'ai mis toute la force de ma jambe tout en me tenant à un élément sous la voiture qui permet normalement de la tracter.
 
 Il va y avoir du sport :
 
@@ -206,6 +206,8 @@ On va mettre la nouvelle pompe à eau, mais pas sur une surface sale. Il se peut
 Avec un grattoir plastique ou la partie verte d'une éponge, on arrivera à un résultat suffisamment propre.
 
 Placez le joint dans la gorge qui lui est destinée dans la pompe à eau. Souvent, il y a des dents pour que le joint ne bouge pas lors de la pose. Moi, j'avais une pompe à eau SKF et par endroit les dents étaient un peu grosses (défaut de fabrication ?) du coup le joint débordait un peu et a été pincé lors de la pose.
+
+![Pompe à eau D16Z6](/assets/img/mecanique/timing_belt/pompe_a_eau.jpg)
 
 J'ai aussi mis une pâte d'étanchéité sur la zone extérieure de la pompe (pas sur le joint !). Vu que la zone est très fine, j'ai préféré étaler la pâte avec le doigt plutôt que de faire des paquets qui s'étaleront de toute part lors du serrage.
 
@@ -269,7 +271,7 @@ La nouvelle procédure de serrage étant extrêmement compliquée (voir ci-desso
 
 ![Procédure de serrage de la vis de vilebrequin](/assets/img/mecanique/timing_belt/serrage_vis_vilebrequin.jpg)
 
-Pour la suite, on remet la courroie d'alternateur et on resserre les différentes vis associées et poussant l'alternateur à la main.
+Pour la suite, on remet la courroie d'alternateur et on resserre les différentes vis associées en poussant l'alternateur à la main.
 
 On remet le cache moteur haut puis le support de DA, la pompe de DA et sa courroie. Là encore, il faut que ce soit serré, mais pas trop.
 
